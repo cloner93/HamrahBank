@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="register">ثبت نام</string>
+    <string name="login_to_hamrah_bank">ورود به همراه بانک</string>
+    <string name="mellat_bank">بانک ملت</string>
+    <string name="username">نام کاربری</string>
+    <string name="password">رمز عبور</string>
+    <string name="login">ورود</string>
+    <string name="forget_password">فراموشی رمز عبور</string>
+    <string name="phone_number">شماره موبایل</string>
+    <string name="national_id">کد ملی</string>
+    <string name="new_password">رمز عبور جدید</string>
+    <string name="re_new_password">تکرار رمز عبور جدید</string>
+    <string name="_continue">ادامه</string>
+    <string name="authentication">احراز هویت</string>
+    <string name="msg_forget_password_auth">جهت ثبت رمز عبور جدید، باید از طریق یکی روش‌های زیر اقدام به احراز هویت نمایید.</string>
+    <string name="mellat_signiture_app">اپلیکیشن امضای ملت</string>
+    <string name="video_authentication_process">فرآیند احراز هویت تصویری</string>
+    <string name="bank_card_information">اطلاعات کارت بانکی</string>
+</resources>

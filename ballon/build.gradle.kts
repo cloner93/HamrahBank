@@ -36,6 +36,11 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
     }
+    packaging {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
+    }
 }
 
 dependencies {
@@ -49,6 +54,10 @@ dependencies {
     api(libs.androidx.ui.tooling)
     api(libs.androidx.material3)
     api(libs.coil.compose)
+    api(libs.navigation.compose)
+    api(libs.androidx.material.icons.extended)
+    implementation(project(":core"))
+//    api(libs.navigation.ui)
 
     testApi(libs.junit)
     androidTestApi(libs.androidx.junit)

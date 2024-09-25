@@ -4,10 +4,12 @@ import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -32,6 +34,46 @@ fun AppIcon(@DrawableRes icon: Int, style: IconStyle? = null) {
         contentDescription = null,
         tint = tint
     )
+}
+
+@Composable
+fun AppIcon(icon: ImageVector, style: IconStyle? = null) {
+    val modifier = style?.let {
+        when (style.size) {
+            is Size.FIX -> Modifier.size(style.size.all)
+            is Size.Rectangle -> Modifier.size(width = style.size.width, height = style.size.height)
+            Size.DEFAULT -> Modifier.size(24.dp)
+        }
+    } ?: Modifier.size(24.dp)
+    val tint = style?.tint ?: LocalContentColor.current
+
+    Icon(
+        modifier = modifier,
+        imageVector = icon,
+        contentDescription = null,
+        tint = tint
+    )
+}
+
+@Composable
+fun AppButtonIcon(
+    modifier: Modifier = Modifier,
+    icon: ImageVector,
+    style: IconStyle? = null,
+    onClick: () -> Unit
+) {
+    val tint = style?.tint ?: LocalContentColor.current
+
+    IconButton(
+        onClick = onClick,
+        modifier = modifier
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = "Description Icon",
+            tint = tint
+        )
+    }
 }
 
 @Preview

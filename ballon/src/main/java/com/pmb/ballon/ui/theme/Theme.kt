@@ -1,36 +1,82 @@
 package com.pmb.ballon.ui.theme
 
-import android.app.Activity
-import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+    primary = Color.Dark.OnBackgroundNeutralDefault,
+    secondary = Color.Dark.ForegroundNeutralDefault,
+    onSecondary = Color.Dark.LOnForegroundNeutralDefault,
+    tertiary = Pink80,
+    background = Color.Dark.Background2Neutral,
+    onBackground = Color.Dark.OnBackgroundPrimarySubdued,
+    error = Color.Dark.StrokeNeutral2Error,
+    onError = Color.Dark.OnBackgroundErrorDefault,
 )
 
+//
+//internal val ColorScheme.defaultButtonColors: ButtonColors
+//    get() {
+//        return defaultButtonColorsCached
+//            ?: ButtonColors(
+//                containerColor = fromToken(FilledButtonTokens.ContainerColor),
+//                contentColor = fromToken(FilledButtonTokens.LabelTextColor),
+//                disabledContainerColor =
+//                fromToken(FilledButtonTokens.DisabledContainerColor)
+//                    .copy(alpha = FilledButtonTokens.DisabledContainerOpacity),
+//                disabledContentColor =
+//                fromToken(FilledButtonTokens.DisabledLabelTextColor)
+//                    .copy(alpha = FilledButtonTokens.DisabledLabelTextOpacity)
+//            )
+//                .also { defaultButtonColorsCached = it }
+//    }
+
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
+    primary = Color.Light.OnBackgroundNeutralDefault,
+    secondary = Color.Light.ForegroundNeutralDefault,
+    onSecondary = Color.Light.LOnForegroundNeutralDefault,
+    tertiary = Pink40,
+    background = Color.Light.Background2Neutral,
+    onBackground = Color.Light.OnBackgroundPrimarySubdued,
+    error = Color.Light.StrokeNeutral2Error,
+    onError = Color.Light.OnBackgroundErrorDefault,
+
 
     /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+    onPrimary =,
+    primaryContainer =,
+    onPrimaryContainer =,
+    inversePrimary =,
+    secondaryContainer =,
+    onSecondaryContainer =,
+    onTertiary =,
+    tertiaryContainer =,
+    onTertiaryContainer =,
+    onBackground =,
+    surface =,
+    onSurface =,
+    surfaceVariant =,
+    onSurfaceVariant =,
+    surfaceTint =,
+    inverseSurface =,
+    inverseOnSurface =,
+
+    errorContainer =,
+    onErrorContainer =,
+    outline =,
+    outlineVariant =,
+    scrim =,
+    surfaceBright =,
+    surfaceContainer =,
+    surfaceContainerHigh =,
+    surfaceContainerHighest =,
+    surfaceContainerLow =,
+    surfaceContainerLowest =,
+    surfaceDim =,
+     */
 )
 
 @Composable
@@ -41,18 +87,19 @@ fun HamrahBankTheme(
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
+//        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+//            val context = LocalContext.current
+//            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+//            dynamicLightColorScheme(context)
+//        }
 
-        darkTheme -> DarkColorScheme
+//        darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography,
+        typography = AppTypography,
         content = content
     )
 }

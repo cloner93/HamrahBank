@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,10 +25,13 @@ import com.pmb.ballon.models.TextStyle
 fun MenuItem(
     title: String,
     subtitle: String? = null,
-    @DrawableRes startIcon: Int,
+    @DrawableRes startIcon: Int? = null,
     @DrawableRes endIcon: Int? = null,
     bottomDivider: Boolean = false,
-    titleStyle: TextStyle? = null,
+    titleStyle: TextStyle = TextStyle(
+        color = MaterialTheme.colorScheme.secondary,
+        typography = MaterialTheme.typography.bodyLarge,
+    ),
     subtitleStyle: TextStyle? = null,
     startIconStyle: IconStyle? = null,
     endIconStyle: IconStyle? = null,
@@ -37,24 +41,26 @@ fun MenuItem(
         onItemClick?.invoke()
     }) {
         Row(
-            modifier = Modifier.padding(horizontal = 12.dp, vertical = 14.dp),
+            modifier = Modifier.padding(horizontal = 4.dp, vertical = 14.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
+
+            startIcon?.let {
+                AppIcon(icon = it, style = startIconStyle)
+                Spacer(modifier = Modifier.size(16.dp))
+            }
+
+            Column(horizontalAlignment = Alignment.Start) {
+                AppText(title = title, style = titleStyle)
+                subtitle?.let { AppText(title = it, style = subtitleStyle) }
+            }
+
+            Spacer(modifier = Modifier.weight(1f))
 
             endIcon?.let {
                 AppIcon(icon = endIcon, style = endIconStyle)
             }
 
-            Spacer(modifier = Modifier.weight(1f))
-
-            Column(horizontalAlignment = Alignment.Start) {
-                AppText(title = title, textStyle = titleStyle)
-                subtitle?.let { AppText(title = it, textStyle = subtitleStyle) }
-            }
-
-            Spacer(modifier = Modifier.size(16.dp))
-
-            AppIcon(icon = startIcon, style = startIconStyle)
         }
         if (bottomDivider) HorizontalDivider(thickness = 1.dp)
     }
