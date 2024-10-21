@@ -93,6 +93,7 @@ dependencies {
     implementation(project(":core"))
     implementation(project(":ballon"))
     implementation(project(":auth"))
+    implementation(project(":profile"))
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

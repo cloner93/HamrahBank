@@ -1,2 +1,15 @@
 <resources>
+    <string name="buy_subscription">خرید اشتراک</string>
+    <string name="buy_subscription_subtitle">صورت‌حساب خودکار، تم رسید و...</string>
+    <string name="my_services">سرویس‌های من</string>
+    <string name="user_info">اطلاعات کاربری</string>
+    <string name="security_privacy">امنیت و حریم خصوصی</string>
+    <string name="appearance_of_program">ظاهر برنامه</string>
+    <string name="update">به‌روزرسانی</string>
+    <string name="login_to_internet_bank">ورود به اینترنت بانک</string>
+    <string name="support">پشتیبانی</string>
+    <string name="invite_friend">دعوت از دوستان</string>
+    <string name="about_app">درباره برنامه</string>
+    <string name="comments_and_suggestions">نظرات و پیشنهادات</string>
+    <string name="logout_account">خروج از حساب</string>
 </resources>

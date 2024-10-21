@@ -37,6 +37,8 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.pmb.ballon.models.AppTextField
+import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.core.utils.isIranianNationalId
 import com.pmb.core.utils.isMobile
 
@@ -62,20 +64,37 @@ internal fun AppBaseTextField(
     minLines: Int = 1,
     interactionSource: MutableInteractionSource? = null,
     shape: Shape = TextFieldDefaults.shape,
-    colors: TextFieldColors = TextFieldDefaults.colors(),
+    colors: TextFieldColors = AppTextField.defaultColors(),
 ) {
     var isFocused by remember { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }
 
+
+    val borderColor =
+        if (isError) AppTheme.colorScheme.strokeNeutral2Error
+        else if (!enabled) Color.Transparent
+        else if (isFocused) AppTheme.colorScheme.strokeNeutral2Active
+        else AppTheme.colorScheme.strokeNeutral2Default
+
+    val labelColor =
+        if (isError) colors.errorLabelColor
+        else if (!enabled) colors.disabledLabelColor
+        else if (isFocused) colors.focusedLabelColor
+        else colors.unfocusedLabelColor
+
+    val inputColor =
+        if (isError) colors.errorTextColor
+        else if (!enabled) colors.disabledTextColor
+        else if (isFocused) colors.focusedTextColor
+        else colors.unfocusedTextColor
 
     Box(
         modifier = modifier
             .fillMaxWidth()
             .defaultMinSize(minHeight = 56.dp)
             .border(
-                border = BorderStroke(
-                    if (isFocused) 2.dp else 1.dp, if (isFocused) Color.Black else Color.LightGray
-                ), shape = RoundedCornerShape(12.dp)
+                border = BorderStroke(if (isFocused) 2.dp else 1.dp, borderColor),
+                shape = RoundedCornerShape(12.dp)
             )
     ) {
         // Label above text field when focused or not empty
@@ -84,7 +103,7 @@ internal fun AppBaseTextField(
             text = label,
             fontSize = 12.sp,
             fontWeight = FontWeight.Normal,
-            color = Color.Gray,
+            color = labelColor,
             modifier = Modifier.padding(
                 top = 4.dp, start = 16.dp, end = 16.dp
             ) // Adjust padding to position above
@@ -100,7 +119,7 @@ internal fun AppBaseTextField(
             BasicTextField(
                 value = value,
                 onValueChange = onValueChange,
-                textStyle = TextStyle(fontSize = 16.sp),
+                textStyle = TextStyle(fontSize = 16.sp, color = inputColor),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(
@@ -142,9 +161,10 @@ internal fun AppBaseTextField(
                     ) {
                         Box(modifier = Modifier.weight(1f)) {
                             if (value.isEmpty() && !isFocused && label != null) {
-                                Text(
-                                    text = label, // Placeholder text in Persian
-                                    fontSize = 16.sp, modifier = Modifier.padding(bottom = 6.dp)
+                                BodyMediumText(
+                                    modifier = Modifier.padding(bottom = 6.dp),
+                                    text = label,
+                                    color = labelColor
                                 )
                             }
                             innerTextField()

@@ -2,6 +2,7 @@ package com.pmb.profile.presentaion.component
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
@@ -15,7 +16,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.pmb.ballon.component.base.AppText
 import com.pmb.profile.R
 
 @Composable
@@ -32,7 +32,7 @@ fun ProfileHeader(profileUrl: String, title: String) {
             contentScale = ContentScale.Crop
         )
         Spacer(Modifier.size(16.dp))
-        AppText(title = title);
+//        AppText(title = title);
     }
 }
 
