@@ -4,7 +4,7 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2024-10-19T13:08:21.199660Z">
+        <DropdownSelection timestamp="2024-10-23T07:50:16.124636Z">
           <Target type="DEFAULT_BOOT">
             <handle>
               <DeviceId pluginId="PhysicalDevice" identifier="serial=530c7ac4" />
@@ -19,16 +19,10 @@
       <SelectionState runConfigName="MenuItemPreview">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="profile">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
       <SelectionState runConfigName="ProfileHeaderPreview">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
       <SelectionState runConfigName="MenuItemSubtitlePreview">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
-      <SelectionState runConfigName="home">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

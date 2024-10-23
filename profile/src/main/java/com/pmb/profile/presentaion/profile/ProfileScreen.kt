@@ -12,19 +12,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.pmb.ballon.component.MenuItem
 import com.pmb.ballon.component.TextImage
 import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.models.IconStyle
 import com.pmb.ballon.models.TextStyle
 import com.pmb.ballon.ui.theme.AppTheme
+import com.pmb.core.presentation.NavigationManager
 import com.pmb.profile.R
 
 @Composable
-fun ProfileScreen(navController: NavController) {
+fun ProfileScreen(navigationManager: NavigationManager) {
     AppContent {
-        Column(modifier = Modifier.padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             TextImage(
                 modifier = Modifier.padding(all = 32.dp),
                 image = R.drawable.profile_placeholder,

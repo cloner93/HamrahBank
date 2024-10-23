@@ -42,6 +42,7 @@ dependencies {
     api(libs.androidx.core.ktx)
     api(libs.androidx.appcompat)
     api(libs.material)
+    api(libs.navigation.compose)
 
     // DI > Hilt
     api(libs.android.hilt)

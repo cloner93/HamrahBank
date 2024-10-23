@@ -7,19 +7,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.pmb.auth.R
 import com.pmb.ballon.component.MenuItem
 import com.pmb.ballon.component.TextImage
 import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.TopBar
+import com.pmb.core.presentation.NavigationManager
 
 @Composable
-fun ForgetPasswordAuthScreen(navController: NavController) {
+fun ForgetPasswordAuthScreen(navigationManager: NavigationManager) {
     AppContent(
         modifier = Modifier.padding(24.dp),
         topBar = TopBar(title = stringResource(R.string.authentication),
-            onBack = { navController.navigateUp() })
+            onBack = { navigationManager.navigateBack() })
     ) {
         TextImage(
             modifier = Modifier.fillMaxWidth(),

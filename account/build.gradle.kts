@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.pmb.auth"
+    namespace = "com.pmb.account"
     compileSdk = 34
 
     defaultConfig {
@@ -45,7 +45,6 @@ android {
 dependencies {
     implementation(project(":core"))
     implementation(project(":ballon"))
-    implementation(project(":home"))
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
