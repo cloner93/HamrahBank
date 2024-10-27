@@ -46,6 +46,10 @@ dependencies {
     // DI > Hilt
     api(libs.android.hilt)
     kapt(libs.android.hilt.compiler)
+    api(libs.hilt.navigation.compose)
+
+    //viewmodel
+    api(libs.lifecycle.viewmodel.ktx)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

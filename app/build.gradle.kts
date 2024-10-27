@@ -4,6 +4,8 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.android.hilt)
+    alias(libs.plugins.kotlin.kapt)
 }
 
 
@@ -93,6 +95,11 @@ dependencies {
     implementation(project(":core"))
     implementation(project(":ballon"))
     implementation(project(":auth"))
+
+    // DI > Hilt
+    implementation(libs.android.hilt)
+    kapt(libs.android.hilt.compiler)
+    implementation(libs.hilt.navigation.compose)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
