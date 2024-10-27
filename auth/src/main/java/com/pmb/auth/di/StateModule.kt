@@ -1,4 +1,4 @@
-package com.pmb.auth.presentaion.di
+package com.pmb.auth.di
 
 import com.pmb.auth.presentaion.login.viewmodel.LoginViewState
 import dagger.Module
@@ -13,5 +13,5 @@ object StateModule {
 
     @Provides
     @Singleton
-    fun provideLoginViewState():LoginViewState = LoginViewState()
+    fun provideLoginViewState(): LoginViewState = LoginViewState()
 }

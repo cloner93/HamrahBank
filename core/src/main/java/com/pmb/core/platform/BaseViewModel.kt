@@ -13,7 +13,7 @@ abstract class BaseViewModel<VA : BaseViewAction, VS : BaseViewState, VE : BaseV
 ) : ViewModel() {
 
     private val _latestEvent: MutableSharedFlow<VE> = MutableSharedFlow()
-    val latestEvent: SharedFlow<VE>
+    val viewEvent: SharedFlow<VE>
         get() = _latestEvent
 
     // Function to post an event
@@ -35,5 +35,6 @@ abstract class BaseViewModel<VA : BaseViewAction, VS : BaseViewState, VE : BaseV
 
     // Abstract function to handle actions
     abstract fun handle(action: VA)
+
 }
 

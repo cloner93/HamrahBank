@@ -7,16 +7,22 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.pmb.auth.presentaion.AuthScreens
+import com.pmb.auth.presentaion.login.viewmodel.LoginViewActions
+import com.pmb.auth.presentaion.login.viewmodel.LoginViewEvents
+import com.pmb.auth.presentaion.login.viewmodel.LoginViewModel
 import com.pmb.ballon.R
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppSingleTextField
@@ -26,12 +32,23 @@ import com.pmb.core.presentation.NavigationManager
 import com.pmb.home.presentation.HomeScreens
 
 @Composable
-fun LoginScreen(navigationManager: NavigationManager) {
+fun LoginScreen(navigationManager: NavigationManager, viewModel: LoginViewModel) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-fun LoginScreen(navController: NavController) {
-    var username by rememberSaveable { mutableStateOf("") }
-    var password by rememberSaveable { mutableStateOf("") }
+
+    val viewState by viewModel.viewState.collectAsState()
+
+    // Handle one-time events such as navigation or showing toasts
+    LaunchedEffect(Unit) {
+        viewModel.viewEvent.collect { event ->
+            when (event) {
+                LoginViewEvents.LoginSuccess -> {
+                    navigationManager.navigate(HomeScreens.Home)
+                }
+            }
+        }
+    }
+
 
     Column(
         modifier = Modifier
@@ -66,7 +83,14 @@ fun LoginScreen(navController: NavController) {
 
         AppButton(modifier = Modifier.fillMaxWidth(),
             title = stringResource(com.pmb.auth.R.string.login),
-            onClick = { navigationManager.navigate(HomeScreens.Home) })
+            enable = !viewState.loading,
+            onClick = {
+                viewModel.handle(
+                    LoginViewActions.Login(
+                        username = username, password = password
+                    )
+                )
+            })
 
         Spacer(modifier = Modifier.size(8.dp))
 

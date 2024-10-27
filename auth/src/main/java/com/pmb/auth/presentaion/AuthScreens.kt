@@ -1,11 +1,13 @@
 package com.pmb.auth.presentaion
 
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.pmb.auth.presentaion.foget_password.ForgetPasswordAuthScreen
 import com.pmb.auth.presentaion.foget_password.ForgetPasswordScreen
 import com.pmb.auth.presentaion.intro.IntroScreen
 import com.pmb.auth.presentaion.login.LoginScreen
+import com.pmb.auth.presentaion.login.viewmodel.LoginViewModel
 import com.pmb.core.presentation.NavigationManager
 import com.pmb.core.presentation.Screen
 
@@ -28,7 +30,7 @@ fun NavGraphBuilder.authScreensHandle(
     }
 
     composable(route = AuthScreens.Login.route) {
-        LoginScreen(navigationManager = navigationManager)
+        LoginScreen(navigationManager = navigationManager, viewModel = hiltViewModel<LoginViewModel>())
     }
 
     composable(route = AuthScreens.Register.route) {
