@@ -6,4 +6,5 @@
     <string name="lowercase">حروف کوچک</string>
     <string name="digit">حروف کوچک</string>
     <string name="special_char"><![CDATA[علامت (مانند ٪>@)]]></string>
+    <string name="real_carrency">ریال</string>
 </resources>

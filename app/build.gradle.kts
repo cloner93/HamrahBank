@@ -95,6 +95,9 @@ dependencies {
     implementation(project(":core"))
     implementation(project(":ballon"))
     implementation(project(":auth"))
+    implementation(project(":home"))
+    implementation(project(":account"))
+    implementation(project(":profile"))
 
     // DI > Hilt
     implementation(libs.android.hilt)

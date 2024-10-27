@@ -17,4 +17,8 @@
     <string name="mellat_signiture_app">اپلیکیشن امضای ملت</string>
     <string name="video_authentication_process">فرآیند احراز هویت تصویری</string>
     <string name="bank_card_information">اطلاعات کارت بانکی</string>
+    <string name="msg_changed_new_password">رمز عبور جدید با موفقیت ثبت شد!</string>
+    <string name="complete">تمام</string>
+    <string name="select_new_password">انتخاب رمز عبور جدید</string>
+    <string name="msg_select_new_password">به دلیل حفظ امنیت حساب شما، باید یک رمز عبور جدید انتخاب کنید.</string>
 </resources>

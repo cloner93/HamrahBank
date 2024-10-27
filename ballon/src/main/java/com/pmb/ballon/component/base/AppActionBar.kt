@@ -5,13 +5,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.pmb.ballon.models.TextStyle
+import com.pmb.ballon.ui.theme.AppTheme
 
 @Composable
 fun AppTopBar(title: String, onBack: (() -> Unit)? = null) {
@@ -29,13 +28,10 @@ fun AppTopBar(title: String, onBack: (() -> Unit)? = null) {
             )
         }
 
-        AppText(
+        Headline5Text(
             modifier = Modifier.align(Alignment.Center),
-            title = title,
-            style = TextStyle(
-                color = MaterialTheme.colorScheme.primary,
-                typography = MaterialTheme.typography.titleLarge
-            )
+            text = title,
+            color = AppTheme.colorScheme.onBackgroundNeutralDefault,
         )
     }
 }

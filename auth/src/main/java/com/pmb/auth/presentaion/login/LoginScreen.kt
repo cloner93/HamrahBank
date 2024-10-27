@@ -13,19 +13,22 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
+import com.pmb.auth.presentaion.AuthScreens
 import com.pmb.ballon.R
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppSingleTextField
 import com.pmb.ballon.component.base.AppTextButton
 import com.pmb.ballon.component.text_field.AppPasswordTextField
-import com.pmb.ballon.models.ButtonStyle
+import com.pmb.core.presentation.NavigationManager
+import com.pmb.home.presentation.HomeScreens
 
 @Composable
+fun LoginScreen(navigationManager: NavigationManager) {
+    var username by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
 fun LoginScreen(navController: NavController) {
     var username by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
@@ -63,13 +66,14 @@ fun LoginScreen(navController: NavController) {
 
         AppButton(modifier = Modifier.fillMaxWidth(),
             title = stringResource(com.pmb.auth.R.string.login),
-            style = ButtonStyle(containerColor = Color.Black),
-            onClick = { navController.navigate("login") })
+            onClick = { navigationManager.navigate(HomeScreens.Home) })
 
         Spacer(modifier = Modifier.size(8.dp))
 
         AppTextButton(modifier = Modifier.fillMaxWidth(),
             title = stringResource(com.pmb.auth.R.string.forget_password),
-            onClick = { navController.navigate("forget_password") })
+            onClick = {
+                navigationManager.navigate(AuthScreens.ForgetPassword)
+            })
     }
 }

@@ -51,6 +51,7 @@ dependencies {
     implementation(libs.android.hilt)
     kapt(libs.android.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
+    implementation(project(":home"))
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

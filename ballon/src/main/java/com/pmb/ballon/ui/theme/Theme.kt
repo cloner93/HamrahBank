@@ -1,105 +1,63 @@
 package com.pmb.ballon.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.lightColorScheme
+import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 
-private val DarkColorScheme = darkColorScheme(
-    primary = Color.Dark.OnBackgroundNeutralDefault,
-    secondary = Color.Dark.ForegroundNeutralDefault,
-    onSecondary = Color.Dark.LOnForegroundNeutralDefault,
-    tertiary = Pink80,
-    background = Color.Dark.Background2Neutral,
-    onBackground = Color.Dark.OnBackgroundPrimarySubdued,
-    error = Color.Dark.StrokeNeutral2Error,
-    onError = Color.Dark.OnBackgroundErrorDefault,
+object AppTheme {
+
+    val colorScheme: CustomColors
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalColors.current
+
+    val typography: CustomTypography
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalTypography.current
+
+    val spaces: CustomSpaces
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalSpaces.current
+}
+
+data class CustomSpaces(
+    val small: Dp = 4.dp,
+    val medium: Dp = 8.dp,
+    val large: Dp = 16.dp,
+    val extraLarge: Dp = 40.dp,
 )
 
-//
-//internal val ColorScheme.defaultButtonColors: ButtonColors
-//    get() {
-//        return defaultButtonColorsCached
-//            ?: ButtonColors(
-//                containerColor = fromToken(FilledButtonTokens.ContainerColor),
-//                contentColor = fromToken(FilledButtonTokens.LabelTextColor),
-//                disabledContainerColor =
-//                fromToken(FilledButtonTokens.DisabledContainerColor)
-//                    .copy(alpha = FilledButtonTokens.DisabledContainerOpacity),
-//                disabledContentColor =
-//                fromToken(FilledButtonTokens.DisabledLabelTextColor)
-//                    .copy(alpha = FilledButtonTokens.DisabledLabelTextOpacity)
-//            )
-//                .also { defaultButtonColorsCached = it }
-//    }
+/* Global variables (application level) */
+val LocalSpaces = staticCompositionLocalOf { CustomSpaces() }
 
-private val LightColorScheme = lightColorScheme(
-    primary = Color.Light.OnBackgroundNeutralDefault,
-    secondary = Color.Light.ForegroundNeutralDefault,
-    onSecondary = Color.Light.LOnForegroundNeutralDefault,
-    tertiary = Pink40,
-    background = Color.Light.Background2Neutral,
-    onBackground = Color.Light.OnBackgroundPrimarySubdued,
-    error = Color.Light.StrokeNeutral2Error,
-    onError = Color.Light.OnBackgroundErrorDefault,
+val LocalColors = staticCompositionLocalOf { lightColors() }
 
-
-    /* Other default colors to override
-    onPrimary =,
-    primaryContainer =,
-    onPrimaryContainer =,
-    inversePrimary =,
-    secondaryContainer =,
-    onSecondaryContainer =,
-    onTertiary =,
-    tertiaryContainer =,
-    onTertiaryContainer =,
-    onBackground =,
-    surface =,
-    onSurface =,
-    surfaceVariant =,
-    onSurfaceVariant =,
-    surfaceTint =,
-    inverseSurface =,
-    inverseOnSurface =,
-
-    errorContainer =,
-    onErrorContainer =,
-    outline =,
-    outlineVariant =,
-    scrim =,
-    surfaceBright =,
-    surfaceContainer =,
-    surfaceContainerHigh =,
-    surfaceContainerHighest =,
-    surfaceContainerLow =,
-    surfaceContainerLowest =,
-    surfaceDim =,
-     */
-)
+val LocalTypography = staticCompositionLocalOf { CustomTypography() }
 
 @Composable
 fun HamrahBankTheme(
+    spaces: CustomSpaces = AppTheme.spaces,
+    typography: CustomTypography = AppTheme.typography,
+    colors: CustomColors = AppTheme.colorScheme,
+    darkColors: CustomColors? = null,
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
-    val colorScheme = when {
-//        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-//            val context = LocalContext.current
-//            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-//            dynamicLightColorScheme(context)
-//        }
-
-//        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
+    val currentColor = remember { if (darkColors != null && darkTheme) darkColors else colors }
+    val rememberedColors = remember { currentColor.copy() }.apply { updateColorsFrom(currentColor) }
+    CompositionLocalProvider(
+        LocalColors provides rememberedColors,
+        LocalSpaces provides spaces,
+        LocalTypography provides typography,
+    ) {
+        ProvideTextStyle(typography.bodyMedium, content = content)
     }
-
-    MaterialTheme(
-        colorScheme = colorScheme,
-        typography = AppTypography,
-        content = content
-    )
 }

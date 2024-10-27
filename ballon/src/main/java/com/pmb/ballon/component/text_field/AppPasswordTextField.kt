@@ -21,10 +21,11 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.pmb.ballon.R
-import com.pmb.ballon.component.TextRow
+import com.pmb.ballon.component.TextIcon
 import com.pmb.ballon.component.base.AppBaseTextField
 import com.pmb.ballon.component.base.AppButtonIcon
-import com.pmb.ballon.component.base.AppText
+import com.pmb.ballon.component.base.BodySmallText
+import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.core.utils.PasswordValidationResult
 import com.pmb.core.utils.isPassword
 
@@ -77,25 +78,28 @@ private fun PasswordConditions(result: PasswordValidationResult) {
     val unchecked = R.drawable.ic_dash_circle_2
     val checked = R.drawable.ic_check_circle
     Column {
-        AppText(title = stringResource(R.string.title_pasword_condition))
+        BodySmallText(
+            text = stringResource(R.string.title_pasword_condition),
+            color = AppTheme.colorScheme.onBackgroundNeutralSubdued
+        )
         Spacer(modifier = Modifier.size(12.dp))
-        TextRow(
+        TextIcon(
             title = stringResource(R.string.min_char_in_password),
             icon = if (result.minLen) checked else unchecked
         )
-        TextRow(
+        TextIcon(
             title = stringResource(R.string.upper_case),
             icon = if (result.uppercase) checked else unchecked
         )
-        TextRow(
+        TextIcon(
             title = stringResource(R.string.lowercase),
             icon = if (result.lowercase) checked else unchecked
         )
-        TextRow(
+        TextIcon(
             title = stringResource(R.string.digit),
             icon = if (result.digit) checked else unchecked
         )
-        TextRow(
+        TextIcon(
             title = stringResource(R.string.special_char),
             icon = if (result.specialChar) checked else unchecked
         )
