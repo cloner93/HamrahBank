@@ -15,15 +15,29 @@ import androidx.compose.ui.unit.dp
 import com.pmb.ballon.component.MenuItem
 import com.pmb.ballon.component.TextImage
 import com.pmb.ballon.component.base.AppContent
+import com.pmb.ballon.component.base.AppLoading
+import com.pmb.ballon.component.base.BottomBar
+import com.pmb.ballon.component.base.BottomNavItem
 import com.pmb.ballon.models.IconStyle
 import com.pmb.ballon.models.TextStyle
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.core.presentation.NavigationManager
 import com.pmb.profile.R
+import com.pmb.profile.presentaion.ProfileScreens
+
 
 @Composable
 fun ProfileScreen(navigationManager: NavigationManager) {
-    AppContent {
+    AppContent(
+        bottomBar = BottomBar(
+            items = mutableListOf(
+                BottomNavItem.Home(screen = ProfileScreens.Profile),
+                BottomNavItem.Transfer(screen = ProfileScreens.Profile),
+                BottomNavItem.AccountCard(screen = ProfileScreens.Profile),
+                BottomNavItem.Profile(screen = ProfileScreens.Profile)
+            ),
+            selectedItem = { navigationManager.navigate(it) })
+    ) {
         Column(
             modifier = Modifier.padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -191,4 +205,7 @@ fun ProfileScreen(navigationManager: NavigationManager) {
             Spacer(modifier = Modifier.height(16.dp))
         }
     }
+
+
+    AppLoading()
 }
