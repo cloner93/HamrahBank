@@ -50,7 +50,7 @@ fun AppNavHost(innerPadding: PaddingValues) {
     val navController = rememberNavController()
     val navigationManager by remember {
         mutableStateOf(
-            NavigationManager(navController = navController, startDestination = ProfileScreens.Profile)
+            NavigationManager(navController = navController, startDestination = AuthScreens.Auth)
         )
     }
 

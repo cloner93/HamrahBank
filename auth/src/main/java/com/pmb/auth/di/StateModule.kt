@@ -1,5 +1,6 @@
 package com.pmb.auth.di
 
+import com.pmb.auth.presentaion.foget_password.viewmodel.ForgetPasswordViewState
 import com.pmb.auth.presentaion.login.viewmodel.LoginViewState
 import dagger.Module
 import dagger.Provides
@@ -14,4 +15,8 @@ object StateModule {
     @Provides
     @Singleton
     fun provideLoginViewState(): LoginViewState = LoginViewState()
+
+    @Provides
+    @Singleton
+    fun provideForgetPasswordViewState(): ForgetPasswordViewState = ForgetPasswordViewState()
 }

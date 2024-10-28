@@ -5,6 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.pmb.auth.presentaion.foget_password.ForgetPasswordAuthScreen
 import com.pmb.auth.presentaion.foget_password.ForgetPasswordScreen
+import com.pmb.auth.presentaion.foget_password.viewmodel.ForgetPasswordViewModel
 import com.pmb.auth.presentaion.intro.IntroScreen
 import com.pmb.auth.presentaion.login.LoginScreen
 import com.pmb.auth.presentaion.login.viewmodel.LoginViewModel
@@ -38,7 +39,7 @@ fun NavGraphBuilder.authScreensHandle(
     }
 
     composable(route = AuthScreens.ForgetPassword.route) {
-        ForgetPasswordScreen(navigationManager = navigationManager)
+        ForgetPasswordScreen(navigationManager = navigationManager, viewModel = hiltViewModel<ForgetPasswordViewModel>())
     }
 
     composable(route = AuthScreens.ForgetPasswordAuth.route) {
