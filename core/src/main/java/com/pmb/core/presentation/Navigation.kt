@@ -7,6 +7,7 @@ import androidx.navigation.NavHostController
 abstract class Screen(val route: String, val arguments: Map<String, String> = emptyMap())
 
 class NavigationManager(val navController: NavHostController, val startDestination: Screen) {
+
     fun navigate(screen: Screen) {
         navController.navigate(screen.route)
     }

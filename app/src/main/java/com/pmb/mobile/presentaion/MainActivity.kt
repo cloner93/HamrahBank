@@ -24,6 +24,7 @@ import com.pmb.auth.presentaion.authScreensHandle
 import com.pmb.ballon.ui.theme.HamrahBankTheme
 import com.pmb.core.presentation.NavigationManager
 import com.pmb.home.presentation.homeScreensHandle
+import com.pmb.profile.presentaion.ProfileScreens
 import com.pmb.profile.presentaion.profileScreensHandle
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -49,7 +50,7 @@ fun AppNavHost(innerPadding: PaddingValues) {
     val navController = rememberNavController()
     val navigationManager by remember {
         mutableStateOf(
-            NavigationManager(navController = navController, startDestination = AuthScreens.Auth)
+            NavigationManager(navController = navController, startDestination = ProfileScreens.Profile)
         )
     }
 
@@ -64,3 +65,5 @@ fun AppNavHost(innerPadding: PaddingValues) {
         profileScreensHandle(navigationManager = navigationManager)
     }
 }
+
+

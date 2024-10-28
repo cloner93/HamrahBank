@@ -11,14 +11,17 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.pmb.core.presentation.Screen
 
 
 data class TopBar(val title: String, val onBack: (() -> Unit)? = null)
+data class BottomBar(val items: MutableList<BottomNavItem>, val selectedItem: (Screen) -> Unit)
 
 @Composable
 fun AppContent(
     modifier: Modifier = Modifier,
     topBar: TopBar? = null,
+    bottomBar: BottomBar? = null,
     verticalArrangement: Arrangement.Vertical = Arrangement.Top,
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
     footer: (@Composable (ColumnScope.() -> Unit))? = null,
@@ -48,5 +51,9 @@ fun AppContent(
         }
 
         footer?.invoke(this)
+
+        bottomBar?.let {
+            AppBottomBar(tabBarItems = it.items, selectedItem = it.selectedItem)
+        }
     }
 }
