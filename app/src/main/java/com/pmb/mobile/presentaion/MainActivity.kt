@@ -39,9 +39,7 @@ class MainActivity : ComponentActivity() {
                 HamrahBankTheme {
                     Scaffold(modifier = Modifier.fillMaxSize(),
                         bottomBar = {
-//                            AppBottomBar(tabBarItems = bottomNavItems) {
-//
-//                            }
+
                         }) { innerPadding ->
                         AppNavHost(innerPadding)
                     }
