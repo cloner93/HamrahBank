@@ -15,7 +15,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -24,7 +23,9 @@ import com.pmb.auth.presentaion.login.viewmodel.LoginViewActions
 import com.pmb.auth.presentaion.login.viewmodel.LoginViewEvents
 import com.pmb.auth.presentaion.login.viewmodel.LoginViewModel
 import com.pmb.ballon.R
+import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.base.AppButton
+import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.component.base.AppSingleTextField
 import com.pmb.ballon.component.base.AppTextButton
 import com.pmb.ballon.component.text_field.AppPasswordTextField
@@ -99,5 +100,12 @@ fun LoginScreen(navigationManager: NavigationManager, viewModel: LoginViewModel)
             onClick = {
                 navigationManager.navigate(AuthScreens.ForgetPassword)
             })
+
+    }
+    if (viewState.loading){
+        AppLoading()
+    }
+    if (viewState.alert!=null){
+        AlertComponent(viewState.alert!!)
     }
 }

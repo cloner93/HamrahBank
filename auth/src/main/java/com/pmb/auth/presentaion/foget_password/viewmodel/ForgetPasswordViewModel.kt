@@ -37,10 +37,17 @@ class ForgetPasswordViewModel @Inject constructor(
                         setState {
                             it.copy(
                                 loading = false,
-                                alert = AlertModelState.SnackBar(message = result.message)
+                                alert = AlertModelState.SnackBar(message = result.message,
+                                    onActionPerformed = {
+                                        setState { state -> state.copy(alert = null) }
+                                    },
+                                    onDismissed = {
+                                        setState { state -> state.copy(alert = null) }
+                                    })
                             )
                         }
                     }
+
                     Result.Loading -> setState { it.copy(loading = true) }
                     is Result.Success -> {
                         setState {

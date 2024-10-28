@@ -1,5 +1,6 @@
 package com.pmb.auth.presentaion.login.viewmodel
 
+import android.app.Application
 import androidx.lifecycle.viewModelScope
 import com.pmb.auth.domain.login.usecase.RequestLoginParams
 import com.pmb.auth.domain.login.usecase.RequestLoginUseCase
@@ -7,12 +8,13 @@ import com.pmb.core.platform.AlertModelState
 import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.platform.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    initialState: LoginViewState, private val loginRequestLoginUseCase: RequestLoginUseCase
+    initialState: LoginViewState, private val loginRequestLoginUseCase: RequestLoginUseCase,
 ) : BaseViewModel<LoginViewActions, LoginViewState, LoginViewEvents>(initialState) {
 
 
@@ -34,8 +36,14 @@ class LoginViewModel @Inject constructor(
                     is Result.Error -> {
                         setState {
                             it.copy(
-                                loading = false,
-                                alert = AlertModelState.SnackBar(message = result.message)
+                                loading = false, alert = AlertModelState.Dialog(
+                                    title = "Login Failed",
+                                    description = "failed to login because ${result.message}",
+                                    positiveButtonTitle = "okay",
+                                    onPositiveClick = {
+                                        setState { state -> state.copy(alert = null) }
+                                    }
+                                )
                             )
                         }
                     }

@@ -19,8 +19,10 @@ import com.pmb.auth.presentaion.component.ShowChangedNewPasswordBottomSheet
 import com.pmb.auth.presentaion.foget_password.viewmodel.ForgetPasswordViewActions
 import com.pmb.auth.presentaion.foget_password.viewmodel.ForgetPasswordViewEvents
 import com.pmb.auth.presentaion.foget_password.viewmodel.ForgetPasswordViewModel
+import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppContent
+import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.component.base.AppMobileTextField
 import com.pmb.ballon.component.base.AppNationalIdTextField
 import com.pmb.ballon.component.base.TopBar
@@ -40,11 +42,12 @@ fun ForgetPasswordScreen(navigationManager: NavigationManager, viewModel: Forget
     var isPassword by remember { mutableStateOf(false) }
     var isRePassword by remember { mutableStateOf(false) }
 
-    val viewState = viewModel.viewState.collectAsState()
+    val viewState by viewModel.viewState.collectAsState()
+
     LaunchedEffect(Unit) {
         viewModel.viewEvent.collect { event ->
             when (event) {
-                ForgetPasswordViewEvents.ResetPasswordSuccess -> showBottomSheet = false
+                ForgetPasswordViewEvents.ResetPasswordSuccess -> showBottomSheet = true
             }
         }
     }
@@ -57,7 +60,7 @@ fun ForgetPasswordScreen(navigationManager: NavigationManager, viewModel: Forget
                 .fillMaxWidth()
                 .padding(horizontal = 24.dp),
                 title = stringResource(R.string._continue),
-                enable = isMobile && isNationalId && isPassword && isRePassword && password == rePassword || true,
+                enable = !viewState.loading && isMobile && isNationalId && isPassword && isRePassword && password == rePassword || true,
                 onClick = {
                     viewModel.handle(
                         ForgetPasswordViewActions.ResetPassword(
@@ -67,9 +70,7 @@ fun ForgetPasswordScreen(navigationManager: NavigationManager, viewModel: Forget
                 })
         },
         content = {
-            if (viewState.value.alert!=null){
 
-            }
             AppMobileTextField(value = mobile,
                 label = stringResource(R.string.phone_number),
                 onValidate = { isMobile = it },
@@ -107,4 +108,10 @@ fun ForgetPasswordScreen(navigationManager: NavigationManager, viewModel: Forget
         })
 
     if (showBottomSheet) ShowChangedNewPasswordBottomSheet(onDismiss = { showBottomSheet = false })
+    if (viewState.loading) {
+        AppLoading()
+    }
+    if (viewState.alert != null) {
+        AlertComponent(viewState.alert!!)
+    }
 }

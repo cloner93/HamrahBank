@@ -20,8 +20,8 @@ import androidx.compose.ui.unit.dp
 fun SnackBar(
     message: String,
     actionLabel: String? = null,
-    onDismissed: () -> Unit,
-    onActionPerformed: () -> Unit
+    onDismissed: (() -> Unit)?,
+    onActionPerformed: (() -> Unit)?
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -39,8 +39,8 @@ fun SnackBar(
                     message = message, actionLabel = actionLabel
                 )
                 when (result) {
-                    SnackbarResult.Dismissed -> onDismissed.invoke()
-                    SnackbarResult.ActionPerformed -> onActionPerformed.invoke()
+                    SnackbarResult.Dismissed -> onDismissed?.invoke()
+                    SnackbarResult.ActionPerformed -> onActionPerformed?.invoke()
                 }
             }
         }

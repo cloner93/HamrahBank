@@ -8,15 +8,27 @@ import com.pmb.ballon.component.base.BodyMediumText
 
 @Composable
 fun MessageDialog(
-    title: String, message: String? = null, onConfirm: () -> Unit, onDismiss: () -> Unit
+    title: String, message: String? = null, onConfirm: (() -> Unit)?, onDismiss: (() -> Unit)?
 ) {
-    AlertDialog(onDismissRequest = { onDismiss() },
+    AlertDialog(onDismissRequest = {
+        if (onDismiss != null) {
+            onDismiss()
+        }
+    },
         title = { BodyLargeText(text = title) },
         text = { message?.let { BodyMediumText(text = it) } },
         confirmButton = {
-            AppButton(title = "OK", onClick = { onConfirm() })
+            onConfirm?.let {
+                AppButton(title = "OK", onClick = {
+                        onConfirm()
+                })
+            }
         },
         dismissButton = {
-            AppButton(title = "Cancel", onClick = { onDismiss() })
+            onDismiss?.let {
+                AppButton(title = "Cancel", onClick = {
+                        onDismiss()
+                })
+            }
         })
 }
