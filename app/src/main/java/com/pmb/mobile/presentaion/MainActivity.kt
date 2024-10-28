@@ -21,10 +21,11 @@ import androidx.navigation.compose.rememberNavController
 import com.pmb.account.presentation.accountScreensHandle
 import com.pmb.auth.presentaion.AuthScreens
 import com.pmb.auth.presentaion.authScreensHandle
+import com.pmb.ballon.component.base.AppBottomBar
+import com.pmb.ballon.component.base.bottomNavItems
 import com.pmb.ballon.ui.theme.HamrahBankTheme
 import com.pmb.core.presentation.NavigationManager
 import com.pmb.home.presentation.homeScreensHandle
-import com.pmb.profile.presentaion.ProfileScreens
 import com.pmb.profile.presentaion.profileScreensHandle
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -36,7 +37,12 @@ class MainActivity : ComponentActivity() {
         setContent {
             CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
                 HamrahBankTheme {
-                    Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                    Scaffold(modifier = Modifier.fillMaxSize(),
+                        bottomBar = {
+//                            AppBottomBar(tabBarItems = bottomNavItems) {
+//
+//                            }
+                        }) { innerPadding ->
                         AppNavHost(innerPadding)
                     }
                 }
@@ -50,7 +56,10 @@ fun AppNavHost(innerPadding: PaddingValues) {
     val navController = rememberNavController()
     val navigationManager by remember {
         mutableStateOf(
-            NavigationManager(navController = navController, startDestination = ProfileScreens.Profile)
+            NavigationManager(
+                navController = navController,
+                startDestination = AuthScreens.Auth
+            )
         )
     }
 
