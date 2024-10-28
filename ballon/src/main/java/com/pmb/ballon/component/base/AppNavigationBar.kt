@@ -18,7 +18,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.pmb.ballon.R
-import com.pmb.core.presentation.Screen
 
 sealed class BottomNavItem(
     @StringRes
@@ -28,40 +27,41 @@ sealed class BottomNavItem(
     @DrawableRes
     val unselectedIcon: Int,
     val badgeAmount: Int? = null,
-    open val screen: Screen,
 ) {
-    data class Home(override val screen: Screen) : BottomNavItem(
+    data object Home : BottomNavItem(
         title = R.string.home,
         selectedIcon = R.drawable.ic_home_filled,
         unselectedIcon = R.drawable.ic_home_gray,
-        screen = screen
     )
 
-    data class Transfer(override val screen: Screen) : BottomNavItem(
+    data object Transfer : BottomNavItem(
         title = R.string.transfer_and_receive,
         selectedIcon = R.drawable.ic_double_left_circle,
         unselectedIcon = R.drawable.ic_double_left_circle,
-        screen = screen
     )
 
-    data class AccountCard(override val screen: Screen) : BottomNavItem(
+    data object AccountCard : BottomNavItem(
         title = R.string.account_card,
         selectedIcon = R.drawable.ic_bank_card_filled,
         unselectedIcon = R.drawable.ic_bank_card,
-        screen = screen
     )
 
-    data class Profile(override val screen: Screen) : BottomNavItem(
+    data object Profile : BottomNavItem(
         title = R.string.profile,
         selectedIcon = R.drawable.ic_user_circle_filled,
         unselectedIcon = R.drawable.ic_user_circle_black,
-        screen = screen
     )
 }
 
+val bottomNavItems = mutableListOf(
+    BottomNavItem.Home,
+    BottomNavItem.Transfer,
+    BottomNavItem.AccountCard,
+    BottomNavItem.Profile
+)
 
 @Composable
-fun AppBottomBar(tabBarItems: List<BottomNavItem>, selectedItem: (Screen) -> Unit) {
+fun AppBottomBar(tabBarItems: List<BottomNavItem>, selectedItem: (BottomNavItem) -> Unit) {
     var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
 
     NavigationBar {
@@ -71,7 +71,7 @@ fun AppBottomBar(tabBarItems: List<BottomNavItem>, selectedItem: (Screen) -> Uni
                 selected = selectedTabIndex == index,
                 onClick = {
                     selectedTabIndex = index
-                    selectedItem.invoke(tabBarItem.screen)
+                    selectedItem.invoke(tabBarItem)
                 },
                 icon = {
                     TabBarIconView(
