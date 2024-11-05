@@ -31,17 +31,20 @@ fun ForgetPasswordAuthScreen(navigationManager: NavigationManager) {
         MenuItem(title = stringResource(R.string.mellat_signiture_app),
             endIcon = com.pmb.ballon.R.drawable.ic_arrow_left,
             bottomDivider = true,
+            clickable = false,
             onItemClick = {
 
             })
         MenuItem(title = stringResource(R.string.video_authentication_process),
             endIcon = com.pmb.ballon.R.drawable.ic_arrow_left,
             bottomDivider = true,
+            clickable = false,
             onItemClick = {
 
             })
         MenuItem(title = stringResource(R.string.bank_card_information),
             endIcon = com.pmb.ballon.R.drawable.ic_arrow_left,
+            clickable = false,
             onItemClick = {})
 
         Spacer(modifier = Modifier.weight(1f))

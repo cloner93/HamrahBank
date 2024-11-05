@@ -15,7 +15,6 @@ import androidx.compose.ui.unit.dp
 import com.pmb.ballon.component.MenuItem
 import com.pmb.ballon.component.TextImage
 import com.pmb.ballon.component.base.AppContent
-import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.models.IconStyle
 import com.pmb.ballon.models.TextStyle
 import com.pmb.ballon.ui.theme.AppTheme
@@ -45,10 +44,11 @@ fun ProfileScreen(navigationManager: NavigationManager) {
                     title = stringResource(R.string.buy_subscription),
                     subtitle = stringResource(R.string.buy_subscription_subtitle),
                     startIcon = com.pmb.ballon.R.drawable.ic_star_magic,
-                    startIconStyle = IconStyle(tint = AppTheme.colorScheme.onBackgroundPrimaryCTA),
-                    titleStyle = TextStyle(color = AppTheme.colorScheme.onBackgroundPrimaryCTA),
                     endIcon = com.pmb.ballon.R.drawable.ic_arrow_left,
                     bottomDivider = true,
+                    titleStyle = TextStyle(color = AppTheme.colorScheme.onBackgroundPrimaryCTA),
+                    startIconStyle = IconStyle(tint = AppTheme.colorScheme.onBackgroundPrimaryCTA),
+                    clickable = false,
                     onItemClick = {
 
                     })
@@ -58,6 +58,7 @@ fun ProfileScreen(navigationManager: NavigationManager) {
                     startIcon = com.pmb.ballon.R.drawable.ic_my_services,
                     endIcon = com.pmb.ballon.R.drawable.ic_arrow_left,
                     startIconStyle = IconStyle(tint = AppTheme.colorScheme.iconColor),
+                    clickable = false,
                     onItemClick = {
 
                     })
@@ -74,8 +75,9 @@ fun ProfileScreen(navigationManager: NavigationManager) {
                     title = stringResource(R.string.user_info),
                     startIcon = com.pmb.ballon.R.drawable.ic_user_circle_black,
                     endIcon = com.pmb.ballon.R.drawable.ic_arrow_left,
-                    startIconStyle = IconStyle(tint = AppTheme.colorScheme.iconColor),
                     bottomDivider = true,
+                    startIconStyle = IconStyle(tint = AppTheme.colorScheme.iconColor),
+                    clickable = false,
                     onItemClick = {
 
                     })
@@ -84,8 +86,9 @@ fun ProfileScreen(navigationManager: NavigationManager) {
                     title = stringResource(R.string.security_privacy),
                     startIcon = com.pmb.ballon.R.drawable.ic_lock,
                     endIcon = com.pmb.ballon.R.drawable.ic_arrow_left,
-                    startIconStyle = IconStyle(tint = AppTheme.colorScheme.iconColor),
                     bottomDivider = true,
+                    startIconStyle = IconStyle(tint = AppTheme.colorScheme.iconColor),
+                    clickable = false,
                     onItemClick = {
 
                     })
@@ -94,8 +97,9 @@ fun ProfileScreen(navigationManager: NavigationManager) {
                     title = stringResource(R.string.appearance_of_program),
                     startIcon = com.pmb.ballon.R.drawable.ic_painting_palette,
                     endIcon = com.pmb.ballon.R.drawable.ic_arrow_left,
-                    startIconStyle = IconStyle(tint = AppTheme.colorScheme.iconColor),
                     bottomDivider = true,
+                    startIconStyle = IconStyle(tint = AppTheme.colorScheme.iconColor),
+                    clickable = false,
                     onItemClick = {
 
                     })
@@ -105,6 +109,7 @@ fun ProfileScreen(navigationManager: NavigationManager) {
                     startIcon = com.pmb.ballon.R.drawable.ic_refresh,
                     endIcon = com.pmb.ballon.R.drawable.ic_arrow_left,
                     startIconStyle = IconStyle(tint = AppTheme.colorScheme.iconColor),
+                    clickable = false,
                     onItemClick = {
 
                     })
@@ -122,6 +127,7 @@ fun ProfileScreen(navigationManager: NavigationManager) {
                     startIcon = com.pmb.ballon.R.drawable.ic_qr_scan,
                     endIcon = com.pmb.ballon.R.drawable.ic_arrow_left,
                     startIconStyle = IconStyle(tint = AppTheme.colorScheme.iconColor),
+                    clickable = false,
                     onItemClick = {
 
                     })
@@ -138,8 +144,9 @@ fun ProfileScreen(navigationManager: NavigationManager) {
                     title = stringResource(R.string.support),
                     startIcon = com.pmb.ballon.R.drawable.ic_support,
                     endIcon = com.pmb.ballon.R.drawable.ic_arrow_left,
-                    startIconStyle = IconStyle(tint = AppTheme.colorScheme.iconColor),
                     bottomDivider = true,
+                    startIconStyle = IconStyle(tint = AppTheme.colorScheme.iconColor),
+                    clickable = false,
                     onItemClick = {
 
                     })
@@ -148,8 +155,9 @@ fun ProfileScreen(navigationManager: NavigationManager) {
                     title = stringResource(R.string.invite_friend),
                     startIcon = com.pmb.ballon.R.drawable.ic_happy_heart,
                     endIcon = com.pmb.ballon.R.drawable.ic_arrow_left,
-                    startIconStyle = IconStyle(tint = AppTheme.colorScheme.iconColor),
                     bottomDivider = true,
+                    startIconStyle = IconStyle(tint = AppTheme.colorScheme.iconColor),
+                    clickable = false,
                     onItemClick = {
 
                     })
@@ -158,8 +166,9 @@ fun ProfileScreen(navigationManager: NavigationManager) {
                     title = stringResource(R.string.about_app),
                     startIcon = com.pmb.ballon.R.drawable.ic_info_circle,
                     endIcon = com.pmb.ballon.R.drawable.ic_arrow_left,
-                    startIconStyle = IconStyle(tint = AppTheme.colorScheme.iconColor),
                     bottomDivider = true,
+                    startIconStyle = IconStyle(tint = AppTheme.colorScheme.iconColor),
+                    clickable = false,
                     onItemClick = {
 
                     })
@@ -169,6 +178,7 @@ fun ProfileScreen(navigationManager: NavigationManager) {
                     startIcon = com.pmb.ballon.R.drawable.ic_comment,
                     endIcon = com.pmb.ballon.R.drawable.ic_arrow_left,
                     startIconStyle = IconStyle(tint = AppTheme.colorScheme.iconColor),
+                    clickable = false,
                     onItemClick = {
 
                     })
@@ -185,6 +195,7 @@ fun ProfileScreen(navigationManager: NavigationManager) {
                     title = stringResource(R.string.logout_account),
                     startIcon = com.pmb.ballon.R.drawable.ic_logout,
                     endIcon = com.pmb.ballon.R.drawable.ic_arrow_left,
+                    clickable = false,
                     onItemClick = {
 
                     })
@@ -193,7 +204,4 @@ fun ProfileScreen(navigationManager: NavigationManager) {
             Spacer(modifier = Modifier.height(16.dp))
         }
     }
-
-
-    AppLoading()
 }

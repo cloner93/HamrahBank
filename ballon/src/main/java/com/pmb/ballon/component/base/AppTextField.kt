@@ -44,7 +44,7 @@ import com.pmb.core.utils.isMobile
 
 
 @Composable
-internal fun AppBaseTextField(
+fun AppBaseTextField(
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,

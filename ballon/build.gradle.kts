@@ -44,6 +44,8 @@ android {
 }
 
 dependencies {
+    implementation(project(":core"))
+
     api(libs.androidx.core.ktx)
     api(libs.androidx.lifecycle.runtime.ktx)
     api(libs.androidx.activity.compose)
@@ -56,8 +58,6 @@ dependencies {
     api(libs.coil.compose)
     api(libs.navigation.compose)
     api(libs.androidx.material.icons.extended)
-    implementation(project(":core"))
-//    api(libs.navigation.ui)
 
     testApi(libs.junit)
     androidTestApi(libs.androidx.junit)

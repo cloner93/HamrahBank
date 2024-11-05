@@ -64,6 +64,7 @@ class CustomColors(
     foregroundErrorDefault: Color,
     foregroundWarningDefault: Color,
     iconColor: Color,
+    iconBackgroundColor: Color,
     isLight: Boolean,
 ) {
 
@@ -183,6 +184,8 @@ class CustomColors(
         private set
     var iconColor by mutableStateOf(iconColor)
         private set
+    var iconBackgroundColor by mutableStateOf(iconBackgroundColor)
+        private set
 
     var isLight by mutableStateOf(isLight)
         private set
@@ -246,6 +249,7 @@ class CustomColors(
         foregroundErrorDefault: Color = this.foregroundErrorDefault,
         foregroundWarningDefault: Color = this.foregroundWarningDefault,
         iconColor: Color = this.iconColor,
+        iconBackgroundColor: Color = this.iconBackgroundColor,
         isLight: Boolean = this.isLight,
     ) = CustomColors(
         onForegroundNeutralDefault = onForegroundNeutralDefault,
@@ -306,6 +310,7 @@ class CustomColors(
         foregroundErrorDefault = foregroundErrorDefault,
         foregroundWarningDefault = foregroundWarningDefault,
         iconColor = iconColor,
+        iconBackgroundColor = iconBackgroundColor,
         isLight = isLight,
     )
 
@@ -434,6 +439,7 @@ fun lightColors() = CustomColors(
     foregroundWarningDefault = Color(0xFFAA8004),
 
     iconColor = Color(0xFF00629D),
+    iconBackgroundColor = Color(0x4D00629D),
     isLight = true,
 )
 
@@ -497,5 +503,6 @@ fun darkColors() = CustomColors(
     foregroundWarningDefault = Color(0xFF550816),
 
     iconColor = Color(0xFF00629D),
+    iconBackgroundColor = Color(0x4D00629D),
     isLight = false,
 )

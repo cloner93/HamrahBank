@@ -96,6 +96,7 @@ dependencies {
     implementation(project(":ballon"))
     implementation(project(":auth"))
     implementation(project(":home"))
+    implementation(project(":transfer"))
     implementation(project(":account"))
     implementation(project(":profile"))
 

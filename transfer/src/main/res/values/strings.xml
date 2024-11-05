@@ -1,0 +1,8 @@
+<resources>
+    <string name="contacts">مخاطبین</string>
+    <string name="see_all">مشاهده همه</string>
+    <string name="favorites">برگزیده‌ها</string>
+    <string name="destination">مقصد</string>
+    <string name="next">بعدی</string>
+    <string name="card_account_iban_number">شماره کارت، حساب یا شبا</string>
+</resources>

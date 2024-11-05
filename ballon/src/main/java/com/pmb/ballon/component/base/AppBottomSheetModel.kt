@@ -38,12 +38,16 @@ fun AppBottomSheet(
 @Composable
 fun AppBottomSheet(
     isVisible: Boolean,
+    cancelable: Boolean = false,
     onDismiss: () -> Unit,
     dragHandle: @Composable () -> Unit = {},
     content: @Composable ColumnScope.() -> Unit
 ) {
     val sheetState =
-        rememberModalBottomSheetState(skipPartiallyExpanded = true, confirmValueChange = { false })
+        if (cancelable) rememberModalBottomSheetState(skipPartiallyExpanded = true)
+        else rememberModalBottomSheetState(
+            skipPartiallyExpanded = true,
+            confirmValueChange = { false })
     val scope = rememberCoroutineScope()
 
     LaunchedEffect(isVisible) {
