@@ -26,6 +26,7 @@ import com.pmb.transfer.R
 import com.pmb.transfer.domain.BankIdentifierNumberType
 import com.pmb.transfer.domain.ClientBank
 import com.pmb.transfer.domain.TransactionClientBank
+import com.pmb.transfer.presentation.TransferScreens
 import com.pmb.transfer.presentation.components.ClientBankInfoTypeRow
 import com.pmb.transfer.utils.BankUtil
 
@@ -48,7 +49,7 @@ fun DestinationInputScreen(navigationManager: NavigationManager) {
                     title = stringResource(R.string.next),
                     enable = isValid,
                     onClick = {
-
+                        navigationManager.navigate(TransferScreens.Amount)
                     })
             }
         ) {
@@ -57,21 +58,23 @@ fun DestinationInputScreen(navigationManager: NavigationManager) {
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
                 value = identifierNumber,
-                onValueChange = {
-                    identifierNumber = it
-                    isValid = BankUtil.getBankByCardNumber(identifierNumber) != null
-                    if (isValid) {
-                        clientBank = TransactionClientBank(
-                            clientBank = ClientBank(
-                                name = "محمد صادقی",
-                                phoneNumber = "09123456789",
-                                profileUrl = "https://randomuser.me/api/portraits/men/1.jpg",
-                                cardNumber = 6037991234567890,
-                                accountNumber = "1234567890123456",
-                                iban = "IR820540102680020817909002"
-                            ),
-                            type = BankIdentifierNumberType.CARD
-                        )
+                onValueChange = { newText ->
+                    if (newText.all { it.isDigit() }) {
+                        identifierNumber = newText
+                        isValid = BankUtil.getBankByCardNumber(identifierNumber) != null
+                        if (isValid) {
+                            clientBank = TransactionClientBank(
+                                clientBank = ClientBank(
+                                    name = "محمد صادقی",
+                                    phoneNumber = "09123456789",
+                                    profileUrl = "https://randomuser.me/api/portraits/men/1.jpg",
+                                    cardNumber = 6037991234567890,
+                                    accountNumber = "1234567890123456",
+                                    iban = "IR820540102680020817909002"
+                                ),
+                                type = BankIdentifierNumberType.CARD
+                            )
+                        }
                     }
                 },
                 label = stringResource(R.string.card_account_iban_number),
@@ -91,7 +94,7 @@ fun DestinationInputScreen(navigationManager: NavigationManager) {
                     ClientBankInfoTypeRow(info = it,
                         background = Color(0xFFF3F3F7),
                         onClick = {
-
+                            navigationManager.navigate(TransferScreens.Amount)
                         })
                 }
             }

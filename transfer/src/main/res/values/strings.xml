@@ -5,4 +5,8 @@
     <string name="destination">مقصد</string>
     <string name="next">بعدی</string>
     <string name="card_account_iban_number">شماره کارت، حساب یا شبا</string>
+    <string name="amount">مبلغ</string>
+    <string name="toman">تومان</string>
+    <string name="transfer_method">روش انتقال</string>
+    <string name="card_to_card">کارت به کارت</string>
 </resources>

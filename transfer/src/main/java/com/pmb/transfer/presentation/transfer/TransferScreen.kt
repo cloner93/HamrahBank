@@ -12,6 +12,7 @@ import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.core.presentation.NavigationManager
 import com.pmb.transfer.domain.clientBanks
 import com.pmb.transfer.domain.transactionClientBanks
+import com.pmb.transfer.presentation.TransferScreens
 import com.pmb.transfer.presentation.components.ContactsView
 import com.pmb.transfer.presentation.components.TransactionClientBankList
 
@@ -25,14 +26,14 @@ fun TransferScreen(navigationManager: NavigationManager) {
         ContactsView(
             items = clientBanks,
             onClick = {
-
+                navigationManager.navigate(TransferScreens.DestinationInput)
             }
         )
         Spacer(modifier = Modifier.height(8.dp))
         TransactionClientBankList(
             items = transactionClientBanks,
             onClick = {
-
+                navigationManager.navigate(TransferScreens.DestinationInput)
             }
         )
     }

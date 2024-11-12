@@ -70,23 +70,20 @@ fun AppBaseTextField(
     val focusRequester = remember { FocusRequester() }
 
 
-    val borderColor =
-        if (isError) AppTheme.colorScheme.strokeNeutral2Error
-        else if (!enabled) Color.Transparent
-        else if (isFocused) AppTheme.colorScheme.strokeNeutral2Active
-        else AppTheme.colorScheme.strokeNeutral2Default
+    val borderColor = if (isError) AppTheme.colorScheme.strokeNeutral2Error
+    else if (!enabled) Color.Transparent
+    else if (isFocused) AppTheme.colorScheme.strokeNeutral2Active
+    else AppTheme.colorScheme.strokeNeutral2Default
 
-    val labelColor =
-        if (isError) colors.errorLabelColor
-        else if (!enabled) colors.disabledLabelColor
-        else if (isFocused) colors.focusedLabelColor
-        else colors.unfocusedLabelColor
+    val labelColor = if (isError) colors.errorLabelColor
+    else if (!enabled) colors.disabledLabelColor
+    else if (isFocused) colors.focusedLabelColor
+    else colors.unfocusedLabelColor
 
-    val inputColor =
-        if (isError) colors.errorTextColor
-        else if (!enabled) colors.disabledTextColor
-        else if (isFocused) colors.focusedTextColor
-        else colors.unfocusedTextColor
+    val inputColor = if (isError) colors.errorTextColor
+    else if (!enabled) colors.disabledTextColor
+    else if (isFocused) colors.focusedTextColor
+    else colors.unfocusedTextColor
 
     Box(
         modifier = modifier
@@ -256,6 +253,31 @@ fun AppNationalIdTextField(
             val valid = it.isIranianNationalId()
             if (it.length <= 10 || valid) onValueChange(it)
             onValidate?.invoke(valid)
+        },
+        trailingIcon = @Composable {
+            if (value.isNotEmpty()) AppButtonIcon(icon = Icons.Default.Close) { onValueChange("") }
+        },
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+    )
+}
+
+@Composable
+fun AppNumberTextField(
+    modifier: Modifier = Modifier,
+    value: String,
+    label: String,
+    onValueChange: (String) -> Unit,
+) {
+    AppBaseTextField(
+        modifier = modifier.fillMaxWidth(),
+        value = value,
+        label = label,
+        singleLine = true,
+        onValueChange = { newText ->
+            // Ensure that the input consists of only digits
+            if (newText.all { it.isDigit() }) {
+                onValueChange(newText)
+            }
         },
         trailingIcon = @Composable {
             if (value.isNotEmpty()) AppButtonIcon(icon = Icons.Default.Close) { onValueChange("") }
