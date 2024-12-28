@@ -16,7 +16,7 @@ sealed class TransferScreens(route: String, arguments: Map<String, String> = emp
     data object DestinationInput : TransferScreens(route = "destination_input")
     data object Amount : TransferScreens(route = "amount")
     data object TransferMethod : TransferScreens(route = "transfer_method")
-    data object TransferConfirm : TransferScreens(route = "transfer_method")
+    data object TransferConfirm : TransferScreens(route = "transfer_confirm")
 
     companion object {
         fun fromRoute(route: String?): TransferScreens? = when (route) {

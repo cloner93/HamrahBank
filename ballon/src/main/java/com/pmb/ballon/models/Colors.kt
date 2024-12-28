@@ -30,7 +30,7 @@ object MenuItemColors {
     @Composable
     fun default(
         titleColor: ObjectColors = ObjectColors(
-            contentColor = AppTheme.colorScheme.foregroundNeutralDefault,
+            contentColor = AppTheme.colorScheme.foregroundPrimaryDefault,
             errorContentColor = AppTheme.colorScheme.onBackgroundErrorDefault,
             disabledContentColor = AppTheme.colorScheme.onBackgroundNeutralDisabled
         ),
@@ -39,31 +39,30 @@ object MenuItemColors {
             errorContentColor = AppTheme.colorScheme.onBackgroundErrorDefault,
             disabledContentColor = AppTheme.colorScheme.onBackgroundNeutralDisabled
         ),
-
-        startIcoColor: ObjectColors = ObjectColors(
+        startIconColor: ObjectColors = ObjectColors(
             contentColor = AppTheme.colorScheme.onBackgroundNeutralCTA,
             errorContentColor = AppTheme.colorScheme.onBackgroundNeutralCTA,
-            disabledContentColor = AppTheme.colorScheme.onBackgroundNeutralCTA
+            disabledContentColor = AppTheme.colorScheme.onBackgroundNeutralDisabled
         ),
         endIconColor: ObjectColors = ObjectColors(
-            contentColor = AppTheme.colorScheme.onBackgroundNeutralDefault,
-            errorContentColor = Color(0xffC2C7CF),
+            contentColor = AppTheme.colorScheme.onBackgroundNeutralSubdued,
+            errorContentColor = AppTheme.colorScheme.onBackgroundNeutralSubdued,
             disabledContentColor = AppTheme.colorScheme.onBackgroundNeutralDisabled,
         ),
         containerColor: ObjectColors = ObjectColors(
             contentColor = Color.Transparent,
             errorContentColor = Color.Transparent,
-            disabledContentColor = Color.Transparent
+            disabledContentColor = Color(0x66C6C6C9)
         ),
         borderColor: ObjectColors = ObjectColors(
-            contentColor = AppTheme.colorScheme.strokeNeutral1Default,
-            errorContentColor = AppTheme.colorScheme.onBackgroundErrorDefault,
-            disabledContentColor = AppTheme.colorScheme.strokeNeutral3Rest
+            contentColor = AppTheme.colorScheme.onBackgroundNeutralDisabled,
+            errorContentColor = AppTheme.colorScheme.onBackgroundNeutralCTA,
+            disabledContentColor = Color.Transparent
         )
     ): ItemColors = ItemColors(
         titleColor = titleColor,
         subtitleColor = subtitleColor,
-        startIcoColor = startIcoColor,
+        startIcoColor = startIconColor,
         endIconColor = endIconColor,
         containerColor = containerColor,
         borderColor = borderColor

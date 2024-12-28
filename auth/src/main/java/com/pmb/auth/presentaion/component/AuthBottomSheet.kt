@@ -13,14 +13,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.pmb.auth.R
 import com.pmb.ballon.component.TextImage
 import com.pmb.ballon.component.base.AppBottomSheet
 import com.pmb.ballon.component.base.AppButton
+import com.pmb.ballon.component.base.AppTextButton
+import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.models.ImageStyle
 import com.pmb.ballon.models.Size
+import com.pmb.ballon.ui.theme.AppTheme
 
 @Composable
 fun ShowChangedNewPasswordBottomSheet(onDismiss: () -> Unit) {
@@ -46,6 +50,44 @@ fun ShowChangedNewPasswordBottomSheet(onDismiss: () -> Unit) {
                     onClick = {
                         isVisible = false
                     })
+            }
+        })
+}
+
+@Composable
+fun ShowInvalidLoginBottomSheet(expired: String, onDismiss: () -> Unit) {
+    var isVisible by remember { mutableStateOf(true) }
+    AppBottomSheet(
+        isVisible = isVisible,
+        onDismiss = { onDismiss() },
+        content = {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                TextImage(
+                    image = com.pmb.ballon.R.drawable.img_info_circle,
+                    text = stringResource(R.string.msg_could_not_login),
+                    imageStyle = ImageStyle(size = Size.FIX(80.dp)),
+                )
+                Spacer(modifier = Modifier.size(12.dp))
+                BodyMediumText(
+                    text = stringResource(R.string.msg_invalid_login_credentials),
+                    color = AppTheme.colorScheme.onBackgroundNeutralSubdued,
+                    textAlign = TextAlign.Center
+                )
+                Spacer(modifier = Modifier.size(24.dp))
+                AppTextButton(
+                    modifier = Modifier.fillMaxWidth(),
+                    title = "امکان  ورود مجدد تا ۲۳:۵۹:۵۹",
+                    enable = false,
+                    onClick = { isVisible = false })
+                Spacer(modifier = Modifier.size(8.dp))
+                AppButton(modifier = Modifier.fillMaxWidth(),
+                    title = stringResource(R.string.i_understand),
+                    onClick = { isVisible = false })
             }
         })
 }

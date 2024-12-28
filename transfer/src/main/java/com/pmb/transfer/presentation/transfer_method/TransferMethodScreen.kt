@@ -17,6 +17,8 @@ import androidx.compose.ui.unit.dp
 import com.pmb.ballon.component.ItemVerticalTextIcon
 import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.TopBar
+import com.pmb.ballon.models.ItemColors
+import com.pmb.ballon.models.ObjectColors
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.core.presentation.NavigationManager
 import com.pmb.transfer.R
@@ -43,7 +45,7 @@ fun TransferMethodScreen(navigationManager: NavigationManager) {
                 Spacer(modifier = Modifier.size(16.dp))
                 ItemVerticalTextIcon(title = "بین بانکی (ساتنا)",
                     subtitle = "حداقل مبلغ انتقال ۵۰۰.۰۰۰.۰۰۰ ریال است.",
-                    startIcon = com.pmb.ballon.R.drawable.ic_tick_square,
+                    startIcon = com.pmb.ballon.R.drawable.ic_university,
                     enable = false,
                     onClick = {
 
@@ -51,7 +53,7 @@ fun TransferMethodScreen(navigationManager: NavigationManager) {
                 Spacer(modifier = Modifier.size(16.dp))
                 ItemVerticalTextIcon(title = "بین بانکی (پایا)",
                     subtitle = "انتقال در امروز ۷:۴۵ شب | کارمزد: ۲.۴۰۰ ریال",
-                    startIcon = com.pmb.ballon.R.drawable.ic_tick_square,
+                    startIcon = com.pmb.ballon.R.drawable.ic_university,
                     enable = false,
                     onClick = {
 
@@ -59,7 +61,7 @@ fun TransferMethodScreen(navigationManager: NavigationManager) {
                 Spacer(modifier = Modifier.size(16.dp))
                 ItemVerticalTextIcon(title = "بین بانکی (پل)",
                     subtitle = "انتقال در لحظه | کارمزد: ۵.۰۰۰ ریال",
-                    startIcon = com.pmb.ballon.R.drawable.ic_tick_square,
+                    startIcon = com.pmb.ballon.R.drawable.ic_university,
                     enable = false,
                     onClick = {
 
@@ -67,7 +69,7 @@ fun TransferMethodScreen(navigationManager: NavigationManager) {
                 Spacer(modifier = Modifier.size(16.dp))
                 ItemVerticalTextIcon(title = "ملت به ملت",
                     subtitle = "برای انتقال، کارت مقصد باید ملت باشد.",
-                    startIcon = com.pmb.ballon.R.drawable.ic_tick_square,
+                    startIcon = com.pmb.ballon.R.drawable.ic_bank_mellat,
                     enable = false,
                     onClick = {
 
