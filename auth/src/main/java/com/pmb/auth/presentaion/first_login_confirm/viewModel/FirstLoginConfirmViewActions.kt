@@ -1,6 +1,8 @@
 package com.pmb.auth.presentaion.first_login_confirm.viewModel
 
-sealed interface FirstLoginConfirmViewActions {
+import com.pmb.core.platform.BaseViewAction
+
+sealed interface FirstLoginConfirmViewActions :BaseViewAction {
     data object ClearAlert : FirstLoginConfirmViewActions
     data class ConfirmFirstLogin(
         val mobileNumber: String,

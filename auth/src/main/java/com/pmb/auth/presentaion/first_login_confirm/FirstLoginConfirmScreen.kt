@@ -14,6 +14,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,9 +28,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.pmb.auth.R
 import com.pmb.auth.presentaion.component.ShowInvalidLoginBottomSheet
+import com.pmb.auth.presentaion.first_login_confirm.viewModel.FirstLoginConfirmViewActions
+import com.pmb.auth.presentaion.first_login_confirm.viewModel.FirstLoginConfirmViewEvents
+import com.pmb.auth.presentaion.first_login_confirm.viewModel.FirstLoginConfirmViewModel
+import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppIcon
+import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.component.base.AppNumberTextField
 import com.pmb.ballon.component.base.AppTextButton
 import com.pmb.ballon.component.base.AppTopBar
@@ -42,11 +49,37 @@ import com.pmb.home.presentation.HomeScreens
 
 
 @Composable
-fun FirstLoginConfirmScreen(navigationManager: NavigationManager) {
+fun FirstLoginConfirmScreen(
+    navigationManager: NavigationManager,
+    viewModel: FirstLoginConfirmViewModel
+) {
     var showBottomSheet by remember { mutableStateOf(false) }
     val phonenumber by remember { mutableStateOf("09128353268") }
     var otp by remember { mutableStateOf("") }
+    val viewState by viewModel.viewState.collectAsState()
 
+    // Handle one-time events such as navigation or showing toasts
+    LaunchedEffect(Unit) {
+        viewModel.viewEvent.collect { event ->
+            when (event) {
+                FirstLoginConfirmViewEvents.FirstLoginConfirmSucceed -> {
+                    navigationManager.navigate(HomeScreens.Home)
+                }
+
+                FirstLoginConfirmViewEvents.FirstLoginConfirmResend -> {
+
+                }
+
+                FirstLoginConfirmViewEvents.FirstLoginStartTimer -> {
+
+                }
+
+                FirstLoginConfirmViewEvents.FirstLoginFinishTimer -> {
+
+                }
+            }
+        }
+    }
     AppContent(
         modifier = Modifier.padding(horizontal = 16.dp),
         topBar = {
@@ -75,7 +108,11 @@ fun FirstLoginConfirmScreen(navigationManager: NavigationManager) {
             enable = otp == "123456",
             title = stringResource(R.string.login),
             onClick = {
-                navigationManager.navigate(HomeScreens.Home)
+                viewModel.handle(
+                    FirstLoginConfirmViewActions.ConfirmFirstLogin(
+                        mobileNumber = phonenumber, otpCode = otp
+                    )
+                )
             })
         Spacer(modifier = Modifier.size(8.dp))
         AppTextButton(modifier = Modifier.fillMaxWidth(),
@@ -84,7 +121,12 @@ fun FirstLoginConfirmScreen(navigationManager: NavigationManager) {
                 showBottomSheet = true
             })
     }
-
+    if (viewState.loading) {
+        AppLoading()
+    }
+    if (viewState.alertModelState != null) {
+        AlertComponent(viewState.alertModelState!!)
+    }
     if (showBottomSheet) ShowInvalidLoginBottomSheet(
         expired = "23:59:59",
         onDismiss = { showBottomSheet = false })

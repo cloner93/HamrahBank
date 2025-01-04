@@ -16,7 +16,7 @@ class FirstLoginConfirmRepositoryImpl @Inject constructor() :
         flow {
             emit(Result.Loading)
             delay(2000)
-            sendOtpRequest.takeIf { it.otp == "12345" && it.mobileNumber == "09308160417" }?.let {
+            sendOtpRequest.takeIf { it.otp == "123456" && it.mobileNumber == "09128353268" }?.let {
                 emit(Result.Success(SendOtpResponse(isSuccess = true)))
             } ?: run {
                 emit(Result.Error(message = "otp is wrong"))

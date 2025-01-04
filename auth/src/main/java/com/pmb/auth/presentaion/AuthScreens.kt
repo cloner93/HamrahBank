@@ -6,6 +6,7 @@ import androidx.navigation.compose.composable
 import com.pmb.auth.presentaion.first_login.FirstLoginScreen
 import com.pmb.auth.presentaion.first_login.viewModel.FirstLoginViewModel
 import com.pmb.auth.presentaion.first_login_confirm.FirstLoginConfirmScreen
+import com.pmb.auth.presentaion.first_login_confirm.viewModel.FirstLoginConfirmViewModel
 import com.pmb.auth.presentaion.foget_password.ForgetPasswordAuthScreen
 import com.pmb.auth.presentaion.foget_password.ForgetPasswordScreen
 import com.pmb.auth.presentaion.foget_password.viewmodel.ForgetPasswordViewModel
@@ -38,7 +39,7 @@ fun NavGraphBuilder.authScreensHandle(
         FirstLoginScreen(navigationManager = navigationManager, viewModel = hiltViewModel<FirstLoginViewModel>())
     }
     composable(route = AuthScreens.FirstLoginConfirm.route) {
-        FirstLoginConfirmScreen(navigationManager = navigationManager)
+        FirstLoginConfirmScreen(navigationManager = navigationManager,viewModel = hiltViewModel<FirstLoginConfirmViewModel>())
     }
     composable(route = AuthScreens.Login.route) {
         LoginScreen(
