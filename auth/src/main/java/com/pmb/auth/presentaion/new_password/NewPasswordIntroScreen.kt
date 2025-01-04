@@ -20,7 +20,7 @@ import com.pmb.ballon.component.base.AppNumberTextField
 import com.pmb.ballon.component.base.AppOutlineButton
 import com.pmb.ballon.component.base.AppSingleTextField
 import com.pmb.ballon.component.base.AppTextButton
-import com.pmb.ballon.component.base.TopBar
+import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.text_field.AppPasswordTextField
 import com.pmb.core.utils.isMobile
 
@@ -35,9 +35,11 @@ fun NewPasswordIntroScreen(navController: NavController) {
 
     AppContent(
         modifier = Modifier.padding(24.dp),
-        topBar = TopBar(
-            title = stringResource(R.string.select_new_password),
-            onBack = { navController.navigateUp() }),
+        topBar = {
+            AppTopBar(
+                title = stringResource(R.string.select_new_password),
+                onBack = { navController.navigateUp() })
+        },
         content = {
             AppNumberTextField(
                 value = phonenumber,

@@ -17,7 +17,7 @@ import com.pmb.ballon.component.base.AppBaseTextField
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppImage
-import com.pmb.ballon.component.base.TopBar
+import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.models.ImageStyle
 import com.pmb.ballon.models.Size
 import com.pmb.ballon.ui.theme.AppTheme
@@ -39,9 +39,11 @@ fun DestinationInputScreen(navigationManager: NavigationManager) {
     Box(modifier = Modifier.background(color = AppTheme.colorScheme.background1Neutral))
     {
         AppContent(
-            topBar = TopBar(
-                title = stringResource(R.string.destination),
-                onBack = { navigationManager.navigateBack() }),
+            topBar = {
+                AppTopBar(
+                    title = stringResource(R.string.destination),
+                    onBack = { navigationManager.navigateBack() })
+            },
             footer = {
                 AppButton(modifier = Modifier
                     .fillMaxWidth()

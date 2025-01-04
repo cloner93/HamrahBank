@@ -31,13 +31,14 @@ import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppIcon
 import com.pmb.ballon.component.base.AppNumberTextField
 import com.pmb.ballon.component.base.AppTextButton
+import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.component.base.BodySmallText
-import com.pmb.ballon.component.base.TopBar
 import com.pmb.ballon.models.IconStyle
 import com.pmb.ballon.models.Size
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.core.presentation.NavigationManager
+import com.pmb.home.presentation.HomeScreens
 
 
 @Composable
@@ -48,9 +49,11 @@ fun FirstLoginConfirmScreen(navigationManager: NavigationManager) {
 
     AppContent(
         modifier = Modifier.padding(horizontal = 16.dp),
-        topBar = TopBar(
-            title = stringResource(R.string.login),
-            onBack = { navigationManager.navigateBack() }),
+        topBar = {
+            AppTopBar(
+                title = stringResource(R.string.login),
+                onBack = { navigationManager.navigateBack() })
+        },
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.size(24.dp))
@@ -69,9 +72,10 @@ fun FirstLoginConfirmScreen(navigationManager: NavigationManager) {
         )
         Spacer(modifier = Modifier.size(32.dp))
         AppButton(modifier = Modifier.fillMaxWidth(),
+            enable = otp == "123456",
             title = stringResource(R.string.login),
             onClick = {
-
+                navigationManager.navigate(HomeScreens.Home)
             })
         Spacer(modifier = Modifier.size(8.dp))
         AppTextButton(modifier = Modifier.fillMaxWidth(),

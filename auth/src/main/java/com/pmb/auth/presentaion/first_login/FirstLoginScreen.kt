@@ -23,7 +23,7 @@ import com.pmb.ballon.component.base.AppMobileTextField
 import com.pmb.ballon.component.base.AppOutlineButton
 import com.pmb.ballon.component.base.AppSingleTextField
 import com.pmb.ballon.component.base.AppTextButton
-import com.pmb.ballon.component.base.TopBar
+import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.text_field.AppPasswordTextField
 import com.pmb.core.presentation.NavigationManager
 
@@ -51,9 +51,11 @@ fun FirstLoginScreen(navigationManager: NavigationManager) {
 
     AppContent(
         modifier = Modifier.padding(horizontal = 24.dp),
-        topBar = TopBar(
-            title = stringResource(com.pmb.auth.R.string.login_to_hamrah_bank),
-            onBack = { navigationManager.navigateBack() }),
+        topBar = {
+            AppTopBar(
+                title = stringResource(com.pmb.auth.R.string.login_to_hamrah_bank),
+                onBack = { navigationManager.navigateBack() })
+        },
         horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally,
         footer = {
             AppOutlineButton(modifier = Modifier

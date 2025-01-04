@@ -28,7 +28,7 @@ import androidx.core.text.isDigitsOnly
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppNumberTextField
-import com.pmb.ballon.component.base.TopBar
+import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.core.presentation.NavigationManager
 import com.pmb.core.utils.Convert
@@ -43,8 +43,10 @@ fun AmountScreen(navigationManager: NavigationManager) {
     var clientBank by remember { mutableStateOf<TransactionClientBank?>(null) }
 
     Box(modifier = Modifier.background(color = AppTheme.colorScheme.background1Neutral)) {
-        AppContent(topBar = TopBar(title = stringResource(R.string.destination),
-            onBack = { navigationManager.navigateBack() }), footer = {
+        AppContent(topBar = {
+            AppTopBar(title = stringResource(R.string.destination),
+                onBack = { navigationManager.navigateBack() })
+        }, footer = {
             AppButton(modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 24.dp),

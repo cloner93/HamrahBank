@@ -25,7 +25,7 @@ import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.component.base.AppMobileTextField
 import com.pmb.ballon.component.base.AppNationalIdTextField
-import com.pmb.ballon.component.base.TopBar
+import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.text_field.AppPasswordTextField
 import com.pmb.core.presentation.NavigationManager
 
@@ -53,8 +53,10 @@ fun ForgetPasswordScreen(navigationManager: NavigationManager, viewModel: Forget
     }
 
     AppContent(modifier = Modifier.padding(24.dp),
-        topBar = TopBar(title = stringResource(R.string.forget_password),
-            onBack = { navigationManager.navigateBack() }),
+        topBar = {
+            AppTopBar(title = stringResource(R.string.forget_password),
+                onBack = { navigationManager.navigateBack() })
+        },
         footer = {
             AppButton(modifier = Modifier
                 .fillMaxWidth()

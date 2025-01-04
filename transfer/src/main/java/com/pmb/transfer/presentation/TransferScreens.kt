@@ -13,6 +13,7 @@ import com.pmb.transfer.presentation.transfer_method.TransferMethodScreen
 sealed class TransferScreens(route: String, arguments: Map<String, String> = emptyMap()) :
     Screen(route = route, arguments = arguments) {
     data object Transfer : TransferScreens(route = "transfer")
+    data object Search : TransferScreens(route = "search")
     data object DestinationInput : TransferScreens(route = "destination_input")
     data object Amount : TransferScreens(route = "amount")
     data object TransferMethod : TransferScreens(route = "transfer_method")
@@ -33,6 +34,10 @@ sealed class TransferScreens(route: String, arguments: Map<String, String> = emp
 fun NavGraphBuilder.transferScreensHandle(navigationManager: NavigationManager) {
     composable(route = TransferScreens.Transfer.route) {
         TransferScreen(navigationManager = navigationManager)
+    }
+
+    composable(route = TransferScreens.Search.route) {
+//        DestinationInputScreen(navigationManager = navigationManager)
     }
 
     composable(route = TransferScreens.DestinationInput.route) {

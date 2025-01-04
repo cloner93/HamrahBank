@@ -16,9 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.pmb.ballon.component.ItemVerticalTextIcon
 import com.pmb.ballon.component.base.AppContent
-import com.pmb.ballon.component.base.TopBar
-import com.pmb.ballon.models.ItemColors
-import com.pmb.ballon.models.ObjectColors
+import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.core.presentation.NavigationManager
 import com.pmb.transfer.R
@@ -32,8 +30,10 @@ fun TransferMethodScreen(navigationManager: NavigationManager) {
 
     Box(modifier = Modifier.background(color = AppTheme.colorScheme.background1Neutral)) {
         AppContent(
-            topBar = TopBar(title = stringResource(R.string.transfer_method),
-                onBack = { navigationManager.navigateBack() })
+            topBar = {
+                AppTopBar(title = stringResource(R.string.transfer_method),
+                    onBack = { navigationManager.navigateBack() })
+            }
         ) {
             Column(modifier = Modifier.padding(horizontal = 24.dp, vertical = 16.dp)) {
                 ItemVerticalTextIcon(title = stringResource(R.string.card_to_card),

@@ -9,4 +9,5 @@
     <string name="toman">تومان</string>
     <string name="transfer_method">روش انتقال</string>
     <string name="card_to_card">کارت به کارت</string>
+    <string name="fund_transfer">انتقال وجه</string>
 </resources>

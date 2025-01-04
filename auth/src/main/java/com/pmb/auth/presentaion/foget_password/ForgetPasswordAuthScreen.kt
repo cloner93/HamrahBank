@@ -11,15 +11,17 @@ import com.pmb.auth.R
 import com.pmb.ballon.component.MenuItem
 import com.pmb.ballon.component.TextImage
 import com.pmb.ballon.component.base.AppContent
-import com.pmb.ballon.component.base.TopBar
+import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.core.presentation.NavigationManager
 
 @Composable
 fun ForgetPasswordAuthScreen(navigationManager: NavigationManager) {
     AppContent(
         modifier = Modifier.padding(24.dp),
-        topBar = TopBar(title = stringResource(R.string.authentication),
-            onBack = { navigationManager.navigateBack() })
+        topBar = {
+            AppTopBar(title = stringResource(R.string.authentication),
+                onBack = { navigationManager.navigateBack() })
+        }
     ) {
         TextImage(
             modifier = Modifier.fillMaxWidth(),

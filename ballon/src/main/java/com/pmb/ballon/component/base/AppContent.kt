@@ -13,12 +13,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
 
-data class TopBar(val title: String, val onBack: (() -> Unit)? = null)
-
 @Composable
 fun AppContent(
     modifier: Modifier = Modifier,
-    topBar: TopBar? = null,
+    topBar: (@Composable (ColumnScope.() -> Unit))? = null,
     verticalArrangement: Arrangement.Vertical = Arrangement.Top,
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
     footer: (@Composable (ColumnScope.() -> Unit))? = null,
@@ -28,14 +26,7 @@ fun AppContent(
     Column(
         modifier = wrapperModifier.fillMaxSize()
     ) {
-        topBar?.let {
-            AppTopBar(
-                title = it.title,
-                onBack = it.onBack
-            )
-
-        }
-
+        topBar?.invoke(this)
         Column(
             modifier = modifier
                 .weight(1f)
