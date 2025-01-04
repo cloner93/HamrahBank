@@ -67,3 +67,4 @@ data class PasswordValidationResult(
     val isValid: Boolean
         get() = minLen && lowercase && uppercase && digit && specialChar
 }
+

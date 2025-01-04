@@ -11,15 +11,17 @@ import com.pmb.auth.R
 import com.pmb.ballon.component.MenuItem
 import com.pmb.ballon.component.TextImage
 import com.pmb.ballon.component.base.AppContent
-import com.pmb.ballon.component.base.TopBar
+import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.core.presentation.NavigationManager
 
 @Composable
 fun ForgetPasswordAuthScreen(navigationManager: NavigationManager) {
     AppContent(
         modifier = Modifier.padding(24.dp),
-        topBar = TopBar(title = stringResource(R.string.authentication),
-            onBack = { navigationManager.navigateBack() })
+        topBar = {
+            AppTopBar(title = stringResource(R.string.authentication),
+                onBack = { navigationManager.navigateBack() })
+        }
     ) {
         TextImage(
             modifier = Modifier.fillMaxWidth(),
@@ -31,17 +33,20 @@ fun ForgetPasswordAuthScreen(navigationManager: NavigationManager) {
         MenuItem(title = stringResource(R.string.mellat_signiture_app),
             endIcon = com.pmb.ballon.R.drawable.ic_arrow_left,
             bottomDivider = true,
+            clickable = false,
             onItemClick = {
 
             })
         MenuItem(title = stringResource(R.string.video_authentication_process),
             endIcon = com.pmb.ballon.R.drawable.ic_arrow_left,
             bottomDivider = true,
+            clickable = false,
             onItemClick = {
 
             })
         MenuItem(title = stringResource(R.string.bank_card_information),
             endIcon = com.pmb.ballon.R.drawable.ic_arrow_left,
+            clickable = false,
             onItemClick = {})
 
         Spacer(modifier = Modifier.weight(1f))

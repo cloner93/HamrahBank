@@ -21,4 +21,11 @@
     <string name="complete">تمام</string>
     <string name="select_new_password">انتخاب رمز عبور جدید</string>
     <string name="msg_select_new_password">به دلیل حفظ امنیت حساب شما، باید یک رمز عبور جدید انتخاب کنید.</string>
+    <string name="hamrah_bank_activate">فعالسازی همراه بانک</string>
+    <string name="msg_first_login_confirm_header">کد ورود به شماره تلفن همراه شما ارسال شد. لطفا آن را وارد نمایید.</string>
+    <string name="otp">کد ورود</string>
+    <string name="re_send">ارسال مجدد</string>
+    <string name="msg_could_not_login">ورود امکان پذیر نیست!</string>
+    <string name="msg_invalid_login_credentials">همراه‌بانک شما به دلیل ورود کد نادرست قفل شده‌است. لطفاً پس از ۲۴ ساعت دوباره امتحان کنید.</string>
+    <string name="i_understand">متوجه شدم</string>
 </resources>

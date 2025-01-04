@@ -17,7 +17,7 @@ import com.pmb.auth.R
 import com.pmb.auth.presentaion.component.ShowChangedNewPasswordBottomSheet
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppContent
-import com.pmb.ballon.component.base.TopBar
+import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.text_field.AppPasswordTextField
 
 @Composable
@@ -30,9 +30,11 @@ fun NewPasswordScreen(navController: NavController) {
 
     AppContent(
         modifier = Modifier.padding(24.dp),
-        topBar = TopBar(
-            title = stringResource(R.string.select_new_password),
-            onBack = { navController.navigateUp() }),
+        topBar = {
+            AppTopBar(
+                title = stringResource(R.string.select_new_password),
+                onBack = { navController.navigateUp() })
+        },
         footer = {
             AppButton(modifier = Modifier
                 .fillMaxWidth()

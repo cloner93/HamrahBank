@@ -2,6 +2,8 @@ package com.pmb.ballon.component.base
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Icon
@@ -13,11 +15,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.pmb.ballon.R
+import com.pmb.ballon.ui.theme.AppTheme
+import java.nio.file.WatchEvent.Modifier
 
 sealed class BottomNavItem(
     @StringRes
@@ -64,7 +69,7 @@ val bottomNavItems = mutableListOf(
 fun AppBottomBar(tabBarItems: List<BottomNavItem>, selectedItem: (BottomNavItem) -> Unit) {
     var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
 
-    NavigationBar {
+    NavigationBar(containerColor = AppTheme.colorScheme.background1Neutral) {
         // looping over each tab to generate the views and navigation for each item
         tabBarItems.forEachIndexed { index, tabBarItem ->
             NavigationBarItem(

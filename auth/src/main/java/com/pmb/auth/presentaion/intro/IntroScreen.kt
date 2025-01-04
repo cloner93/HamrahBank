@@ -55,7 +55,7 @@ fun IntroScreen(
                 AppButton(
                     modifier = Modifier.fillMaxWidth(),
                     title = stringResource(R.string.login_to_hamrah_bank),
-                    onClick = { navigationManager.navigate(AuthScreens.Login) }
+                    onClick = { navigationManager.navigate(AuthScreens.FirstLogin) }
                 )
 
                 Spacer(modifier = Modifier.size(8.dp))

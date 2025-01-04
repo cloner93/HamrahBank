@@ -9,6 +9,8 @@ import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -56,6 +58,56 @@ fun AppIcon(icon: ImageVector, style: IconStyle? = null) {
 }
 
 @Composable
+fun AppIcon(icon: Painter, style: IconStyle? = null) {
+    val modifier = style?.let {
+        when (style.size) {
+            is Size.FIX -> Modifier.size(style.size.all)
+            is Size.Rectangle -> Modifier.size(width = style.size.width, height = style.size.height)
+            Size.DEFAULT -> Modifier.size(24.dp)
+        }
+    } ?: Modifier.size(24.dp)
+    val tint = style?.tint ?: LocalContentColor.current
+
+    Icon(
+        modifier = modifier,
+        painter = icon,
+        contentDescription = null,
+        tint = tint
+    )
+}
+
+@Composable
+fun AppButtonIcon(
+    modifier: Modifier = Modifier,
+    icon: IconType,
+    style: IconStyle? = null,
+    onClick: () -> Unit
+) {
+    when (icon) {
+        is IconType.Bitmap -> AppButtonIcon(
+            modifier = modifier,
+            icon = icon.icon,
+            style = style,
+            onClick = onClick
+        )
+
+        is IconType.ImageVector -> AppButtonIcon(
+            modifier = modifier,
+            icon = icon.icon,
+            style = style,
+            onClick = onClick
+        )
+
+        is IconType.Painter -> AppButtonIcon(
+            modifier = modifier,
+            icon = icon.icon,
+            style = style,
+            onClick = onClick
+        )
+    }
+}
+
+@Composable
 fun AppButtonIcon(
     modifier: Modifier = Modifier,
     icon: ImageVector,
@@ -74,6 +126,63 @@ fun AppButtonIcon(
             tint = tint
         )
     }
+}
+
+@Composable
+fun AppButtonIcon(
+    modifier: Modifier = Modifier,
+    icon: ImageBitmap,
+    style: IconStyle? = null,
+    onClick: () -> Unit
+) {
+    val tint = style?.tint ?: LocalContentColor.current
+
+    IconButton(
+        onClick = onClick,
+        modifier = modifier
+    ) {
+        Icon(
+            bitmap = icon,
+            contentDescription = "Description Icon",
+            tint = tint
+        )
+    }
+}
+
+@Composable
+fun AppButtonIcon(
+    modifier: Modifier = Modifier,
+    icon: Painter,
+    style: IconStyle? = null,
+    onClick: () -> Unit
+) {
+    val tint = style?.tint ?: LocalContentColor.current
+
+    IconButton(
+        onClick = onClick,
+        modifier = modifier
+    ) {
+        Icon(
+            painter = icon,
+            contentDescription = "Description Icon",
+            tint = tint
+        )
+    }
+}
+
+@Composable
+fun AppButtonIcon(
+    modifier: Modifier = Modifier,
+    @DrawableRes icon: Int,
+    style: IconStyle? = null,
+    onClick: () -> Unit
+) {
+    AppButtonIcon(
+        modifier = modifier,
+        icon = painterResource(id = icon),
+        style = style,
+        onClick = onClick
+    )
 }
 
 @Preview

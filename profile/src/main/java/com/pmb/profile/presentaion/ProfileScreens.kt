@@ -10,10 +10,17 @@ import com.pmb.profile.presentaion.profile.ProfileScreen
 sealed class ProfileScreens(route: String, arguments: Map<String, String> = emptyMap()) :
     Screen(route = route, arguments = arguments) {
     data object Profile : ProfileScreens(route = "profile")
-}
 
-fun NavGraphBuilder.profileScreensHandle(navigationManager: NavigationManager) {
-    composable(route = ProfileScreens.Profile.route) {
-        ProfileScreen(navigationManager = navigationManager)
+    companion object {
+        fun fromRoute(route: String?): ProfileScreens? = when (route) {
+            Profile.route -> Profile
+            else -> null
+        }
     }
 }
+
+    fun NavGraphBuilder.profileScreensHandle(navigationManager: NavigationManager) {
+        composable(route = ProfileScreens.Profile.route) {
+            ProfileScreen(navigationManager = navigationManager)
+        }
+    }

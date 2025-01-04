@@ -1,0 +1,71 @@
+package com.pmb.transfer.presentation.components
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import com.pmb.ballon.component.ItemColumn
+import com.pmb.ballon.models.TextStyle
+import com.pmb.ballon.ui.theme.AppTheme
+import com.pmb.transfer.domain.BankIdentifierNumberType
+import com.pmb.transfer.domain.TransactionClientBank
+
+@Composable
+fun ClientBankInfoTypeRow(
+    info: TransactionClientBank,
+    enable: Boolean = true,
+    background: Color = Color.Unspecified,
+    titleStyle: TextStyle = TextStyle(
+        color = Color(0xFF42474E),
+        typography = AppTheme.typography.bodyMedium,
+        textAlign = TextAlign.Start
+    ),
+    subtitleStyle: TextStyle = TextStyle(
+        color = Color(0xFF42474E),
+        typography = AppTheme.typography.caption,
+        textAlign = TextAlign.Start
+    ),
+    onClick: ((TransactionClientBank) -> Unit)? = null
+) {
+    val text = when (info.type) {
+        BankIdentifierNumberType.ACCOUNT -> info.clientBank.accountNumber
+        BankIdentifierNumberType.CARD -> info.clientBank.cardNumber.toString()
+        BankIdentifierNumberType.IBAN -> info.clientBank.iban
+    }
+
+    // Chain the modifiers directly or reassign
+    val modifier = Modifier
+        .fillMaxWidth()
+        .clip(shape = RoundedCornerShape(16.dp))
+        .background(color = if (background != Color.Unspecified) background else Color.Transparent)
+        .then(
+            if (enable && onClick != null) Modifier.clickable { onClick(info) }
+            else Modifier
+        )
+
+    Row(
+        modifier = modifier
+            .padding(vertical = 10.dp, horizontal = 16.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        ClientBankImage(clientBank = info.clientBank, imageSize = 44.dp)
+        Spacer(modifier = Modifier.width(12.dp))
+        ItemColumn(
+            title = info.clientBank.name,
+            subtitle = text,
+            titleStyle = titleStyle,
+            subtitleStyle = subtitleStyle
+        )
+    }
+}

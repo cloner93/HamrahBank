@@ -1,3 +1,24 @@
 <resources>
     <string name="app_name">account</string>
+    <string name="cards">کارت‌ها</string>
+    <string name="accounts">سپرده‌ها</string>
+    <string name="deposit_card_sheba">شماره کارت، حساب و شبا</string>
+    <string name="transactions">تراکنش‌ها</string>
+    <string name="deposit_info">اطلاعات حساب</string>
+    <string name="deposit_number">شماره حساب</string>
+    <string name="iban_number">شماره شبا</string>
+    <string name="cart_number">شماره کارت</string>
+    <string name="close">بستن</string>
+    <string name="select_for_main_deposit">انتخاب به عنوان سپرده اصلی</string>
+    <string name="cards_connected_to_the_deposit">کارت‌های متصل به سپرده</string>
+    <string name="request_to_issue_a_card_for_deposit">درخواست صدور کارت برای سپرده</string>
+    <string name="edit_deposit_title">ویرایش عنوان سپرده</string>
+    <string name="card_reissue">صدور مجدد کارت</string>
+    <string name="card_connection_disconnection">اتصال/انفصال کارت</string>
+    <string name="deactivating_the_card">غیرفعال‌سازی کارت</string>
+    <string name="password_management">" مدیریت رمزها"</string>
+    <string name="cardless_withdrawal">برداشت وجه بدون کارت</string>
+    <string name="card_cancellation">ابطال کارت</string>
+    <string name="add_a_new_bank_card">افزودن کارت بانکی جدید</string>
+    <string name="adding_and_activating_a_bank_card">افزودن و فعال‌سازی بن‌کارت</string>
 </resources>

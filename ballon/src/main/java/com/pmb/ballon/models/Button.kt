@@ -49,4 +49,18 @@ object AppButton {
             disabledContainerColor = disabledContainerColor,
             disabledContentColor = disabledContentColor
         )
+
+    @Composable
+    fun textButtonBlueColors(
+        containerColor: Color = Color.Transparent, // Background color
+        contentColor: Color = AppTheme.colorScheme.iconColor, // Text color
+        disabledContainerColor: Color = Color.Transparent, // Disabled background color
+        disabledContentColor: Color = AppTheme.colorScheme.onForegroundNeutralDisabled // Disabled text color
+    ): ButtonColors =
+        ButtonDefaults.outlinedButtonColors(
+            containerColor = containerColor,
+            contentColor = contentColor,
+            disabledContainerColor = disabledContainerColor,
+            disabledContentColor = disabledContentColor
+        )
 }

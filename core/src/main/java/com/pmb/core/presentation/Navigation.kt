@@ -25,4 +25,6 @@ class NavigationManager(val navController: NavHostController, val startDestinati
     fun navigateWithDeepLink(deepLink: Uri) {
         navController.navigate(deepLink.toString())
     }
+
+    fun currentRoute(): String? = navController.currentDestination?.route
 }
