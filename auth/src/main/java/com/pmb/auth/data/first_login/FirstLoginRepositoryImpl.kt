@@ -15,9 +15,10 @@ class FirstLoginRepositoryImpl @Inject constructor() : FirstLoginRepository {
     ): Flow<Result<FirstLoginStepResponse>> = flow {
         emit(Result.Loading)
         delay(2000)
-        if (firstLoginStepRequest.mobileNumber == "09308160417" && firstLoginStepRequest.password == "mellat" && firstLoginStepRequest.userName == "mellat") {
-            emit(Result.Success(FirstLoginStepResponse(isSuccess = true)))
-        } else {
+        firstLoginStepRequest.takeIf { it.mobileNumber == "09308160417" && it.password == "mellat" && it.userName == "mellat" }
+            ?.let {
+                emit(Result.Success(FirstLoginStepResponse(isSuccess = true)))
+            } ?: run {
             emit(Result.Error(message = "UserName and password are incorrect"))
         }
     }
