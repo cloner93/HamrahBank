@@ -65,18 +65,6 @@ fun FirstLoginConfirmScreen(
                 FirstLoginConfirmViewEvents.FirstLoginConfirmSucceed -> {
                     navigationManager.navigate(HomeScreens.Home)
                 }
-
-                FirstLoginConfirmViewEvents.FirstLoginConfirmResend -> {
-
-                }
-
-                FirstLoginConfirmViewEvents.FirstLoginStartTimer -> {
-
-                }
-
-                FirstLoginConfirmViewEvents.FirstLoginFinishTimer -> {
-
-                }
             }
         }
     }

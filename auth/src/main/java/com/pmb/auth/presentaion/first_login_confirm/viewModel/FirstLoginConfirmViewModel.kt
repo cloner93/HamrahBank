@@ -84,7 +84,6 @@ class FirstLoginConfirmViewModel @Inject constructor(
                         setState {
                             it.copy(loading = false)
                         }
-                        postEvent(FirstLoginConfirmViewEvents.FirstLoginConfirmResend)
                     }
 
                     is Result.Error -> {
