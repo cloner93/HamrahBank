@@ -31,3 +31,18 @@ fun HeaderList(title: String, buttonText: String, onClick: () -> Unit) {
         )
     }
 }
+
+
+@Composable
+fun Header(title: String) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Headline6Text(
+            modifier = Modifier.padding(16.dp),
+            text = title
+        )
+    }
+}
