@@ -144,7 +144,7 @@ class FirstLoginConfirmViewModel @Inject constructor(
             eventChannel.trySend(event)
         }
     }
-    var remain = timerDurationInterval
+    private var remain = timerDurationInterval
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private fun tick() {
