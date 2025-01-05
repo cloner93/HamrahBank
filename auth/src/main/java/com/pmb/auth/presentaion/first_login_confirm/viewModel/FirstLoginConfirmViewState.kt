@@ -6,9 +6,23 @@ import com.pmb.core.platform.BaseViewState
 data class FirstLoginConfirmViewState(
     val loading: Boolean = false,
     val alertModelState: AlertModelState? = null,
-    val timerStatus: TimerStatus = TimerStatus.STARTED
-) : BaseViewState
+    val timerState: TimerState = TimerState.COUNTING,
+    val timerSecond: Long = 0L
+) : BaseViewState {
+    val minute: String
+        get() {
+            return (timerSecond / 60).toString().padStart(2, '0')
+        }
+    val second: String
+        get() {
+            return (timerSecond % 60).toString().padStart(2, '0')
+        }
+}
 
-enum class TimerStatus {
+enum class TimerEvent {
     STARTED, COUNTING, FINISHED
+}
+
+enum class TimerState {
+    LOADING, IDLE, COUNTING
 }

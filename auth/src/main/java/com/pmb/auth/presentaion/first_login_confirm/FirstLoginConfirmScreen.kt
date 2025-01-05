@@ -31,6 +31,7 @@ import com.pmb.auth.presentaion.component.ShowInvalidLoginBottomSheet
 import com.pmb.auth.presentaion.first_login_confirm.viewModel.FirstLoginConfirmViewActions
 import com.pmb.auth.presentaion.first_login_confirm.viewModel.FirstLoginConfirmViewEvents
 import com.pmb.auth.presentaion.first_login_confirm.viewModel.FirstLoginConfirmViewModel
+import com.pmb.auth.presentaion.first_login_confirm.viewModel.TimerState
 import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppContent
@@ -54,10 +55,20 @@ fun FirstLoginConfirmScreen(
     viewModel: FirstLoginConfirmViewModel
 ) {
     var showBottomSheet by remember { mutableStateOf(false) }
-    val phonenumber by remember { mutableStateOf("09128353268") }
+    val phonenumber by remember { mutableStateOf("09308160417") }
     var otp by remember { mutableStateOf("") }
     val viewState by viewModel.viewState.collectAsState()
-
+    val title = when (viewState.timerState) {
+        TimerState.LOADING->{
+            "Loading"
+        }
+        TimerState.COUNTING ->{
+            stringResource(R.string.resend_request,viewState.minute,viewState.second)
+        }
+        TimerState.IDLE ->{
+            stringResource(R.string.re_send)
+        }
+    }
     // Handle one-time events such as navigation or showing toasts
     LaunchedEffect(Unit) {
         viewModel.viewEvent.collect { event ->
@@ -104,9 +115,15 @@ fun FirstLoginConfirmScreen(
             })
         Spacer(modifier = Modifier.size(8.dp))
         AppTextButton(modifier = Modifier.fillMaxWidth(),
-            title = stringResource(R.string.re_send),
+            enable = viewState.timerState == TimerState.IDLE,
+            title = title,
             onClick = {
-                showBottomSheet = true
+                viewModel.handle(
+                    FirstLoginConfirmViewActions.ResendFirstLoginInfo(
+                        mobileNumber = phonenumber, userName = "mellat", password = "mellat"
+                    )
+                )
+//                showBottomSheet = true
             })
     }
     if (viewState.loading) {
