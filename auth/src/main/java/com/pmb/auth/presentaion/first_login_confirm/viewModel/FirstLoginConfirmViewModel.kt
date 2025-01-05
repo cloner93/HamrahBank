@@ -34,10 +34,12 @@ class FirstLoginConfirmViewModel @Inject constructor(
 ) : BaseViewModel<FirstLoginConfirmViewActions, FirstLoginConfirmViewState, FirstLoginConfirmViewEvents>(
     initialState
 ) {
-    val timerDurationInterval = 10L
+    private val timerDurationInterval: Long = 5L
+    private var otpTryingStack = 0
     override fun handle(action: FirstLoginConfirmViewActions) {
         when (action) {
             FirstLoginConfirmViewActions.ClearAlert -> setState { it.copy(loading = false) }
+            FirstLoginConfirmViewActions.ClearBottomSheet -> setState { it.copy(isShowBottomSheet = false) }
             is FirstLoginConfirmViewActions.ConfirmFirstLogin -> handleConfirmFirstLogin(action)
             is FirstLoginConfirmViewActions.ResendFirstLoginInfo -> handleResendFirstLoginInfo(
                 action
@@ -46,43 +48,50 @@ class FirstLoginConfirmViewModel @Inject constructor(
     }
 
     private fun handleConfirmFirstLogin(action: FirstLoginConfirmViewActions.ConfirmFirstLogin) {
-        viewModelScope.launch {
-            firstLoginConfirmUseCase.invoke(
-                SendOtpRequest(
-                    mobileNumber = action.mobileNumber,
-                    otp = action.otpCode
-                )
-            ).collect { result ->
-                when (result) {
-                    is Result.Success -> {
-                        setState {
-                            it.copy(loading = false)
+        if (otpTryingStack < 4) {
+            otpTryingStack++
+            viewModelScope.launch {
+                firstLoginConfirmUseCase.invoke(
+                    SendOtpRequest(
+                        mobileNumber = action.mobileNumber,
+                        otp = action.otpCode
+                    )
+                ).collect { result ->
+                    when (result) {
+                        is Result.Success -> {
+                            setState {
+                                it.copy(loading = false)
+                            }
+                            postEvent(FirstLoginConfirmViewEvents.FirstLoginConfirmSucceed)
                         }
-                        postEvent(FirstLoginConfirmViewEvents.FirstLoginConfirmSucceed)
-                    }
 
-                    is Result.Error -> {
-                        setState {
-                            it.copy(
-                                loading = false,
-                                alertModelState = AlertModelState.SnackBar(
-                                    message = result.message,
-                                    onActionPerformed = {
-                                        setState { state -> state.copy(alertModelState = null) }
-                                    },
-                                    onDismissed = {
-                                        setState { state -> state.copy(alertModelState = null) }
-                                    }
+                        is Result.Error -> {
+                            setState {
+                                it.copy(
+                                    loading = false,
+                                    alertModelState = AlertModelState.SnackBar(
+                                        message = result.message,
+                                        onActionPerformed = {
+                                            setState { state -> state.copy(alertModelState = null) }
+                                        },
+                                        onDismissed = {
+                                            setState { state -> state.copy(alertModelState = null) }
+                                        }
+                                    )
+
                                 )
-
-                            )
+                            }
                         }
-                    }
 
-                    is Result.Loading -> {
-                        setState { it.copy(loading = true) }
+                        is Result.Loading -> {
+                            setState { it.copy(loading = true) }
+                        }
                     }
                 }
+            }
+        } else {
+            setState {
+                it.copy(isShowBottomSheet = true)
             }
         }
     }
@@ -128,7 +137,8 @@ class FirstLoginConfirmViewModel @Inject constructor(
                     }
 
                     is Result.Loading -> {
-                        remain = 11L
+                        // the screen ui cannot start from the exact number so we should start with increasing the base number
+                        remain = timerDurationInterval
                         setState { it.copy(loading = true, timerState = TimerState.LOADING) }
                     }
                 }
@@ -138,6 +148,7 @@ class FirstLoginConfirmViewModel @Inject constructor(
 
     private val eventChannel = Channel<TimerEvent>(Channel.RENDEZVOUS)
 
+    // call this variable for starting or stopping the countdown timer
     @OptIn(DelicateCoroutinesApi::class)
     val dispatch = { event: TimerEvent ->
         if (!eventChannel.isClosedForSend) {

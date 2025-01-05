@@ -59,13 +59,15 @@ fun FirstLoginConfirmScreen(
     var otp by remember { mutableStateOf("") }
     val viewState by viewModel.viewState.collectAsState()
     val title = when (viewState.timerState) {
-        TimerState.LOADING->{
+        TimerState.LOADING -> {
             "Loading"
         }
-        TimerState.COUNTING ->{
-            stringResource(R.string.resend_request,viewState.minute,viewState.second)
+
+        TimerState.COUNTING -> {
+            stringResource(R.string.resend_request, viewState.minute, viewState.second)
         }
-        TimerState.IDLE ->{
+
+        TimerState.IDLE -> {
             stringResource(R.string.re_send)
         }
     }
@@ -104,7 +106,7 @@ fun FirstLoginConfirmScreen(
         )
         Spacer(modifier = Modifier.size(32.dp))
         AppButton(modifier = Modifier.fillMaxWidth(),
-            enable = otp == "123456",
+            enable = otp.length >= 6,
             title = stringResource(R.string.login),
             onClick = {
                 viewModel.handle(
@@ -123,7 +125,6 @@ fun FirstLoginConfirmScreen(
                         mobileNumber = phonenumber, userName = "mellat", password = "mellat"
                     )
                 )
-//                showBottomSheet = true
             })
     }
     if (viewState.loading) {
@@ -132,9 +133,13 @@ fun FirstLoginConfirmScreen(
     if (viewState.alertModelState != null) {
         AlertComponent(viewState.alertModelState!!)
     }
-    if (showBottomSheet) ShowInvalidLoginBottomSheet(
+    if (viewState.isShowBottomSheet) ShowInvalidLoginBottomSheet(
         expired = "23:59:59",
-        onDismiss = { showBottomSheet = false })
+        onDismiss = {
+            viewModel.handle(
+                FirstLoginConfirmViewActions.ClearBottomSheet
+            )
+        })
 }
 
 @Composable

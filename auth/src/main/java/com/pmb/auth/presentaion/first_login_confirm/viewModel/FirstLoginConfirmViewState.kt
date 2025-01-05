@@ -7,7 +7,8 @@ data class FirstLoginConfirmViewState(
     val loading: Boolean = false,
     val alertModelState: AlertModelState? = null,
     val timerState: TimerState = TimerState.COUNTING,
-    val timerSecond: Long = 0L
+    val timerSecond: Long = 0L,
+    val isShowBottomSheet: Boolean = false,
 ) : BaseViewState {
     val minute: String
         get() {
