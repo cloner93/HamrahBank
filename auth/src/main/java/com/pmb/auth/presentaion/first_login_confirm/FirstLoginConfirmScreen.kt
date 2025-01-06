@@ -32,6 +32,7 @@ import com.pmb.auth.presentaion.first_login_confirm.viewModel.FirstLoginConfirmV
 import com.pmb.auth.presentaion.first_login_confirm.viewModel.FirstLoginConfirmViewEvents
 import com.pmb.auth.presentaion.first_login_confirm.viewModel.FirstLoginConfirmViewModel
 import com.pmb.auth.presentaion.first_login_confirm.viewModel.TimerState
+import com.pmb.auth.presentaion.first_login_confirm.viewModel.TimerType
 import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppContent
@@ -54,23 +55,27 @@ fun FirstLoginConfirmScreen(
     navigationManager: NavigationManager,
     viewModel: FirstLoginConfirmViewModel
 ) {
-    var showBottomSheet by remember { mutableStateOf(false) }
     val phonenumber by remember { mutableStateOf("09308160417") }
     var otp by remember { mutableStateOf("") }
     val viewState by viewModel.viewState.collectAsState()
-    val title = when (viewState.timerState) {
-        TimerState.LOADING -> {
-            "Loading"
-        }
+    val title =
+        if (viewState.timerType == TimerType.RESEND_TYPE) {
+            when (viewState.timerState) {
+                TimerState.LOADING -> {
+                    "Loading"
+                }
 
-        TimerState.COUNTING -> {
-            stringResource(R.string.resend_request, viewState.minute, viewState.second)
-        }
+                TimerState.COUNTING -> {
+                    stringResource(R.string.resend_request, viewState.minute, viewState.second)
+                }
 
-        TimerState.IDLE -> {
-            stringResource(R.string.re_send)
+                TimerState.IDLE -> {
+                    stringResource(R.string.re_send)
+                }
+            }
+        } else {
+            "تعداد درخواستهای شما بیش از چهار بار شده است"
         }
-    }
     // Handle one-time events such as navigation or showing toasts
     LaunchedEffect(Unit) {
         viewModel.viewEvent.collect { event ->
@@ -134,7 +139,10 @@ fun FirstLoginConfirmScreen(
         AlertComponent(viewState.alertModelState!!)
     }
     if (viewState.isShowBottomSheet) ShowInvalidLoginBottomSheet(
-        expired = "23:59:59",
+        expired = if (viewState.timerType == TimerType.BOTTOM_SHEET_ERROR)
+            "${viewState.hour}:${viewState.minute}:${viewState.second}"
+        else
+            "",
         onDismiss = {
             viewModel.handle(
                 FirstLoginConfirmViewActions.ClearBottomSheet

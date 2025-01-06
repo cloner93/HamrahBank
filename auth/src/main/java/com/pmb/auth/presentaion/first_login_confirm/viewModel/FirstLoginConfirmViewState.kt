@@ -9,15 +9,25 @@ data class FirstLoginConfirmViewState(
     val timerState: TimerState = TimerState.COUNTING,
     val timerSecond: Long = 0L,
     val isShowBottomSheet: Boolean = false,
+    val attemptSendConfirmationError: Boolean = false,
+    val timerType: TimerType = TimerType.RESEND_TYPE
 ) : BaseViewState {
+    val hour: String
+        get() {
+            return (((timerSecond) / (60 * 60)) % 24).toString().padStart(2, '0')
+        }
     val minute: String
         get() {
-            return (timerSecond / 60).toString().padStart(2, '0')
+            return (((timerSecond) / (60)) % 60).toString().padStart(2, '0')
         }
     val second: String
         get() {
-            return (timerSecond % 60).toString().padStart(2, '0')
+            return ((timerSecond) % 60).toString().padStart(2, '0')
         }
+}
+
+enum class TimerType {
+    RESEND_TYPE, BOTTOM_SHEET_ERROR
 }
 
 enum class TimerEvent {

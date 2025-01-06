@@ -34,7 +34,7 @@ class FirstLoginConfirmViewModel @Inject constructor(
 ) : BaseViewModel<FirstLoginConfirmViewActions, FirstLoginConfirmViewState, FirstLoginConfirmViewEvents>(
     initialState
 ) {
-    private val timerDurationInterval: Long = 5L
+    private var timerDurationInterval: Long = 120000L
     private var otpTryingStack = 0
     override fun handle(action: FirstLoginConfirmViewActions) {
         when (action) {
@@ -48,51 +48,56 @@ class FirstLoginConfirmViewModel @Inject constructor(
     }
 
     private fun handleConfirmFirstLogin(action: FirstLoginConfirmViewActions.ConfirmFirstLogin) {
-        if (otpTryingStack < 4) {
-            otpTryingStack++
-            viewModelScope.launch {
-                firstLoginConfirmUseCase.invoke(
-                    SendOtpRequest(
-                        mobileNumber = action.mobileNumber,
-                        otp = action.otpCode
-                    )
-                ).collect { result ->
-                    when (result) {
-                        is Result.Success -> {
-                            setState {
-                                it.copy(loading = false)
-                            }
-                            postEvent(FirstLoginConfirmViewEvents.FirstLoginConfirmSucceed)
+        otpTryingStack++
+        viewModelScope.launch {
+            firstLoginConfirmUseCase.invoke(
+                SendOtpRequest(
+                    mobileNumber = action.mobileNumber,
+                    otp = action.otpCode
+                )
+            ).collect { result ->
+                when (result) {
+                    is Result.Success -> {
+                        setState {
+                            it.copy(loading = false)
+                        }
+                        postEvent(FirstLoginConfirmViewEvents.FirstLoginConfirmSucceed)
+                    }
+
+                    is Result.Error -> {
+                        if (otpTryingStack >= 4 && viewState.value.timerType != TimerType.BOTTOM_SHEET_ERROR) {
+                            dispatch(TimerEvent.FINISHED)
+                            timerDurationInterval = 31810000
+                            remain = timerDurationInterval
+                            dispatch(TimerEvent.COUNTING)
+                        }
+                        setState {
+
+                            it.copy(
+                                loading = false,
+                                alertModelState = if (otpTryingStack < 4) AlertModelState.SnackBar(
+                                    message = result.message,
+                                    onActionPerformed = {
+                                        setState { state -> state.copy(alertModelState = null) }
+                                    },
+                                    onDismissed = {
+                                        setState { state -> state.copy(alertModelState = null) }
+                                    }
+                                ) else null,
+                                timerType = if (otpTryingStack >= 4) TimerType.BOTTOM_SHEET_ERROR else TimerType.RESEND_TYPE,
+                                isShowBottomSheet = otpTryingStack >= 4
+                            )
+
                         }
 
-                        is Result.Error -> {
-                            setState {
-                                it.copy(
-                                    loading = false,
-                                    alertModelState = AlertModelState.SnackBar(
-                                        message = result.message,
-                                        onActionPerformed = {
-                                            setState { state -> state.copy(alertModelState = null) }
-                                        },
-                                        onDismissed = {
-                                            setState { state -> state.copy(alertModelState = null) }
-                                        }
-                                    )
+                    }
 
-                                )
-                            }
-                        }
-
-                        is Result.Loading -> {
-                            setState { it.copy(loading = true) }
-                        }
+                    is Result.Loading -> {
+                        setState { it.copy(loading = true) }
                     }
                 }
             }
-        } else {
-            setState {
-                it.copy(isShowBottomSheet = true)
-            }
+
         }
     }
 
@@ -120,6 +125,7 @@ class FirstLoginConfirmViewModel @Inject constructor(
                     is Result.Error -> {
                         setState {
                             it.copy(
+
                                 loading = false,
                                 timerState = TimerState.IDLE,
                                 alertModelState = AlertModelState.SnackBar(
@@ -138,7 +144,7 @@ class FirstLoginConfirmViewModel @Inject constructor(
 
                     is Result.Loading -> {
                         // the screen ui cannot start from the exact number so we should start with increasing the base number
-                        remain = timerDurationInterval
+                        remain = timerDurationInterval + 1000
                         setState { it.copy(loading = true, timerState = TimerState.LOADING) }
                     }
                 }
@@ -170,12 +176,12 @@ class FirstLoginConfirmViewModel @Inject constructor(
             }.flatMapLatest { event ->
                 when (event) {
                     TimerEvent.COUNTING -> {
-                        generateSequence(remain - 1) { it - 1 }
+                        generateSequence((remain / 1000) - 1) { it - 1 }
                             .asFlow()
                             .onEach {
                                 delay(1000)
-                                remain -= 1
-                            }.onStart { emit(remain) }
+                                remain -= 1000
+                            }.onStart { emit(remain / 1000) }
                             .takeWhile { it >= 0 }
                             .map { second ->
                                 setState {
