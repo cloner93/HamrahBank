@@ -31,8 +31,8 @@ import com.pmb.auth.presentaion.component.ShowInvalidLoginBottomSheet
 import com.pmb.auth.presentaion.first_login_confirm.viewModel.FirstLoginConfirmViewActions
 import com.pmb.auth.presentaion.first_login_confirm.viewModel.FirstLoginConfirmViewEvents
 import com.pmb.auth.presentaion.first_login_confirm.viewModel.FirstLoginConfirmViewModel
-import com.pmb.auth.presentaion.first_login_confirm.viewModel.TimerState
-import com.pmb.auth.presentaion.first_login_confirm.viewModel.TimerType
+import com.pmb.auth.presentaion.first_login_confirm.viewModel.TimerStatus
+import com.pmb.auth.presentaion.first_login_confirm.viewModel.TimerTypeId
 import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppContent
@@ -59,23 +59,19 @@ fun FirstLoginConfirmScreen(
     var otp by remember { mutableStateOf("") }
     val viewState by viewModel.viewState.collectAsState()
     val title =
-        if (viewState.timerType == TimerType.RESEND_TYPE) {
-            when (viewState.timerState) {
-                TimerState.LOADING -> {
-                    "Loading"
-                }
+        if (viewState.timerState?.get(TimerTypeId.RESEND_TIMER)?.timerStatus == TimerStatus.IS_RUNNING) {
 
-                TimerState.COUNTING -> {
-                    stringResource(R.string.resend_request, viewState.minute, viewState.second)
-                }
+            stringResource(
+                R.string.resend_request,
+                viewState.calculateMinute(TimerTypeId.RESEND_TIMER),
+                viewState.calculateSecond(TimerTypeId.RESEND_TIMER)
+            )
 
-                TimerState.IDLE -> {
-                    stringResource(R.string.re_send)
-                }
-            }
+
         } else {
-            "تعداد درخواستهای شما بیش از چهار بار شده است"
+            stringResource(R.string.re_send)
         }
+
     // Handle one-time events such as navigation or showing toasts
     LaunchedEffect(Unit) {
         viewModel.viewEvent.collect { event ->
@@ -122,7 +118,7 @@ fun FirstLoginConfirmScreen(
             })
         Spacer(modifier = Modifier.size(8.dp))
         AppTextButton(modifier = Modifier.fillMaxWidth(),
-            enable = viewState.timerState == TimerState.IDLE,
+            enable = viewState.timerState?.get(TimerTypeId.RESEND_TIMER)?.timerStatus == TimerStatus.IS_FINISHED,
             title = title,
             onClick = {
                 viewModel.handle(
@@ -139,14 +135,17 @@ fun FirstLoginConfirmScreen(
         AlertComponent(viewState.alertModelState!!)
     }
     if (viewState.isShowBottomSheet) ShowInvalidLoginBottomSheet(
-        expired = if (viewState.timerType == TimerType.BOTTOM_SHEET_ERROR)
-            "${viewState.hour}:${viewState.minute}:${viewState.second}"
-        else
-            "",
+        expired =
+        "${viewState.calculateHour(TimerTypeId.LOCK_TIMER)}:${viewState.calculateMinute(TimerTypeId.LOCK_TIMER)}:${
+            viewState.calculateSecond(
+                TimerTypeId.LOCK_TIMER
+            )
+        }",
         onDismiss = {
             viewModel.handle(
                 FirstLoginConfirmViewActions.ClearBottomSheet
             )
+            navigationManager.navigateBack()
         })
 }
 

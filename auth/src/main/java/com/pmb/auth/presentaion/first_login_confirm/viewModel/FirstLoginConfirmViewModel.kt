@@ -5,24 +5,19 @@ import com.pmb.auth.domain.first_login.entity.FirstLoginStepRequest
 import com.pmb.auth.domain.first_login.useCase.FirstLoginUseCase
 import com.pmb.auth.domain.first_login_confirm.entity.SendOtpRequest
 import com.pmb.auth.domain.first_login_confirm.useCase.FirstLoginConfirmUseCase
+import com.pmb.auth.utils.startCountDown
 import com.pmb.core.platform.AlertModelState
 import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.platform.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.consumeAsFlow
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -65,11 +60,9 @@ class FirstLoginConfirmViewModel @Inject constructor(
                     }
 
                     is Result.Error -> {
-                        if (otpTryingStack >= 4 && viewState.value.timerType != TimerType.BOTTOM_SHEET_ERROR) {
-                            dispatch(TimerEvent.FINISHED)
-                            timerDurationInterval = 31810000
-                            remain = timerDurationInterval
-                            dispatch(TimerEvent.COUNTING)
+                        if (otpTryingStack >= 4) {
+                            updateState(TimerTypeId.LOCK_TIMER, 13810000L)
+                            dispatch(TimerTypeId.LOCK_TIMER, TimerEvent.STARTED)
                         }
                         setState {
 
@@ -84,12 +77,9 @@ class FirstLoginConfirmViewModel @Inject constructor(
                                         setState { state -> state.copy(alertModelState = null) }
                                     }
                                 ) else null,
-                                timerType = if (otpTryingStack >= 4) TimerType.BOTTOM_SHEET_ERROR else TimerType.RESEND_TYPE,
                                 isShowBottomSheet = otpTryingStack >= 4
                             )
-
                         }
-
                     }
 
                     is Result.Loading -> {
@@ -112,22 +102,24 @@ class FirstLoginConfirmViewModel @Inject constructor(
             ).collect { result ->
                 when (result) {
                     is Result.Success -> {
-
                         setState {
-                            dispatch(TimerEvent.COUNTING)
                             it.copy(
                                 loading = false,
                             )
                         }
+                        updateState(
+                            TimerTypeId.RESEND_TIMER,
+                            timerDurationInterval,
+                            timerStatus = TimerStatus.IS_RUNNING
+                        )
+                        dispatch(TimerTypeId.RESEND_TIMER, TimerEvent.STARTED)
 
                     }
 
                     is Result.Error -> {
                         setState {
                             it.copy(
-
                                 loading = false,
-                                timerState = TimerState.IDLE,
                                 alertModelState = AlertModelState.SnackBar(
                                     message = result.message,
                                     onActionPerformed = {
@@ -143,104 +135,92 @@ class FirstLoginConfirmViewModel @Inject constructor(
                     }
 
                     is Result.Loading -> {
-                        // the screen ui cannot start from the exact number so we should start with increasing the base number
-                        remain = timerDurationInterval + 1000
-                        setState { it.copy(loading = true, timerState = TimerState.LOADING) }
+                        updateState(
+                            TimerTypeId.RESEND_TIMER,
+                            0,
+                            timerStatus = TimerStatus.IS_LOADING,
+                        )
                     }
                 }
             }
         }
     }
 
-    private val eventChannel = Channel<TimerEvent>(Channel.RENDEZVOUS)
+    private val eventChannel = Channel<Pair<TimerTypeId, TimerEvent>>(Channel.UNLIMITED)
 
     // call this variable for starting or stopping the countdown timer
     @OptIn(DelicateCoroutinesApi::class)
-    val dispatch = { event: TimerEvent ->
+    fun dispatch(timerId: TimerTypeId, event: TimerEvent) {
         if (!eventChannel.isClosedForSend) {
-            eventChannel.trySend(event)
+            viewModelScope.launch {
+                eventChannel.trySend(timerId to event)
+            }
         }
     }
-    private var remain = timerDurationInterval
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    private fun tick() {
-        eventChannel.consumeAsFlow()
-            .onEach { event ->
+    private fun startTimers() {
+        viewModelScope.launch {
+            eventChannel.consumeAsFlow().flatMapLatest { (timerId, event) ->
                 when (event) {
-                    TimerEvent.STARTED -> timerDurationInterval
-                    TimerEvent.COUNTING -> viewState.value.timerSecond
-                    TimerEvent.FINISHED -> timerDurationInterval
-                }
+                    TimerEvent.STARTED -> {
+                        val initialTime =
+                            viewState.value.timerState?.get(timerId)?.remainingTime ?: 0L
+                        eventChannel.consumeAsFlow().startCountDown(timerId, initialTime)
+                    }
 
-            }.flatMapLatest { event ->
-                when (event) {
                     TimerEvent.COUNTING -> {
-                        generateSequence((remain / 1000) - 1) { it - 1 }
-                            .asFlow()
-                            .onEach {
-                                delay(1000)
-                                remain -= 1000
-                            }.onStart { emit(remain / 1000) }
-                            .takeWhile { it >= 0 }
-                            .map { second ->
-                                setState {
-                                    it.copy(
-                                        timerState = TimerState.COUNTING,
-                                        timerSecond = second
-                                    )
-                                }
-                                second
-                            }.onCompletion { second ->
-                                setState {
-                                    it.copy(
-                                        timerState = TimerState.IDLE,
-                                        timerSecond = timerDurationInterval
-                                    )
-                                }
-                                timerDurationInterval
-                            }
+                        val remainingTime =
+                            viewState.value.timerState?.get(timerId)?.remainingTime ?: 0L
+                        flowOf(timerId to remainingTime)
                     }
 
                     TimerEvent.FINISHED -> {
-                        setState {
-                            it.copy(
-                                timerState = TimerState.IDLE,
-                                timerSecond = timerDurationInterval
-                            )
-                        }
-                        flowOf(timerDurationInterval)
+                        updateState(timerId, 0, timerStatus = TimerStatus.IS_FINISHED)
+                        emptyFlow()
                     }
+                }
+            }.onEach { (timerId, remainingTime) ->
+                updateState(
+                    timerId,
+                    remainingTime,
+                    timerStatus = if (remainingTime >= 0) TimerStatus.IS_RUNNING else TimerStatus.IS_FINISHED,
+                )
+            }.launchIn(viewModelScope)
+        }
+    }
 
-                    TimerEvent.STARTED -> {
-                        setState {
-                            it.copy(
-                                timerState = TimerState.COUNTING,
-                                timerSecond = timerDurationInterval
-                            )
-                        }
-                        remain = timerDurationInterval
-                        flowOf(timerDurationInterval)
-                    }
+    private fun updateState(
+        timerId: TimerTypeId,
+        remainingTime: Long,
+        timerStatus: TimerStatus = TimerStatus.IS_LOADING
+    ) {
+        setState {
+            it.copy(
+                timerState = it.timerState?.toMutableMap().apply {
+                    this?.set(timerId, TimerState(remainingTime, timerStatus))
                 }
-            }
-            .onEach { second ->
-                setState {
-                    it.copy(
-                        timerSecond = second
-                    )
-                }
-            }
-            .launchIn(viewModelScope)
+            )
+        }
     }
 
     init {
-        tick()
-        dispatch(TimerEvent.COUNTING)
+        setState {
+            it.copy(
+                timerState = mapOf(
+                    (TimerTypeId.RESEND_TIMER to TimerState(remainingTime = timerDurationInterval)),
+                    (TimerTypeId.LOCK_TIMER to TimerState())
+                )
+            )
+        }
+        startTimers()
+        dispatch(TimerTypeId.RESEND_TIMER, TimerEvent.STARTED)
     }
+
 
     override fun onCleared() {
         eventChannel.close()
         super.onCleared()
     }
 }
+
+

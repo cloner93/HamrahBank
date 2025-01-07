@@ -6,34 +6,40 @@ import com.pmb.core.platform.BaseViewState
 data class FirstLoginConfirmViewState(
     val loading: Boolean = false,
     val alertModelState: AlertModelState? = null,
-    val timerState: TimerState = TimerState.COUNTING,
-    val timerSecond: Long = 0L,
+    val timerState: Map<TimerTypeId, TimerState>? = null,
     val isShowBottomSheet: Boolean = false,
-    val attemptSendConfirmationError: Boolean = false,
-    val timerType: TimerType = TimerType.RESEND_TYPE
 ) : BaseViewState {
-    val hour: String
-        get() {
-            return (((timerSecond) / (60 * 60)) % 24).toString().padStart(2, '0')
-        }
-    val minute: String
-        get() {
-            return (((timerSecond) / (60)) % 60).toString().padStart(2, '0')
-        }
-    val second: String
-        get() {
-            return ((timerSecond) % 60).toString().padStart(2, '0')
-        }
+    fun calculateSecond(timerTypeId: TimerTypeId) =
+        (((timerState?.get(timerTypeId)?.remainingTime ?: 0)) % 60).toString().padStart(2, '0')
+
+    fun calculateMinute(timerTypeId: TimerTypeId) =
+        (((timerState?.get(timerTypeId)?.remainingTime
+            ?: 0) / (60)) % 60).toString()
+            .padStart(2, '0')
+
+    fun calculateHour(timerTypeId: TimerTypeId) =
+        (((timerState?.get(timerTypeId)?.remainingTime
+            ?: 0) / (60 * 60)) % 24).toString()
+            .padStart(2, '0')
 }
 
-enum class TimerType {
-    RESEND_TYPE, BOTTOM_SHEET_ERROR
+sealed class TimerEvent {
+    data object STARTED : TimerEvent()
+    data object COUNTING : TimerEvent()
+    data object FINISHED : TimerEvent()
 }
 
-enum class TimerEvent {
-    STARTED, COUNTING, FINISHED
+data class TimerState(
+    val remainingTime: Long = 0L,
+    val timerStatus: TimerStatus = TimerStatus.IS_LOADING
+
+)
+
+enum class TimerStatus {
+    IS_LOADING, IS_RUNNING, IS_FINISHED
 }
 
-enum class TimerState {
-    LOADING, IDLE, COUNTING
+enum class TimerTypeId {
+    RESEND_TIMER,
+    LOCK_TIMER
 }
