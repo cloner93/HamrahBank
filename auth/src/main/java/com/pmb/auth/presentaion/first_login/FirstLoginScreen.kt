@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -16,9 +17,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.pmb.auth.presentaion.AuthScreens
+import com.pmb.auth.presentaion.first_login.viewModel.FirsLoginViewEvents
+import com.pmb.auth.presentaion.first_login.viewModel.FirstLoginViewActions
+import com.pmb.auth.presentaion.first_login.viewModel.FirstLoginViewModel
 import com.pmb.ballon.R
+import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppContent
+import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.component.base.AppMobileTextField
 import com.pmb.ballon.component.base.AppOutlineButton
 import com.pmb.ballon.component.base.AppSingleTextField
@@ -28,7 +34,7 @@ import com.pmb.ballon.component.text_field.AppPasswordTextField
 import com.pmb.core.presentation.NavigationManager
 
 @Composable
-fun FirstLoginScreen(navigationManager: NavigationManager) {
+fun FirstLoginScreen(navigationManager: NavigationManager, viewModel: FirstLoginViewModel) {
     var phonenumber by remember { mutableStateOf("") }
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -36,17 +42,17 @@ fun FirstLoginScreen(navigationManager: NavigationManager) {
     var isUsername by remember { mutableStateOf(false) }
     var isPassword by remember { mutableStateOf(false) }
 
-//    val viewState by viewModel.viewState.collectAsState()
+    val viewState by viewModel.viewState.collectAsState()
 
     // Handle one-time events such as navigation or showing toasts
     LaunchedEffect(Unit) {
-//        viewModel.viewEvent.collect { event ->
-//            when (event) {
-//                LoginViewEvents.LoginSuccess -> {
-//                    navigationManager.navigate(HomeScreens.Home)
-//                }
-//            }
-//        }
+        viewModel.viewEvent.collect { event ->
+            when (event) {
+                FirsLoginViewEvents.FirstLoginStepSucceed -> {
+                    navigationManager.navigate(AuthScreens.FirstLoginConfirm)
+                }
+            }
+        }
     }
 
     AppContent(
@@ -116,7 +122,11 @@ fun FirstLoginScreen(navigationManager: NavigationManager) {
             title = stringResource(com.pmb.auth.R.string._continue),
             enable = isMobile && isPassword && isUsername,
             onClick = {
-                navigationManager.navigate(AuthScreens.FirstLoginConfirm)
+                viewModel.handle(
+                    FirstLoginViewActions.FirstLoginStepConfirm(
+                        userName = username, mobileNumber = phonenumber, password = password
+                    )
+                )
             })
 
         Spacer(modifier = Modifier.size(8.dp))
@@ -130,5 +140,11 @@ fun FirstLoginScreen(navigationManager: NavigationManager) {
 //            Spacer(modifier = Modifier.weight(1f))
 
 //        }
+    }
+    if (viewState.loading) {
+        AppLoading()
+    }
+    if (viewState.alertModelState != null) {
+        AlertComponent(viewState.alertModelState!!)
     }
 }
