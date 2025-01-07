@@ -4,10 +4,13 @@
     <string name="favorites">برگزیده‌ها</string>
     <string name="destination">مقصد</string>
     <string name="next">بعدی</string>
-    <string name="card_account_iban_number">شماره کارت، حساب یا شبا</string>
+    <string name="card_account_iban_number">شماره کارت، حساب یا شبا (بدون IR) </string>
     <string name="amount">مبلغ</string>
     <string name="toman">تومان</string>
     <string name="transfer_method">روش انتقال</string>
     <string name="card_to_card">کارت به کارت</string>
     <string name="fund_transfer">انتقال وجه</string>
+    <string name="new_transfer">انتقال جدید</string>
+    <string name="msg_dont_have_transfer_yet">"هنوز انتقال وجهی انجام نداده‌اید. "</string>
+    <string name="hint_transfer_account_search">نام، نام خانوادگی، شماره کارت و...</string>
 </resources>

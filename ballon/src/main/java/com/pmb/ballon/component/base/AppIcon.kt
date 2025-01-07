@@ -20,6 +20,15 @@ import com.pmb.ballon.models.IconStyle
 import com.pmb.ballon.models.Size
 
 @Composable
+fun AppIcon(icon: IconType, style: IconStyle? = null) {
+    when (icon) {
+        is IconType.Bitmap -> AppIcon(icon = icon.imageBitmap, style = style)
+        is IconType.ImageVector -> AppIcon(icon = icon.imageVector, style = style)
+        is IconType.Painter -> AppIcon(icon = icon.painter, style = style)
+    }
+}
+
+@Composable
 fun AppIcon(@DrawableRes icon: Int, style: IconStyle? = null) {
     val modifier = style?.let {
         when (style.size) {
@@ -77,6 +86,25 @@ fun AppIcon(icon: Painter, style: IconStyle? = null) {
 }
 
 @Composable
+fun AppIcon(icon: ImageBitmap, style: IconStyle? = null) {
+    val modifier = style?.let {
+        when (style.size) {
+            is Size.FIX -> Modifier.size(style.size.all)
+            is Size.Rectangle -> Modifier.size(width = style.size.width, height = style.size.height)
+            Size.DEFAULT -> Modifier.size(24.dp)
+        }
+    } ?: Modifier.size(24.dp)
+    val tint = style?.tint ?: LocalContentColor.current
+
+    Icon(
+        modifier = modifier,
+        bitmap = icon,
+        contentDescription = null,
+        tint = tint
+    )
+}
+
+@Composable
 fun AppButtonIcon(
     modifier: Modifier = Modifier,
     icon: IconType,
@@ -86,21 +114,21 @@ fun AppButtonIcon(
     when (icon) {
         is IconType.Bitmap -> AppButtonIcon(
             modifier = modifier,
-            icon = icon.icon,
+            icon = icon.imageBitmap,
             style = style,
             onClick = onClick
         )
 
         is IconType.ImageVector -> AppButtonIcon(
             modifier = modifier,
-            icon = icon.icon,
+            icon = icon.imageVector,
             style = style,
             onClick = onClick
         )
 
         is IconType.Painter -> AppButtonIcon(
             modifier = modifier,
-            icon = icon.icon,
+            icon = icon.painter,
             style = style,
             onClick = onClick
         )

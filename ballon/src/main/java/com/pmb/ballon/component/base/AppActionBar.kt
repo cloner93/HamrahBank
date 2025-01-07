@@ -15,9 +15,9 @@ import com.pmb.ballon.ui.theme.AppTheme
 
 data class ClickableIcon(val icon: IconType, val onClick: () -> Unit)
 sealed class IconType {
-    data class Painter(val icon: androidx.compose.ui.graphics.painter.Painter) : IconType()
-    data class ImageVector(val icon: androidx.compose.ui.graphics.vector.ImageVector) : IconType()
-    data class Bitmap(val icon: androidx.compose.ui.graphics.ImageBitmap) : IconType()
+    data class Painter(val painter: androidx.compose.ui.graphics.painter.Painter) : IconType()
+    data class ImageVector(val imageVector: androidx.compose.ui.graphics.vector.ImageVector) : IconType()
+    data class Bitmap(val imageBitmap: androidx.compose.ui.graphics.ImageBitmap) : IconType()
 }
 
 @Composable

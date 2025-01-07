@@ -1,20 +1,28 @@
 package com.pmb.ballon.component.base
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldColors
@@ -287,6 +295,74 @@ fun AppNumberTextField(
 }
 
 
+@Composable
+fun AppSearchTextField(
+    modifier: Modifier = Modifier,
+    query: String,
+    hint: String,
+    onValueChange: (String) -> Unit
+) {
+    var isFocused by remember { mutableStateOf(false) }
+
+    Box(modifier = modifier) {
+        BasicTextField(
+            value = query,
+            onValueChange = onValueChange,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(48.dp)
+                .onFocusChanged { focusState ->
+                    isFocused = focusState.isFocused
+                }
+                .then(
+                    if (isFocused) {
+                        Modifier.border(
+                            width = 1.dp,
+                            color = AppTheme.colorScheme.onBackgroundNeutralSubdued,
+                            shape = RoundedCornerShape(12.dp)
+                        )
+                    } else {
+                        Modifier // No border when not focused
+                    }
+                )
+                .background(
+                    color = if (isFocused) Color.Transparent else AppTheme.colorScheme.background3Neutral,
+                    shape = RoundedCornerShape(12.dp)
+                ),
+            singleLine = true,
+            textStyle = AppTheme.typography.bodyMedium.copy(color = Color.Black),
+            decorationBox = { innerTextField ->
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    Spacer(modifier = Modifier.width(12.dp))
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = "Search",
+                        tint = AppTheme.colorScheme.onBackgroundNeutralSubdued
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Box(modifier = Modifier.weight(1f)) {
+                        if (query.isEmpty()) {
+                            BodyMediumText(
+                                text = hint,
+                                color = AppTheme.colorScheme.onBackgroundNeutralSubdued
+                            )
+                        }
+                        innerTextField()
+                    }
+                    if (query.isNotEmpty()) {
+                        AppButtonIcon(icon = IconType.ImageVector(imageVector = Icons.Outlined.Close),
+                            onClick = { onValueChange("") })
+                    }
+                }
+            }
+        )
+    }
+}
+
+
 @Preview(showBackground = true)
 @Composable
 fun PreviewAnimatedTextField() {
@@ -295,5 +371,15 @@ fun PreviewAnimatedTextField() {
         value = "askjhjkhas",
         onValueChange = { },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewSearchTextField() {
+    AppSearchTextField(
+        query = "username",
+        hint = "salam",
+        onValueChange = { },
     )
 }

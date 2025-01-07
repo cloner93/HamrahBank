@@ -9,13 +9,14 @@ import com.pmb.transfer.presentation.destination_input.DestinationInputScreen
 import com.pmb.transfer.presentation.transfer.TransferScreen
 import com.pmb.transfer.presentation.transfer_confirm.TransferConfirmScreen
 import com.pmb.transfer.presentation.transfer_method.TransferMethodScreen
+import com.pmb.transfer.presentation.transfer_search_history.TransferSearchHistoryScreen
 
 sealed class TransferScreens(route: String, arguments: Map<String, String> = emptyMap()) :
     Screen(route = route, arguments = arguments) {
     data object Transfer : TransferScreens(route = "transfer")
-    data object Search : TransferScreens(route = "search")
-    data object DestinationInput : TransferScreens(route = "destination_input")
-    data object Amount : TransferScreens(route = "amount")
+    data object DestinationSearch : TransferScreens(route = "transfer_destination_search")
+    data object DestinationInput : TransferScreens(route = "transfer_destination_input")
+    data object Amount : TransferScreens(route = "transfer_amount")
     data object TransferMethod : TransferScreens(route = "transfer_method")
     data object TransferConfirm : TransferScreens(route = "transfer_confirm")
 
@@ -36,8 +37,8 @@ fun NavGraphBuilder.transferScreensHandle(navigationManager: NavigationManager) 
         TransferScreen(navigationManager = navigationManager)
     }
 
-    composable(route = TransferScreens.Search.route) {
-//        DestinationInputScreen(navigationManager = navigationManager)
+    composable(route = TransferScreens.DestinationSearch.route) {
+        TransferSearchHistoryScreen(navigationManager = navigationManager)
     }
 
     composable(route = TransferScreens.DestinationInput.route) {
