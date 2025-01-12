@@ -12,6 +12,7 @@ import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.platform.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.emptyFlow
@@ -161,6 +162,7 @@ class FirstLoginConfirmViewModel @Inject constructor(
         }
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     private fun startTimers() {
         viewModelScope.launch {
             eventChannel.consumeAsFlow().flatMapLatest { (timerId, event) ->
