@@ -21,8 +21,11 @@ sealed class ProfileScreens(route: String, arguments: Map<String, String> = empt
     }
 }
 
-    fun NavGraphBuilder.profileScreensHandle(navigationManager: NavigationManager) {
-        composable(route = ProfileScreens.Profile.route) {
-            ProfileScreen(navigationManager = navigationManager, viewModel = hiltViewModel<ProfileViewModel>())
-        }
+fun NavGraphBuilder.profileScreensHandle(navigationManager: NavigationManager) {
+    composable(route = ProfileScreens.Profile.route) {
+        ProfileScreen(
+            navigationManager = navigationManager,
+            viewModel = hiltViewModel<ProfileViewModel>()
+        )
     }
+}
