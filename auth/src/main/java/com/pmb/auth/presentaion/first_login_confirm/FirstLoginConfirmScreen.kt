@@ -55,7 +55,7 @@ fun FirstLoginConfirmScreen(
     navigationManager: NavigationManager,
     viewModel: FirstLoginConfirmViewModel
 ) {
-    val phonenumber by remember { mutableStateOf("09308160417") }
+    val phonenumber by remember { mutableStateOf(viewModel.getAccountModel().mobileNumber) }
     var otp by remember { mutableStateOf("") }
     val viewState by viewModel.viewState.collectAsState()
     val title =
@@ -123,7 +123,9 @@ fun FirstLoginConfirmScreen(
             onClick = {
                 viewModel.handle(
                     FirstLoginConfirmViewActions.ResendFirstLoginInfo(
-                        mobileNumber = phonenumber, userName = "mellat", password = "mellat"
+                        mobileNumber = phonenumber,
+                        userName = viewModel.getAccountModel().userName,
+                        password = viewModel.getAccountModel().passWord
                     )
                 )
             })

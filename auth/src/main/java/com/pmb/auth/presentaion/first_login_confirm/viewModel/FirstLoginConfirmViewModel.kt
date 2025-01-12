@@ -6,6 +6,7 @@ import com.pmb.auth.domain.first_login.useCase.FirstLoginUseCase
 import com.pmb.auth.domain.first_login_confirm.entity.SendOtpRequest
 import com.pmb.auth.domain.first_login_confirm.useCase.FirstLoginConfirmUseCase
 import com.pmb.auth.utils.startCountDown
+import com.pmb.ballon.models.AccountSampleModel
 import com.pmb.core.platform.AlertModelState
 import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.platform.Result
@@ -29,6 +30,8 @@ class FirstLoginConfirmViewModel @Inject constructor(
 ) : BaseViewModel<FirstLoginConfirmViewActions, FirstLoginConfirmViewState, FirstLoginConfirmViewEvents>(
     initialState
 ) {
+    private val accountSampleModel = AccountSampleModel()
+    fun getAccountModel() = accountSampleModel
     private var timerDurationInterval: Long = 120000L
     private var otpTryingStack = 0
     override fun handle(action: FirstLoginConfirmViewActions) {
