@@ -1,5 +1,6 @@
 package com.pmb.auth.di
 
+import com.pmb.auth.presentaion.activate.viewModel.ActivateViewState
 import com.pmb.auth.presentaion.first_login.viewModel.FirstLoginViewState
 import com.pmb.auth.presentaion.first_login_confirm.viewModel.FirstLoginConfirmViewState
 import com.pmb.auth.presentaion.foget_password.viewmodel.ForgetPasswordViewState
@@ -31,4 +32,9 @@ object StateModule {
     @Singleton
     fun provideFirstLoginConfirmViewState(): FirstLoginConfirmViewState =
         FirstLoginConfirmViewState()
+
+
+    @Provides
+    @Singleton
+    fun provideActivateViewState(): ActivateViewState = ActivateViewState()
 }
