@@ -62,7 +62,7 @@ fun AppBaseTextField(
     label: String? = null,
     leadingIcon: @Composable (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit) = @Composable {},
-    isError: Boolean = false,
+    error: Boolean = false,
     onFocused: ((Boolean) -> Unit)? = null,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
@@ -72,23 +72,24 @@ fun AppBaseTextField(
     minLines: Int = 1,
     interactionSource: MutableInteractionSource? = null,
     shape: Shape = TextFieldDefaults.shape,
+    bordered: Boolean = true,
     colors: TextFieldColors = AppTextField.defaultColors(),
 ) {
     var isFocused by remember { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }
 
 
-    val borderColor = if (isError) AppTheme.colorScheme.strokeNeutral2Error
+    val borderColor = if (error) AppTheme.colorScheme.strokeNeutral2Error
     else if (!enabled) Color.Transparent
     else if (isFocused) AppTheme.colorScheme.strokeNeutral2Active
-    else AppTheme.colorScheme.strokeNeutral2Default
+    else AppTheme.colorScheme.strokeNeutral1Default
 
-    val labelColor = if (isError) colors.errorLabelColor
+    val labelColor = if (error) colors.errorLabelColor
     else if (!enabled) colors.disabledLabelColor
     else if (isFocused) colors.focusedLabelColor
     else colors.unfocusedLabelColor
 
-    val inputColor = if (isError) colors.errorTextColor
+    val inputColor = if (error) colors.errorTextColor
     else if (!enabled) colors.disabledTextColor
     else if (isFocused) colors.focusedTextColor
     else colors.unfocusedTextColor
@@ -97,9 +98,11 @@ fun AppBaseTextField(
         modifier = modifier
             .fillMaxWidth()
             .defaultMinSize(minHeight = 56.dp)
-            .border(
-                border = BorderStroke(if (isFocused) 2.dp else 1.dp, borderColor),
-                shape = RoundedCornerShape(12.dp)
+            .then(
+                if (bordered) Modifier.border(
+                    border = BorderStroke(if (isFocused) 2.dp else 1.dp, borderColor),
+                    shape = RoundedCornerShape(12.dp)
+                ) else Modifier
             )
     ) {
         // Label above text field when focused or not empty
@@ -274,21 +277,31 @@ fun AppNumberTextField(
     modifier: Modifier = Modifier,
     value: String,
     label: String,
+    bordered: Boolean = true,
+    trailingIcon: @Composable (() -> Unit)? = null,
+    enabled: Boolean = true,
+    error: Boolean = false,
+    onFocused: ((Boolean) -> Unit)? = null,
     onValueChange: (String) -> Unit,
 ) {
     AppBaseTextField(
         modifier = modifier.fillMaxWidth(),
         value = value,
         label = label,
+        enabled = enabled,
+        error  = error,
         singleLine = true,
+        bordered = bordered,
         onValueChange = { newText ->
             // Ensure that the input consists of only digits
             if (newText.all { it.isDigit() }) {
                 onValueChange(newText)
             }
         },
+        onFocused = onFocused,
         trailingIcon = @Composable {
-            if (value.isNotEmpty()) AppButtonIcon(icon = Icons.Default.Close) { onValueChange("") }
+            if (trailingIcon != null) trailingIcon()
+            else if (value.isNotEmpty()) AppButtonIcon(icon = Icons.Default.Close) { onValueChange("") }
         },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
     )

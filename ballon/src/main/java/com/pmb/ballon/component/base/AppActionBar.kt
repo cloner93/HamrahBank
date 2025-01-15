@@ -11,21 +11,29 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.pmb.ballon.ui.theme.AppTheme
+import com.pmb.ballon.models.TextStyle
 
 data class ClickableIcon(val icon: IconType, val onClick: () -> Unit)
 sealed class IconType {
     data class Painter(val painter: androidx.compose.ui.graphics.painter.Painter) : IconType()
-    data class ImageVector(val imageVector: androidx.compose.ui.graphics.vector.ImageVector) : IconType()
+    data class ImageVector(val imageVector: androidx.compose.ui.graphics.vector.ImageVector) :
+        IconType()
+
     data class Bitmap(val imageBitmap: androidx.compose.ui.graphics.ImageBitmap) : IconType()
 }
 
 @Composable
-fun AppTopBar(title: String, startIcon: ClickableIcon? = null, endIcon: ClickableIcon? = null) {
+fun AppTopBar(
+    title: String,
+    textStyle: TextStyle = TextStyle.defaultTopBar(),
+    requiredHeight: Boolean = true,
+    startIcon: ClickableIcon? = null,
+    endIcon: ClickableIcon? = null
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(64.dp),
+            .then(if (requiredHeight) Modifier.height(64.dp) else Modifier),
     ) {
         if (startIcon != null) {
             AppButtonIcon(
@@ -43,11 +51,7 @@ fun AppTopBar(title: String, startIcon: ClickableIcon? = null, endIcon: Clickabl
             )
         }
 
-        Headline5Text(
-            modifier = Modifier.align(Alignment.Center),
-            text = title,
-            color = AppTheme.colorScheme.onBackgroundNeutralDefault,
-        )
+        BaseAppText(modifier = Modifier.align(Alignment.Center), title = title, style = textStyle)
     }
 }
 
@@ -70,6 +74,18 @@ fun AppTopBar(title: String, onBack: (() -> Unit)? = null, endIcon: ClickableIco
 private fun AppTopBarPreview() {
     AppTopBar(
         title = "test toolbar",
+        startIcon = ClickableIcon(IconType.ImageVector(Icons.Default.CloudQueue), onClick = {}),
+        endIcon = ClickableIcon(IconType.ImageVector(Icons.Filled.ArrowForward), onClick = {})
+    )
+}
+
+
+@Preview
+@Composable
+private fun AppTopBarPreview2() {
+    AppTopBar(
+        title = "test toolbar",
+        requiredHeight = false,
         startIcon = ClickableIcon(IconType.ImageVector(Icons.Default.CloudQueue), onClick = {}),
         endIcon = ClickableIcon(IconType.ImageVector(Icons.Filled.ArrowForward), onClick = {})
     )

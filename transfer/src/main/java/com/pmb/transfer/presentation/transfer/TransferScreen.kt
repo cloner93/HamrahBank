@@ -42,7 +42,7 @@ fun TransferScreen(navigationManager: NavigationManager) {
                 endIcon = ClickableIcon(
                     icon = IconType.Painter(painterResource(com.pmb.ballon.R.drawable.ic_search)),
                     onClick = {
-                        navigationManager.navigate(TransferScreens.DestinationSearch)
+                        navigationManager.navigate(TransferScreens.TransferDestinationSearch)
                     })
             )
             if (transactionClientBanks.isEmpty()) {
@@ -55,7 +55,7 @@ fun TransferScreen(navigationManager: NavigationManager) {
                     items = transactionClientBanks,
                     state = lazyListState,
                     onClick = {
-                        navigationManager.navigate(TransferScreens.DestinationInput)
+                        navigationManager.navigate(TransferScreens.TransferDestinationInput)
                     }
                 )
             }
@@ -66,7 +66,7 @@ fun TransferScreen(navigationManager: NavigationManager) {
             text = stringResource(R.string.new_transfer),
             icon = IconType.ImageVector(imageVector = Icons.Default.Add),
             onClick = {
-                navigationManager.navigate(TransferScreens.DestinationInput)
+                navigationManager.navigate(TransferScreens.TransferDestinationInput)
             }
         )
     }

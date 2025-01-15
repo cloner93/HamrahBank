@@ -10,6 +10,7 @@ import androidx.compose.ui.res.stringResource
 import com.pmb.ballon.component.Header
 import com.pmb.transfer.R
 import com.pmb.transfer.domain.TransactionClientBank
+import com.pmb.transfer.presentation.components.transfer_confirm.ClientBankInfoTypeRow
 
 @Composable
 fun TransactionClientBankList(
