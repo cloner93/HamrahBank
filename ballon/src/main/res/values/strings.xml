@@ -7,6 +7,7 @@
     <string name="digit">حروف کوچک</string>
     <string name="special_char"><![CDATA[علامت (مانند ٪>@)]]></string>
     <string name="real_carrency">ریال</string>
+    <string name="toman">تومان</string>
     <string name="home">خانه</string>
     <string name="transfer_and_receive">انتقال و دریافت</string>
     <string name="account_card">کارت و سپرده</string>
