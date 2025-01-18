@@ -1,4 +1,4 @@
-package com.pmb.transfer.presentation.amount
+package com.pmb.transfer.presentation.transfer_amount
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -6,25 +6,16 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.core.text.isDigitsOnly
+import com.pmb.ballon.component.SentencesWithSuffix
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppNumberTextField
@@ -34,13 +25,15 @@ import com.pmb.core.presentation.NavigationManager
 import com.pmb.core.utils.Convert
 import com.pmb.transfer.R
 import com.pmb.transfer.domain.TransactionClientBank
+import com.pmb.transfer.domain.transactionClientBanks
 import com.pmb.transfer.presentation.TransferScreens
+import com.pmb.transfer.presentation.components.ClientBankProfileInfo
 
 @Composable
 fun AmountScreen(navigationManager: NavigationManager) {
     var isValid by remember { mutableStateOf(false) }
     var identifierNumber by remember { mutableStateOf("") }
-    var clientBank by remember { mutableStateOf<TransactionClientBank?>(null) }
+    val clientBank by remember { mutableStateOf<TransactionClientBank>(transactionClientBanks.first()) }
 
     Box(modifier = Modifier.background(color = AppTheme.colorScheme.background1Neutral)) {
         AppContent(topBar = {
@@ -56,6 +49,8 @@ fun AmountScreen(navigationManager: NavigationManager) {
                     navigationManager.navigate(TransferScreens.TransferMethod)
                 })
         }) {
+            ClientBankProfileInfo(clientBank = clientBank.clientBank)
+            Spacer(modifier = Modifier.size(40.dp))
             AppNumberTextField(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -72,50 +67,9 @@ fun AmountScreen(navigationManager: NavigationManager) {
             Spacer(modifier = Modifier.size(16.dp))
 
             if (isValid)
-                LongSentenceWithSuffix(
+                SentencesWithSuffix(
                     sentence = Convert.numberToWords(identifierNumber.toBigInteger()),
-                    suffix = stringResource(R.string.toman)
                 )
         }
     }
-}
-
-
-@Composable
-fun LongSentenceWithSuffix(sentence: String, suffix: String = stringResource(R.string.toman)) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp),
-        contentAlignment = Alignment.Center // Centers the content within the Box
-    ) {
-        Text(
-            text = buildAnnotatedString {
-                append(sentence)
-                append(" ")
-                withStyle(
-                    style = SpanStyle(
-                        fontFamily = AppTheme.typography.bodyMedium.fontFamily,
-                        fontWeight = FontWeight.Normal
-                    )
-                ) {
-                    append(suffix)
-                }
-            },
-            style = TextStyle(
-                fontSize = 16.sp,
-                lineHeight = 24.sp,
-                fontFamily = AppTheme.typography.headline6.fontFamily,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center // Centers text horizontally
-            )
-        )
-    }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewLongSentenceWithSuffix() {
-    LongSentenceWithSuffix(sentence = "این یک جمله طولانی است که مبلغ آن محاسبه شده و در انتهای جمله تومان اضافه خواهد شد.")
 }

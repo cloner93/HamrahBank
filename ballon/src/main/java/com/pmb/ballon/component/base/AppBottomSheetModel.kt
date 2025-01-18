@@ -54,7 +54,8 @@ fun AppBottomSheet(
         if (isVisible) {
             sheetState.show() // Show the bottom sheet
         } else {
-            sheetState.hide() // Hide the bottom sheet
+            if (sheetState.isVisible)
+                sheetState.hide() // Hide the bottom sheet
             onDismiss()
         }
     }
@@ -62,7 +63,8 @@ fun AppBottomSheet(
     ModalBottomSheet(
         onDismissRequest = {
             scope.launch {
-                sheetState.hide() // Hide the sheet on dismissal request
+                if (sheetState.isVisible)
+                    sheetState.hide() // Hide the sheet on dismissal request
                 onDismiss() // Trigger onDismiss after hiding
             }
         },

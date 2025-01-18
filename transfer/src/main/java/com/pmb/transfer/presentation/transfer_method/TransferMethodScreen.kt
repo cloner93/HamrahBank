@@ -21,6 +21,7 @@ import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.core.presentation.NavigationManager
 import com.pmb.transfer.R
 import com.pmb.transfer.domain.TransactionClientBank
+import com.pmb.transfer.presentation.TransferScreens
 
 @Composable
 fun TransferMethodScreen(navigationManager: NavigationManager) {
@@ -40,7 +41,7 @@ fun TransferMethodScreen(navigationManager: NavigationManager) {
                     subtitle = "انتقال در لحظه | کارمزد: ۵٬۰۰۰ ریال",
                     startIcon = com.pmb.ballon.R.drawable.ic_bank_card_swap,
                     onClick = {
-
+                        navigationManager.navigate(TransferScreens.TransferConfirm)
                     })
                 Spacer(modifier = Modifier.size(16.dp))
                 ItemVerticalTextIcon(title = "بین بانکی (ساتنا)",
@@ -48,7 +49,7 @@ fun TransferMethodScreen(navigationManager: NavigationManager) {
                     startIcon = com.pmb.ballon.R.drawable.ic_university,
                     enable = false,
                     onClick = {
-
+                        navigationManager.navigate(TransferScreens.TransferConfirm)
                     })
                 Spacer(modifier = Modifier.size(16.dp))
                 ItemVerticalTextIcon(title = "بین بانکی (پایا)",
@@ -56,7 +57,7 @@ fun TransferMethodScreen(navigationManager: NavigationManager) {
                     startIcon = com.pmb.ballon.R.drawable.ic_university,
                     enable = false,
                     onClick = {
-
+                        navigationManager.navigate(TransferScreens.TransferConfirm)
                     })
                 Spacer(modifier = Modifier.size(16.dp))
                 ItemVerticalTextIcon(title = "بین بانکی (پل)",
@@ -64,7 +65,7 @@ fun TransferMethodScreen(navigationManager: NavigationManager) {
                     startIcon = com.pmb.ballon.R.drawable.ic_university,
                     enable = false,
                     onClick = {
-
+                        navigationManager.navigate(TransferScreens.TransferConfirm)
                     })
                 Spacer(modifier = Modifier.size(16.dp))
                 ItemVerticalTextIcon(title = "ملت به ملت",
@@ -72,7 +73,7 @@ fun TransferMethodScreen(navigationManager: NavigationManager) {
                     startIcon = com.pmb.ballon.R.drawable.ic_bank_mellat,
                     enable = false,
                     onClick = {
-
+                        navigationManager.navigate(TransferScreens.TransferConfirm)
                     })
             }
         }
