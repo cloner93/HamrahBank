@@ -1,4 +1,4 @@
-package com.pmb.transfer.presentation.components
+package com.pmb.transfer.presentation.components.transfer_confirm
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -20,6 +20,8 @@ import com.pmb.ballon.models.TextStyle
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.transfer.domain.BankIdentifierNumberType
 import com.pmb.transfer.domain.TransactionClientBank
+import com.pmb.transfer.presentation.components.ProfileAndThumbnail
+import com.pmb.transfer.utils.BankUtil
 
 @Composable
 fun ClientBankInfoTypeRow(
@@ -59,7 +61,11 @@ fun ClientBankInfoTypeRow(
             .padding(vertical = 10.dp, horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        ClientBankImage(clientBank = info.clientBank, imageSize = 44.dp)
+        ProfileAndThumbnail(
+            profileUrl = info.clientBank.profileUrl,
+            icon = BankUtil.getLogo(info.clientBank.cardNumber),
+            imageSize = 44.dp,
+        )
         Spacer(modifier = Modifier.width(12.dp))
         ItemColumn(
             title = info.clientBank.name,
