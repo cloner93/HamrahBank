@@ -45,19 +45,19 @@ object MenuItemColors {
             disabledContentColor = AppTheme.colorScheme.onBackgroundNeutralDisabled
         ),
         endIconColor: ObjectColors = ObjectColors(
-            contentColor = AppTheme.colorScheme.onBackgroundNeutralSubdued,
+            contentColor = AppTheme.colorScheme.foregroundNeutralDefault,
             errorContentColor = AppTheme.colorScheme.onBackgroundNeutralSubdued,
             disabledContentColor = AppTheme.colorScheme.onBackgroundNeutralDisabled,
         ),
         containerColor: ObjectColors = ObjectColors(
             contentColor = Color.Transparent,
             errorContentColor = Color.Transparent,
-            disabledContentColor = Color(0x66C6C6C9)
+            disabledContentColor = Color.Transparent
         ),
         borderColor: ObjectColors = ObjectColors(
-            contentColor = AppTheme.colorScheme.onBackgroundNeutralDisabled,
+            contentColor = AppTheme.colorScheme.onBackgroundNeutralSubdued,
             errorContentColor = AppTheme.colorScheme.onBackgroundNeutralCTA,
-            disabledContentColor = Color.Transparent
+            disabledContentColor = AppTheme.colorScheme.strokeNeutral3Rest
         )
     ): ItemColors = ItemColors(
         titleColor = titleColor,
