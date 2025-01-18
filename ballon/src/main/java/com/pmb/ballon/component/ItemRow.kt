@@ -40,7 +40,7 @@ fun BaseItemRow(
             title()
             subtitle()
         }
-        if (bottomDivider) HorizontalDivider(thickness = 1.dp)
+        if (bottomDivider) HorizontalDivider()
     }
 }
 

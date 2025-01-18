@@ -33,7 +33,7 @@ fun BaseItemColumn(
         title()
         Spacer(modifier = Modifier.size(4.dp))
         subtitle()
-        if (bottomDivider) HorizontalDivider(thickness = 1.dp)
+        if (bottomDivider) HorizontalDivider()
     }
 }
 

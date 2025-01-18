@@ -1,4 +1,4 @@
-package com.pmb.transfer.presentation.destination_input
+package com.pmb.transfer.presentation.transfer_destination_input
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -27,7 +27,7 @@ import com.pmb.transfer.domain.BankIdentifierNumberType
 import com.pmb.transfer.domain.ClientBank
 import com.pmb.transfer.domain.TransactionClientBank
 import com.pmb.transfer.presentation.TransferScreens
-import com.pmb.transfer.presentation.components.ClientBankInfoTypeRow
+import com.pmb.transfer.presentation.components.transfer_confirm.ClientBankInfoTypeRow
 import com.pmb.transfer.utils.BankUtil
 
 @Composable
@@ -51,7 +51,7 @@ fun DestinationInputScreen(navigationManager: NavigationManager) {
                     title = stringResource(R.string.next),
                     enable = isValid,
                     onClick = {
-                        navigationManager.navigate(TransferScreens.Amount)
+                        navigationManager.navigate(TransferScreens.TransferAmount)
                     })
             }
         ) {
@@ -96,7 +96,7 @@ fun DestinationInputScreen(navigationManager: NavigationManager) {
                     ClientBankInfoTypeRow(info = it,
                         background = Color(0xFFF3F3F7),
                         onClick = {
-                            navigationManager.navigate(TransferScreens.Amount)
+                            navigationManager.navigate(TransferScreens.TransferAmount)
                         })
                 }
             }
