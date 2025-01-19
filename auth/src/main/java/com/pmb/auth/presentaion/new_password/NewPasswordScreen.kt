@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -15,19 +17,32 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.pmb.auth.R
 import com.pmb.auth.presentaion.component.ShowChangedNewPasswordBottomSheet
+import com.pmb.auth.presentaion.new_password.viewModel.NewPassWordViewEvents
+import com.pmb.auth.presentaion.new_password.viewModel.NewPassWordViewModel
+import com.pmb.auth.presentaion.new_password.viewModel.NewPasswordViewActions
+import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppContent
+import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.text_field.AppPasswordTextField
 
 @Composable
-fun NewPasswordScreen(navController: NavController) {
-    var showBottomSheet by remember { mutableStateOf(false) }
+fun NewPasswordScreen(navController: NavController, viewModel: NewPassWordViewModel) {
     var password by remember { mutableStateOf("") }
     var rePassword by remember { mutableStateOf("") }
     var isPassword by remember { mutableStateOf(false) }
     var isRePassword by remember { mutableStateOf(false) }
-
+    val viewState by viewModel.viewState.collectAsState()
+    LaunchedEffect(Unit) {
+        viewModel.viewEvent.collect { event ->
+            when (event) {
+                NewPassWordViewEvents.ChangePassWordSucceed -> {
+                    //TODO - change when we want to do something and we call it in AuthScreens.kt
+                }
+            }
+        }
+    }
     AppContent(
         modifier = Modifier.padding(24.dp),
         topBar = {
@@ -40,9 +55,15 @@ fun NewPasswordScreen(navController: NavController) {
                 .fillMaxWidth()
                 .padding(horizontal = 24.dp),
                 title = stringResource(R.string._continue),
-                enable = isPassword && isRePassword && password == rePassword,
+                enable = !viewState.loading && isPassword && isRePassword && password == rePassword,
                 onClick = {
-                    showBottomSheet = true
+                    viewModel.handle(
+                        NewPasswordViewActions.ChangePassWord(
+                            passWord = password,
+                            mobileNumber = viewModel.getAccountSampleModel().mobileNumber,
+                            userName = viewModel.getAccountSampleModel().userName
+                        )
+                    )
                 })
         },
         content = {
@@ -65,5 +86,17 @@ fun NewPasswordScreen(navController: NavController) {
                 onValueChange = { rePassword = it })
         })
 
-    if (showBottomSheet) ShowChangedNewPasswordBottomSheet(onDismiss = { showBottomSheet = false })
+    if (viewState.isShowBottomSheet)
+        ShowChangedNewPasswordBottomSheet(onDismiss = {
+            viewModel.handle(
+                NewPasswordViewActions.ClearBottomSheet
+            )
+        })
+    if (viewState.loading) {
+        AppLoading()
+    }
+    if (viewState.alertModelState != null) {
+        AlertComponent(viewState.alertModelState!!)
+    }
 }
+
