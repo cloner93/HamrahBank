@@ -1,10 +1,12 @@
 package com.pmb.auth.di
 
+import com.pmb.auth.data.activate.ActivateRepositoryImpl
 import com.pmb.auth.data.first_login.FirstLoginRepositoryImpl
 import com.pmb.auth.data.first_login_confirm.FirstLoginConfirmRepositoryImpl
 import com.pmb.auth.data.forget_password.ForgetPasswordRepositoryImpl
 import com.pmb.auth.data.login.LoginRepositoryImpl
 import com.pmb.auth.data.new_password.NewPasswordRepositoryImpl
+import com.pmb.auth.domain.activate.repository.ActivateRepository
 import com.pmb.auth.domain.first_login.repository.FirstLoginRepository
 import com.pmb.auth.domain.first_login_confirm.repository.FirstLoginConfirmRepository
 import com.pmb.auth.domain.forget_password.repository.ForgetPasswordRepository
@@ -30,6 +32,10 @@ abstract class RepositoryModule {
 
     @Binds
     abstract fun bindFirstLoginConfirm(firstLoginConfirmRepositoryImpl: FirstLoginConfirmRepositoryImpl): FirstLoginConfirmRepository
+
+
+    @Binds
+    abstract fun bindActivationUser(activateRepositoryImpl: ActivateRepositoryImpl): ActivateRepository
 
     @Binds
     abstract fun bindNewPasswordRepository(newPasswordRepositoryImpl: NewPasswordRepositoryImpl): NewPasswordRepository
