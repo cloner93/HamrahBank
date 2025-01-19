@@ -11,6 +11,8 @@ import com.pmb.auth.presentaion.foget_password.viewmodel.ForgetPasswordViewModel
 import com.pmb.auth.presentaion.intro.IntroScreen
 import com.pmb.auth.presentaion.login.LoginScreen
 import com.pmb.auth.presentaion.login.viewmodel.LoginViewModel
+import com.pmb.auth.presentaion.register.account_opening.AccountOpeningScreen
+import com.pmb.auth.presentaion.register.national_id.RegisterNationalIdScreen
 import com.pmb.core.presentation.NavigationManager
 import com.pmb.core.presentation.Screen
 
@@ -24,6 +26,7 @@ sealed class AuthScreens(route: String, arguments: Map<String, String> = emptyMa
     data object Register : AuthScreens(route = "register")
     data object ForgetPassword : AuthScreens(route = "forget_password")
     data object ForgetPasswordAuth : AuthScreens(route = "forget_password_auth")
+    data object RegisterNationalId : AuthScreens(route = "register_national_id")
 }
 
 
@@ -46,7 +49,7 @@ fun NavGraphBuilder.authScreensHandle(
         )
     }
     composable(route = AuthScreens.Register.route) {
-
+        AccountOpeningScreen(navigationManager = navigationManager)
     }
     composable(route = AuthScreens.ForgetPassword.route) {
         ForgetPasswordScreen(
@@ -56,5 +59,8 @@ fun NavGraphBuilder.authScreensHandle(
     }
     composable(route = AuthScreens.ForgetPasswordAuth.route) {
         ForgetPasswordAuthScreen(navigationManager = navigationManager)
+    }
+    composable(route = AuthScreens.RegisterNationalId.route) {
+        RegisterNationalIdScreen(navigationManager = navigationManager)
     }
 }
