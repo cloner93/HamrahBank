@@ -25,6 +25,7 @@
     <string name="msg_first_login_confirm_header">کد ورود به شماره تلفن همراه شما ارسال شد. لطفا آن را وارد نمایید.</string>
     <string name="otp">کد ورود</string>
     <string name="re_send">ارسال مجدد</string>
+    <string name="resend_request"> امکان درخواست مجدد تا %s:%s</string>
     <string name="msg_could_not_login">ورود امکان پذیر نیست!</string>
     <string name="msg_invalid_login_credentials">همراه‌بانک شما به دلیل ورود کد نادرست قفل شده‌است. لطفاً پس از ۲۴ ساعت دوباره امتحان کنید.</string>
     <string name="i_understand">متوجه شدم</string>

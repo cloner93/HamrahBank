@@ -102,10 +102,10 @@ fun LoginScreen(navigationManager: NavigationManager, viewModel: LoginViewModel)
             })
 
     }
-    if (viewState.loading){
+    if (viewState.loading) {
         AppLoading()
     }
-    if (viewState.alert!=null){
+    if (viewState.alert != null) {
         AlertComponent(viewState.alert!!)
     }
 }

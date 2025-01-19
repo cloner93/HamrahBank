@@ -89,7 +89,7 @@ fun ShowInvalidLoginBottomSheet(expired: String, onDismiss: () -> Unit) {
                 Spacer(modifier = Modifier.size(24.dp))
                 AppTextButton(
                     modifier = Modifier.fillMaxWidth(),
-                    title = "امکان  ورود مجدد تا ۲۳:۵۹:۵۹",
+                    title = "امکان  ورود مجدد تا ${expired}",
                     enable = false,
                     onClick = { isVisible = false })
                 Spacer(modifier = Modifier.size(8.dp))
