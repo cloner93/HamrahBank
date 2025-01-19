@@ -1,6 +1,5 @@
 package com.pmb.auth.presentaion.login.viewmodel
 
-import android.app.Application
 import androidx.lifecycle.viewModelScope
 import com.pmb.auth.domain.login.usecase.RequestLoginParams
 import com.pmb.auth.domain.login.usecase.RequestLoginUseCase
@@ -8,7 +7,6 @@ import com.pmb.core.platform.AlertModelState
 import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.platform.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

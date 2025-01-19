@@ -2,6 +2,7 @@ package com.pmb.auth.data.forget_password
 
 import com.pmb.auth.domain.forget_password.entity.ForgetPasswordEntity
 import com.pmb.auth.domain.forget_password.repository.ForgetPasswordRepository
+import com.pmb.ballon.models.AccountSampleModel
 import com.pmb.core.platform.Result
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -16,11 +17,12 @@ class ForgetPasswordRepositoryImpl @Inject constructor(
         nationalId: String,
         password: String
     ): Flow<Result<ForgetPasswordEntity>> = flow {
+        val accountSampleModel = AccountSampleModel()
         emit(Result.Loading)
         delay(2000)
-        if(nationalId=="1"&&mobileNumber=="1"){
+        if (nationalId == accountSampleModel.nationalId && mobileNumber == accountSampleModel.mobileNumber) {
             emit(Result.Success(ForgetPasswordEntity(isSuccess = true)))
-        }else{
+        } else {
             emit(Result.Error(message = "forget password failed"))
         }
     }
