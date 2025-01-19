@@ -53,14 +53,14 @@ data class CustomTypography(
     val buttonSmall: TextStyle = TextStyle(
         fontFamily = appFontFamily,
         fontSize = 14.sp,
-        lineHeight = 20.sp,
-        fontWeight = FontWeight(416),
+        lineHeight = 18.sp,
+        fontWeight = FontWeight(500),
     ),
     val buttonMedium: TextStyle = TextStyle(
         fontFamily = appFontFamily,
-        fontSize = 14.sp,
-        lineHeight = 24.sp,
-        fontWeight = FontWeight(416),
+        fontSize = 16.sp,
+        lineHeight = 20.sp,
+        fontWeight = FontWeight(400),
     ),
     val buttonLarge: TextStyle = TextStyle(
         fontFamily = appFontFamily,

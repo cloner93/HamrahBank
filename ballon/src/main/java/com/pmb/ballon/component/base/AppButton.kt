@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.pmb.ballon.models.AppButton
+import com.pmb.ballon.models.TextStyle
 
 
 @Composable
@@ -17,6 +18,7 @@ fun AppButton(
     modifier: Modifier = Modifier,
     title: String,
     colors: ButtonColors = AppButton.buttonColors(),
+    textStyle: TextStyle = TextStyle.defaultButton(),
     enable: Boolean = true,
     onClick: () -> Unit
 ) {
@@ -27,7 +29,7 @@ fun AppButton(
         enabled = enable,
         onClick = onClick
     ) {
-        ButtonLargeText(text = title)
+        BaseAppText(title = title, style = textStyle)
     }
 }
 

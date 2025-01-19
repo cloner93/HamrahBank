@@ -1,32 +1,39 @@
 package com.pmb.transfer.presentation.transfer
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
-import com.pmb.ballon.component.base.AppContent
+import com.pmb.ballon.component.EmptyList
+import com.pmb.ballon.component.ExtendFAB
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.ClickableIcon
 import com.pmb.ballon.component.base.IconType
+import com.pmb.ballon.models.isScrollingUp
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.core.presentation.NavigationManager
 import com.pmb.transfer.R
-import com.pmb.transfer.domain.clientBanks
 import com.pmb.transfer.domain.transactionClientBanks
 import com.pmb.transfer.presentation.TransferScreens
-import com.pmb.transfer.presentation.components.ContactsView
 import com.pmb.transfer.presentation.components.TransactionClientBankList
 
 @Composable
 fun TransferScreen(navigationManager: NavigationManager) {
-    AppContent(
-        topBar = {
+    val lazyListState = rememberLazyListState()
+    Box(contentAlignment = Alignment.BottomCenter) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(color = AppTheme.colorScheme.onForegroundNeutralDefault)
+        ) {
             AppTopBar(
                 title = stringResource(R.string.fund_transfer),
                 onBack = {
@@ -35,38 +42,32 @@ fun TransferScreen(navigationManager: NavigationManager) {
                 endIcon = ClickableIcon(
                     icon = IconType.Painter(painterResource(com.pmb.ballon.R.drawable.ic_search)),
                     onClick = {
-                        navigationManager.navigate(TransferScreens.Search)
+                        navigationManager.navigate(TransferScreens.TransferDestinationSearch)
                     })
             )
-        },
-        footer = {
-
-        },
-        content = {
-
-        })
-}
-
-@Composable
-private fun TransferScreenOld(navigationManager: NavigationManager) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = AppTheme.colorScheme.onForegroundNeutralDefault)
-    ) {
-        ContactsView(
-            items = clientBanks,
-            onClick = {
-                navigationManager.navigate(TransferScreens.DestinationInput)
+            if (transactionClientBanks.isEmpty()) {
+                EmptyList(
+                    iconType = IconType.Painter(painterResource(R.drawable.img_bank_card_shrare_money)),
+                    message = stringResource(R.string.msg_dont_have_transfer_yet)
+                )
+            } else {
+                TransactionClientBankList(
+                    items = transactionClientBanks,
+                    state = lazyListState,
+                    onClick = {
+                        navigationManager.navigate(TransferScreens.TransferDestinationInput)
+                    }
+                )
             }
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        TransactionClientBankList(
-            items = transactionClientBanks,
+
+        }
+        ExtendFAB(
+            extended = lazyListState.isScrollingUp(),
+            text = stringResource(R.string.new_transfer),
+            icon = IconType.ImageVector(imageVector = Icons.Default.Add),
             onClick = {
-                navigationManager.navigate(TransferScreens.DestinationInput)
+                navigationManager.navigate(TransferScreens.TransferDestinationInput)
             }
         )
     }
 }
-

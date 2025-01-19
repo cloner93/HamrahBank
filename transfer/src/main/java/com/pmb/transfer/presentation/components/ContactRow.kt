@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.pmb.ballon.component.base.CaptionText
 import com.pmb.transfer.domain.ClientBank
+import com.pmb.transfer.utils.BankUtil
 
 @Composable
 fun ContactRow(clientBank: ClientBank, onClick: (ClientBank) -> Unit) {
@@ -20,7 +21,10 @@ fun ContactRow(clientBank: ClientBank, onClick: (ClientBank) -> Unit) {
             .padding(horizontal = 12.dp)
             .clickable { onClick(clientBank) }
     ) {
-        ClientBankImage(clientBank = clientBank)
+        ProfileAndThumbnail(
+            profileUrl = clientBank.profileUrl,
+            icon = BankUtil.getLogo(clientBank.cardNumber),
+        )
         Spacer(modifier = Modifier.height(6.dp))
         CaptionText(text = clientBank.name)
     }
