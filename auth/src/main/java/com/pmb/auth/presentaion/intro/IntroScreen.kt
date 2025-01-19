@@ -65,7 +65,6 @@ fun IntroScreen(
                     title = stringResource(R.string.register),
                     onClick = {
                         navigationManager.navigate(AuthScreens.Register)
-//                        showBottomSheet = true
                     }
                 )
 
@@ -95,7 +94,6 @@ private fun SplashViewPreview() {
                 modifier = Modifier.fillMaxWidth(),
                 title = stringResource(R.string.register)
             ) {
-
             }
         }
 

@@ -28,4 +28,6 @@
     <string name="msg_could_not_login">ورود امکان پذیر نیست!</string>
     <string name="msg_invalid_login_credentials">همراه‌بانک شما به دلیل ورود کد نادرست قفل شده‌است. لطفاً پس از ۲۴ ساعت دوباره امتحان کنید.</string>
     <string name="i_understand">متوجه شدم</string>
+    <string name="account_opening">افتتاح حساب</string>
+    <string name="birthday">تاریخ تولد</string>
 </resources>

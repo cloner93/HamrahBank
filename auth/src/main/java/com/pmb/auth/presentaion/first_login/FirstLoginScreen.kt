@@ -29,7 +29,7 @@ import com.pmb.core.presentation.NavigationManager
 
 @Composable
 fun FirstLoginScreen(navigationManager: NavigationManager) {
-    var phonenumber by remember { mutableStateOf("") }
+    var phoneNumber by remember { mutableStateOf("") }
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var isMobile by remember { mutableStateOf(false) }
@@ -82,10 +82,10 @@ fun FirstLoginScreen(navigationManager: NavigationManager) {
 
         Spacer(modifier = Modifier.size(32.dp))
 
-        AppMobileTextField(value = phonenumber,
+        AppMobileTextField(value = phoneNumber,
             label = stringResource(com.pmb.auth.R.string.phone_number),
             onValidate = { isMobile = it },
-            onValueChange = { phonenumber = it })
+            onValueChange = { phoneNumber = it })
 
         Spacer(modifier = Modifier.size(32.dp))
 
