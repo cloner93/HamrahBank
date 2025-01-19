@@ -5,6 +5,7 @@ import com.pmb.auth.presentaion.first_login.viewModel.FirstLoginViewState
 import com.pmb.auth.presentaion.first_login_confirm.viewModel.FirstLoginConfirmViewState
 import com.pmb.auth.presentaion.foget_password.viewmodel.ForgetPasswordViewState
 import com.pmb.auth.presentaion.login.viewmodel.LoginViewState
+import com.pmb.auth.presentaion.new_password.viewModel.NewPasswordViewState
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -37,4 +38,8 @@ object StateModule {
     @Provides
     @Singleton
     fun provideActivateViewState(): ActivateViewState = ActivateViewState()
+
+    @Provides
+    @Singleton
+    fun provideNewPasswordViewState(): NewPasswordViewState = NewPasswordViewState()
 }
