@@ -3,6 +3,7 @@ package com.pmb.auth.presentaion
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import com.pmb.auth.presentaion.ekyc.signature.SignatureScreen
 import com.pmb.auth.presentaion.first_login.FirstLoginScreen
 import com.pmb.auth.presentaion.first_login.viewModel.FirstLoginViewModel
 import com.pmb.auth.presentaion.first_login_confirm.FirstLoginConfirmScreen
@@ -29,6 +30,7 @@ sealed class AuthScreens(route: String, arguments: Map<String, String> = emptyMa
     data object ForgetPassword : AuthScreens(route = "forget_password")
     data object ForgetPasswordAuth : AuthScreens(route = "forget_password_auth")
     data object RegisterNationalId : AuthScreens(route = "register_national_id")
+    data object Signature : AuthScreens(route = "signature")
 }
 
 
@@ -39,10 +41,16 @@ fun NavGraphBuilder.authScreensHandle(
         IntroScreen(navigationManager = navigationManager)
     }
     composable(route = AuthScreens.FirstLogin.route) {
-        FirstLoginScreen(navigationManager = navigationManager, viewModel = hiltViewModel<FirstLoginViewModel>())
+        FirstLoginScreen(
+            navigationManager = navigationManager,
+            viewModel = hiltViewModel<FirstLoginViewModel>()
+        )
     }
     composable(route = AuthScreens.FirstLoginConfirm.route) {
-        FirstLoginConfirmScreen(navigationManager = navigationManager,viewModel = hiltViewModel<FirstLoginConfirmViewModel>())
+        FirstLoginConfirmScreen(
+            navigationManager = navigationManager,
+            viewModel = hiltViewModel<FirstLoginConfirmViewModel>()
+        )
     }
     composable(route = AuthScreens.Login.route) {
         LoginScreen(
@@ -64,5 +72,8 @@ fun NavGraphBuilder.authScreensHandle(
     }
     composable(route = AuthScreens.RegisterNationalId.route) {
         RegisterNationalIdScreen(navigationManager = navigationManager)
+    }
+    composable(route = AuthScreens.Signature.route){
+        SignatureScreen()
     }
 }

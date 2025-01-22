@@ -30,5 +30,8 @@
     <string name="msg_invalid_login_credentials">همراه‌بانک شما به دلیل ورود کد نادرست قفل شده‌است. لطفاً پس از ۲۴ ساعت دوباره امتحان کنید.</string>
     <string name="i_understand">متوجه شدم</string>
     <string name="account_opening">افتتاح حساب</string>
+    <string name="account_signature">امضای حساب</string>
+    <string name="take_your_signature">تصویر امضای خود را ثبت نمایید.</string>
+    <string name="coverage_signature_message">لطفا مطمئن شوید که امضای شما کامل در کادر قرار گیرد.</string>
     <string name="birthday">تاریخ تولد</string>
 </resources>
