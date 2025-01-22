@@ -2,6 +2,7 @@ package com.pmb.auth.presentaion.ekyc.signature.viewModel
 
 import androidx.lifecycle.viewModelScope
 import com.pmb.camera.platform.CameraManager
+import com.pmb.core.compression.ImageCompressor
 import com.pmb.core.permissions.PermissionDispatcher
 import com.pmb.core.platform.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,7 +13,8 @@ import javax.inject.Inject
 class SignatureViewModel @Inject constructor(
     initialSate: SignatureViewState,
     private val permissionDispatcher: PermissionDispatcher,
-    private val cameraManager: CameraManager
+    private val cameraManager: CameraManager,
+    private val imageCompressor: ImageCompressor
 ) : BaseViewModel<SignatureViewActions, SignatureViewState, SignatureViewEvents>(initialSate) {
     override fun handle(action: SignatureViewActions) {
         when (action) {
@@ -100,33 +102,41 @@ class SignatureViewModel @Inject constructor(
     }
 
     private fun takePhoto() {
-        viewModelScope.launch {
-            setState { state ->
-                state.copy(isLoading = true)
-            }
-            cameraManager.takePhoto(
-                onPhotoCaptured = { savedUri ->
-                    setState { state ->
-                        state.copy(
-                            isCapturingPhoto = false,
-                            photoCaptured = true,
-                            savedFileUri = savedUri,
-                            error = null
-                        )
-                    }
 
-                },
-                onError = { error ->
-                    setState { state ->
-                        state.copy(
-                            isCapturingPhoto = false,
-                            error = error
-                        )
-                    }
-
-                }
-            )
+        setState { state ->
+            state.copy(isLoading = true)
         }
+        cameraManager.takePhoto(
+            onPhotoCaptured = { savedUri ->
+                viewModelScope.launch {
+                    imageCompressor.compressImageFromPath(
+                        savedUri,
+                        1024,
+                        1024,
+                        compressionPercentage = 50
+                    )
+                }
+                setState { state ->
+                    state.copy(
+                        isCapturingPhoto = false,
+                        photoCaptured = true,
+                        savedFileUri = savedUri,
+                        error = null
+                    )
+                }
+
+            },
+            onError = { error ->
+                setState { state ->
+                    state.copy(
+                        isCapturingPhoto = false,
+                        error = error
+                    )
+                }
+
+            }
+        )
+
     }
 
 

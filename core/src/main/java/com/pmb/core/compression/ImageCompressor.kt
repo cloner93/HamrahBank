@@ -28,7 +28,8 @@ class ImageCompressor @Inject constructor(
         }
     }
 
-    suspend fun String.compressImageFromPath(
+    suspend fun compressImageFromPath(
+        imagePath: String,
         maxWidth: Int,
         maxHeight: Int,
         format: Bitmap.CompressFormat = Bitmap.CompressFormat.JPEG,
@@ -39,12 +40,12 @@ class ImageCompressor @Inject constructor(
         }
         try {
             val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
-            BitmapFactory.decodeFile(this@compressImageFromPath, options)
+            BitmapFactory.decodeFile(imagePath, options)
 
             options.inSampleSize = calculateInSampleSize(options, maxWidth, maxHeight)
             options.inJustDecodeBounds = false
 
-            val bitmap = BitmapFactory.decodeFile(this@compressImageFromPath, options)
+            val bitmap = BitmapFactory.decodeFile(imagePath, options)
 
             bitmap?.compress(format, compressionPercentage)
         } catch (exception: Exception) {
