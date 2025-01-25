@@ -9,8 +9,6 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
-import com.pmb.core.fileManager.FileManager
-import com.pmb.core.fileManager.FileManagerImpl
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
 import javax.inject.Inject
@@ -19,7 +17,6 @@ import javax.inject.Singleton
 @Singleton
 class CameraManager @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val fileManager: FileManager,
 ) {
     private var imageCapture: ImageCapture? = null
     private var cameraSelector: CameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
@@ -61,14 +58,12 @@ class CameraManager @Inject constructor(
             onError("ImageCapture is not initialized")
             return
         }
-//        val photoFile = fileManager.createImageFile()
         val outputOptions = ImageCapture.OutputFileOptions.Builder(outputFile).build()
         imageCapture.takePicture(
             outputOptions,
             ContextCompat.getMainExecutor(context),
             object : ImageCapture.OnImageSavedCallback {
                 override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
-//                    val savedUri = fileManager.getFileUri(outputFile)
                     onPhotoCaptured(true)
                 }
 
