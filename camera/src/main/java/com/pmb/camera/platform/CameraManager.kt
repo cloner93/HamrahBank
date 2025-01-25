@@ -10,7 +10,9 @@ import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import com.pmb.core.fileManager.FileManager
+import com.pmb.core.fileManager.FileManagerImpl
 import dagger.hilt.android.qualifiers.ApplicationContext
+import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -34,7 +36,8 @@ class CameraManager @Inject constructor(
                 val preview = Preview.Builder().build().also {
                     it.surfaceProvider = previewView.surfaceProvider
                 }
-                imageCapture = ImageCapture.Builder().build()
+                imageCapture = ImageCapture.Builder()
+                    .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY).build()
                 cameraProvider.unbindAll()
                 cameraProvider.bindToLifecycle(
                     lifecycleOwner,
@@ -50,22 +53,23 @@ class CameraManager @Inject constructor(
     }
 
     fun takePhoto(
-        onPhotoCaptured: (String) -> Unit,
+        outputFile: File,
+        onPhotoCaptured: (Boolean) -> Unit,
         onError: (String) -> Unit
     ) {
         val imageCapture = imageCapture ?: run {
             onError("ImageCapture is not initialized")
             return
         }
-        val photoFile = fileManager.createImageFile()
-        val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
+//        val photoFile = fileManager.createImageFile()
+        val outputOptions = ImageCapture.OutputFileOptions.Builder(outputFile).build()
         imageCapture.takePicture(
             outputOptions,
             ContextCompat.getMainExecutor(context),
             object : ImageCapture.OnImageSavedCallback {
                 override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
-                    val savedUri = fileManager.getFileUri(photoFile)
-                    onPhotoCaptured(savedUri.toString())
+//                    val savedUri = fileManager.getFileUri(outputFile)
+                    onPhotoCaptured(true)
                 }
 
                 override fun onError(exception: ImageCaptureException) {

@@ -7,7 +7,6 @@ data class SignatureViewState(
     val hasCameraPermission: Boolean = false,
     val hasFilePermissions: Boolean = false,
     val isCameraReady: Boolean = false,
-    val isRecording: Boolean = false,
     val isFrontCamera: Boolean = false,
     val isCapturingPhoto: Boolean = false,
     val photoCaptured: Boolean = false,

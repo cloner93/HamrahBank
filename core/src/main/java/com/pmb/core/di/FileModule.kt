@@ -2,6 +2,7 @@ package com.pmb.core.di
 
 import android.content.Context
 import com.pmb.core.fileManager.FileManager
+import com.pmb.core.fileManager.FileManagerImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,6 +18,6 @@ object FileModule {
     @Singleton
     fun provideFileManager(
         @ApplicationContext context: Context
-    ) = FileManager(context)
+    ): FileManager = FileManagerImpl(context)
 
 }
