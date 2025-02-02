@@ -2,6 +2,7 @@ package com.pmb.camera.di
 
 import android.content.Context
 import com.pmb.camera.platform.CameraManager
+import com.pmb.camera.platform.CameraManagerImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,7 +18,7 @@ object CameraModule {
     fun provideCameraController(
         @ApplicationContext context: Context
     ): CameraManager {
-        return CameraManager(
+        return CameraManagerImpl(
             context
         )
     }
