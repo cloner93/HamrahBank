@@ -18,14 +18,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.pmb.auth.R
+import com.pmb.auth.presentaion.AuthScreens
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.ui.theme.AppTheme
+import com.pmb.core.presentation.NavigationManager
 
 @Composable
-fun AuthenticationScreen() {
+fun AuthenticationScreen(navigationManager: NavigationManager) {
     AppContent(
         modifier = Modifier.padding(horizontal = 16.dp),
         topBar = {
@@ -42,6 +44,7 @@ fun AuthenticationScreen() {
                 enable = true,
                 title = stringResource(R.string.start_account_authentication),
                 onClick = {
+                    navigationManager.navigate(AuthScreens.FacePhotoCapture)
                 })
         },
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -63,7 +66,7 @@ fun AuthenticationScreen() {
             modifier = Modifier.fillMaxWidth(),
             text = buildAnnotatedString {
                 append("\u2022")
-                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)){
+                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
                     append(" شئونات اسلامی ")
                 }
                 append("را رعایت فرمایید.")
@@ -77,7 +80,7 @@ fun AuthenticationScreen() {
             modifier = Modifier.fillMaxWidth(),
             text = buildAnnotatedString {
                 append("\u2022")
-                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)){
+                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
                     append(" ماسک و عینک ")
                 }
                 append("بر روی صورت نداشته باشید.")
@@ -92,7 +95,7 @@ fun AuthenticationScreen() {
             text = buildAnnotatedString {
                 append("\u2022")
                 append(" صورت خود را")
-                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)){
+                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
                     append(" به طور کامل در کادر ")
                 }
                 append("مشخص شده قرار دهید.")
