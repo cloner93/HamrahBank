@@ -54,7 +54,7 @@ class PermissionDispatcher @Inject constructor(
         if (ContextCompat.checkSelfPermission(
                 context,
                 permission
-            ) != PackageManager.PERMISSION_GRANTED
+            ) == PackageManager.PERMISSION_GRANTED
         ) {
             onPermissionGranted()
         } else {

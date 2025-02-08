@@ -3,6 +3,7 @@ package com.pmb.auth.presentaion
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import com.pmb.auth.presentaion.ekyc.authentication.AuthenticationScreen
 import com.pmb.auth.presentaion.ekyc.signature.SignatureScreen
 import com.pmb.auth.presentaion.first_login.FirstLoginScreen
 import com.pmb.auth.presentaion.first_login.viewModel.FirstLoginViewModel
@@ -31,6 +32,7 @@ sealed class AuthScreens(route: String, arguments: Map<String, String> = emptyMa
     data object ForgetPasswordAuth : AuthScreens(route = "forget_password_auth")
     data object RegisterNationalId : AuthScreens(route = "register_national_id")
     data object Signature : AuthScreens(route = "signature")
+    data object Authentication : AuthScreens(route = "authentication")
 }
 
 
@@ -73,7 +75,10 @@ fun NavGraphBuilder.authScreensHandle(
     composable(route = AuthScreens.RegisterNationalId.route) {
         RegisterNationalIdScreen(navigationManager = navigationManager)
     }
-    composable(route = AuthScreens.Signature.route){
-        SignatureScreen()
+    composable(route = AuthScreens.Signature.route) {
+        SignatureScreen(navigationManager = navigationManager)
+    }
+    composable(route = AuthScreens.Authentication.route) {
+        AuthenticationScreen()
     }
 }

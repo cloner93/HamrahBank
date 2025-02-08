@@ -1,10 +1,14 @@
 package com.pmb.auth.presentaion.ekyc.signature.viewModel
 
+import android.util.Log
+import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.lifecycle.viewModelScope
+import com.pmb.auth.presentaion.login.LoginScreen
 import com.pmb.camera.platform.CameraManager
 import com.pmb.core.compression.ImageCompressor
 import com.pmb.core.fileManager.FileManager
 import com.pmb.core.permissions.PermissionDispatcher
+import com.pmb.core.permissions.requestSinglePermissionInCompose
 import com.pmb.core.platform.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -20,7 +24,7 @@ class SignatureViewModel @Inject constructor(
 ) : BaseViewModel<SignatureViewActions, SignatureViewState, SignatureViewEvents>(initialSate) {
     override fun handle(action: SignatureViewActions) {
         when (action) {
-            is SignatureViewActions.RequestCameraPermission -> requestCameraPermission()
+            is SignatureViewActions.RequestCameraPermission -> {requestCameraPermission(action)}
             is SignatureViewActions.RequestFilePermission -> requestFilePermission()
             is SignatureViewActions.TakePhoto -> takePhoto()
             is SignatureViewActions.ToggleCamera -> toggleCamera()
@@ -35,18 +39,24 @@ class SignatureViewModel @Inject constructor(
             }
         }
     }
-
-    private fun requestCameraPermission() {
+    fun onSinglePermissionResult(isGranted: Boolean){
+        permissionDispatcher.onSinglePermissionResult(isGranted)
+    }
+    fun requestCameraPermission(action:SignatureViewActions.RequestCameraPermission) {
         viewModelScope.launch {
+
+            permissionDispatcher.initialize(action.managedActivityResultLauncher)
             permissionDispatcher.requestSinglePermission(
                 permission = android.Manifest.permission.CAMERA,
                 onPermissionGranted = {
                     setState { state ->
+                        Log.i("per", "You have permission for using camera")
                         state.copy(hasCameraPermission = true)
                     }
                 },
                 onPermissionDenied = {
                     setState { state ->
+                        Log.i("per", "You don't have permission for using camera")
                         state.copy(error = "You don't have permission for using camera")
                     }
                 }
