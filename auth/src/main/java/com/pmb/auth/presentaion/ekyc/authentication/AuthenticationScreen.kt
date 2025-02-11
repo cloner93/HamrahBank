@@ -33,7 +33,9 @@ fun AuthenticationScreen(navigationManager: NavigationManager) {
         topBar = {
             AppTopBar(
                 title = stringResource(R.string.account_authentication),
-                onBack = { }
+                onBack = {
+                    navigationManager.navigateBack()
+                }
             )
 
         },

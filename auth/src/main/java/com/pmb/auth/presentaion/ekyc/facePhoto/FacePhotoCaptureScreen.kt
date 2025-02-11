@@ -87,6 +87,7 @@ fun FacePhotoCapture(navigationManager: NavigationManager) {
                     enable = true,
                     title = stringResource(R.string._continue),
                     onClick = {
+                        navigationManager.navigate(AuthScreens.AuthenticationVideo)
                     })
             }
         },

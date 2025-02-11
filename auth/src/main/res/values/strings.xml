@@ -37,7 +37,11 @@
     <string name="coverage_signature_message">لطفا مطمئن شوید که امضای شما کامل در کادر قرار گیرد.</string>
     <string name="birthday">تاریخ تولد</string>
     <string name="face_photo">تصویر از چهره</string>
+    <string name="video_authentication">ویدئو از چهره</string>
     <string name="take_your_face_photo">تصویر چهره خود را ثبت نمایید.</string>
+    <string name="repeat_sentence">جمله زیر را تکرار کنید.</string>
+    <string name="repeated_sentence">من درس ریاضی را دوست دارم.</string>
     <string name="take_your_face_photo_continue">در صورتی که تصویر، مورد تاییدتان است، دکمه ادامه را فشار بدهید.</string>
+    <string name="take_your_video_continue">در صورتی که ویدئو مورد تاییدتان است، دکمه ادامه را فشار بدهید در غیر این صورت دکمه ضبط مجدد را فشار دهید.</string>
     <string name="start_authentication_description">در این مرحله، باید یک تصویر و ویدئو از چهره خود بگیرید. لطفا پیش از شروع این فرآیند، به نکات زیر توجه فرمایید :</string>
 </resources>
