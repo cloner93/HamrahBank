@@ -3,6 +3,7 @@ package com.pmb.auth.presentaion
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import com.pmb.auth.presentaion.ekyc.authenthicationConfirm.AuthenticationConfirmScreen
 import com.pmb.auth.presentaion.ekyc.authentication.AuthenticationScreen
 import com.pmb.auth.presentaion.ekyc.authenticationSelectServices.AuthenticationSelectServicesScreen
 import com.pmb.auth.presentaion.ekyc.authenticationVideo.AuthenticationVideoScreen
@@ -40,9 +41,10 @@ sealed class AuthScreens(route: String, arguments: Map<String, String> = emptyMa
     data object Authentication : AuthScreens(route = "authentication")
     data object FacePhotoCapture : AuthScreens(route = "facePhotoCapture")
     data object AuthenticationVideo : AuthScreens(route = "authenticationVideo")
+    data object AuthenticationStep : AuthScreens(route = "authenticationStep")
     data object AuthenticationSelectServices : AuthScreens(route = "authenticationSelectServices")
     data object FeeDetails : AuthScreens(route = "feeDetails")
-    data object openAccount : AuthScreens(route = "openAccount")
+    data object OpenAccount : AuthScreens(route = "openAccount")
 }
 
 
@@ -97,13 +99,16 @@ fun NavGraphBuilder.authScreensHandle(
     composable(route = AuthScreens.AuthenticationVideo.route) {
         AuthenticationVideoScreen(navigationManager = navigationManager)
     }
+    composable(route = AuthScreens.AuthenticationStep.route) {
+        AuthenticationConfirmScreen(navigationManager = navigationManager)
+    }
     composable(route = AuthScreens.AuthenticationSelectServices.route ){
         AuthenticationSelectServicesScreen(navigationManager = navigationManager)
     }
     composable(route = AuthScreens.FeeDetails.route ){
         FeeDetailsScreen(navigationManager = navigationManager)
     }
-    composable(route = AuthScreens.openAccount.route ){
+    composable(route = AuthScreens.OpenAccount.route ){
         OpenAccountScreen(navigationManager = navigationManager)
     }
 }

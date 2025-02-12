@@ -91,7 +91,7 @@ fun AuthenticationSelectServicesScreen(navigationManager: NavigationManager) {
                 enable = checked || checked2,
                 title = stringResource(R.string._continue),
                 onClick = {
-                    navigationManager.navigate(AuthScreens.openAccount)
+                    navigationManager.navigate(AuthScreens.OpenAccount)
                 })
         }
     ) {

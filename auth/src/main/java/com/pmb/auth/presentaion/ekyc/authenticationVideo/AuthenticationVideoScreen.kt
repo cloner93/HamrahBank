@@ -40,6 +40,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.pmb.auth.R
+import com.pmb.auth.presentaion.AuthScreens
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppTopBar
@@ -143,6 +144,7 @@ fun AuthenticationVideoScreen(navigationManager: NavigationManager) {
                     enable = true,
                     title = stringResource(R.string._continue),
                     onClick = {
+                        navigationManager.navigate(AuthScreens.AuthenticationStep)
                     })
             }
         },
