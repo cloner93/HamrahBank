@@ -31,6 +31,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.pmb.auth.R
@@ -90,6 +91,7 @@ fun AuthenticationSelectServicesScreen(navigationManager: NavigationManager) {
                 enable = checked || checked2,
                 title = stringResource(R.string._continue),
                 onClick = {
+                    navigationManager.navigate(AuthScreens.openAccount)
                 })
         }
     ) {
@@ -179,6 +181,78 @@ fun RoundedCornerCheckbox(
         }
         Spacer(modifier = Modifier.size(20.dp))
         Column {
+            BodyMediumText(
+                modifier = Modifier,
+                text = title,
+                color = AppTheme.colorScheme.onBackgroundNeutralDefault
+
+            )
+            caption?.takeIf { it.isNotEmpty() }?.let {
+                CaptionText(
+                    modifier = Modifier,
+                    text = it,
+                    color = AppTheme.colorScheme.onBackgroundNeutralSubdued
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun RoundedCornerCheckbox(
+    title: AnnotatedString,
+    caption: String? = null,
+    isChecked: Boolean,
+    modifier: Modifier = Modifier,
+    size: Float = 18f,
+    checkedColor: Color = AppTheme.colorScheme.foregroundPrimaryDefault,
+    uncheckedBorderColor: Color = AppTheme.colorScheme.onBackgroundPrimarySubdued,
+    uncheckedColor: Color = Color.White,
+    onValueChange: (Boolean) -> Unit
+) {
+    val checkboxColor: Color by animateColorAsState(if (isChecked) checkedColor else uncheckedColor)
+    val checkBorderColor: Color by animateColorAsState(if (isChecked) checkedColor else uncheckedBorderColor)
+    val density = LocalDensity.current
+    val duration = 100
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
+
+
+    ) {
+        Box(
+            modifier = Modifier
+                .size(size.dp)
+                .background(color = checkboxColor, shape = RoundedCornerShape(6.dp))
+                .border(width = 1.5.dp, color = checkBorderColor, shape = RoundedCornerShape(6.dp))
+                .toggleable(
+                    value = isChecked,
+                    role = Role.Checkbox,
+                    onValueChange = onValueChange
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            androidx.compose.animation.AnimatedVisibility(
+                visible = isChecked,
+                enter = slideInHorizontally(animationSpec = tween(duration)) {
+                    with(density) { (size * -0.5).dp.roundToPx() }
+                } + expandHorizontally(
+                    expandFrom = Alignment.Start,
+                    animationSpec = tween(duration)
+                ),
+                exit = fadeOut()
+            ) {
+                Icon(
+                    Icons.Default.Check,
+                    contentDescription = null,
+                    tint = uncheckedColor
+                )
+            }
+        }
+        Spacer(modifier = Modifier.size(20.dp))
+        Column {
+
             BodyMediumText(
                 modifier = Modifier,
                 text = title,

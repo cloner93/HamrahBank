@@ -1,4 +1,4 @@
-package com.pmb.auth.presentaion.feeDetails
+package com.pmb.auth.presentaion.ekyc.feeDetails
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
