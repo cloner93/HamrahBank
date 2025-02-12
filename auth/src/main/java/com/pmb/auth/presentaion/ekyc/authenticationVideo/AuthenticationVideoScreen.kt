@@ -91,6 +91,7 @@ fun AuthenticationVideoScreen(navigationManager: NavigationManager) {
                     )
                 }
             }
+            Spacer(modifier = Modifier.size(10.dp))
             AnimatedVisibility(
                 visible = !isVideoCaptured && !isVideoStarted,
                 exit = fadeOut(tween(100, easing = LinearEasing)),
@@ -179,7 +180,7 @@ fun AuthenticationVideoScreen(navigationManager: NavigationManager) {
                         R.string.repeated_sentence
                     ),
                     textAlign = TextAlign.Center,
-                    color = AppTheme.colorScheme.onBackgroundPrimarySubdued
+                    color = AppTheme.colorScheme.foregroundPrimaryDefault
                 )
         }
         Spacer(modifier = Modifier.size(20.dp))

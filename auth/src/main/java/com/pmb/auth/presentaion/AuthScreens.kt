@@ -4,6 +4,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.pmb.auth.presentaion.ekyc.authentication.AuthenticationScreen
+import com.pmb.auth.presentaion.ekyc.authenticationSelectServices.AuthenticationSelectServicesScreen
 import com.pmb.auth.presentaion.ekyc.authenticationVideo.AuthenticationVideoScreen
 import com.pmb.auth.presentaion.ekyc.facePhoto.FacePhotoCapture
 import com.pmb.auth.presentaion.ekyc.signature.SignatureScreen
@@ -37,6 +38,7 @@ sealed class AuthScreens(route: String, arguments: Map<String, String> = emptyMa
     data object Authentication : AuthScreens(route = "authentication")
     data object FacePhotoCapture : AuthScreens(route = "facePhotoCapture")
     data object AuthenticationVideo : AuthScreens(route = "authenticationVideo")
+    data object AuthenticationSelectServices : AuthScreens(route = "authenticationSelectServices")
 }
 
 
@@ -90,5 +92,8 @@ fun NavGraphBuilder.authScreensHandle(
     }
     composable(route = AuthScreens.AuthenticationVideo.route) {
         AuthenticationVideoScreen(navigationManager = navigationManager)
+    }
+    composable(route = AuthScreens.AuthenticationSelectServices.route ){
+        AuthenticationSelectServicesScreen(navigationManager = navigationManager)
     }
 }
