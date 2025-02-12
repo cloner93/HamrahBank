@@ -34,6 +34,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.pmb.auth.R
+import com.pmb.auth.presentaion.AuthScreens
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppTextButton
@@ -79,6 +80,7 @@ fun AuthenticationSelectServicesScreen(navigationManager: NavigationManager) {
                 AppTextButton(modifier = Modifier.weight(1f),
                     title = stringResource(R.string.show_details),
                     onClick = {
+                        navigationManager.navigate(AuthScreens.FeeDetails)
                     })
             }
             Spacer(modifier = Modifier.size(10.dp))

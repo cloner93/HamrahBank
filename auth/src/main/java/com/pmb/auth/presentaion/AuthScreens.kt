@@ -8,6 +8,7 @@ import com.pmb.auth.presentaion.ekyc.authenticationSelectServices.Authentication
 import com.pmb.auth.presentaion.ekyc.authenticationVideo.AuthenticationVideoScreen
 import com.pmb.auth.presentaion.ekyc.facePhoto.FacePhotoCapture
 import com.pmb.auth.presentaion.ekyc.signature.SignatureScreen
+import com.pmb.auth.presentaion.feeDetails.FeeDetailsScreen
 import com.pmb.auth.presentaion.first_login.FirstLoginScreen
 import com.pmb.auth.presentaion.first_login.viewModel.FirstLoginViewModel
 import com.pmb.auth.presentaion.first_login_confirm.FirstLoginConfirmScreen
@@ -39,6 +40,7 @@ sealed class AuthScreens(route: String, arguments: Map<String, String> = emptyMa
     data object FacePhotoCapture : AuthScreens(route = "facePhotoCapture")
     data object AuthenticationVideo : AuthScreens(route = "authenticationVideo")
     data object AuthenticationSelectServices : AuthScreens(route = "authenticationSelectServices")
+    data object FeeDetails : AuthScreens(route = "feeDetails")
 }
 
 
@@ -95,5 +97,8 @@ fun NavGraphBuilder.authScreensHandle(
     }
     composable(route = AuthScreens.AuthenticationSelectServices.route ){
         AuthenticationSelectServicesScreen(navigationManager = navigationManager)
+    }
+    composable(route = AuthScreens.FeeDetails.route ){
+        FeeDetailsScreen(navigationManager = navigationManager)
     }
 }
