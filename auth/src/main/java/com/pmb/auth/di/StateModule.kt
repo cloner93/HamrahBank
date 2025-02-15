@@ -1,6 +1,7 @@
 package com.pmb.auth.di
 
 import com.pmb.auth.presentaion.activate.viewModel.ActivateViewState
+import com.pmb.auth.presentaion.ekyc.feeDetails.viewModel.FeeDetailsViewState
 import com.pmb.auth.presentaion.ekyc.signature.viewModel.SignatureViewState
 import com.pmb.auth.presentaion.first_login.viewModel.FirstLoginViewState
 import com.pmb.auth.presentaion.first_login_confirm.viewModel.FirstLoginConfirmViewState
@@ -47,4 +48,8 @@ object StateModule {
     @Provides
     @Singleton
     fun provideSignatureViewState(): SignatureViewState = SignatureViewState()
+
+    @Provides
+    @Singleton
+    fun provideFeeDetailsViewState(): FeeDetailsViewState = FeeDetailsViewState()
 }

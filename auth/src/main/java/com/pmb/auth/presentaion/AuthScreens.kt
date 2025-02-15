@@ -10,6 +10,7 @@ import com.pmb.auth.presentaion.ekyc.authenticationVideo.AuthenticationVideoScre
 import com.pmb.auth.presentaion.ekyc.facePhoto.FacePhotoCapture
 import com.pmb.auth.presentaion.ekyc.signature.SignatureScreen
 import com.pmb.auth.presentaion.ekyc.feeDetails.FeeDetailsScreen
+import com.pmb.auth.presentaion.ekyc.feeDetails.viewModel.FeeDetailsViewModel
 import com.pmb.auth.presentaion.ekyc.openAccount.OpenAccountScreen
 import com.pmb.auth.presentaion.first_login.FirstLoginScreen
 import com.pmb.auth.presentaion.first_login.viewModel.FirstLoginViewModel
@@ -106,7 +107,7 @@ fun NavGraphBuilder.authScreensHandle(
         AuthenticationSelectServicesScreen(navigationManager = navigationManager)
     }
     composable(route = AuthScreens.FeeDetails.route ){
-        FeeDetailsScreen(navigationManager = navigationManager)
+        FeeDetailsScreen(navigationManager = navigationManager,viewModel = hiltViewModel<FeeDetailsViewModel>())
     }
     composable(route = AuthScreens.OpenAccount.route ){
         OpenAccountScreen(navigationManager = navigationManager)

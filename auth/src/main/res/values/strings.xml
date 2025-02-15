@@ -58,4 +58,6 @@
     <string name="confirm">تایید</string>
     <string name="select_services_title">پس از افتتاح حساب، همراه بانک ملت به طور پیش فرض برای شما فعال خواهد شد.</string>
     <string name="select_services_description">در صورت تمایل می توانید دریافت سایر خدمات را نیز انتخاب نمایید.</string>
+    <string name="rial">ريال</string>
+    <string name="total">مبلغ کل</string>
 </resources>
