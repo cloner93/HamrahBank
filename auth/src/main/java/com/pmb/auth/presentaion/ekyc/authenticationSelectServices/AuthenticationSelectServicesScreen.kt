@@ -21,10 +21,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -36,8 +35,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.pmb.auth.R
 import com.pmb.auth.presentaion.AuthScreens
+import com.pmb.auth.presentaion.ekyc.authenticationSelectServices.viewModel.AuthenticationSelectServicesViewActions
+import com.pmb.auth.presentaion.ekyc.authenticationSelectServices.viewModel.AuthenticationSelectServicesViewEvent
+import com.pmb.auth.presentaion.ekyc.authenticationSelectServices.viewModel.AuthenticationSelectServicesViewModel
+import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppContent
+import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.component.base.AppTextButton
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.BodyMediumText
@@ -46,85 +50,105 @@ import com.pmb.ballon.component.base.CaptionText
 import com.pmb.ballon.component.base.Headline6Text
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.core.presentation.NavigationManager
-import com.pmb.core.utils.toCurrency
 
 @Composable
-fun AuthenticationSelectServicesScreen(navigationManager: NavigationManager) {
-    var isContinueEnabled by remember {
-        mutableStateOf(false)
-    }
-    var checked by remember { mutableStateOf(false) }
-    var checked2 by remember { mutableStateOf(false) }
-    AppContent(
-        modifier = Modifier.padding(horizontal = 16.dp),
-        topBar = {
-            AppTopBar(
-                title = stringResource(R.string.select_services),
-                onBack = {
-                    navigationManager.navigateBack()
+fun AuthenticationSelectServicesScreen(
+    navigationManager: NavigationManager,
+    viewModel: AuthenticationSelectServicesViewModel
+) {
+    val viewState by viewModel.viewState.collectAsState()
+    LaunchedEffect(Unit) {
+        viewModel.viewEvent.collect { event ->
+            when (event) {
+                AuthenticationSelectServicesViewEvent.SelectServicesSucceed -> {
+                    navigationManager.navigate(AuthScreens.OpenAccount)
                 }
-            )
-        },
-        footer = {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 18.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                BodySmallText(
-                    text = stringResource(R.string.services_total, 500000.toDouble().toCurrency()),
-                    color = AppTheme.colorScheme.onBackgroundPrimarySubdued
+            }
+        }
+    }
+    viewState.data?.let { selectServices ->
+        AppContent(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            topBar = {
+                AppTopBar(
+                    title = stringResource(R.string.select_services),
+                    onBack = {
+                        navigationManager.navigateBack()
+                    }
                 )
-                Spacer(modifier = Modifier.size(5.dp))
-                AppTextButton(modifier = Modifier.weight(1f),
-                    title = stringResource(R.string.show_details),
+            },
+            footer = {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 18.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    BodySmallText(
+                        text = stringResource(R.string.services_total, viewModel.getTotalPrice()),
+                        color = AppTheme.colorScheme.onBackgroundPrimarySubdued
+                    )
+                    Spacer(modifier = Modifier.size(5.dp))
+                    AppTextButton(modifier = Modifier.weight(1f),
+                        title = stringResource(R.string.show_details),
+                        onClick = {
+                            navigationManager.navigate(AuthScreens.FeeDetails)
+                        })
+                }
+                Spacer(modifier = Modifier.size(10.dp))
+                AppButton(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp, end = 16.dp, top = 16.dp),
+                    enable = !viewModel.hasIsCheckedFlag().isNullOrEmpty(),
+                    title = stringResource(R.string._continue),
                     onClick = {
-                        navigationManager.navigate(AuthScreens.FeeDetails)
+                        viewModel.getIsCheckedFlagIds()?.let {
+                            viewModel.handle(
+                                AuthenticationSelectServicesViewActions.ConfirmAuthenticationSelectedServices(
+                                    it
+                                )
+                            )
+                        }
                     })
             }
+        ) {
+
+            Spacer(modifier = Modifier.size(16.dp))
+            Headline6Text(
+                text = stringResource(R.string.select_services_title),
+                color = AppTheme.colorScheme.onBackgroundNeutralDefault,
+                textAlign = TextAlign.Center
+            )
+            Spacer(modifier = Modifier.size(30.dp))
+            BodySmallText(
+                text = stringResource(R.string.select_services_description),
+                color = AppTheme.colorScheme.onBackgroundPrimarySubdued,
+                textAlign = TextAlign.Center
+            )
             Spacer(modifier = Modifier.size(10.dp))
-            AppButton(modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp, top = 16.dp),
-                enable = checked || checked2,
-                title = stringResource(R.string._continue),
-                onClick = {
-                    navigationManager.navigate(AuthScreens.OpenAccount)
-                })
-        }
-    ) {
-        Spacer(modifier = Modifier.size(16.dp))
-        Headline6Text(
-            text = stringResource(R.string.select_services_title),
-            color = AppTheme.colorScheme.onBackgroundNeutralDefault,
-            textAlign = TextAlign.Center
-        )
-        Spacer(modifier = Modifier.size(30.dp))
-        BodySmallText(
-            text = stringResource(R.string.select_services_description),
-            color = AppTheme.colorScheme.onBackgroundPrimarySubdued,
-            textAlign = TextAlign.Center
-        )
-        Spacer(modifier = Modifier.size(10.dp))
-        RoundedCornerCheckbox(
-            title = stringResource(R.string.activation_internet_bank),
-            caption = stringResource(R.string.tax_amount, 20000.toDouble().toCurrency()),
-            isChecked = checked
-        ) {
-            checked = !checked
-        }
-        Spacer(modifier = Modifier.size(10.dp))
-        RoundedCornerCheckbox(
-            title = stringResource(R.string.receive_internet_card),
-            caption = stringResource(R.string.tax_amount, 20000.toDouble().toCurrency()),
-            isChecked = checked2
-        ) {
-            checked2 = !checked2
+            selectServices?.selectServicesList?.forEach { selectServiceObject ->
+                RoundedCornerCheckbox(
+                    title = selectServiceObject.title,
+                    caption = stringResource(
+                        R.string.tax_amount,
+                        selectServiceObject.getSeparatedPrice()
+                    ),
+                    isChecked = selectServiceObject.isChecked.value
+                ) {
+
+                    viewModel.changeSelectServicesFlag(selectServiceObject.id)
+                }
+                Spacer(modifier = Modifier.size(10.dp))
+            }
         }
     }
-
+    if (viewState.loading) {
+        AppLoading()
+    }
+    if (viewState.alertModelState != null) {
+        AlertComponent(viewState.alertModelState!!)
+    }
 }
 
 @Composable

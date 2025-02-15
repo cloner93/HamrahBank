@@ -6,12 +6,13 @@ import androidx.navigation.compose.composable
 import com.pmb.auth.presentaion.ekyc.authenthicationConfirm.AuthenticationConfirmScreen
 import com.pmb.auth.presentaion.ekyc.authentication.AuthenticationScreen
 import com.pmb.auth.presentaion.ekyc.authenticationSelectServices.AuthenticationSelectServicesScreen
+import com.pmb.auth.presentaion.ekyc.authenticationSelectServices.viewModel.AuthenticationSelectServicesViewModel
 import com.pmb.auth.presentaion.ekyc.authenticationVideo.AuthenticationVideoScreen
 import com.pmb.auth.presentaion.ekyc.facePhoto.FacePhotoCapture
-import com.pmb.auth.presentaion.ekyc.signature.SignatureScreen
 import com.pmb.auth.presentaion.ekyc.feeDetails.FeeDetailsScreen
 import com.pmb.auth.presentaion.ekyc.feeDetails.viewModel.FeeDetailsViewModel
 import com.pmb.auth.presentaion.ekyc.openAccount.OpenAccountScreen
+import com.pmb.auth.presentaion.ekyc.signature.SignatureScreen
 import com.pmb.auth.presentaion.first_login.FirstLoginScreen
 import com.pmb.auth.presentaion.first_login.viewModel.FirstLoginViewModel
 import com.pmb.auth.presentaion.first_login_confirm.FirstLoginConfirmScreen
@@ -103,13 +104,19 @@ fun NavGraphBuilder.authScreensHandle(
     composable(route = AuthScreens.AuthenticationStep.route) {
         AuthenticationConfirmScreen(navigationManager = navigationManager)
     }
-    composable(route = AuthScreens.AuthenticationSelectServices.route ){
-        AuthenticationSelectServicesScreen(navigationManager = navigationManager)
+    composable(route = AuthScreens.AuthenticationSelectServices.route) {
+        AuthenticationSelectServicesScreen(
+            navigationManager = navigationManager,
+            viewModel = hiltViewModel<AuthenticationSelectServicesViewModel>()
+        )
     }
-    composable(route = AuthScreens.FeeDetails.route ){
-        FeeDetailsScreen(navigationManager = navigationManager,viewModel = hiltViewModel<FeeDetailsViewModel>())
+    composable(route = AuthScreens.FeeDetails.route) {
+        FeeDetailsScreen(
+            navigationManager = navigationManager,
+            viewModel = hiltViewModel<FeeDetailsViewModel>()
+        )
     }
-    composable(route = AuthScreens.OpenAccount.route ){
+    composable(route = AuthScreens.OpenAccount.route) {
         OpenAccountScreen(navigationManager = navigationManager)
     }
 }
