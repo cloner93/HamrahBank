@@ -13,6 +13,7 @@ import com.pmb.auth.presentaion.ekyc.facePhoto.FacePhotoCapture
 import com.pmb.auth.presentaion.ekyc.feeDetails.FeeDetailsScreen
 import com.pmb.auth.presentaion.ekyc.feeDetails.viewModel.FeeDetailsViewModel
 import com.pmb.auth.presentaion.ekyc.openAccount.OpenAccountScreen
+import com.pmb.auth.presentaion.ekyc.openAccount.viewModel.OpenAccountViewModel
 import com.pmb.auth.presentaion.ekyc.signature.SignatureScreen
 import com.pmb.auth.presentaion.first_login.FirstLoginScreen
 import com.pmb.auth.presentaion.first_login.viewModel.FirstLoginViewModel
@@ -121,6 +122,9 @@ fun NavGraphBuilder.authScreensHandle(
         )
     }
     composable(route = AuthScreens.OpenAccount.route) {
-        OpenAccountScreen(navigationManager = navigationManager)
+        OpenAccountScreen(
+            navigationManager = navigationManager,
+            viewModel = hiltViewModel<OpenAccountViewModel>()
+        )
     }
 }

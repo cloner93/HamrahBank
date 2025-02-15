@@ -8,10 +8,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -23,16 +22,33 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.pmb.auth.R
 import com.pmb.auth.presentaion.ekyc.authenticationSelectServices.RoundedCornerCheckbox
+import com.pmb.auth.presentaion.ekyc.openAccount.viewModel.OpenAccountViewActions
+import com.pmb.auth.presentaion.ekyc.openAccount.viewModel.OpenAccountViewEvents
+import com.pmb.auth.presentaion.ekyc.openAccount.viewModel.OpenAccountViewModel
+import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppContent
+import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.core.presentation.NavigationManager
-import com.pmb.core.utils.toCurrency
+import com.pmb.home.presentation.HomeScreens
 
 @Composable
-fun OpenAccountScreen(navigationManager: NavigationManager) {
-    var checked by remember { mutableStateOf(false) }
+fun OpenAccountScreen(
+    navigationManager: NavigationManager,
+    viewModel: OpenAccountViewModel
+) {
+    val viewState by viewModel.viewState.collectAsState()
+    LaunchedEffect(Unit) {
+        viewModel.viewEvent.collect { event ->
+            when (event) {
+                OpenAccountViewEvents.OpenAccountSucceed -> {
+                    navigationManager.navigate(HomeScreens.Home)
+                }
+            }
+        }
+    }
     AppContent(
         modifier = Modifier.padding(horizontal = 16.dp),
         topBar = {
@@ -47,13 +63,18 @@ fun OpenAccountScreen(navigationManager: NavigationManager) {
             AppButton(modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 16.dp, end = 16.dp, top = 16.dp),
-                enable = checked,
+                enable = viewState.isChecked,
                 title = stringResource(R.string.confirm_open),
                 onClick = {
+                    viewModel.handle(OpenAccountViewActions.OpenAccountConfirm)
                 })
         }
     ) {
-        Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.weight(1f)) {
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.weight(1f)
+        ) {
             Image(
                 painter = painterResource(com.pmb.ballon.R.drawable.ic_open_account),
                 contentDescription = "open_account"
@@ -66,15 +87,21 @@ fun OpenAccountScreen(navigationManager: NavigationManager) {
                             fontWeight = FontWeight.Normal,
                             color = AppTheme.colorScheme.foregroundPrimaryDefault,
                         )
-                    ){
-                        append("قوانین افتتاح حساب بانک ملت ")
+                    ) {
+                        append(stringResource(R.string.rules))
                     }
-                    append("را مطالعه کردم و آن ها را می پذیرم.")
+                    append(stringResource(R.string.rules_read_and_accepted))
                 },
-                isChecked = checked
+                isChecked = viewState.isChecked
             ) {
-                checked = !checked
+                viewModel.handle(OpenAccountViewActions.SelectRules)
             }
         }
+    }
+    if (viewState.loading) {
+        AppLoading()
+    }
+    if (viewState.alertModelState != null) {
+        AlertComponent(viewState.alertModelState!!)
     }
 }

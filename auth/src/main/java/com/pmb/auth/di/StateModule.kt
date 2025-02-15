@@ -4,6 +4,7 @@ import com.pmb.auth.presentaion.activate.viewModel.ActivateViewState
 import com.pmb.auth.presentaion.ekyc.authenthicationConfirm.viewModel.AuthenticationConfirmStepViewState
 import com.pmb.auth.presentaion.ekyc.authenticationSelectServices.viewModel.AuthenticationSelectServicesViewState
 import com.pmb.auth.presentaion.ekyc.feeDetails.viewModel.FeeDetailsViewState
+import com.pmb.auth.presentaion.ekyc.openAccount.viewModel.OpenAccountViewState
 import com.pmb.auth.presentaion.ekyc.signature.viewModel.SignatureViewState
 import com.pmb.auth.presentaion.first_login.viewModel.FirstLoginViewState
 import com.pmb.auth.presentaion.first_login_confirm.viewModel.FirstLoginConfirmViewState
@@ -64,4 +65,8 @@ object StateModule {
     @Singleton
     fun provideAuthenticationConfirmStepViewState(): AuthenticationConfirmStepViewState =
         AuthenticationConfirmStepViewState()
+
+    @Provides
+    @Singleton
+    fun provideOpenAccountViewState(): OpenAccountViewState = OpenAccountViewState()
 }

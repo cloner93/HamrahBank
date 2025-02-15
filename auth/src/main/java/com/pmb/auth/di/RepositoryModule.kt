@@ -4,6 +4,7 @@ import com.pmb.auth.data.activate.ActivateRepositoryImpl
 import com.pmb.auth.data.ekyc.authenticationConfirmStep.AuthenticationStepConfirmRepositoryImpl
 import com.pmb.auth.data.ekyc.authenticationSelectServices.AuthenticationSelectServicesRepositoryImpl
 import com.pmb.auth.data.ekyc.feeDtails.FeeDetailsRepositoryImpl
+import com.pmb.auth.data.ekyc.openAccount.OpenAccountRepositoryImpl
 import com.pmb.auth.data.first_login.FirstLoginRepositoryImpl
 import com.pmb.auth.data.first_login_confirm.FirstLoginConfirmRepositoryImpl
 import com.pmb.auth.data.forget_password.ForgetPasswordRepositoryImpl
@@ -13,6 +14,7 @@ import com.pmb.auth.domain.activate.repository.ActivateRepository
 import com.pmb.auth.domain.ekyc.authenticationConfirmStep.repository.AuthenticationConfirmStepRepository
 import com.pmb.auth.domain.ekyc.authenticationSelectServices.repository.AuthenticationSelectServicesRepository
 import com.pmb.auth.domain.ekyc.feeDetails.repository.FeeDetailsRepository
+import com.pmb.auth.domain.ekyc.openAccount.repository.OpenAccountRepository
 import com.pmb.auth.domain.first_login.repository.FirstLoginRepository
 import com.pmb.auth.domain.first_login_confirm.repository.FirstLoginConfirmRepository
 import com.pmb.auth.domain.forget_password.repository.ForgetPasswordRepository
@@ -58,4 +60,7 @@ abstract class RepositoryModule {
     abstract fun bindAuthenticationConfirmStepRepository(
         authenticationConfirmStepRepositoryImpl: AuthenticationStepConfirmRepositoryImpl
     ): AuthenticationConfirmStepRepository
+
+    @Binds
+    abstract fun bindOpenAccountRepository(openAccountRepositoryImpl: OpenAccountRepositoryImpl): OpenAccountRepository
 }
