@@ -20,6 +20,9 @@ class FeeDetailsViewModel @Inject constructor(
     override fun handle(action: FeeDetailsViewActions) {
         when (action) {
             FeeDetailsViewActions.ClearAlert -> setState { it.copy(loading = false) }
+            FeeDetailsViewActions.LoadFeeDetails ->{
+                getFeeDetails()
+            }
         }
     }
 
@@ -72,6 +75,6 @@ class FeeDetailsViewModel @Inject constructor(
     }
 
     init {
-        getFeeDetails()
+        handle(FeeDetailsViewActions.LoadFeeDetails)
     }
 }
