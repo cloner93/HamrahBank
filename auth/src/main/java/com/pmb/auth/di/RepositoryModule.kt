@@ -1,6 +1,7 @@
 package com.pmb.auth.di
 
 import com.pmb.auth.data.activate.ActivateRepositoryImpl
+import com.pmb.auth.data.ekyc.authenticationConfirmStep.AuthenticationStepConfirmRepositoryImpl
 import com.pmb.auth.data.ekyc.authenticationSelectServices.AuthenticationSelectServicesRepositoryImpl
 import com.pmb.auth.data.ekyc.feeDtails.FeeDetailsRepositoryImpl
 import com.pmb.auth.data.first_login.FirstLoginRepositoryImpl
@@ -9,6 +10,7 @@ import com.pmb.auth.data.forget_password.ForgetPasswordRepositoryImpl
 import com.pmb.auth.data.login.LoginRepositoryImpl
 import com.pmb.auth.data.new_password.NewPasswordRepositoryImpl
 import com.pmb.auth.domain.activate.repository.ActivateRepository
+import com.pmb.auth.domain.ekyc.authenticationConfirmStep.repository.AuthenticationConfirmStepRepository
 import com.pmb.auth.domain.ekyc.authenticationSelectServices.repository.AuthenticationSelectServicesRepository
 import com.pmb.auth.domain.ekyc.feeDetails.repository.FeeDetailsRepository
 import com.pmb.auth.domain.first_login.repository.FirstLoginRepository
@@ -51,4 +53,9 @@ abstract class RepositoryModule {
     abstract fun bindAuthenticationSelectServicesRepository(
         authenticationSelectServicesRepositoryImpl: AuthenticationSelectServicesRepositoryImpl
     ): AuthenticationSelectServicesRepository
+
+    @Binds
+    abstract fun bindAuthenticationConfirmStepRepository(
+        authenticationConfirmStepRepositoryImpl: AuthenticationStepConfirmRepositoryImpl
+    ): AuthenticationConfirmStepRepository
 }

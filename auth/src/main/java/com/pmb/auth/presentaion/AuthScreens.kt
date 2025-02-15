@@ -4,6 +4,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.pmb.auth.presentaion.ekyc.authenthicationConfirm.AuthenticationConfirmScreen
+import com.pmb.auth.presentaion.ekyc.authenthicationConfirm.viewModel.AuthenticationConfirmStepViewModel
 import com.pmb.auth.presentaion.ekyc.authentication.AuthenticationScreen
 import com.pmb.auth.presentaion.ekyc.authenticationSelectServices.AuthenticationSelectServicesScreen
 import com.pmb.auth.presentaion.ekyc.authenticationSelectServices.viewModel.AuthenticationSelectServicesViewModel
@@ -102,7 +103,10 @@ fun NavGraphBuilder.authScreensHandle(
         AuthenticationVideoScreen(navigationManager = navigationManager)
     }
     composable(route = AuthScreens.AuthenticationStep.route) {
-        AuthenticationConfirmScreen(navigationManager = navigationManager)
+        AuthenticationConfirmScreen(
+            navigationManager = navigationManager,
+            viewModel = hiltViewModel<AuthenticationConfirmStepViewModel>()
+        )
     }
     composable(route = AuthScreens.AuthenticationSelectServices.route) {
         AuthenticationSelectServicesScreen(

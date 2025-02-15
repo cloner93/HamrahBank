@@ -52,7 +52,7 @@ fun FeeDetailsScreen(
             AppButton(modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 16.dp, end = 16.dp, top = 16.dp),
-                enable = true,
+                enable = viewState.data?.entityList?.isNotEmpty() == true ,
                 title = stringResource(R.string.confirm),
                 onClick = {
                     navigationManager.navigateBack()
