@@ -41,7 +41,6 @@ import com.pmb.auth.presentaion.AuthScreens
 import com.pmb.auth.presentaion.ekyc.facePhoto.viewModel.FacePhotoCapturedViewActions
 import com.pmb.auth.presentaion.ekyc.facePhoto.viewModel.FacePhotoCapturedViewEvents
 import com.pmb.auth.presentaion.ekyc.facePhoto.viewModel.FacePhotoCapturedViewModel
-import com.pmb.auth.presentaion.ekyc.signature.viewModel.SignatureViewEvents
 import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppContent

@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.pmb.auth.domain.ekyc.facePhoto.entity.FacePhotoParams
 import com.pmb.auth.domain.ekyc.facePhoto.useCase.SendFacePhotoUseCase
-import com.pmb.auth.presentaion.ekyc.authenticationVideo.viewModel.AuthenticationCapturingVideoViewActions
 import com.pmb.camera.platform.CameraManager
 import com.pmb.camera.platform.PhotoViewActions
 import com.pmb.core.compression.ImageCompressor

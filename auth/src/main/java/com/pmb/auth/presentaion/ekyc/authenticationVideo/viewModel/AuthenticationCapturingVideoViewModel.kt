@@ -3,10 +3,7 @@ package com.pmb.auth.presentaion.ekyc.authenticationVideo.viewModel
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.pmb.auth.domain.ekyc.captureVideo.entity.CapturingVideoParams
-import com.pmb.auth.domain.ekyc.captureVideo.repository.CapturingVideoRepository
 import com.pmb.auth.domain.ekyc.captureVideo.useCase.SendVideoUseCase
-import com.pmb.auth.domain.ekyc.facePhoto.entity.FacePhotoParams
-import com.pmb.auth.domain.ekyc.facePhoto.useCase.SendFacePhotoUseCase
 import com.pmb.camera.platform.CameraManager
 import com.pmb.camera.platform.VideoViewActions
 import com.pmb.core.compression.VideoCompressor
