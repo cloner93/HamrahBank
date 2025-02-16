@@ -38,9 +38,14 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.pmb.auth.R
 import com.pmb.auth.presentaion.AuthScreens
+import com.pmb.auth.presentaion.ekyc.facePhoto.viewModel.FacePhotoCapturedViewActions
+import com.pmb.auth.presentaion.ekyc.facePhoto.viewModel.FacePhotoCapturedViewEvents
 import com.pmb.auth.presentaion.ekyc.facePhoto.viewModel.FacePhotoCapturedViewModel
+import com.pmb.auth.presentaion.ekyc.signature.viewModel.SignatureViewEvents
+import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppContent
+import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.ui.theme.AppTheme
@@ -53,7 +58,7 @@ fun FacePhotoCapture(
     viewModel: FacePhotoCapturedViewModel
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
-    val state by viewModel.viewState.collectAsState()
+    val viewState by viewModel.viewState.collectAsState()
     var isPhotoCaptured by remember {
         mutableStateOf(false)
     }
@@ -73,6 +78,15 @@ fun FacePhotoCapture(
     }
     LaunchedEffect(Unit) {
         viewModel.handle(PhotoViewActions.RequestFilePermission(multiplePermissionLauncher))
+    }
+    LaunchedEffect(Unit) {
+        viewModel.viewEvent.collect { event ->
+            when (event) {
+                FacePhotoCapturedViewEvents.FacePhotoCaptured -> {
+                    navigationManager.navigate(AuthScreens.AuthenticationVideo)
+                }
+            }
+        }
     }
     AppContent(
         modifier = Modifier.padding(horizontal = 16.dp),
@@ -116,7 +130,7 @@ fun FacePhotoCapture(
                     enable = true,
                     title = stringResource(R.string._continue),
                     onClick = {
-                        navigationManager.navigate(AuthScreens.AuthenticationVideo)
+                        viewModel.handle(FacePhotoCapturedViewActions.SendFacePhoto("DD"))
                     })
             }
         },
@@ -165,5 +179,11 @@ fun FacePhotoCapture(
             )
         }
 
+    }
+    if (viewState.isLoading) {
+        AppLoading()
+    }
+    if (viewState.alertModelState != null) {
+        AlertComponent(viewState.alertModelState!!)
     }
 }

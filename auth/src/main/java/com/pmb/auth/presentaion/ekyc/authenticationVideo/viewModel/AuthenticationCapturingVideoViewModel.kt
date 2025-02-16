@@ -2,14 +2,19 @@ package com.pmb.auth.presentaion.ekyc.authenticationVideo.viewModel
 
 import android.util.Log
 import androidx.lifecycle.viewModelScope
+import com.pmb.auth.domain.ekyc.captureVideo.entity.CapturingVideoParams
+import com.pmb.auth.domain.ekyc.captureVideo.repository.CapturingVideoRepository
+import com.pmb.auth.domain.ekyc.captureVideo.useCase.SendVideoUseCase
+import com.pmb.auth.domain.ekyc.facePhoto.entity.FacePhotoParams
+import com.pmb.auth.domain.ekyc.facePhoto.useCase.SendFacePhotoUseCase
 import com.pmb.camera.platform.CameraManager
-import com.pmb.camera.platform.PhotoViewActions
 import com.pmb.camera.platform.VideoViewActions
-import com.pmb.core.compression.ImageCompressor
 import com.pmb.core.compression.VideoCompressor
 import com.pmb.core.fileManager.FileManager
 import com.pmb.core.permissions.PermissionDispatcher
+import com.pmb.core.platform.AlertModelState
 import com.pmb.core.platform.BaseViewModel
+import com.pmb.core.platform.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -20,7 +25,8 @@ class AuthenticationCapturingVideoViewModel @Inject constructor(
     private val permissionDispatcher: PermissionDispatcher,
     private val cameraManager: CameraManager,
     private val videoCompressor: VideoCompressor,
-    private val fileManager: FileManager
+    private val fileManager: FileManager,
+    private val sendVideoUseCase: SendVideoUseCase
 ) : BaseViewModel<
         VideoViewActions,
         AuthenticationCapturingVideoViewState,
@@ -39,9 +45,59 @@ class AuthenticationCapturingVideoViewModel @Inject constructor(
                 previewCamera(action)
             }
 
+            is AuthenticationCapturingVideoViewActions.SendVideo -> {
+                handleSendFacePhoto(action)
+            }
+
             is AuthenticationCapturingVideoViewActions.ClearAlert -> {
                 setState {
                     it.copy(isLoading = false)
+                }
+            }
+        }
+    }
+
+    private fun handleSendFacePhoto(action: AuthenticationCapturingVideoViewActions.SendVideo) {
+        viewModelScope.launch {
+            sendVideoUseCase.invoke(CapturingVideoParams(action.uri)).collect { result ->
+                when (result) {
+                    is Result.Success -> {
+                        setState {
+                            it.copy(
+                                isLoading = false
+                            )
+                        }
+                        postEvent(AuthenticationCapturingVideoViewEvents.VideoCaptured)
+                    }
+
+                    is Result.Error -> {
+                        setState {
+                            it.copy(
+                                isLoading = false,
+                                alertModelState = AlertModelState.SnackBar(
+                                    message = result.message,
+                                    onDismissed = {
+                                        setState {
+                                            it.copy(alertModelState = null)
+                                        }
+                                    },
+                                    onActionPerformed = {
+                                        setState {
+                                            it.copy(alertModelState = null)
+                                        }
+                                    }
+                                )
+                            )
+                        }
+                    }
+
+                    is Result.Loading -> {
+                        setState {
+                            it.copy(
+                                isLoading = true
+                            )
+                        }
+                    }
                 }
             }
         }

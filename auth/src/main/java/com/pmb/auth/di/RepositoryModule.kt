@@ -3,9 +3,11 @@ package com.pmb.auth.di
 import com.pmb.auth.data.activate.ActivateRepositoryImpl
 import com.pmb.auth.data.ekyc.authenticationConfirmStep.AuthenticationStepConfirmRepositoryImpl
 import com.pmb.auth.data.ekyc.authenticationSelectServices.AuthenticationSelectServicesRepositoryImpl
+import com.pmb.auth.data.ekyc.facePhoto.FacePhotoRepositoryImpl
 import com.pmb.auth.data.ekyc.feeDtails.FeeDetailsRepositoryImpl
 import com.pmb.auth.data.ekyc.openAccount.OpenAccountRepositoryImpl
 import com.pmb.auth.data.ekyc.signature.SignatureRepositoryImpl
+import com.pmb.auth.data.ekyc.videoCapture.CapturingVideoRepositoryImpl
 import com.pmb.auth.data.first_login.FirstLoginRepositoryImpl
 import com.pmb.auth.data.first_login_confirm.FirstLoginConfirmRepositoryImpl
 import com.pmb.auth.data.forget_password.ForgetPasswordRepositoryImpl
@@ -14,6 +16,8 @@ import com.pmb.auth.data.new_password.NewPasswordRepositoryImpl
 import com.pmb.auth.domain.activate.repository.ActivateRepository
 import com.pmb.auth.domain.ekyc.authenticationConfirmStep.repository.AuthenticationConfirmStepRepository
 import com.pmb.auth.domain.ekyc.authenticationSelectServices.repository.AuthenticationSelectServicesRepository
+import com.pmb.auth.domain.ekyc.captureVideo.repository.CapturingVideoRepository
+import com.pmb.auth.domain.ekyc.facePhoto.repository.FacePhotoRepository
 import com.pmb.auth.domain.ekyc.feeDetails.repository.FeeDetailsRepository
 import com.pmb.auth.domain.ekyc.openAccount.repository.OpenAccountRepository
 import com.pmb.auth.domain.ekyc.signature.repository.SignatureRepository
@@ -69,4 +73,11 @@ abstract class RepositoryModule {
 
     @Binds
     abstract fun bindSignatureRepository(signatureRepositoryImpl: SignatureRepositoryImpl): SignatureRepository
+
+
+    @Binds
+    abstract fun bindFacePhotoRepository(facePhotoRepositoryImpl: FacePhotoRepositoryImpl): FacePhotoRepository
+
+    @Binds
+    abstract fun bindCapturingVideoRepository(capturingVideoRepositoryImpl: CapturingVideoRepositoryImpl): CapturingVideoRepository
 }

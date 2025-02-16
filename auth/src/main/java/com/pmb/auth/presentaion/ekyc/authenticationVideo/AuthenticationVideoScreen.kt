@@ -25,6 +25,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,14 +46,17 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.pmb.auth.R
 import com.pmb.auth.presentaion.AuthScreens
+import com.pmb.auth.presentaion.ekyc.authenticationVideo.viewModel.AuthenticationCapturingVideoViewActions
+import com.pmb.auth.presentaion.ekyc.authenticationVideo.viewModel.AuthenticationCapturingVideoViewEvents
 import com.pmb.auth.presentaion.ekyc.authenticationVideo.viewModel.AuthenticationCapturingVideoViewModel
+import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppContent
+import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.component.base.Headline4Text
 import com.pmb.ballon.ui.theme.AppTheme
-import com.pmb.camera.platform.PhotoViewActions
 import com.pmb.camera.platform.VideoViewActions
 import com.pmb.core.presentation.NavigationManager
 
@@ -62,6 +66,7 @@ fun AuthenticationVideoScreen(
     viewModel: AuthenticationCapturingVideoViewModel
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
+    val viewState by viewModel.viewState.collectAsState()
     var isVideoCaptured by remember {
         mutableStateOf(false)
     }
@@ -87,7 +92,15 @@ fun AuthenticationVideoScreen(
         viewModel.handle(VideoViewActions.RequestFilePermission(multiplePermissionLauncher))
     }
     val title = "00:06/00:20"
-
+    LaunchedEffect(Unit) {
+        viewModel.viewEvent.collect { event ->
+            when (event) {
+                AuthenticationCapturingVideoViewEvents.VideoCaptured -> {
+                    navigationManager.navigate(AuthScreens.AuthenticationStep)
+                }
+            }
+        }
+    }
     AppContent(
         modifier = Modifier.padding(horizontal = 16.dp),
         topBar = {
@@ -173,7 +186,7 @@ fun AuthenticationVideoScreen(
                     enable = true,
                     title = stringResource(R.string._continue),
                     onClick = {
-                        navigationManager.navigate(AuthScreens.AuthenticationStep)
+                        viewModel.handle(AuthenticationCapturingVideoViewActions.SendVideo("FF"))
                     })
             }
         },
@@ -248,5 +261,11 @@ fun AuthenticationVideoScreen(
             )
         }
 
+    }
+    if (viewState.isLoading) {
+        AppLoading()
+    }
+    if (viewState.alertModelState != null) {
+        AlertComponent(viewState.alertModelState!!)
     }
 }

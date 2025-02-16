@@ -2,13 +2,17 @@ package com.pmb.auth.presentaion.ekyc.facePhoto.viewModel
 
 import android.util.Log
 import androidx.lifecycle.viewModelScope
-import com.pmb.auth.presentaion.ekyc.signature.viewModel.SignatureViewActions
+import com.pmb.auth.domain.ekyc.facePhoto.entity.FacePhotoParams
+import com.pmb.auth.domain.ekyc.facePhoto.useCase.SendFacePhotoUseCase
+import com.pmb.auth.presentaion.ekyc.authenticationVideo.viewModel.AuthenticationCapturingVideoViewActions
 import com.pmb.camera.platform.CameraManager
 import com.pmb.camera.platform.PhotoViewActions
 import com.pmb.core.compression.ImageCompressor
 import com.pmb.core.fileManager.FileManager
 import com.pmb.core.permissions.PermissionDispatcher
+import com.pmb.core.platform.AlertModelState
 import com.pmb.core.platform.BaseViewModel
+import com.pmb.core.platform.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -19,7 +23,8 @@ class FacePhotoCapturedViewModel @Inject constructor(
     private val permissionDispatcher: PermissionDispatcher,
     private val cameraManager: CameraManager,
     private val imageCompressor: ImageCompressor,
-    private val fileManager: FileManager
+    private val fileManager: FileManager,
+    private val sendFacePhotoUseCase: SendFacePhotoUseCase
 ) : BaseViewModel<PhotoViewActions, FacePhotoCapturedViewState, FacePhotoCapturedViewEvents>(
     initialState
 ) {
@@ -35,10 +40,57 @@ class FacePhotoCapturedViewModel @Inject constructor(
             is PhotoViewActions.PreviewCamera -> {
                 previewCamera(action)
             }
-
-            is SignatureViewActions.ClearAlert -> {
+            is FacePhotoCapturedViewActions.SendFacePhoto->{
+                handleSendFacePhoto(action)
+            }
+            is FacePhotoCapturedViewActions.ClearAlert -> {
                 setState {
                     it.copy(isLoading = false)
+                }
+            }
+        }
+    }
+    private fun handleSendFacePhoto(action: FacePhotoCapturedViewActions.SendFacePhoto) {
+        viewModelScope.launch {
+            sendFacePhotoUseCase.invoke(FacePhotoParams(action.uri)).collect { result ->
+                when (result) {
+                    is Result.Success -> {
+                        setState {
+                            it.copy(
+                                isLoading = false
+                            )
+                        }
+                        postEvent(FacePhotoCapturedViewEvents.FacePhotoCaptured)
+                    }
+
+                    is Result.Error -> {
+                        setState {
+                            it.copy(
+                                isLoading = false,
+                                alertModelState = AlertModelState.SnackBar(
+                                    message = result.message,
+                                    onDismissed = {
+                                        setState {
+                                            it.copy(alertModelState = null)
+                                        }
+                                    },
+                                    onActionPerformed = {
+                                        setState {
+                                            it.copy(alertModelState = null)
+                                        }
+                                    }
+                                )
+                            )
+                        }
+                    }
+
+                    is Result.Loading -> {
+                        setState {
+                            it.copy(
+                                isLoading = true
+                            )
+                        }
+                    }
                 }
             }
         }
