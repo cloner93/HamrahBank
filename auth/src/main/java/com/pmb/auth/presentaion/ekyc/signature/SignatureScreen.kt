@@ -1,6 +1,5 @@
 package com.pmb.auth.presentaion.ekyc.signature
 
-import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.view.PreviewView
@@ -36,13 +35,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.pmb.auth.R
 import com.pmb.auth.presentaion.AuthScreens
+import com.pmb.auth.presentaion.ekyc.signature.viewModel.SignatureViewActions
+import com.pmb.auth.presentaion.ekyc.signature.viewModel.SignatureViewEvents
 import com.pmb.auth.presentaion.ekyc.signature.viewModel.SignatureViewModel
+import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppContent
+import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.component.base.BodySmallText
@@ -56,7 +58,7 @@ fun SignatureScreen(
     viewModel: SignatureViewModel
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
-    val state by viewModel.viewState.collectAsState()
+    val viewState by viewModel.viewState.collectAsState()
     var isPhotoCaptured by remember {
         mutableStateOf(false)
     }
@@ -76,6 +78,15 @@ fun SignatureScreen(
     }
     LaunchedEffect(Unit) {
         viewModel.handle(PhotoViewActions.RequestFilePermission(multiplePermissionLauncher))
+    }
+    LaunchedEffect(Unit) {
+        viewModel.viewEvent.collect { event ->
+            when (event) {
+                SignatureViewEvents.SignaturePhotoCaptured -> {
+                    navigationManager.navigate(AuthScreens.Authentication)
+                }
+            }
+        }
     }
     AppContent(
         modifier = Modifier.padding(horizontal = 16.dp),
@@ -119,7 +130,7 @@ fun SignatureScreen(
                     enable = true,
                     title = stringResource(R.string._continue),
                     onClick = {
-                        navigationManager.navigate(AuthScreens.Authentication)
+                        viewModel.handle(SignatureViewActions.SendSignaturePhoto("D"))
                     })
             }
         },
@@ -179,6 +190,12 @@ fun SignatureScreen(
         }
 //        }
 
+    }
+    if (viewState.isLoading) {
+        AppLoading()
+    }
+    if (viewState.alertModelState != null) {
+        AlertComponent(viewState.alertModelState!!)
     }
 
 }

@@ -2,12 +2,16 @@ package com.pmb.auth.presentaion.ekyc.signature.viewModel
 
 import android.util.Log
 import androidx.lifecycle.viewModelScope
+import com.pmb.auth.domain.ekyc.signature.entity.SignatureParams
+import com.pmb.auth.domain.ekyc.signature.useCase.SendSignaturePhotoUseCase
 import com.pmb.camera.platform.CameraManager
 import com.pmb.camera.platform.PhotoViewActions
 import com.pmb.core.compression.ImageCompressor
 import com.pmb.core.fileManager.FileManager
 import com.pmb.core.permissions.PermissionDispatcher
+import com.pmb.core.platform.AlertModelState
 import com.pmb.core.platform.BaseViewModel
+import com.pmb.core.platform.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -18,7 +22,8 @@ class SignatureViewModel @Inject constructor(
     private val permissionDispatcher: PermissionDispatcher,
     private val cameraManager: CameraManager,
     private val imageCompressor: ImageCompressor,
-    private val fileManager: FileManager
+    private val fileManager: FileManager,
+    private val sendSignaturePhotoUseCase: SendSignaturePhotoUseCase
 ) : BaseViewModel<PhotoViewActions, SignatureViewState, SignatureViewEvents>(initialSate) {
     override fun handle(action: PhotoViewActions) {
         when (action) {
@@ -33,9 +38,54 @@ class SignatureViewModel @Inject constructor(
                 previewCamera(action)
             }
 
+            is SignatureViewActions.SendSignaturePhoto -> {
+                handleSendSignaturePhoto(action)
+            }
+
             is SignatureViewActions.ClearAlert -> {
                 setState {
                     it.copy(isLoading = false)
+                }
+            }
+        }
+    }
+
+    private fun handleSendSignaturePhoto(action: SignatureViewActions.SendSignaturePhoto) {
+        viewModelScope.launch {
+            sendSignaturePhotoUseCase.invoke(SignatureParams(action.uri)).collect { result ->
+                when (result) {
+                    is Result.Loading -> {
+                        setState {
+                            it.copy(
+                                isLoading = true
+                            )
+                        }
+                    }
+
+                    is Result.Error -> {
+                        setState {
+                            it.copy(
+                                isLoading = false,
+                                alertModelState = AlertModelState.SnackBar(
+                                    message = result.message,
+                                    onActionPerformed = {
+                                        setState { state -> state.copy(alertModelState = null) }
+                                    },
+                                    onDismissed = {
+                                        setState { state -> state.copy(alertModelState = null) }
+                                    }
+                                )
+
+                            )
+                        }
+                    }
+
+                    is Result.Success -> {
+                        setState {
+                            it.copy(isLoading = false)
+                        }
+                        postEvent(SignatureViewEvents.SignaturePhotoCaptured)
+                    }
                 }
             }
         }
