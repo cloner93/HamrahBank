@@ -1,18 +1,18 @@
-package com.pmb.auth.presentaion.ekyc.signature.viewModel
+package com.pmb.auth.presentaion.ekyc.authenticationVideo.viewModel
 
-import com.pmb.camera.platform.PhotoViewState
+import com.pmb.camera.platform.VideoViewState
 import com.pmb.core.platform.AlertModelState
 
-data class SignatureViewState(
-    val isLoading: Boolean=false,
+data class AuthenticationCapturingVideoViewState(
+    val isLoading :Boolean = false,
     val alertModelState: AlertModelState?=null,
     override val hasCameraPermission: Boolean = false,
     override val hasFilePermissions: Boolean = false,
     override val isCameraReady: Boolean = false,
     override val isFrontCamera: Boolean = false,
-    override val isCapturingPhoto: Boolean = false,
-    override val photoCaptured: Boolean = false,
+    override val isCapturingVideo: Boolean = false,
+    override val videoCaptured: Boolean = false,
     override val savedFileUri: String? = null,
     override val cameraHasError: String? = null,
-    override val isCameraLoading: Boolean = false,
-) : PhotoViewState
+    override val isCameraLoading: Boolean = false
+) : VideoViewState

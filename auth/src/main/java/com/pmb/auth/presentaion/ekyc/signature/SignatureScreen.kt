@@ -1,5 +1,6 @@
 package com.pmb.auth.presentaion.ekyc.signature
 
+import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.view.PreviewView
@@ -33,13 +34,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.pmb.auth.R
 import com.pmb.auth.presentaion.AuthScreens
-import com.pmb.auth.presentaion.ekyc.signature.viewModel.SignatureViewActions
 import com.pmb.auth.presentaion.ekyc.signature.viewModel.SignatureViewModel
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppContent
@@ -47,13 +47,15 @@ import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.component.base.BodySmallText
 import com.pmb.ballon.ui.theme.AppTheme
+import com.pmb.camera.platform.PhotoViewActions
 import com.pmb.core.presentation.NavigationManager
 
 @Composable
 fun SignatureScreen(
-    viewModel: SignatureViewModel = hiltViewModel(),
-    navigationManager: NavigationManager
+    navigationManager: NavigationManager,
+    viewModel: SignatureViewModel
 ) {
+    val lifecycleOwner = LocalLifecycleOwner.current
     val state by viewModel.viewState.collectAsState()
     var isPhotoCaptured by remember {
         mutableStateOf(false)
@@ -63,11 +65,17 @@ fun SignatureScreen(
     ) { isGranted ->
         viewModel.onSinglePermissionResult(isGranted)
     }
-    LaunchedEffect(Unit) {
-        viewModel.handle(SignatureViewActions.RequestCameraPermission(permissionLauncher))
+
+    val multiplePermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestMultiplePermissions()
+    ) {
+        viewModel.onMultiplePermissionResult(it)
     }
     LaunchedEffect(Unit) {
-        viewModel.handle(SignatureViewActions.RequestFilePermission)
+        viewModel.handle(PhotoViewActions.RequestCameraPermission(permissionLauncher))
+    }
+    LaunchedEffect(Unit) {
+        viewModel.handle(PhotoViewActions.RequestFilePermission(multiplePermissionLauncher))
     }
     AppContent(
         modifier = Modifier.padding(horizontal = 16.dp),
@@ -132,7 +140,7 @@ fun SignatureScreen(
         )
         Spacer(modifier = Modifier.size(20.dp))
 //        if (state.hasCameraPermission && state.isCameraReady) {
-//            val lifecycleOwner = LocalLifecycleOwner.current
+
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -148,14 +156,14 @@ fun SignatureScreen(
 
                 factory = { context ->
                     val previewView = PreviewView(context).apply {
-                        scaleType = PreviewView.ScaleType.FIT_CENTER
+                        scaleType = PreviewView.ScaleType.FILL_CENTER
                     }
-//                    viewModel.handle(
-//                        SignatureViewActions.PreviewCamera(
-//                            previewView,
-//                            lifecycleOwner
-//                        )
-//                    )
+                    viewModel.handle(
+                        PhotoViewActions.PreviewCamera(
+                            previewView,
+                            lifecycleOwner
+                        )
+                    )
                     previewView
                 },
                 modifier = Modifier

@@ -1,10 +1,12 @@
-package com.pmb.auth.presentaion.ekyc.signature.viewModel
+package com.pmb.auth.presentaion.ekyc.authenticationVideo.viewModel
 
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.pmb.camera.platform.CameraManager
 import com.pmb.camera.platform.PhotoViewActions
+import com.pmb.camera.platform.VideoViewActions
 import com.pmb.core.compression.ImageCompressor
+import com.pmb.core.compression.VideoCompressor
 import com.pmb.core.fileManager.FileManager
 import com.pmb.core.permissions.PermissionDispatcher
 import com.pmb.core.platform.BaseViewModel
@@ -13,27 +15,31 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SignatureViewModel @Inject constructor(
-    initialSate: SignatureViewState,
+class AuthenticationCapturingVideoViewModel @Inject constructor(
+    initialState: AuthenticationCapturingVideoViewState,
     private val permissionDispatcher: PermissionDispatcher,
     private val cameraManager: CameraManager,
-    private val imageCompressor: ImageCompressor,
+    private val videoCompressor: VideoCompressor,
     private val fileManager: FileManager
-) : BaseViewModel<PhotoViewActions, SignatureViewState, SignatureViewEvents>(initialSate) {
-    override fun handle(action: PhotoViewActions) {
+) : BaseViewModel<
+        VideoViewActions,
+        AuthenticationCapturingVideoViewState,
+        AuthenticationCapturingVideoViewEvents>(initialState) {
+    override fun handle(action: VideoViewActions) {
         when (action) {
-            is PhotoViewActions.RequestCameraPermission -> {
+            is VideoViewActions.RequestCameraPermission -> {
                 requestCameraPermission(action)
             }
 
-            is PhotoViewActions.RequestFilePermission -> requestFilePermission(action)
-            is PhotoViewActions.CapturePhoto -> takePhoto()
-            is PhotoViewActions.ToggleCamera -> toggleCamera()
-            is PhotoViewActions.PreviewCamera -> {
+            is VideoViewActions.RequestFilePermission -> requestFilePermission(action)
+            is VideoViewActions.VideoCaptured -> videoCaptured()
+            is VideoViewActions.CapturingVideo -> videoCapturing()
+            is VideoViewActions.ToggleCamera -> toggleCamera()
+            is VideoViewActions.PreviewCamera -> {
                 previewCamera(action)
             }
 
-            is SignatureViewActions.ClearAlert -> {
+            is AuthenticationCapturingVideoViewActions.ClearAlert -> {
                 setState {
                     it.copy(isLoading = false)
                 }
@@ -50,7 +56,7 @@ class SignatureViewModel @Inject constructor(
         permissionDispatcher.onMultiplePermissionResult(grantResult)
     }
 
-    private fun requestCameraPermission(action: PhotoViewActions.RequestCameraPermission) {
+    private fun requestCameraPermission(action: VideoViewActions.RequestCameraPermission) {
         viewModelScope.launch {
 
             permissionDispatcher.initialize(action.managedActivityResultLauncher)
@@ -72,7 +78,7 @@ class SignatureViewModel @Inject constructor(
         }
     }
 
-    private fun requestFilePermission(action: PhotoViewActions.RequestFilePermission) {
+    private fun requestFilePermission(action: VideoViewActions.RequestFilePermission) {
         viewModelScope.launch {
             permissionDispatcher.initialize(multiplePermissionLauncher = action.managedActivityResultLauncher)
             permissionDispatcher.requestMultiplePermission(
@@ -94,7 +100,7 @@ class SignatureViewModel @Inject constructor(
         }
     }
 
-    private fun previewCamera(action: PhotoViewActions.PreviewCamera) {
+    private fun previewCamera(action: VideoViewActions.PreviewCamera) {
         setState { state ->
             state.copy(isLoading = true)
         }
@@ -122,47 +128,15 @@ class SignatureViewModel @Inject constructor(
         )
     }
 
-    private fun getFile() = fileManager.createImageFile()
-    private fun takePhoto() {
-        val photoFile = getFile()
-        setState { state ->
-            state.copy(isLoading = true)
-        }
-        cameraManager.takePhoto(
-            photoFile,
-            onPhotoCaptured = { isCaptured ->
-                viewModelScope.launch {
-                    val compressedFile = imageCompressor.compressAndReplaceImage(
-                        photoFile.absolutePath,
-                        1024,
-                        1024,
-                        compressionPercentage = 50
-                    )
-
-                    setState { state ->
-                        state.copy(
-                            isCapturingPhoto = false,
-                            photoCaptured = compressedFile,
-                            savedFileUri = photoFile.absolutePath,
-                            cameraHasError = null
-                        )
-                    }
-                }
-            },
-            onError = { error ->
-                setState { state ->
-                    state.copy(
-                        isCapturingPhoto = false,
-                        cameraHasError = error
-                    )
-                }
-
-            }
-        )
+    private fun videoCaptured() {
 
     }
 
+    private fun videoCapturing() {
 
+    }
+
+    private fun getFile() = fileManager.createImageFile()
     private fun toggleCamera() {
         viewModelScope.launch {
             cameraManager.toggleCamera()
@@ -174,6 +148,4 @@ class SignatureViewModel @Inject constructor(
             }
         }
     }
-
-
 }

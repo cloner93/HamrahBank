@@ -9,12 +9,15 @@ import com.pmb.auth.presentaion.ekyc.authentication.AuthenticationScreen
 import com.pmb.auth.presentaion.ekyc.authenticationSelectServices.AuthenticationSelectServicesScreen
 import com.pmb.auth.presentaion.ekyc.authenticationSelectServices.viewModel.AuthenticationSelectServicesViewModel
 import com.pmb.auth.presentaion.ekyc.authenticationVideo.AuthenticationVideoScreen
+import com.pmb.auth.presentaion.ekyc.authenticationVideo.viewModel.AuthenticationCapturingVideoViewModel
 import com.pmb.auth.presentaion.ekyc.facePhoto.FacePhotoCapture
+import com.pmb.auth.presentaion.ekyc.facePhoto.viewModel.FacePhotoCapturedViewModel
 import com.pmb.auth.presentaion.ekyc.feeDetails.FeeDetailsScreen
 import com.pmb.auth.presentaion.ekyc.feeDetails.viewModel.FeeDetailsViewModel
 import com.pmb.auth.presentaion.ekyc.openAccount.OpenAccountScreen
 import com.pmb.auth.presentaion.ekyc.openAccount.viewModel.OpenAccountViewModel
 import com.pmb.auth.presentaion.ekyc.signature.SignatureScreen
+import com.pmb.auth.presentaion.ekyc.signature.viewModel.SignatureViewModel
 import com.pmb.auth.presentaion.first_login.FirstLoginScreen
 import com.pmb.auth.presentaion.first_login.viewModel.FirstLoginViewModel
 import com.pmb.auth.presentaion.first_login_confirm.FirstLoginConfirmScreen
@@ -92,16 +95,25 @@ fun NavGraphBuilder.authScreensHandle(
         RegisterNationalIdScreen(navigationManager = navigationManager)
     }
     composable(route = AuthScreens.Signature.route) {
-        SignatureScreen(navigationManager = navigationManager)
+        SignatureScreen(
+            navigationManager = navigationManager,
+            viewModel = hiltViewModel<SignatureViewModel>()
+        )
     }
     composable(route = AuthScreens.Authentication.route) {
         AuthenticationScreen(navigationManager = navigationManager)
     }
     composable(route = AuthScreens.FacePhotoCapture.route) {
-        FacePhotoCapture(navigationManager = navigationManager)
+        FacePhotoCapture(
+            navigationManager = navigationManager,
+            viewModel = hiltViewModel<FacePhotoCapturedViewModel>()
+        )
     }
     composable(route = AuthScreens.AuthenticationVideo.route) {
-        AuthenticationVideoScreen(navigationManager = navigationManager)
+        AuthenticationVideoScreen(
+            navigationManager = navigationManager,
+            viewModel = hiltViewModel<AuthenticationCapturingVideoViewModel>()
+        )
     }
     composable(route = AuthScreens.AuthenticationStep.route) {
         AuthenticationConfirmScreen(

@@ -1,7 +1,8 @@
-package com.pmb.auth.presentaion.ekyc.signature.viewModel
+package com.pmb.auth.presentaion.ekyc.facePhoto.viewModel
 
 import android.util.Log
 import androidx.lifecycle.viewModelScope
+import com.pmb.auth.presentaion.ekyc.signature.viewModel.SignatureViewActions
 import com.pmb.camera.platform.CameraManager
 import com.pmb.camera.platform.PhotoViewActions
 import com.pmb.core.compression.ImageCompressor
@@ -13,13 +14,15 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SignatureViewModel @Inject constructor(
-    initialSate: SignatureViewState,
+class FacePhotoCapturedViewModel @Inject constructor(
+    initialState: FacePhotoCapturedViewState,
     private val permissionDispatcher: PermissionDispatcher,
     private val cameraManager: CameraManager,
     private val imageCompressor: ImageCompressor,
     private val fileManager: FileManager
-) : BaseViewModel<PhotoViewActions, SignatureViewState, SignatureViewEvents>(initialSate) {
+) : BaseViewModel<PhotoViewActions, FacePhotoCapturedViewState, FacePhotoCapturedViewEvents>(
+    initialState
+) {
     override fun handle(action: PhotoViewActions) {
         when (action) {
             is PhotoViewActions.RequestCameraPermission -> {
@@ -40,7 +43,6 @@ class SignatureViewModel @Inject constructor(
             }
         }
     }
-
     fun onSinglePermissionResult(isGranted: Boolean) {
         permissionDispatcher.onSinglePermissionResult(isGranted)
 
@@ -93,7 +95,6 @@ class SignatureViewModel @Inject constructor(
             )
         }
     }
-
     private fun previewCamera(action: PhotoViewActions.PreviewCamera) {
         setState { state ->
             state.copy(isLoading = true)
@@ -174,6 +175,4 @@ class SignatureViewModel @Inject constructor(
             }
         }
     }
-
-
 }

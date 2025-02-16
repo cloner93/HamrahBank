@@ -3,6 +3,8 @@ package com.pmb.auth.di
 import com.pmb.auth.presentaion.activate.viewModel.ActivateViewState
 import com.pmb.auth.presentaion.ekyc.authenthicationConfirm.viewModel.AuthenticationConfirmStepViewState
 import com.pmb.auth.presentaion.ekyc.authenticationSelectServices.viewModel.AuthenticationSelectServicesViewState
+import com.pmb.auth.presentaion.ekyc.authenticationVideo.viewModel.AuthenticationCapturingVideoViewState
+import com.pmb.auth.presentaion.ekyc.facePhoto.viewModel.FacePhotoCapturedViewState
 import com.pmb.auth.presentaion.ekyc.feeDetails.viewModel.FeeDetailsViewState
 import com.pmb.auth.presentaion.ekyc.openAccount.viewModel.OpenAccountViewState
 import com.pmb.auth.presentaion.ekyc.signature.viewModel.SignatureViewState
@@ -69,4 +71,14 @@ object StateModule {
     @Provides
     @Singleton
     fun provideOpenAccountViewState(): OpenAccountViewState = OpenAccountViewState()
+
+    @Provides
+    @Singleton
+    fun provideFacePhotoCaptureViewState(): FacePhotoCapturedViewState =
+        FacePhotoCapturedViewState()
+
+    @Provides
+    @Singleton
+    fun provideAuthenticationCapturingVideoViewState(): AuthenticationCapturingVideoViewState =
+        AuthenticationCapturingVideoViewState()
 }

@@ -1,5 +1,7 @@
 package com.pmb.auth.presentaion.ekyc.facePhoto
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.view.PreviewView
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.LinearEasing
@@ -18,6 +20,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,19 +35,44 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.pmb.auth.R
 import com.pmb.auth.presentaion.AuthScreens
+import com.pmb.auth.presentaion.ekyc.facePhoto.viewModel.FacePhotoCapturedViewModel
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.ui.theme.AppTheme
+import com.pmb.camera.platform.PhotoViewActions
 import com.pmb.core.presentation.NavigationManager
 
 @Composable
-fun FacePhotoCapture(navigationManager: NavigationManager) {
+fun FacePhotoCapture(
+    navigationManager: NavigationManager,
+    viewModel: FacePhotoCapturedViewModel
+) {
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val state by viewModel.viewState.collectAsState()
     var isPhotoCaptured by remember {
         mutableStateOf(false)
+    }
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        viewModel.onSinglePermissionResult(isGranted)
+    }
+
+    val multiplePermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestMultiplePermissions()
+    ) {
+        viewModel.onMultiplePermissionResult(it)
+    }
+    LaunchedEffect(Unit) {
+        viewModel.handle(PhotoViewActions.RequestCameraPermission(permissionLauncher))
+    }
+    LaunchedEffect(Unit) {
+        viewModel.handle(PhotoViewActions.RequestFilePermission(multiplePermissionLauncher))
     }
     AppContent(
         modifier = Modifier.padding(horizontal = 16.dp),
@@ -114,8 +143,14 @@ fun FacePhotoCapture(navigationManager: NavigationManager) {
 
                 factory = { context ->
                     val previewView = PreviewView(context).apply {
-                        scaleType = PreviewView.ScaleType.FIT_CENTER
+                        scaleType = PreviewView.ScaleType.FILL_CENTER
                     }
+                    viewModel.handle(
+                        PhotoViewActions.PreviewCamera(
+                            previewView,
+                            lifecycleOwner
+                        )
+                    )
                     previewView
                 },
                 modifier = Modifier
