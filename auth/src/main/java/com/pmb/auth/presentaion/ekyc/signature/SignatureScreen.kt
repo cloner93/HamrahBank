@@ -82,7 +82,7 @@ fun SignatureScreen(
     LaunchedEffect(Unit) {
         viewModel.handle(PhotoViewActions.RequestCameraPermission(permissionLauncher))
     }
-    LaunchedEffect(Unit) {
+    LaunchedEffect(viewState.hasCameraPermission) {
         viewModel.handle(PhotoViewActions.RequestFilePermission(multiplePermissionLauncher))
     }
     LaunchedEffect(Unit) {
@@ -176,13 +176,6 @@ fun SignatureScreen(
                 AndroidView(
 
                     factory = { context ->
-//                        val previewView = PreviewView(context)
-//                        viewModel.handle(
-//                            PhotoViewActions.PreviewCamera(
-//                                previewView,
-//                                lifecycleOwner
-//                            )
-//                        )
                         previewView
                     },
                     modifier = Modifier

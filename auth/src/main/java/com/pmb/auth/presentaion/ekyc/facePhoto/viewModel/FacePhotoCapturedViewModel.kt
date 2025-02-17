@@ -13,6 +13,7 @@ import com.pmb.core.platform.AlertModelState
 import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.platform.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -39,12 +40,50 @@ class FacePhotoCapturedViewModel @Inject constructor(
             is PhotoViewActions.PreviewCamera -> {
                 previewCamera(action)
             }
+            is PhotoViewActions.ClearPhoto -> {
+                clearPhoto()
+            }
+
             is FacePhotoCapturedViewActions.SendFacePhoto->{
                 handleSendFacePhoto(action)
             }
             is FacePhotoCapturedViewActions.ClearAlert -> {
                 setState {
                     it.copy(isLoading = false)
+                }
+            }
+        }
+    }
+    private fun clearPhoto() {
+        viewModelScope.launch {
+            setState {
+                it.copy(
+                    isLoading = true,
+                    isCapturingPhoto = true
+                )
+            }
+            viewState.value.savedFileUri?.let {
+                val deleteFile = fileManager.deleteFile(it)
+                if (deleteFile) {
+                    delay(500)
+                    setState { state ->
+                        state.copy(
+                            isLoading = false,
+                            photoCaptured = false,
+                            savedFileUri = null,
+                            cameraHasError = null
+                        )
+                    }
+                } else {
+                    setState {
+                        it.copy(isLoading = false,
+                            isCapturingPhoto = false)
+                    }
+                }
+            } ?: run {
+                setState {
+                    it.copy(isLoading = false,
+                        isCapturingPhoto = false)
                 }
             }
         }
@@ -112,7 +151,7 @@ class FacePhotoCapturedViewModel @Inject constructor(
                 onPermissionGranted = {
                     setState { state ->
                         Log.i("per", "You have permission for using camera")
-                        state.copy(hasCameraPermission = true)
+                        state.copy(hasCameraPermission = true, isCapturingPhoto = true)
                     }
                 },
                 onPermissionDenied = {
@@ -159,7 +198,8 @@ class FacePhotoCapturedViewModel @Inject constructor(
                     state.copy(
                         isCameraReady = true,
                         isLoading = false,
-                        cameraHasError = null
+                        cameraHasError = null,
+                        isCapturingPhoto = true
                     )
                 }
             },
@@ -184,20 +224,19 @@ class FacePhotoCapturedViewModel @Inject constructor(
             photoFile,
             onPhotoCaptured = { isCaptured ->
                 viewModelScope.launch {
-                    val compressedFile = imageCompressor.compressAndReplaceImage(
-                        photoFile.absolutePath,
-                        1024,
-                        1024,
-                        compressionPercentage = 50
-                    )
-
-                    setState { state ->
-                        state.copy(
-                            isCapturingPhoto = false,
-                            photoCaptured = compressedFile,
-                            savedFileUri = photoFile.absolutePath,
-                            cameraHasError = null
+                    viewModelScope.launch {
+                        val compressedFilePath = imageCompressor.compressAndReplaceImage(
+                            photoFile.absolutePath, 1024, 1024, compressionPercentage = 50
                         )
+                        setState { state ->
+                            state.copy(
+                                isLoading = false,
+                                isCapturingPhoto = false,
+                                photoCaptured = compressedFilePath,
+                                savedFileUri = photoFile.absolutePath,
+                                cameraHasError = null
+                            )
+                        }
                     }
                 }
             },

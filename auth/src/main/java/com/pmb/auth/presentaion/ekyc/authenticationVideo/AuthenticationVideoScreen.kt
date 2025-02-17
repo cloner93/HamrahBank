@@ -88,7 +88,7 @@ fun AuthenticationVideoScreen(
     LaunchedEffect(Unit) {
         viewModel.handle(VideoViewActions.RequestCameraPermission(permissionLauncher))
     }
-    LaunchedEffect(Unit) {
+    LaunchedEffect(viewState.hasCameraPermission) {
         viewModel.handle(VideoViewActions.RequestFilePermission(multiplePermissionLauncher))
     }
     val title = "00:06/00:20"
