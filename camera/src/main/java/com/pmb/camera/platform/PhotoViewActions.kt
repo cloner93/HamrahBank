@@ -15,6 +15,7 @@ interface PhotoViewActions : BaseViewAction {
 
     data object CapturePhoto : PhotoViewActions
     data object ToggleCamera : PhotoViewActions
+    data object ClearPhoto :PhotoViewActions
     data class PreviewCamera(
         val previewView: PreviewView,
         val lifecycleOwner: LifecycleOwner
