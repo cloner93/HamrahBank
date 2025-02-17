@@ -3,8 +3,8 @@ package com.pmb.core.compression
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
-import android.media.ExifInterface
 import android.util.Log
+import androidx.exifinterface.media.ExifInterface
 import com.pmb.core.fileManager.FileManager
 import com.pmb.core.qualifier.IoDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
