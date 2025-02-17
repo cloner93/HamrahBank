@@ -3,19 +3,19 @@ package com.pmb.auth.presentaion
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.pmb.auth.presentaion.ekyc.authenthicationConfirm.AuthenticationConfirmScreen
-import com.pmb.auth.presentaion.ekyc.authenthicationConfirm.viewModel.AuthenticationConfirmStepViewModel
+import com.pmb.auth.presentaion.ekyc.authentication_confirm.AuthenticationConfirmScreen
+import com.pmb.auth.presentaion.ekyc.authentication_confirm.viewModel.AuthenticationConfirmStepViewModel
 import com.pmb.auth.presentaion.ekyc.authentication.AuthenticationScreen
-import com.pmb.auth.presentaion.ekyc.authenticationSelectServices.AuthenticationSelectServicesScreen
-import com.pmb.auth.presentaion.ekyc.authenticationSelectServices.viewModel.AuthenticationSelectServicesViewModel
-import com.pmb.auth.presentaion.ekyc.authenticationVideo.AuthenticationVideoScreen
-import com.pmb.auth.presentaion.ekyc.authenticationVideo.viewModel.AuthenticationCapturingVideoViewModel
-import com.pmb.auth.presentaion.ekyc.facePhoto.FacePhotoCapture
-import com.pmb.auth.presentaion.ekyc.facePhoto.viewModel.FacePhotoCapturedViewModel
-import com.pmb.auth.presentaion.ekyc.feeDetails.FeeDetailsScreen
-import com.pmb.auth.presentaion.ekyc.feeDetails.viewModel.FeeDetailsViewModel
-import com.pmb.auth.presentaion.ekyc.openAccount.OpenAccountScreen
-import com.pmb.auth.presentaion.ekyc.openAccount.viewModel.OpenAccountViewModel
+import com.pmb.auth.presentaion.ekyc.authentication_select_services.AuthenticationSelectServicesScreen
+import com.pmb.auth.presentaion.ekyc.authentication_select_services.viewModel.AuthenticationSelectServicesViewModel
+import com.pmb.auth.presentaion.ekyc.authentication_video.AuthenticationVideoScreen
+import com.pmb.auth.presentaion.ekyc.authentication_video.viewModel.AuthenticationCapturingVideoViewModel
+import com.pmb.auth.presentaion.ekyc.face_photo.FacePhotoCaptureScreen
+import com.pmb.auth.presentaion.ekyc.face_photo.viewModel.FacePhotoCapturedViewModel
+import com.pmb.auth.presentaion.ekyc.fee_details.FeeDetailsScreen
+import com.pmb.auth.presentaion.ekyc.fee_details.viewModel.FeeDetailsViewModel
+import com.pmb.auth.presentaion.ekyc.open_account.OpenAccountScreen
+import com.pmb.auth.presentaion.ekyc.open_account.viewModel.OpenAccountViewModel
 import com.pmb.auth.presentaion.ekyc.signature.SignatureScreen
 import com.pmb.auth.presentaion.ekyc.signature.viewModel.SignatureViewModel
 import com.pmb.auth.presentaion.first_login.FirstLoginScreen
@@ -46,12 +46,12 @@ sealed class AuthScreens(route: String, arguments: Map<String, String> = emptyMa
     data object RegisterNationalId : AuthScreens(route = "register_national_id")
     data object Signature : AuthScreens(route = "signature")
     data object Authentication : AuthScreens(route = "authentication")
-    data object FacePhotoCapture : AuthScreens(route = "facePhotoCapture")
-    data object AuthenticationVideo : AuthScreens(route = "authenticationVideo")
-    data object AuthenticationStep : AuthScreens(route = "authenticationStep")
-    data object AuthenticationSelectServices : AuthScreens(route = "authenticationSelectServices")
-    data object FeeDetails : AuthScreens(route = "feeDetails")
-    data object OpenAccount : AuthScreens(route = "openAccount")
+    data object FacePhotoCapture : AuthScreens(route = "face_photo_capture")
+    data object AuthenticationVideo : AuthScreens(route = "authentication_video")
+    data object AuthenticationConfirmStep : AuthScreens(route = "authentication_confirm_step")
+    data object AuthenticationSelectServices : AuthScreens(route = "authentication_select_services")
+    data object FeeDetails : AuthScreens(route = "fee_details")
+    data object OpenAccount : AuthScreens(route = "open_account")
 }
 
 
@@ -104,7 +104,7 @@ fun NavGraphBuilder.authScreensHandle(
         AuthenticationScreen(navigationManager = navigationManager)
     }
     composable(route = AuthScreens.FacePhotoCapture.route) {
-        FacePhotoCapture(
+        FacePhotoCaptureScreen(
             navigationManager = navigationManager,
             viewModel = hiltViewModel<FacePhotoCapturedViewModel>()
         )
@@ -115,7 +115,7 @@ fun NavGraphBuilder.authScreensHandle(
             viewModel = hiltViewModel<AuthenticationCapturingVideoViewModel>()
         )
     }
-    composable(route = AuthScreens.AuthenticationStep.route) {
+    composable(route = AuthScreens.AuthenticationConfirmStep.route) {
         AuthenticationConfirmScreen(
             navigationManager = navigationManager,
             viewModel = hiltViewModel<AuthenticationConfirmStepViewModel>()

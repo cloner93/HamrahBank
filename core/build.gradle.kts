@@ -52,7 +52,6 @@ dependencies {
 
     //viewmodel
     api(libs.lifecycle.viewmodel.ktx)
-//    api(libs.androidx.activity.ktx)
     api(libs.androidx.activity.compose)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

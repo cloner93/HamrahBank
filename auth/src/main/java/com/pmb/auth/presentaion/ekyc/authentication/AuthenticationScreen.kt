@@ -1,11 +1,9 @@
 package com.pmb.auth.presentaion.ekyc.authentication
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,6 +19,7 @@ import com.pmb.auth.R
 import com.pmb.auth.presentaion.AuthScreens
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppContent
+import com.pmb.ballon.component.base.AppImage
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.ui.theme.AppTheme
@@ -52,11 +51,11 @@ fun AuthenticationScreen(navigationManager: NavigationManager) {
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Spacer(modifier = Modifier.size(30.dp))
-        Image(
+        AppImage(
             modifier = Modifier.size(128.dp),
-            painter = painterResource(com.pmb.ballon.R.drawable.ic_authentication),
-            contentDescription = "authentication"
+            image = painterResource(com.pmb.ballon.R.drawable.ic_authentication),
         )
+
         Spacer(modifier = Modifier.size(30.dp))
         BodyMediumText(
             text = stringResource(R.string.start_authentication_description),
@@ -64,7 +63,7 @@ fun AuthenticationScreen(navigationManager: NavigationManager) {
             textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.size(16.dp))
-        Text(
+        BodyMediumText(
             modifier = Modifier.fillMaxWidth(),
             text = buildAnnotatedString {
                 append("\u2022")
@@ -74,11 +73,9 @@ fun AuthenticationScreen(navigationManager: NavigationManager) {
                 append("را رعایت فرمایید.")
             },
             color = AppTheme.colorScheme.onBackgroundPrimarySubdued,
-            textAlign = TextAlign.Start,
-            style = AppTheme.typography.bodyMedium
         )
         Spacer(modifier = Modifier.size(10.dp))
-        Text(
+        BodyMediumText(
             modifier = Modifier.fillMaxWidth(),
             text = buildAnnotatedString {
                 append("\u2022")
@@ -88,11 +85,9 @@ fun AuthenticationScreen(navigationManager: NavigationManager) {
                 append("بر روی صورت نداشته باشید.")
             },
             color = AppTheme.colorScheme.onBackgroundPrimarySubdued,
-            textAlign = TextAlign.Start,
-            style = AppTheme.typography.bodyMedium
         )
         Spacer(modifier = Modifier.size(10.dp))
-        Text(
+        BodyMediumText(
             modifier = Modifier.fillMaxWidth(),
             text = buildAnnotatedString {
                 append("\u2022")
@@ -103,8 +98,6 @@ fun AuthenticationScreen(navigationManager: NavigationManager) {
                 append("مشخص شده قرار دهید.")
             },
             color = AppTheme.colorScheme.onBackgroundPrimarySubdued,
-            textAlign = TextAlign.Start,
-            style = AppTheme.typography.bodyMedium
         )
     }
 }

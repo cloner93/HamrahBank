@@ -55,10 +55,9 @@
     <string name="show_details">مشاهده جزئیات</string>
     <string name="check_authentication_data">اطلاعات شما در دست بررسی می باشد.</string>
     <string name="result_authentication_info">نتایج بررسی حداکثر طی دو روز کاری از طریق پیامک به اطلاع شما خواهد رسید. سپس می توانید مراحل باقی مانده را تکمیل کنید.</string>
-    <string name="confirm">تایید</string>
     <string name="select_services_title">پس از افتتاح حساب، همراه بانک ملت به طور پیش فرض برای شما فعال خواهد شد.</string>
     <string name="select_services_description">در صورت تمایل می توانید دریافت سایر خدمات را نیز انتخاب نمایید.</string>
-    <string name="rial">ريال</string>
+
     <string name="total">مبلغ کل</string>
     <string name="rules">قوانین افتتاح حساب بانک ملت </string>
     <string name="rules_read_and_accepted"> را مطالعه کردم و آن ها را می پذیرم.</string>

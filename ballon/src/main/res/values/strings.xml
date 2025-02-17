@@ -15,4 +15,6 @@
     <string name="day">روز</string>
     <string name="month">ماه</string>
     <string name="year">سال</string>
+    <string name="confirm">تایید</string>
+    <string name="rial">ريال</string>
 </resources>

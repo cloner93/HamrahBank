@@ -1,10 +1,8 @@
 package com.pmb.ballon.component.base
 
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -34,26 +32,6 @@ fun AppButton(
         BaseAppText(title = title, style = textStyle)
     }
 }
-//@Composable
-//fun AppCircleIconButton(
-//    modifier: Modifier = Modifier,
-//    title: String,
-//    colors: ButtonColors = AppButton.buttonColors(),
-//    textStyle: TextStyle = TextStyle.defaultButton(),
-//    enable: Boolean = true,
-//    onClick: () -> Unit
-//) {
-//    Button(
-//        modifier = modifier,
-//        shape = CircleShape,
-//        colors = colors,
-//        enabled = enable,
-//        onClick = onClick
-//    ) {
-//        Icon(painter = )
-//    }
-//}
-
 
 @Composable
 fun AppOutlineButton(

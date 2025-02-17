@@ -1,12 +1,12 @@
 package com.pmb.auth.di
 
 import com.pmb.auth.presentaion.activate.viewModel.ActivateViewState
-import com.pmb.auth.presentaion.ekyc.authenthicationConfirm.viewModel.AuthenticationConfirmStepViewState
-import com.pmb.auth.presentaion.ekyc.authenticationSelectServices.viewModel.AuthenticationSelectServicesViewState
-import com.pmb.auth.presentaion.ekyc.authenticationVideo.viewModel.AuthenticationCapturingVideoViewState
-import com.pmb.auth.presentaion.ekyc.facePhoto.viewModel.FacePhotoCapturedViewState
-import com.pmb.auth.presentaion.ekyc.feeDetails.viewModel.FeeDetailsViewState
-import com.pmb.auth.presentaion.ekyc.openAccount.viewModel.OpenAccountViewState
+import com.pmb.auth.presentaion.ekyc.authentication_confirm.viewModel.AuthenticationConfirmStepViewState
+import com.pmb.auth.presentaion.ekyc.authentication_select_services.viewModel.AuthenticationSelectServicesViewState
+import com.pmb.auth.presentaion.ekyc.authentication_video.viewModel.AuthenticationCapturingVideoViewState
+import com.pmb.auth.presentaion.ekyc.face_photo.viewModel.FacePhotoCapturedViewState
+import com.pmb.auth.presentaion.ekyc.fee_details.viewModel.FeeDetailsViewState
+import com.pmb.auth.presentaion.ekyc.open_account.viewModel.OpenAccountViewState
 import com.pmb.auth.presentaion.ekyc.signature.viewModel.SignatureViewState
 import com.pmb.auth.presentaion.first_login.viewModel.FirstLoginViewState
 import com.pmb.auth.presentaion.first_login_confirm.viewModel.FirstLoginConfirmViewState
