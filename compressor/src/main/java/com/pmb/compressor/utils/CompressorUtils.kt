@@ -82,7 +82,10 @@ object CompressorUtils {
                 Log.i("Output file parameters", "Selected CodecProfileLevel: $higherLevel")
                 setInteger(MediaFormat.KEY_PROFILE, higherLevel)
             } else {
-                setInteger(MediaFormat.KEY_PROFILE, MediaCodecInfo.CodecProfileLevel.AVCProfileBaseline)
+                setInteger(
+                    MediaFormat.KEY_PROFILE,
+                    MediaCodecInfo.CodecProfileLevel.AVCProfileBaseline
+                )
             }
 
             setInteger(
@@ -242,7 +245,7 @@ object CompressorUtils {
             .mapNotNull { codec -> codec.getCapabilitiesForType(type) }
 
         capabilities.forEach { capabilitiesForType ->
-            val levels =  capabilitiesForType.profileLevels.map { it.profile }
+            val levels = capabilitiesForType.profileLevels.map { it.profile }
             return when {
                 MediaCodecInfo.CodecProfileLevel.AVCProfileHigh in levels -> MediaCodecInfo.CodecProfileLevel.AVCProfileHigh
                 MediaCodecInfo.CodecProfileLevel.AVCProfileMain in levels -> MediaCodecInfo.CodecProfileLevel.AVCProfileMain

@@ -1,4 +1,4 @@
-package com.pmb.compressor.`interface`
+package com.pmb.compressor.listeners
 
 import androidx.annotation.MainThread
 import androidx.annotation.WorkerThread
@@ -9,13 +9,13 @@ interface CompressionListener {
     fun onStart()
 
     @MainThread
-    fun onSuccess( size: Long, path: String?)
+    fun onSuccess(size: Long, path: String?)
 
     @MainThread
-    fun onFailure( failureMessage: String)
+    fun onFailure(failureMessage: String)
 
     @WorkerThread
-    fun onProgress( percent: Float)
+    fun onProgress(percent: Float)
 
     @WorkerThread
     fun onCancelled()

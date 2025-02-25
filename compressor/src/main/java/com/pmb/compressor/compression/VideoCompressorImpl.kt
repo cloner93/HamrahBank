@@ -1,14 +1,20 @@
 package com.pmb.compressor.compression
 
-import com.pmb.compressor.`interface`.CompressionListener
-import com.pmb.compressor.`interface`.CompressionProgressListener
 import com.pmb.compressor.compressor.Compressor.compressVideo
 import com.pmb.compressor.compressor.Compressor.isRunning
-import com.pmb.compressor.config.*
+import com.pmb.compressor.config.Configuration
+import com.pmb.compressor.listeners.CompressionListener
+import com.pmb.compressor.listeners.CompressionProgressListener
 import com.pmb.compressor.video.Result
 import com.pmb.core.fileManager.FileManager
 import com.pmb.core.qualifier.IoDispatcher
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 
@@ -19,24 +25,25 @@ enum class VideoQuality {
 class VideoCompressorImpl @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     private val fileManager: FileManager,
-) : VideoCompressor {
+) : CoroutineScope by MainScope(), VideoCompressor {
 
     private var job: Job? = null
 
 
-   override fun compress(
-       uris: String,
-       configureWith: Configuration,
-       listener: CompressionListener,
+    override fun compress(
+        path: String,
+        configureWith: Configuration,
+        listener: CompressionListener,
     ) {
         doVideoCompression(
-            uris,
+            path,
             configureWith,
             listener,
         )
     }
+
     private fun doVideoCompression(
-        uris: String,
+        path: String,
         configuration: Configuration,
         listener: CompressionListener,
     ) {
@@ -52,14 +59,14 @@ class VideoCompressorImpl @Inject constructor(
                 isRunning = true
                 listener.onStart()
                 val result = startCompression(
-                    uris,
+                    path,
                     desFile.path,
                     configuration,
                     listener,
                 )
 
                 if (result.success) {
-                    uris?.let { it1 -> fileManager.deleteFile(uris) }
+                    path?.let { it1 -> fileManager.deleteFile(it1) }
                     listener.onSuccess(result.size, result.path)
                 } else {
                     listener.onFailure(result.failureMessage ?: "An error has occurred!")

@@ -6,7 +6,7 @@ import com.pmb.auth.domain.ekyc.capture_video.entity.CapturingVideoParams
 import com.pmb.auth.domain.ekyc.capture_video.useCase.SendVideoUseCase
 import com.pmb.camera.platform.VideoCameraManagerImpl
 import com.pmb.camera.platform.VideoViewActions
-import com.pmb.compressor.`interface`.CompressionListener
+import com.pmb.compressor.listeners.CompressionListener
 import com.pmb.compressor.compression.VideoQuality
 import com.pmb.compressor.compression.VideoCompressor
 import com.pmb.compressor.config.Configuration

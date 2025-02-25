@@ -4,7 +4,6 @@ import android.media.MediaCodec
 import android.media.MediaFormat
 import com.googlecode.mp4parser.util.Matrix
 import java.io.File
-import java.util.*
 
 class Mp4Movie {
 
@@ -23,12 +22,15 @@ class Mp4Movie {
             0 -> {
                 matrix = Matrix.ROTATE_0
             }
+
             90 -> {
                 matrix = Matrix.ROTATE_90
             }
+
             180 -> {
                 matrix = Matrix.ROTATE_180
             }
+
             270 -> {
                 matrix = Matrix.ROTATE_270
             }

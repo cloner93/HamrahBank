@@ -1,6 +1,11 @@
 package com.pmb.compressor.video
 
-import android.opengl.*
+import android.opengl.EGL14
+import android.opengl.EGLConfig
+import android.opengl.EGLContext
+import android.opengl.EGLDisplay
+import android.opengl.EGLExt
+import android.opengl.EGLSurface
 import android.view.Surface
 
 class InputSurface(surface: Surface?) {

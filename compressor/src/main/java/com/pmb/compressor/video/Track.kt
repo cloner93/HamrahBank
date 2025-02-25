@@ -12,7 +12,8 @@ import com.googlecode.mp4parser.boxes.mp4.objectdescriptors.DecoderConfigDescrip
 import com.googlecode.mp4parser.boxes.mp4.objectdescriptors.ESDescriptor
 import com.googlecode.mp4parser.boxes.mp4.objectdescriptors.SLConfigDescriptor
 import com.mp4parser.iso14496.part15.AvcConfigurationBox
-import java.util.*
+import java.util.Date
+import java.util.LinkedList
 
 class Track(id: Int, format: MediaFormat, audio: Boolean) {
 
@@ -94,54 +95,71 @@ class Track(id: Int, format: MediaFormat, audio: Boolean) {
                         MediaCodecInfo.CodecProfileLevel.AVCLevel1 -> {
                             avcConfigurationBox.avcLevelIndication = 1
                         }
+
                         MediaCodecInfo.CodecProfileLevel.AVCLevel2 -> {
                             avcConfigurationBox.avcLevelIndication = 2
                         }
+
                         MediaCodecInfo.CodecProfileLevel.AVCLevel11 -> {
                             avcConfigurationBox.avcLevelIndication = 11
                         }
+
                         MediaCodecInfo.CodecProfileLevel.AVCLevel12 -> {
                             avcConfigurationBox.avcLevelIndication = 12
                         }
+
                         MediaCodecInfo.CodecProfileLevel.AVCLevel13 -> {
                             avcConfigurationBox.avcLevelIndication = 13
                         }
+
                         MediaCodecInfo.CodecProfileLevel.AVCLevel21 -> {
                             avcConfigurationBox.avcLevelIndication = 21
                         }
+
                         MediaCodecInfo.CodecProfileLevel.AVCLevel22 -> {
                             avcConfigurationBox.avcLevelIndication = 22
                         }
+
                         MediaCodecInfo.CodecProfileLevel.AVCLevel3 -> {
                             avcConfigurationBox.avcLevelIndication = 3
                         }
+
                         MediaCodecInfo.CodecProfileLevel.AVCLevel31 -> {
                             avcConfigurationBox.avcLevelIndication = 31
                         }
+
                         MediaCodecInfo.CodecProfileLevel.AVCLevel32 -> {
                             avcConfigurationBox.avcLevelIndication = 32
                         }
+
                         MediaCodecInfo.CodecProfileLevel.AVCLevel4 -> {
                             avcConfigurationBox.avcLevelIndication = 4
                         }
+
                         MediaCodecInfo.CodecProfileLevel.AVCLevel41 -> {
                             avcConfigurationBox.avcLevelIndication = 41
                         }
+
                         MediaCodecInfo.CodecProfileLevel.AVCLevel42 -> {
                             avcConfigurationBox.avcLevelIndication = 42
                         }
+
                         MediaCodecInfo.CodecProfileLevel.AVCLevel5 -> {
                             avcConfigurationBox.avcLevelIndication = 5
                         }
+
                         MediaCodecInfo.CodecProfileLevel.AVCLevel51 -> {
                             avcConfigurationBox.avcLevelIndication = 51
                         }
+
                         MediaCodecInfo.CodecProfileLevel.AVCLevel52 -> {
                             avcConfigurationBox.avcLevelIndication = 52
                         }
+
                         MediaCodecInfo.CodecProfileLevel.AVCLevel1b -> {
                             avcConfigurationBox.avcLevelIndication = 0x1b
                         }
+
                         else -> avcConfigurationBox.avcLevelIndication = 13
                     }
                 } else {

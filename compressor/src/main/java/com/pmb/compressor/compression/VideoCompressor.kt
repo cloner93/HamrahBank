@@ -1,11 +1,11 @@
 package com.pmb.compressor.compression
 
-import com.pmb.compressor.`interface`.CompressionListener
 import com.pmb.compressor.config.Configuration
+import com.pmb.compressor.listeners.CompressionListener
 
 interface VideoCompressor {
     fun compress(
-        uris: String,
+        path: String,
         configureWith: Configuration,
         listener: CompressionListener,
     )

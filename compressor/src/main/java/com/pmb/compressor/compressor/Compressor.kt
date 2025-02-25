@@ -6,8 +6,8 @@ import android.media.MediaFormat
 import android.media.MediaMetadataRetriever
 import android.os.Build
 import android.util.Log
-import com.pmb.compressor.`interface`.CompressionProgressListener
 import com.pmb.compressor.config.Configuration
+import com.pmb.compressor.listeners.CompressionProgressListener
 import com.pmb.compressor.utils.CompressorUtils.findTrack
 import com.pmb.compressor.utils.CompressorUtils.getBitrate
 import com.pmb.compressor.utils.CompressorUtils.hasQTI
@@ -302,7 +302,6 @@ object Compressor {
                                 }
 
 
-
                                 encoderStatus < 0 -> throw RuntimeException("unexpected result from encoder.dequeueOutputBuffer: $encoderStatus")
                                 else -> {
                                     val encodedData = encoder.getOutputBuffer(encoderStatus)
@@ -331,6 +330,7 @@ object Compressor {
                             when {
                                 decoderStatus == MediaCodec.INFO_TRY_AGAIN_LATER -> decoderOutputAvailable =
                                     false
+
 
                                 decoderStatus < 0 -> throw RuntimeException("unexpected result from decoder.dequeueOutputBuffer: $decoderStatus")
                                 else -> {
@@ -402,12 +402,13 @@ object Compressor {
                 printException(exception)
             }
 
+            var resultFile = cacheFile
 
             return Result(
                 success = true,
                 failureMessage = null,
-                size = cacheFile.length(),
-                cacheFile.path
+                size = resultFile.length(),
+                resultFile.path
             )
         }
 
