@@ -155,6 +155,7 @@ fun AuthenticationVideoScreen(
                             .size(66.dp),
                         onClick = {
                             isVideoStarted = true
+                            viewModel.handle(VideoViewActions.VideoCaptured)
                         }
                     ) {
                         AppImage(
@@ -183,7 +184,7 @@ fun AuthenticationVideoScreen(
                 }
             }
             AnimatedVisibility(
-                visible = isVideoCaptured,
+                visible = viewState.videoCaptured,
             ) {
                 AppButton(modifier = Modifier
                     .fillMaxWidth()

@@ -4,9 +4,13 @@ import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.pmb.auth.domain.ekyc.capture_video.entity.CapturingVideoParams
 import com.pmb.auth.domain.ekyc.capture_video.useCase.SendVideoUseCase
-import com.pmb.camera.platform.CameraManager
+import com.pmb.camera.platform.VideoCameraManagerImpl
 import com.pmb.camera.platform.VideoViewActions
-import com.pmb.core.compression.VideoCompressor
+import com.pmb.compressor.`interface`.CompressionListener
+import com.pmb.compressor.compression.VideoQuality
+import com.pmb.compressor.compression.VideoCompressor
+import com.pmb.compressor.config.Configuration
+import com.pmb.compressor.config.VideoResizer
 import com.pmb.core.fileManager.FileManager
 import com.pmb.core.permissions.PermissionDispatcher
 import com.pmb.core.platform.AlertModelState
@@ -20,7 +24,7 @@ import javax.inject.Inject
 class AuthenticationCapturingVideoViewModel @Inject constructor(
     initialState: AuthenticationCapturingVideoViewState,
     private val permissionDispatcher: PermissionDispatcher,
-    private val cameraManager: CameraManager,
+    private val cameraManager: VideoCameraManagerImpl,
     private val videoCompressor: VideoCompressor,
     private val fileManager: FileManager,
     private val sendVideoUseCase: SendVideoUseCase
@@ -181,6 +185,61 @@ class AuthenticationCapturingVideoViewModel @Inject constructor(
     }
 
     private fun videoCaptured() {
+        val videoFile = getFile()
+
+        cameraManager.startRecording(videoFile, onCaptured = {
+            viewModelScope.launch {
+
+                videoCompressor.compress(
+                    videoFile.absolutePath,
+                    configureWith = Configuration(
+                        quality = VideoQuality.LOW,
+                        videoNames = videoFile.name,
+                        isMinBitrateCheckEnabled = false,
+                        resizer = VideoResizer.limitSize(1280.0)
+                    ),
+                    listener = object : CompressionListener {
+                        override fun onProgress(percent: Float) {
+                            //Update UI
+
+                        }
+
+                        override fun onStart() {
+
+
+                        }
+
+                        override fun onSuccess(size: Long, path: String?) {
+                            setState { state ->
+                                state.copy(
+                                    isLoading = false,
+                                    isCapturingVideo = false,
+                                    videoCaptured = true,
+                                    savedFileUri = path,
+                                    cameraHasError = null
+                                )
+                            }
+                        }
+
+                        override fun onFailure(failureMessage: String) {
+                            Log.wtf("failureMessage", failureMessage)
+                        }
+
+                        override fun onCancelled() {
+                            Log.wtf("TAG", "compression has been cancelled")
+                            // make UI changes, cleanup, etc
+                        }
+                    },
+                )
+            }
+        }, onError = { error ->
+            setState { state ->
+                state.copy(
+                    videoCaptured = false,
+                    cameraHasError = error
+                )
+            }
+        })
 
     }
 
@@ -188,7 +247,7 @@ class AuthenticationCapturingVideoViewModel @Inject constructor(
 
     }
 
-    private fun getFile() = fileManager.createImageFile()
+    private fun getFile() = fileManager.createVideoFile()
     private fun toggleCamera() {
         viewModelScope.launch {
             cameraManager.toggleCamera()

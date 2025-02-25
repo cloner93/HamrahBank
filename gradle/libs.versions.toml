@@ -21,6 +21,7 @@ navigationRuntimeKtx = "2.8.3"
 uiTestAndroid = "1.7.1"
 cameraX = "1.4.1"
 exifinterface = "1.3.7"
+mp4="1.9.56"
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -56,6 +57,7 @@ androidx-camera-lifecycle = { group = "androidx.camera", name = "camera-lifecycl
 androidx-camera-video = { group = "androidx.camera", name = "camera-video", version.ref = "cameraX" }
 androidx-camera-extensions = { group = "androidx.camera", name = "camera-extensions", version.ref = "cameraX" }
 androidx-exifinterface={ group = "androidx.exifinterface", name = "exifinterface", version.ref = "exifinterface" }
+mp4-parser={ group = "org.mp4parser", name = "isoparser", version.ref = "mp4" }
 [bundles]
 androix-camera-bundle = ["androidx-camera-core", "androidx-camera", "androidx-camera-view", "androidx-camera-lifecycle", "androidx-camera-video", "androidx-camera-extensions"]
 

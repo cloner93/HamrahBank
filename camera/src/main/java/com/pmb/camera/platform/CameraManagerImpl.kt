@@ -1,23 +1,11 @@
 package com.pmb.camera.platform
 
 import android.content.Context
-import android.util.Log
-import android.util.Rational
-import android.util.Size
-import android.view.Surface
-import androidx.annotation.OptIn
-import androidx.camera.core.CameraSelector
-import androidx.camera.core.ExperimentalGetImage
-import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
-import androidx.camera.core.UseCaseGroup
-import androidx.camera.core.ViewPort
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
-import androidx.compose.runtime.MutableState
-import androidx.compose.ui.unit.IntSize
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -28,9 +16,8 @@ import javax.inject.Singleton
 @Singleton
 class CameraManagerImpl @Inject constructor(
     @ApplicationContext private val context: Context,
-) : CameraManager {
+) : CameraManagerPrincipleImpl() {
     private var imageCapture: ImageCapture? = null
-    private var cameraSelector: CameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
     override fun startCamera(
         previewView: PreviewView,
         lifecycleOwner: LifecycleOwner,
@@ -60,9 +47,9 @@ class CameraManagerImpl @Inject constructor(
         }, ContextCompat.getMainExecutor(context))
     }
 
-    override fun takePhoto(
+    override fun startRecording(
         outputFile: File,
-        onPhotoCaptured: (Boolean) -> Unit,
+        onCaptured: (Boolean) -> Unit,
         onError: (String) -> Unit
     ) {
         val imageCapture = imageCapture ?: run {
@@ -75,21 +62,12 @@ class CameraManagerImpl @Inject constructor(
             ContextCompat.getMainExecutor(context),
             object : ImageCapture.OnImageSavedCallback {
                 override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
-                    onPhotoCaptured(true)
+                    onCaptured(true)
                 }
 
                 override fun onError(exception: ImageCaptureException) {
                     onError("Photo capture failed: ${exception.message}")
                 }
             })
-    }
-
-    override fun isFrontCamera(): Boolean = cameraSelector == CameraSelector.DEFAULT_FRONT_CAMERA
-    override fun toggleCamera() {
-        cameraSelector = if (cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA) {
-            CameraSelector.DEFAULT_FRONT_CAMERA
-        } else {
-            CameraSelector.DEFAULT_BACK_CAMERA
-        }
     }
 }

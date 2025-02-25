@@ -1,4 +1,4 @@
-package com.pmb.core.compression
+package com.pmb.compressor.compression
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory

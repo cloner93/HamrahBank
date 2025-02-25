@@ -3,17 +3,16 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.android.hilt)
     alias(libs.plugins.kotlin.kapt)
-    alias(libs.plugins.compose.compiler)
 }
 
 android {
-    namespace = "com.pmb.auth"
+    namespace = "com.pmb.compressor"
     compileSdk = 34
 
     defaultConfig {
         minSdk = 24
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
     }
 
     buildTypes {
@@ -32,31 +31,23 @@ android {
     kotlinOptions {
         jvmTarget = "19"
     }
-    buildFeatures {
-        compose = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.15"
-    }
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
+    // Allow references to generated code
+    kapt {
+        correctErrorTypes = true
     }
 }
 
 dependencies {
     implementation(project(":core"))
-    implementation(project(":compressor"))
-    implementation(project(":ballon"))
-    implementation(project(":camera"))
+    api(libs.androidx.core.ktx)
+    api(libs.androidx.exifinterface)
+    implementation ("com.googlecode.mp4parser:isoparser:1.0.6") {
+        exclude("kotlinx-coroutines-android")
+    }
     // DI > Hilt
-    implementation(libs.android.hilt)
+    api(libs.android.hilt)
     kapt(libs.android.hilt.compiler)
-    implementation(libs.hilt.navigation.compose)
-    implementation(project(":home"))
-
-    testImplementation(libs.junit)
+    api(libs.hilt.navigation.compose)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }

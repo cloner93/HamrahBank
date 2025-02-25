@@ -3,6 +3,8 @@ package com.pmb.camera.di
 import android.content.Context
 import com.pmb.camera.platform.CameraManager
 import com.pmb.camera.platform.CameraManagerImpl
+import com.pmb.camera.platform.CameraManagerPrincipleImpl
+import com.pmb.camera.platform.VideoCameraManagerImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,8 +19,17 @@ object CameraModule {
     @Singleton
     fun provideCameraController(
         @ApplicationContext context: Context
-    ): CameraManager {
+    ): CameraManagerPrincipleImpl {
         return CameraManagerImpl(
+            context
+        )
+    }
+    @Provides
+    @Singleton
+    fun provideVideoController(
+        @ApplicationContext context: Context
+    ): CameraManagerPrincipleImpl {
+        return VideoCameraManagerImpl(
             context
         )
     }

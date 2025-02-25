@@ -72,7 +72,7 @@ class FileManagerImpl @Inject constructor(
                 return false
             }
 
-            newFile.copyTo(originalFile, overwrite = true)
+            newFile.copyTo(originalFile, overwrite = false)
 
             newFile.delete()
             true
@@ -98,11 +98,10 @@ class FileManagerImpl @Inject constructor(
     }
 
     override fun createVideoFile(): File {
-        val timeStamp = SimpleDateFormat(
-            "yyyy-MM-dd-HH-mm-ss-SSS",
-            Locale.US
-        ).format(System.currentTimeMillis())
-        return File(getOutputDirectory(), "video_$timeStamp.mp4")
+        val timeStamp = SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS", Locale.US)
+            .format(System.currentTimeMillis())
+        val directory = context.getExternalFilesDir(Environment.DIRECTORY_MOVIES) ?: context.filesDir
+        return File(directory, "video_$timeStamp.mp4")
     }
 
     override fun getFileUri(file: File): Uri {

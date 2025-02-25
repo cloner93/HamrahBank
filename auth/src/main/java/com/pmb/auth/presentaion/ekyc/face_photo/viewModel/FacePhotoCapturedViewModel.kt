@@ -4,9 +4,9 @@ import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.pmb.auth.domain.ekyc.face_photo.entity.FacePhotoParams
 import com.pmb.auth.domain.ekyc.face_photo.useCase.SendFacePhotoUseCase
-import com.pmb.camera.platform.CameraManager
+import com.pmb.camera.platform.CameraManagerImpl
 import com.pmb.camera.platform.PhotoViewActions
-import com.pmb.core.compression.ImageCompressor
+import com.pmb.compressor.compression.ImageCompressor
 import com.pmb.core.fileManager.FileManager
 import com.pmb.core.permissions.PermissionDispatcher
 import com.pmb.core.platform.AlertModelState
@@ -21,7 +21,7 @@ import javax.inject.Inject
 class FacePhotoCapturedViewModel @Inject constructor(
     initialState: FacePhotoCapturedViewState,
     private val permissionDispatcher: PermissionDispatcher,
-    private val cameraManager: CameraManager,
+    private val cameraManager: CameraManagerImpl,
     private val imageCompressor: ImageCompressor,
     private val fileManager: FileManager,
     private val sendFacePhotoUseCase: SendFacePhotoUseCase
@@ -40,13 +40,15 @@ class FacePhotoCapturedViewModel @Inject constructor(
             is PhotoViewActions.PreviewCamera -> {
                 previewCamera(action)
             }
+
             is PhotoViewActions.ClearPhoto -> {
                 clearPhoto()
             }
 
-            is FacePhotoCapturedViewActions.SendFacePhoto->{
+            is FacePhotoCapturedViewActions.SendFacePhoto -> {
                 handleSendFacePhoto(action)
             }
+
             is FacePhotoCapturedViewActions.ClearAlert -> {
                 setState {
                     it.copy(isLoading = false)
@@ -54,6 +56,7 @@ class FacePhotoCapturedViewModel @Inject constructor(
             }
         }
     }
+
     private fun clearPhoto() {
         viewModelScope.launch {
             setState {
@@ -76,18 +79,23 @@ class FacePhotoCapturedViewModel @Inject constructor(
                     }
                 } else {
                     setState {
-                        it.copy(isLoading = false,
-                            isCapturingPhoto = false)
+                        it.copy(
+                            isLoading = false,
+                            isCapturingPhoto = false
+                        )
                     }
                 }
             } ?: run {
                 setState {
-                    it.copy(isLoading = false,
-                        isCapturingPhoto = false)
+                    it.copy(
+                        isLoading = false,
+                        isCapturingPhoto = false
+                    )
                 }
             }
         }
     }
+
     private fun handleSendFacePhoto(action: FacePhotoCapturedViewActions.SendFacePhoto) {
         viewModelScope.launch {
             sendFacePhotoUseCase.invoke(FacePhotoParams(action.uri)).collect { result ->
@@ -133,6 +141,7 @@ class FacePhotoCapturedViewModel @Inject constructor(
             }
         }
     }
+
     fun onSinglePermissionResult(isGranted: Boolean) {
         permissionDispatcher.onSinglePermissionResult(isGranted)
 
@@ -185,6 +194,7 @@ class FacePhotoCapturedViewModel @Inject constructor(
             )
         }
     }
+
     private fun previewCamera(action: PhotoViewActions.PreviewCamera) {
         setState { state ->
             state.copy(isLoading = true)
@@ -220,9 +230,9 @@ class FacePhotoCapturedViewModel @Inject constructor(
         setState { state ->
             state.copy(isLoading = true)
         }
-        cameraManager.takePhoto(
+        cameraManager.startRecording(
             photoFile,
-            onPhotoCaptured = { isCaptured ->
+            onCaptured = { isCaptured ->
                 viewModelScope.launch {
                     viewModelScope.launch {
                         val compressedFilePath = imageCompressor.compressAndReplaceImage(

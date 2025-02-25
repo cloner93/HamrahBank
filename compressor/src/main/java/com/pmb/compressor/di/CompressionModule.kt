@@ -1,9 +1,9 @@
-package com.pmb.core.di
+package com.pmb.compressor.di
 
-import com.pmb.core.compression.ImageCompressor
-import com.pmb.core.compression.ImageCompressorImpl
-import com.pmb.core.compression.VideoCompressor
-import com.pmb.core.compression.VideoCompressorImpl
+import com.pmb.compressor.compression.ImageCompressor
+import com.pmb.compressor.compression.ImageCompressorImpl
+import com.pmb.compressor.compression.VideoCompressor
+import com.pmb.compressor.compression.VideoCompressorImpl
 import com.pmb.core.fileManager.FileManager
 import com.pmb.core.qualifier.IoDispatcher
 import dagger.Module
@@ -21,12 +21,15 @@ object CompressionModule {
     fun provideImageCompressor(
         @IoDispatcher ioDispatcher: CoroutineDispatcher,
         fileManager: FileManager
-    ): ImageCompressor = ImageCompressorImpl(ioDispatcher, fileManager)
+    ): ImageCompressor =
+        ImageCompressorImpl(ioDispatcher, fileManager)
+
 
     @Provides
     @Singleton
-    fun provideVideoCompressor(
+    fun provideVideoCompressor1(
         @IoDispatcher ioDispatcher: CoroutineDispatcher,
         fileManager: FileManager
-    ): VideoCompressor = VideoCompressorImpl(ioDispatcher, fileManager)
+    ): VideoCompressor =
+        VideoCompressorImpl(ioDispatcher, fileManager)
 }
