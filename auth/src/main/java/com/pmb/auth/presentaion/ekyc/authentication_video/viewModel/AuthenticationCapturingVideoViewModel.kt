@@ -4,19 +4,33 @@ import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.pmb.auth.domain.ekyc.capture_video.entity.CapturingVideoParams
 import com.pmb.auth.domain.ekyc.capture_video.useCase.SendVideoUseCase
+import com.pmb.auth.presentaion.first_login_confirm.viewModel.TimerEvent
+import com.pmb.auth.presentaion.first_login_confirm.viewModel.TimerState
+import com.pmb.auth.presentaion.first_login_confirm.viewModel.TimerStatus
+import com.pmb.auth.presentaion.first_login_confirm.viewModel.TimerTypeId
+import com.pmb.auth.utils.startCountUp
 import com.pmb.camera.platform.VideoCameraManagerImpl
 import com.pmb.camera.platform.VideoViewActions
-import com.pmb.compressor.listeners.CompressionListener
-import com.pmb.compressor.compression.VideoQuality
 import com.pmb.compressor.compression.VideoCompressor
+import com.pmb.compressor.compression.VideoQuality
 import com.pmb.compressor.config.Configuration
 import com.pmb.compressor.config.VideoResizer
+import com.pmb.compressor.listeners.CompressionListener
 import com.pmb.core.fileManager.FileManager
 import com.pmb.core.permissions.PermissionDispatcher
 import com.pmb.core.platform.AlertModelState
 import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.platform.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.consumeAsFlow
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -48,6 +62,10 @@ class AuthenticationCapturingVideoViewModel @Inject constructor(
 
             is AuthenticationCapturingVideoViewActions.SendVideo -> {
                 handleSendFacePhoto(action)
+            }
+
+            is AuthenticationCapturingVideoViewActions.FinishTimer -> {
+                finishTimer()
             }
 
             is AuthenticationCapturingVideoViewActions.ClearAlert -> {
@@ -184,9 +202,86 @@ class AuthenticationCapturingVideoViewModel @Inject constructor(
         )
     }
 
-    private fun videoCaptured() {
-        val videoFile = getFile()
+    private val eventChannel = Channel<Pair<TimerTypeId, TimerEvent>>(Channel.UNLIMITED)
 
+    // call this variable for starting or stopping the countdown timer
+    @OptIn(DelicateCoroutinesApi::class)
+    fun dispatch(timerId: TimerTypeId, event: TimerEvent) {
+        if (!eventChannel.isClosedForSend) {
+            viewModelScope.launch {
+                eventChannel.trySend(timerId to event)
+            }
+        }
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private fun startTimers() {
+        viewModelScope.launch {
+            eventChannel.consumeAsFlow().flatMapLatest { (timerId, event) ->
+                when (event) {
+                    TimerEvent.STARTED -> {
+                        val initialTime =
+                            viewState.value.timerState?.get(timerId)?.remainingTime ?: 0L
+                        eventChannel.consumeAsFlow().startCountUp(timerId, initialTime, 20000)
+                    }
+
+                    TimerEvent.COUNTING -> {
+                        val remainingTime =
+                            viewState.value.timerState?.get(timerId)?.remainingTime ?: 0L
+                        flowOf(timerId to remainingTime)
+                    }
+
+                    TimerEvent.FINISHED -> {
+                        cameraManager.stopRecording()
+                        emptyFlow()
+                    }
+                }
+            }.onEach { (timerId, remainingTime) ->
+                Log.i("second", "on each second is $remainingTime")
+                updateState(
+                    timerId,
+                    remainingTime,
+                    timerStatus = if (remainingTime < 20) TimerStatus.IS_RUNNING else TimerStatus.IS_FINISHED,
+                )
+                if (remainingTime >= 20) finishTimer()
+            }.launchIn(viewModelScope)
+        }
+    }
+
+    private fun finishTimer() {
+        dispatch(TimerTypeId.VIDEO_TAKEN_TIMER, TimerEvent.FINISHED)
+    }
+
+    private fun updateState(
+        timerId: TimerTypeId,
+        remainingTime: Long,
+        timerStatus: TimerStatus = TimerStatus.IS_LOADING
+    ) {
+        setState {
+            it.copy(
+                timerState = it.timerState?.toMutableMap().apply {
+                    this?.set(timerId, TimerState(remainingTime, timerStatus))
+                }
+            )
+        }
+    }
+
+    private fun videoCaptured() {
+        setState { state ->
+            state.copy(
+                isCapturingVideo = true,
+            )
+        }
+        val videoFile = getFile()
+        setState {
+            it.copy(
+                timerState = mapOf(
+                    (TimerTypeId.VIDEO_TAKEN_TIMER to TimerState(remainingTime = 0L))
+                )
+            )
+        }
+        startTimers()
+        dispatch(TimerTypeId.VIDEO_TAKEN_TIMER, TimerEvent.STARTED)
         cameraManager.startRecording(videoFile, onCaptured = {
             viewModelScope.launch {
 
@@ -196,7 +291,11 @@ class AuthenticationCapturingVideoViewModel @Inject constructor(
                         quality = VideoQuality.LOW,
                         videoNames = videoFile.name,
                         isMinBitrateCheckEnabled = false,
-                        resizer = VideoResizer.limitSize(1280.0)
+//                        resizer = VideoResizer.limitSize(1200.0),
+                        keepOriginalResolution = true,
+
+//                        videoBitrateInMbps = 5,
+//                        disableAudio = false
                     ),
                     listener = object : CompressionListener {
                         override fun onProgress(percent: Float) {
@@ -205,7 +304,12 @@ class AuthenticationCapturingVideoViewModel @Inject constructor(
                         }
 
                         override fun onStart() {
-
+                            setState { state ->
+                                state.copy(
+                                    isLoading = true,
+                                    isCompressing = true
+                                )
+                            }
 
                         }
 
@@ -215,6 +319,7 @@ class AuthenticationCapturingVideoViewModel @Inject constructor(
                                     isLoading = false,
                                     isCapturingVideo = false,
                                     videoCaptured = true,
+                                    isCompressing = false,
                                     savedFileUri = path,
                                     cameraHasError = null
                                 )

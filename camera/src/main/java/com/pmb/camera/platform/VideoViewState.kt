@@ -12,4 +12,5 @@ interface VideoViewState:BaseViewState {
     val savedFileUri: String?
     val cameraHasError: String?
     val isCameraLoading: Boolean
+    val isCompressing:Boolean
 }

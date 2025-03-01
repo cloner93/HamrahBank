@@ -110,22 +110,30 @@ object Compressor {
 
         //Handle new width and height values
         val resizer = configuration.resizer
-        val target = resizer?.resize(width, height) ?: Pair(width, height)
+        val target =
+//            resizer?.resize(width, height) ?:
+            Pair(width, height)
+
+        Log.i("newSize","new width is ${target.first}")
+        Log.i("newSize","new height is ${target.second}")
+        Log.i("newSize","old width is ${width}")
+        Log.i("newSize","old height is ${height}")
         var newWidth = roundDimension(target.first)
         var newHeight = roundDimension(target.second)
 
         //Handle rotation values and swapping height and width if needed
-        rotation = when (rotation) {
-            90, 270 -> {
-                val tempHeight = newHeight
-                newHeight = newWidth
-                newWidth = tempHeight
-                0
-            }
-
-            180 -> 0
-            else -> rotation
-        }
+        rotation = 0
+//            when (rotation) {
+//            90, 270 -> {
+//                val tempHeight = newHeight
+//                newHeight = newWidth
+//                newWidth = tempHeight
+//                0
+//            }
+//
+//            180 -> 0
+//            else -> rotation
+//        }
 
         return@withContext start(
             newWidth,
@@ -301,6 +309,9 @@ object Compressor {
                                         videoTrackIndex = mediaMuxer.addTrack(newFormat, false)
                                 }
 
+                                encoderStatus == MediaCodec.INFO_OUTPUT_BUFFERS_CHANGED -> {
+                                    // ignore this status
+                                }
 
                                 encoderStatus < 0 -> throw RuntimeException("unexpected result from encoder.dequeueOutputBuffer: $encoderStatus")
                                 else -> {
@@ -331,6 +342,13 @@ object Compressor {
                                 decoderStatus == MediaCodec.INFO_TRY_AGAIN_LATER -> decoderOutputAvailable =
                                     false
 
+                                decoderStatus == MediaCodec.INFO_OUTPUT_BUFFERS_CHANGED -> {
+                                    // ignore this status
+                                }
+
+                                decoderStatus == MediaCodec.INFO_OUTPUT_FORMAT_CHANGED -> {
+                                    // ignore this status
+                                }
 
                                 decoderStatus < 0 -> throw RuntimeException("unexpected result from decoder.dequeueOutputBuffer: $decoderStatus")
                                 else -> {

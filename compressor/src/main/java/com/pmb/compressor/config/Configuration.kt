@@ -32,6 +32,7 @@ data class Configuration(
         videoBitrateInMbps: Int? = null,
         disableAudio: Boolean = false,
         videoHeight: Double? = null,
+        keepOriginalResolution: Boolean= false,
         videoWidth: Double? = null,
         videoNames: String
     ) : this(

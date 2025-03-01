@@ -41,5 +41,6 @@ enum class TimerStatus {
 
 enum class TimerTypeId {
     RESEND_TIMER,
-    LOCK_TIMER
+    LOCK_TIMER,
+    VIDEO_TAKEN_TIMER
 }

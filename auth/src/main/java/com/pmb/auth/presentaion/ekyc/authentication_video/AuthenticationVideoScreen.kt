@@ -1,5 +1,12 @@
 package com.pmb.auth.presentaion.ekyc.authentication_video
 
+import android.util.Log
+import android.view.Gravity
+import android.view.TextureView
+import android.view.ViewGroup
+import android.view.ViewTreeObserver
+import android.widget.FrameLayout
+import android.widget.VideoView
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.view.PreviewView
@@ -12,10 +19,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -48,6 +59,8 @@ import com.pmb.auth.presentaion.AuthScreens
 import com.pmb.auth.presentaion.ekyc.authentication_video.viewModel.AuthenticationCapturingVideoViewActions
 import com.pmb.auth.presentaion.ekyc.authentication_video.viewModel.AuthenticationCapturingVideoViewEvents
 import com.pmb.auth.presentaion.ekyc.authentication_video.viewModel.AuthenticationCapturingVideoViewModel
+import com.pmb.auth.presentaion.first_login_confirm.viewModel.TimerStatus
+import com.pmb.auth.presentaion.first_login_confirm.viewModel.TimerTypeId
 import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppContent
@@ -69,7 +82,25 @@ fun AuthenticationVideoScreen(
     val viewState by viewModel.viewState.collectAsState()
     val context = LocalContext.current
     val previewView = remember { PreviewView(context) }
-
+    val videoView = remember {
+        VideoView(context).apply {
+//            setVideoPath(viewState.savedFileUri)
+            layoutParams = FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT
+            ).apply {
+                gravity = Gravity.CENTER
+            }
+        }
+    }
+    val title: String =
+        if (viewState.timerState?.get(TimerTypeId.VIDEO_TAKEN_TIMER)?.timerStatus != TimerStatus.IS_LOADING) {
+            "${viewState.calculateMinute(TimerTypeId.VIDEO_TAKEN_TIMER)}:${
+                viewState.calculateSecond(
+                    TimerTypeId.VIDEO_TAKEN_TIMER
+                )
+            }/00:20"
+        } else ""
     LaunchedEffect(viewState.hasCameraPermission) {
         if (viewState.hasCameraPermission)
             viewModel.handle(VideoViewActions.PreviewCamera(previewView, lifecycleOwner))
@@ -98,7 +129,6 @@ fun AuthenticationVideoScreen(
     LaunchedEffect(viewState.hasCameraPermission) {
         viewModel.handle(VideoViewActions.RequestFilePermission(multiplePermissionLauncher))
     }
-    val title = "00:06/00:20"
     LaunchedEffect(Unit) {
         viewModel.viewEvent.collect { event ->
             when (event) {
@@ -119,28 +149,6 @@ fun AuthenticationVideoScreen(
             )
         },
         footer = {
-            if (isVideoStarted && !isVideoCaptured) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-
-                    BodyMediumText(
-                        text = title,
-                        textAlign = TextAlign.Center,
-                        color = AppTheme.colorScheme.onBackgroundPrimarySubdued
-
-                    )
-                    Spacer(modifier = Modifier.size(5.dp))
-                    Box(
-                        modifier = Modifier
-                            .padding(bottom = 3.dp)
-                            .size(8.dp)
-                            .background(AppTheme.colorScheme.foregroundPrimaryDefault, CircleShape)
-                    )
-                }
-            }
             Spacer(modifier = Modifier.size(10.dp))
             AnimatedVisibility(
                 visible = !isVideoCaptured && !isVideoStarted,
@@ -165,21 +173,48 @@ fun AuthenticationVideoScreen(
                 }
             }
             AnimatedVisibility(
-                visible = isVideoStarted && !isVideoCaptured,
+                visible = viewState.isCapturingVideo && !viewState.videoCaptured,
             ) {
-                Box(modifier = Modifier.fillMaxWidth()) {
-                    IconButton(
-                        modifier = Modifier
-                            .align(Alignment.Center)
-                            .padding(bottom = 16.dp)
-                            .size(66.dp),
-                        onClick = {
-                            isVideoCaptured = true
-                        }
+                Column {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        AppImage(
-                            image = painterResource(com.pmb.ballon.R.drawable.ic_video_stop)
+
+                        BodyMediumText(
+                            text = title,
+                            textAlign = TextAlign.Center,
+                            color = AppTheme.colorScheme.onBackgroundPrimarySubdued
+
                         )
+                        Spacer(modifier = Modifier.size(5.dp))
+                        Box(
+                            modifier = Modifier
+                                .padding(bottom = 3.dp)
+                                .size(8.dp)
+                                .background(
+                                    AppTheme.colorScheme.foregroundPrimaryDefault,
+                                    CircleShape
+                                )
+                        )
+                    }
+                    Spacer(modifier = Modifier.size(10.dp))
+                    Box(modifier = Modifier.fillMaxWidth()) {
+                        IconButton(
+                            modifier = Modifier
+                                .align(Alignment.Center)
+                                .padding(bottom = 16.dp)
+                                .size(66.dp),
+                            onClick = {
+                                viewModel.handle(AuthenticationCapturingVideoViewActions.FinishTimer)
+                            },
+                            enabled = !viewState.isCompressing
+                        ) {
+                            AppImage(
+                                image = painterResource(com.pmb.ballon.R.drawable.ic_video_stop)
+                            )
+                        }
                     }
                 }
             }
@@ -239,20 +274,42 @@ fun AuthenticationVideoScreen(
                 .height(312.dp)
                 .background(Color.White, RoundedCornerShape(size = 16.dp))
         ) {
-            AndroidView(
-                factory = { context ->
-                    previewView
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(312.dp)
-                    .clip(RoundedCornerShape(16.dp))
-                    .border(
-                        1.dp,
-                        AppTheme.colorScheme.strokeNeutral3Rest,
-                        RoundedCornerShape(16.dp)
-                    )
-            )
+            if (viewState.savedFileUri != null && viewState.videoCaptured) {
+                VideoPlayer(
+                    modifier = Modifier
+                        .fillMaxWidth()
+//                        .height(312.dp)
+                        .clip(RoundedCornerShape(16.dp))
+                        .border(
+                            1.dp,
+                            AppTheme.colorScheme.strokeNeutral3Rest,
+                            RoundedCornerShape(16.dp)
+                        ),
+                    videoUri = viewState.savedFileUri ?: ""
+                )
+            } else {
+                AndroidView(
+                    factory = { context ->
+                        TextureView(context).apply {
+                            layoutParams = FrameLayout.LayoutParams(
+                                960, // Width of cropped area
+                                312, // Height of cropped area
+                            ).apply {
+                                gravity = Gravity.CENTER
+                            }
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(312.dp)
+                        .clip(RoundedCornerShape(16.dp))
+                        .border(
+                            1.dp,
+                            AppTheme.colorScheme.strokeNeutral3Rest,
+                            RoundedCornerShape(16.dp)
+                        )
+                )
+            }
         }
 
     }
@@ -261,5 +318,33 @@ fun AuthenticationVideoScreen(
     }
     if (viewState.alertModelState != null) {
         AlertComponent(viewState.alertModelState!!)
+    }
+}
+
+
+@Composable
+fun VideoPlayer(
+    videoUri: String,
+    modifier: Modifier = Modifier
+) {
+    var videoHeight by remember { mutableStateOf(0) }
+    var videoWidth by remember { mutableStateOf(0) }
+
+    Box(modifier = modifier) {
+        AndroidView(
+            factory = { ctx ->
+                VideoView(ctx).apply {
+                    layoutParams = FrameLayout.LayoutParams(
+                        FrameLayout.LayoutParams.MATCH_PARENT,
+                        FrameLayout.LayoutParams.MATCH_PARENT
+                    ).apply { gravity = Gravity.CENTER }
+                    setVideoPath(videoUri)
+                    setOnPreparedListener { mediaPlayer ->
+                        mediaPlayer.start()
+                    }
+                }
+            },
+            modifier = modifier
+        )
     }
 }

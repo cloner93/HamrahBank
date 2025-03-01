@@ -14,8 +14,8 @@ import kotlin.math.roundToInt
 
 object CompressorUtils {
 
-    private const val MIN_HEIGHT = 640.0
-    private const val MIN_WIDTH = 368.0
+    private const val MIN_HEIGHT = 1024.0
+    private const val MIN_WIDTH = 760.0
 
     // 1 second between I-frames
     private const val I_FRAME_INTERVAL = 1
