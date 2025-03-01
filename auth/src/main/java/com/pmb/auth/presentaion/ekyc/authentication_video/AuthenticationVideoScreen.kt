@@ -2,7 +2,6 @@ package com.pmb.auth.presentaion.ekyc.authentication_video
 
 import android.util.Log
 import android.view.Gravity
-import android.view.TextureView
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.FrameLayout
@@ -278,7 +277,6 @@ fun AuthenticationVideoScreen(
                 VideoPlayer(
                     modifier = Modifier
                         .fillMaxWidth()
-//                        .height(312.dp)
                         .clip(RoundedCornerShape(16.dp))
                         .border(
                             1.dp,
@@ -290,24 +288,13 @@ fun AuthenticationVideoScreen(
             } else {
                 AndroidView(
                     factory = { context ->
-                        TextureView(context).apply {
-                            layoutParams = FrameLayout.LayoutParams(
-                                960, // Width of cropped area
-                                312, // Height of cropped area
-                            ).apply {
-                                gravity = Gravity.CENTER
-                            }
-                        }
+                        previewView
                     },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(312.dp)
                         .clip(RoundedCornerShape(16.dp))
-                        .border(
-                            1.dp,
-                            AppTheme.colorScheme.strokeNeutral3Rest,
-                            RoundedCornerShape(16.dp)
-                        )
+                        .border(1.dp, AppTheme.colorScheme.strokeNeutral3Rest, RoundedCornerShape(16.dp))
                 )
             }
         }
@@ -327,9 +314,6 @@ fun VideoPlayer(
     videoUri: String,
     modifier: Modifier = Modifier
 ) {
-    var videoHeight by remember { mutableStateOf(0) }
-    var videoWidth by remember { mutableStateOf(0) }
-
     Box(modifier = modifier) {
         AndroidView(
             factory = { ctx ->
