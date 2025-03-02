@@ -1,10 +1,6 @@
 package com.pmb.auth.presentaion.ekyc.authentication_video
 
-import android.util.Log
 import android.view.Gravity
-import android.view.TextureView
-import android.view.ViewGroup
-import android.view.ViewTreeObserver
 import android.widget.FrameLayout
 import android.widget.VideoView
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -22,11 +18,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -82,17 +75,7 @@ fun AuthenticationVideoScreen(
     val viewState by viewModel.viewState.collectAsState()
     val context = LocalContext.current
     val previewView = remember { PreviewView(context) }
-    val videoView = remember {
-        VideoView(context).apply {
-//            setVideoPath(viewState.savedFileUri)
-            layoutParams = FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.MATCH_PARENT,
-                FrameLayout.LayoutParams.MATCH_PARENT
-            ).apply {
-                gravity = Gravity.CENTER
-            }
-        }
-    }
+
     val title: String =
         if (viewState.timerState?.get(TimerTypeId.VIDEO_TAKEN_TIMER)?.timerStatus != TimerStatus.IS_LOADING) {
             "${viewState.calculateMinute(TimerTypeId.VIDEO_TAKEN_TIMER)}:${
@@ -104,12 +87,6 @@ fun AuthenticationVideoScreen(
     LaunchedEffect(viewState.hasCameraPermission) {
         if (viewState.hasCameraPermission)
             viewModel.handle(VideoViewActions.PreviewCamera(previewView, lifecycleOwner))
-    }
-    var isVideoCaptured by remember {
-        mutableStateOf(false)
-    }
-    var isVideoStarted by remember {
-        mutableStateOf(false)
     }
 
     val permissionLauncher = rememberLauncherForActivityResult(
@@ -151,7 +128,7 @@ fun AuthenticationVideoScreen(
         footer = {
             Spacer(modifier = Modifier.size(10.dp))
             AnimatedVisibility(
-                visible = !isVideoCaptured && !isVideoStarted,
+                visible = !viewState.videoCaptured && !viewState.isCapturingVideo,
                 exit = fadeOut(tween(100, easing = LinearEasing)),
                 enter = fadeIn(tween(100, easing = LinearEasing))
             ) {
@@ -162,7 +139,7 @@ fun AuthenticationVideoScreen(
                             .padding(bottom = 16.dp)
                             .size(66.dp),
                         onClick = {
-                            isVideoStarted = true
+//                            isVideoStarted = true
                             viewModel.handle(VideoViewActions.VideoCaptured)
                         }
                     ) {
@@ -234,7 +211,7 @@ fun AuthenticationVideoScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Spacer(modifier = Modifier.size(24.dp))
-        if (!isVideoCaptured && !isVideoStarted)
+        if (!viewState.videoCaptured && !viewState.isCapturingVideo)
             BodyMediumText(
                 modifier = Modifier.fillMaxWidth(),
                 text = buildAnnotatedString {
@@ -248,7 +225,7 @@ fun AuthenticationVideoScreen(
             )
         else {
             BodyMediumText(
-                text = if (isVideoStarted && !isVideoCaptured) stringResource(
+                text = if (viewState.isCapturingVideo && !viewState.videoCaptured) stringResource(
                     R.string.repeat_sentence
                 ) else stringResource(
                     R.string.take_your_video_continue
@@ -257,7 +234,7 @@ fun AuthenticationVideoScreen(
                 color = AppTheme.colorScheme.onBackgroundPrimarySubdued
 
             )
-            if (isVideoStarted && !isVideoCaptured)
+            if (viewState.isCapturingVideo && !viewState.videoCaptured)
                 Headline4Text(
                     text = stringResource(
                         R.string.repeated_sentence
@@ -290,14 +267,7 @@ fun AuthenticationVideoScreen(
             } else {
                 AndroidView(
                     factory = { context ->
-                        TextureView(context).apply {
-                            layoutParams = FrameLayout.LayoutParams(
-                                960, // Width of cropped area
-                                312, // Height of cropped area
-                            ).apply {
-                                gravity = Gravity.CENTER
-                            }
-                        }
+                        previewView
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -327,8 +297,6 @@ fun VideoPlayer(
     videoUri: String,
     modifier: Modifier = Modifier
 ) {
-    var videoHeight by remember { mutableStateOf(0) }
-    var videoWidth by remember { mutableStateOf(0) }
 
     Box(modifier = modifier) {
         AndroidView(
