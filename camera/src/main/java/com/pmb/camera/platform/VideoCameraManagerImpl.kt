@@ -58,7 +58,17 @@ class VideoCameraManagerImpl @Inject constructor(
                         preview,
                         videoCapture
                     )
-
+                    val textureView = previewView.getChildAt(0) as? TextureView
+                    textureView?.post {
+                        val matrix = Matrix()
+                        val centerX = textureView.width / 2f
+                        val centerY = textureView.height / 2f
+                        val scaleX = textureView.width.toFloat() / 960f
+                        val scaleY = textureView.height.toFloat() / 312f
+                        val scale = maxOf(scaleX, scaleY)
+                        matrix.setScale(scale, scale, centerX, centerY)
+                        textureView.setTransform(matrix)
+                    }
                     onSuccess()
                 } catch (e: Exception) {
                     onError("Failed to start camera: ${e.message}")
