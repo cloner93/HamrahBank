@@ -2,7 +2,6 @@ package com.pmb.auth.presentation.register.national_id.viewModel
 
 import androidx.lifecycle.viewModelScope
 import com.pmb.auth.domain.register.national_id.entity.RegisterNationalIdRequest
-import com.pmb.auth.domain.register.national_id.repository.RegisterNationalIdRepository
 import com.pmb.auth.domain.register.national_id.useCase.RegisterNationalIdUseCase
 import com.pmb.core.platform.AlertModelState
 import com.pmb.core.platform.BaseViewModel
