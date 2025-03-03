@@ -13,6 +13,7 @@ import com.pmb.auth.data.first_login_confirm.FirstLoginConfirmRepositoryImpl
 import com.pmb.auth.data.forget_password.ForgetPasswordRepositoryImpl
 import com.pmb.auth.data.login.LoginRepositoryImpl
 import com.pmb.auth.data.new_password.NewPasswordRepositoryImpl
+import com.pmb.auth.data.register.check_postal_code.CheckPostalCodeRepositoryImpl
 import com.pmb.auth.data.register.national_id.RegisterNationalIdRepositoryImpl
 import com.pmb.auth.domain.activate.repository.ActivateRepository
 import com.pmb.auth.domain.ekyc.authentication_confirm_step.repository.AuthenticationConfirmStepRepository
@@ -27,6 +28,7 @@ import com.pmb.auth.domain.first_login_confirm.repository.FirstLoginConfirmRepos
 import com.pmb.auth.domain.forget_password.repository.ForgetPasswordRepository
 import com.pmb.auth.domain.login.repository.LoginRepository
 import com.pmb.auth.domain.new_password.repository.NewPasswordRepository
+import com.pmb.auth.domain.register.check_postal_code.repository.CheckPostalCodeRepository
 import com.pmb.auth.domain.register.national_id.repository.RegisterNationalIdRepository
 import dagger.Binds
 import dagger.Module
@@ -85,4 +87,7 @@ abstract class RepositoryModule {
 
     @Binds
     abstract fun bindRegisterNationalIdRepository(registerNationalIdRepositoryImpl: RegisterNationalIdRepositoryImpl): RegisterNationalIdRepository
+
+    @Binds
+    abstract fun bindCheckPostalCodeRepository(checkPostalCodeRepositoryImpl: CheckPostalCodeRepositoryImpl): CheckPostalCodeRepository
 }

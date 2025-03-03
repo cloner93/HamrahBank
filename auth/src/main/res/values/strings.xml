@@ -9,6 +9,7 @@
     <string name="forget_password">فراموشی رمز عبور</string>
     <string name="phone_number">شماره موبایل</string>
     <string name="national_id">کد ملی</string>
+    <string name="postal_code">کد پستی</string>
     <string name="national_id_serial">سریال کارت ملی</string>
     <string name="new_password">رمز عبور جدید</string>
     <string name="re_new_password">تکرار رمز عبور جدید</string>
@@ -46,6 +47,7 @@
     <string name="select_services">انتخاب خدمات</string>
     <string name="fee_details">مشاهده کارمزدها</string>
     <string name="open_account">افتتاح حساب</string>
+    <string name="address">آدرس</string>
     <string name="take_your_face_photo_continue">در صورتی که تصویر، مورد تاییدتان است، دکمه ادامه را فشار بدهید.</string>
     <string name="take_your_video_continue">در صورتی که ویدئو مورد تاییدتان است، دکمه ادامه را فشار بدهید در غیر این صورت دکمه ضبط مجدد را فشار دهید.</string>
     <string name="start_authentication_description">در این مرحله، باید یک تصویر و ویدئو از چهره خود بگیرید. لطفا پیش از شروع این فرآیند، به نکات زیر توجه فرمایید :</string>
@@ -62,4 +64,6 @@
     <string name="total">مبلغ کل</string>
     <string name="rules">قوانین افتتاح حساب بانک ملت </string>
     <string name="rules_read_and_accepted"> را مطالعه کردم و آن ها را می پذیرم.</string>
+    <string name="card_sending_info">کارت به آدرس ثبت شده ارسال می‌گردد.</string>
+    <string name="inquiry">استعلام</string>
 </resources>

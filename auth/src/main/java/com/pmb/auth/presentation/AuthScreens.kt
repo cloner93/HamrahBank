@@ -29,6 +29,8 @@ import com.pmb.auth.presentation.intro.IntroScreen
 import com.pmb.auth.presentation.login.LoginScreen
 import com.pmb.auth.presentation.login.viewmodel.LoginViewModel
 import com.pmb.auth.presentation.register.account_opening.AccountOpeningScreen
+import com.pmb.auth.presentation.register.checkPostalCode.CheckPostalCodeScreen
+import com.pmb.auth.presentation.register.checkPostalCode.viewModel.CheckPostalCodeViewModel
 import com.pmb.auth.presentation.register.national_id.RegisterNationalIdScreen
 import com.pmb.auth.presentation.register.national_id.viewModel.RegisterNationalIdViewModel
 import com.pmb.core.presentation.NavigationManager
@@ -45,6 +47,7 @@ sealed class AuthScreens(route: String, arguments: Map<String, String> = emptyMa
     data object ForgetPassword : AuthScreens(route = "forget_password")
     data object ForgetPasswordAuth : AuthScreens(route = "forget_password_auth")
     data object RegisterNationalId : AuthScreens(route = "register_national_id")
+    data object CheckPostalCode : AuthScreens(route = "check_postal_code")
     data object Signature : AuthScreens(route = "signature")
     data object Authentication : AuthScreens(route = "authentication")
     data object FacePhotoCapture : AuthScreens(route = "face_photo_capture")
@@ -141,6 +144,12 @@ fun NavGraphBuilder.authScreensHandle(
         OpenAccountScreen(
             navigationManager = navigationManager,
             viewModel = hiltViewModel<OpenAccountViewModel>()
+        )
+    }
+    composable(route = AuthScreens.CheckPostalCode.route) {
+        CheckPostalCodeScreen(
+            navigationManager = navigationManager,
+            viewModel = hiltViewModel<CheckPostalCodeViewModel>()
         )
     }
 }
