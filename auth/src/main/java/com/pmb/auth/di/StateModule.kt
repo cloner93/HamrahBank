@@ -13,6 +13,7 @@ import com.pmb.auth.presentation.first_login_confirm.viewModel.FirstLoginConfirm
 import com.pmb.auth.presentation.foget_password.viewmodel.ForgetPasswordViewState
 import com.pmb.auth.presentation.login.viewmodel.LoginViewState
 import com.pmb.auth.presentation.new_password.viewModel.NewPasswordViewState
+import com.pmb.auth.presentation.register.national_id.viewModel.RegisterNationalIdViewState
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -81,4 +82,9 @@ object StateModule {
     @Singleton
     fun provideAuthenticationCapturingVideoViewState(): AuthenticationCapturingVideoViewState =
         AuthenticationCapturingVideoViewState()
+
+    @Provides
+    @Singleton
+    fun provideRegisterNationalIdViewState(): RegisterNationalIdViewState =
+        RegisterNationalIdViewState()
 }

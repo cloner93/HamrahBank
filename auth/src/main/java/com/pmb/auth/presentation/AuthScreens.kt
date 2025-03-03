@@ -3,9 +3,9 @@ package com.pmb.auth.presentation
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import com.pmb.auth.presentation.ekyc.authentication.AuthenticationScreen
 import com.pmb.auth.presentation.ekyc.authentication_confirm.AuthenticationConfirmScreen
 import com.pmb.auth.presentation.ekyc.authentication_confirm.viewModel.AuthenticationConfirmStepViewModel
-import com.pmb.auth.presentation.ekyc.authentication.AuthenticationScreen
 import com.pmb.auth.presentation.ekyc.authentication_select_services.AuthenticationSelectServicesScreen
 import com.pmb.auth.presentation.ekyc.authentication_select_services.viewModel.AuthenticationSelectServicesViewModel
 import com.pmb.auth.presentation.ekyc.authentication_video.AuthenticationVideoScreen
@@ -30,6 +30,7 @@ import com.pmb.auth.presentation.login.LoginScreen
 import com.pmb.auth.presentation.login.viewmodel.LoginViewModel
 import com.pmb.auth.presentation.register.account_opening.AccountOpeningScreen
 import com.pmb.auth.presentation.register.national_id.RegisterNationalIdScreen
+import com.pmb.auth.presentation.register.national_id.viewModel.RegisterNationalIdViewModel
 import com.pmb.core.presentation.NavigationManager
 import com.pmb.core.presentation.Screen
 
@@ -92,7 +93,10 @@ fun NavGraphBuilder.authScreensHandle(
         ForgetPasswordAuthScreen(navigationManager = navigationManager)
     }
     composable(route = AuthScreens.RegisterNationalId.route) {
-        RegisterNationalIdScreen(navigationManager = navigationManager)
+        RegisterNationalIdScreen(
+            navigationManager = navigationManager,
+            viewModel = hiltViewModel<RegisterNationalIdViewModel>()
+        )
     }
     composable(route = AuthScreens.Signature.route) {
         SignatureScreen(
