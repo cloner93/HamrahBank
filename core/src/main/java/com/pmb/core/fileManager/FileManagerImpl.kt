@@ -72,7 +72,7 @@ class FileManagerImpl @Inject constructor(
                 return false
             }
 
-            newFile.copyTo(originalFile, overwrite = false)
+            newFile.copyTo(originalFile, overwrite = true)
 
             newFile.delete()
             true

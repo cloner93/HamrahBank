@@ -109,9 +109,7 @@ object Compressor {
             else configuration.videoBitrateInMbps!! * 1000000
 
         //Handle new width and height values
-        val resizer = configuration.resizer
         val target =
-//            resizer?.resize(width, height) ?:
             Pair(width, height)
 
         Log.i("newSize","new width is ${target.first}")
@@ -123,17 +121,7 @@ object Compressor {
 
         //Handle rotation values and swapping height and width if needed
         rotation = 0
-//            when (rotation) {
-//            90, 270 -> {
-//                val tempHeight = newHeight
-//                newHeight = newWidth
-//                newWidth = tempHeight
-//                0
-//            }
-//
-//            180 -> 0
-//            else -> rotation
-//        }
+
 
         return@withContext start(
             newWidth,

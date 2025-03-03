@@ -1,6 +1,6 @@
 package com.pmb.mobile
 
-import com.pmb.mobile.presentaion.viewmodel.MainActivityViewState
+import com.pmb.mobile.presentation.viewmodel.MainActivityViewState
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

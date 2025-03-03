@@ -1,8 +1,8 @@
 package com.pmb.auth.utils
 
 import android.util.Log
-import com.pmb.auth.presentaion.first_login_confirm.viewModel.TimerEvent
-import com.pmb.auth.presentaion.first_login_confirm.viewModel.TimerTypeId
+import com.pmb.auth.presentation.first_login_confirm.viewModel.TimerEvent
+import com.pmb.auth.presentation.first_login_confirm.viewModel.TimerTypeId
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow

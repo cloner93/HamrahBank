@@ -55,7 +55,7 @@ class VideoCompressorImpl @Inject constructor(
         job = coroutineScope.launch(ioDispatcher) {
             val desFile = fileManager.createVideoFile()
 
-            desFile?.let {
+            desFile.let {
                 isRunning = true
                 listener.onStart()
                 val result = startCompression(
@@ -66,7 +66,7 @@ class VideoCompressorImpl @Inject constructor(
                 )
 
                 if (result.success) {
-                    path?.let { it1 -> fileManager.deleteFile(it1) }
+                    path.let { it1 -> fileManager.deleteFile(it1) }
                     listener.onSuccess(result.size, result.path)
                 } else {
                     listener.onFailure(result.failureMessage ?: "An error has occurred!")

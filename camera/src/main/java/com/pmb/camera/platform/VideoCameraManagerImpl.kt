@@ -48,7 +48,7 @@ class VideoCameraManagerImpl @Inject constructor(
                         }
                     val recorder =
                         Recorder.Builder().setQualitySelector(QualitySelector.from(Quality.SD))
-                            .setExecutor(ContextCompat.getMainExecutor(context)) // Ensures operations run on the UI thread
+                            .setExecutor(ContextCompat.getMainExecutor(context))
                             .build()
                     videoCapture = VideoCapture.withOutput(recorder)
                     cameraProvider.unbindAll()
