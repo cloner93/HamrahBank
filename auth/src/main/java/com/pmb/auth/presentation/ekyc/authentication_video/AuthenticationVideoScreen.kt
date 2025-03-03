@@ -44,7 +44,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.max
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.pmb.auth.R
@@ -246,7 +245,7 @@ fun AuthenticationVideoScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .heightIn(max=312.dp)
+                    .heightIn(max = 312.dp)
                     .background(Color.White, RoundedCornerShape(size = 16.dp))
             ) {
                 AndroidView(

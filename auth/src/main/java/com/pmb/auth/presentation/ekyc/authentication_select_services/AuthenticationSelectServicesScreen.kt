@@ -108,7 +108,7 @@ fun AuthenticationSelectServicesScreen(
                 textAlign = TextAlign.Center
             )
             Spacer(modifier = Modifier.size(10.dp))
-            selectServices?.selectServicesList?.forEach { selectServiceObject ->
+            selectServices.selectServicesList.forEach { selectServiceObject ->
                 RoundedCornerCheckboxComponent(
                     title = selectServiceObject.title,
                     caption = stringResource(

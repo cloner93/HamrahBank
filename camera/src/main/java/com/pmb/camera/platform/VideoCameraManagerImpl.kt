@@ -2,10 +2,7 @@ package com.pmb.camera.platform
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Matrix
-import android.media.MediaRecorder
 import android.util.Log
-import android.view.TextureView
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.video.FileOutputOptions
@@ -21,7 +18,6 @@ import androidx.lifecycle.LifecycleOwner
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.File
 import javax.inject.Inject
@@ -80,16 +76,17 @@ class VideoCameraManagerImpl @Inject constructor(
             ?.start(ContextCompat.getMainExecutor(context)) { event ->
                 if (event is VideoRecordEvent.Finalize) {
                     if (event.hasError()) {
-                        Log.d("video","video failed")
+                        Log.d("video", "video failed")
                         onError("Recording failed: ${event.error}")
                     } else {
-                        Log.d("video","video captured")
+                        Log.d("video", "video captured")
                         onCaptured(true)
                     }
                 }
             }
     }
-    fun stopRecording(){
+
+    fun stopRecording() {
         CoroutineScope(Dispatchers.Main).launch {
             Log.i("video", "video Stopped")
             recorder?.stop()

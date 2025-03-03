@@ -1,6 +1,5 @@
 package com.pmb.auth.presentation.ekyc.authentication_video.viewModel
 
-import com.pmb.camera.platform.PhotoViewActions
 import com.pmb.camera.platform.VideoViewActions
 
 sealed interface AuthenticationCapturingVideoViewActions : VideoViewActions {
