@@ -1,4 +1,4 @@
-package com.pmb.auth.presentation.register.checkPostalCode.viewModel
+package com.pmb.auth.presentation.register.check_postal_code.viewModel
 
 import androidx.lifecycle.viewModelScope
 import com.pmb.auth.domain.register.check_postal_code.entity.CheckPostalCodeRequest

@@ -1,4 +1,4 @@
-package com.pmb.auth.presentation.register.checkPostalCode.viewModel
+package com.pmb.auth.presentation.register.check_postal_code.viewModel
 
 import com.pmb.core.platform.BaseViewAction
 

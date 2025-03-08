@@ -2,7 +2,10 @@ package com.pmb.auth.presentation
 
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavType
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
 import com.pmb.auth.presentation.ekyc.authentication.AuthenticationScreen
 import com.pmb.auth.presentation.ekyc.authentication_confirm.AuthenticationConfirmScreen
 import com.pmb.auth.presentation.ekyc.authentication_confirm.viewModel.AuthenticationConfirmStepViewModel
@@ -29,10 +32,14 @@ import com.pmb.auth.presentation.intro.IntroScreen
 import com.pmb.auth.presentation.login.LoginScreen
 import com.pmb.auth.presentation.login.viewmodel.LoginViewModel
 import com.pmb.auth.presentation.register.account_opening.AccountOpeningScreen
-import com.pmb.auth.presentation.register.checkPostalCode.CheckPostalCodeScreen
-import com.pmb.auth.presentation.register.checkPostalCode.viewModel.CheckPostalCodeViewModel
+import com.pmb.auth.presentation.register.check_postal_code.CheckPostalCodeScreen
+import com.pmb.auth.presentation.register.check_postal_code.viewModel.CheckPostalCodeViewModel
+import com.pmb.auth.presentation.register.deposit_information.DepositInformationScreen
+import com.pmb.auth.presentation.register.deposit_information.viewModel.DepositInformationViewModel
 import com.pmb.auth.presentation.register.national_id.RegisterNationalIdScreen
 import com.pmb.auth.presentation.register.national_id.viewModel.RegisterNationalIdViewModel
+import com.pmb.auth.presentation.register.search_opening_branch.SearchOpeningBranchScreen
+import com.pmb.auth.presentation.register.search_opening_branch.viewModel.SearchOpeningBranchViewModel
 import com.pmb.core.presentation.NavigationManager
 import com.pmb.core.presentation.Screen
 
@@ -48,6 +55,13 @@ sealed class AuthScreens(route: String, arguments: Map<String, String> = emptyMa
     data object ForgetPasswordAuth : AuthScreens(route = "forget_password_auth")
     data object RegisterNationalId : AuthScreens(route = "register_national_id")
     data object CheckPostalCode : AuthScreens(route = "check_postal_code")
+    data object DepositInformation : AuthScreens(route = "deposit_information")
+    data object SearchOpeningBranch :
+        AuthScreens(route = "search_opening_branch/{provinceName}/{cityName}/{cityId}") {
+        fun createRoute(cityId: Int, cityName: String, provinceName: String) =
+            "search_opening_branch/$provinceName/$cityName/$cityId"
+    }
+
     data object Signature : AuthScreens(route = "signature")
     data object Authentication : AuthScreens(route = "authentication")
     data object FacePhotoCapture : AuthScreens(route = "face_photo_capture")
@@ -151,5 +165,28 @@ fun NavGraphBuilder.authScreensHandle(
             navigationManager = navigationManager,
             viewModel = hiltViewModel<CheckPostalCodeViewModel>()
         )
+    }
+    composable(route = AuthScreens.DepositInformation.route) {
+        DepositInformationScreen(
+            navigationManager = navigationManager,
+            viewModel = hiltViewModel<DepositInformationViewModel>()
+        )
+    }
+
+    composable(
+        route = AuthScreens.SearchOpeningBranch.route,
+        deepLinks = listOf(navDeepLink {
+            uriPattern = "myapp://search_opening_branch/{provinceName}/{cityName}/{cityId}"
+        }),
+        arguments = listOf(
+            navArgument("cityId") { type = NavType.IntType },
+            navArgument("cityName") { type = NavType.StringType },
+            navArgument("provinceName") { type = NavType.StringType })
+    ) {
+        SearchOpeningBranchScreen(
+            navigationManager,
+            viewModel = hiltViewModel<SearchOpeningBranchViewModel>()
+        )
+
     }
 }

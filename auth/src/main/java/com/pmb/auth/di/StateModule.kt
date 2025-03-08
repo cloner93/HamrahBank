@@ -13,8 +13,10 @@ import com.pmb.auth.presentation.first_login_confirm.viewModel.FirstLoginConfirm
 import com.pmb.auth.presentation.foget_password.viewmodel.ForgetPasswordViewState
 import com.pmb.auth.presentation.login.viewmodel.LoginViewState
 import com.pmb.auth.presentation.new_password.viewModel.NewPasswordViewState
-import com.pmb.auth.presentation.register.checkPostalCode.viewModel.CheckPostalCodeViewState
+import com.pmb.auth.presentation.register.check_postal_code.viewModel.CheckPostalCodeViewState
+import com.pmb.auth.presentation.register.deposit_information.viewModel.DepositInformationViewState
 import com.pmb.auth.presentation.register.national_id.viewModel.RegisterNationalIdViewState
+import com.pmb.auth.presentation.register.search_opening_branch.viewModel.SearchOpeningBranchViewState
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -92,4 +94,14 @@ object StateModule {
     @Provides
     @Singleton
     fun provideCheckPostalCodeViewState(): CheckPostalCodeViewState = CheckPostalCodeViewState()
+
+    @Provides
+    @Singleton
+    fun provideDepositInformationViewState(): DepositInformationViewState =
+        DepositInformationViewState()
+
+    @Provides
+    @Singleton
+    fun provideSearchOpeningBranchViewState(): SearchOpeningBranchViewState =
+        SearchOpeningBranchViewState()
 }

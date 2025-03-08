@@ -66,4 +66,6 @@
     <string name="rules_read_and_accepted"> را مطالعه کردم و آن ها را می پذیرم.</string>
     <string name="card_sending_info">کارت به آدرس ثبت شده ارسال می‌گردد.</string>
     <string name="inquiry">استعلام</string>
+    <string name="deposit_information">اطلاعات حساب</string>
+    <string name="opening_branches_list">لیست شعب بانک ملت</string>
 </resources>

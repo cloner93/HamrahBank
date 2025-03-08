@@ -1,4 +1,4 @@
-package com.pmb.auth.presentation.register.checkPostalCode
+package com.pmb.auth.presentation.register.check_postal_code
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,9 +17,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.pmb.auth.R
 import com.pmb.auth.presentation.AuthScreens
-import com.pmb.auth.presentation.register.checkPostalCode.viewModel.CheckPostalCodeViewActions
-import com.pmb.auth.presentation.register.checkPostalCode.viewModel.CheckPostalCodeViewEvents
-import com.pmb.auth.presentation.register.checkPostalCode.viewModel.CheckPostalCodeViewModel
+import com.pmb.auth.presentation.register.check_postal_code.viewModel.CheckPostalCodeViewActions
+import com.pmb.auth.presentation.register.check_postal_code.viewModel.CheckPostalCodeViewEvents
+import com.pmb.auth.presentation.register.check_postal_code.viewModel.CheckPostalCodeViewModel
 import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppContent
@@ -46,7 +46,7 @@ fun CheckPostalCodeScreen(
         viewModel.viewEvent.collect { event ->
             when (event) {
                 CheckPostalCodeViewEvents.CheckAddressSucceed -> {
-                    navigationManager.navigate(AuthScreens.Signature)
+                    navigationManager.navigate(AuthScreens.DepositInformation)
                 }
 
                 is CheckPostalCodeViewEvents.CheckPostalCode -> {
@@ -91,13 +91,13 @@ fun CheckPostalCodeScreen(
             value = postalCode,
             label = stringResource(com.pmb.auth.R.string.postal_code),
             onValueChange = {
-               if (postalCode.length < 10) postalCode = it
+                if (postalCode.length < 10) postalCode = it
             },
             trailingIcon = {
                 AppButton(
                     modifier = Modifier.padding(end = 6.dp),
                     title = stringResource(R.string.inquiry),
-                    enable = postalCode.isNotEmpty() && postalCode.length ==10
+                    enable = postalCode.isNotEmpty() && postalCode.length == 10
                 ) {
                     viewModel.handle(CheckPostalCodeViewActions.CheckPostalCode(postalCode))
                 }

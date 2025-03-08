@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.android.hilt)
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.compose.compiler)
+    id("kotlin-parcelize")
 }
 
 android {
@@ -43,6 +44,7 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
 }
 
 dependencies {
