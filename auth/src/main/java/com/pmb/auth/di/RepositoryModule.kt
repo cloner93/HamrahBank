@@ -17,6 +17,7 @@ import com.pmb.auth.data.register.check_postal_code.CheckPostalCodeRepositoryImp
 import com.pmb.auth.data.register.deposit_information.DepositInformationRepositoryImpl
 import com.pmb.auth.data.register.national_id.RegisterNationalIdRepositoryImpl
 import com.pmb.auth.data.register.search_opening_branch.OpeningBranchRepositoryImpl
+import com.pmb.auth.data.register.select_job_information.SelectJobInformationRepositoryImpl
 import com.pmb.auth.domain.activate.repository.ActivateRepository
 import com.pmb.auth.domain.ekyc.authentication_confirm_step.repository.AuthenticationConfirmStepRepository
 import com.pmb.auth.domain.ekyc.authentication_select_services.repository.AuthenticationSelectServicesRepository
@@ -34,6 +35,7 @@ import com.pmb.auth.domain.register.check_postal_code.repository.CheckPostalCode
 import com.pmb.auth.domain.register.deposit_information.repository.DepositInformationRepository
 import com.pmb.auth.domain.register.national_id.repository.RegisterNationalIdRepository
 import com.pmb.auth.domain.register.search_opening_branch.repository.OpeningBranchRepository
+import com.pmb.auth.domain.register.select_job_information.repository.SelectJobInformationRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -100,5 +102,9 @@ abstract class RepositoryModule {
 
     @Binds
     abstract fun bindOpeningBranchRepository(openingBranchRepositoryImpl: OpeningBranchRepositoryImpl): OpeningBranchRepository
+
+    @Binds
+    abstract fun bindSelectJobInformationRepository(selectJobInformationRepositoryImpl: SelectJobInformationRepositoryImpl): SelectJobInformationRepository
+
 
 }

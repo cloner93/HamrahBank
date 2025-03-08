@@ -17,6 +17,7 @@ import com.pmb.auth.presentation.register.check_postal_code.viewModel.CheckPosta
 import com.pmb.auth.presentation.register.deposit_information.viewModel.DepositInformationViewState
 import com.pmb.auth.presentation.register.national_id.viewModel.RegisterNationalIdViewState
 import com.pmb.auth.presentation.register.search_opening_branch.viewModel.SearchOpeningBranchViewState
+import com.pmb.auth.presentation.register.select_job_information.viewModel.SelectJobInformationViewState
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -104,4 +105,9 @@ object StateModule {
     @Singleton
     fun provideSearchOpeningBranchViewState(): SearchOpeningBranchViewState =
         SearchOpeningBranchViewState()
+
+    @Provides
+    @Singleton
+    fun provideSelectJonInformationViewState(): SelectJobInformationViewState =
+        SelectJobInformationViewState()
 }

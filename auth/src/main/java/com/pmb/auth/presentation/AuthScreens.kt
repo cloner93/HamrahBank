@@ -40,6 +40,8 @@ import com.pmb.auth.presentation.register.national_id.RegisterNationalIdScreen
 import com.pmb.auth.presentation.register.national_id.viewModel.RegisterNationalIdViewModel
 import com.pmb.auth.presentation.register.search_opening_branch.SearchOpeningBranchScreen
 import com.pmb.auth.presentation.register.search_opening_branch.viewModel.SearchOpeningBranchViewModel
+import com.pmb.auth.presentation.register.select_job_information.SelectJobInformationScreen
+import com.pmb.auth.presentation.register.select_job_information.viewModel.SelectJobInformationViewModel
 import com.pmb.core.presentation.NavigationManager
 import com.pmb.core.presentation.Screen
 
@@ -54,6 +56,9 @@ sealed class AuthScreens(route: String, arguments: Map<String, String> = emptyMa
     data object ForgetPassword : AuthScreens(route = "forget_password")
     data object ForgetPasswordAuth : AuthScreens(route = "forget_password_auth")
     data object RegisterNationalId : AuthScreens(route = "register_national_id")
+    data object SelectJobInformation :
+        AuthScreens(route = "select_job_information")
+
     data object CheckPostalCode : AuthScreens(route = "check_postal_code")
     data object DepositInformation : AuthScreens(route = "deposit_information")
     data object SearchOpeningBranch :
@@ -187,6 +192,11 @@ fun NavGraphBuilder.authScreensHandle(
             navigationManager,
             viewModel = hiltViewModel<SearchOpeningBranchViewModel>()
         )
-
+    }
+    composable(route = AuthScreens.SelectJobInformation.route) {
+        SelectJobInformationScreen(
+            navigationManager,
+            viewModel = hiltViewModel<SelectJobInformationViewModel>()
+        )
     }
 }
