@@ -50,7 +50,7 @@ fun PersianDatePicker(
 
     onChangeValue.invoke(
         yearPickerState.selectedItem,
-        monthPickerState.selectedItem,
+        months.indexOf(monthPickerState.selectedItem).plus(1).toString(),
         dayPickerState.selectedItem
     )
 
