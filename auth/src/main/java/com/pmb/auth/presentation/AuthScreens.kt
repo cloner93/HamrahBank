@@ -31,6 +31,10 @@ import com.pmb.auth.presentation.foget_password.viewmodel.ForgetPasswordViewMode
 import com.pmb.auth.presentation.intro.IntroScreen
 import com.pmb.auth.presentation.login.LoginScreen
 import com.pmb.auth.presentation.login.viewmodel.LoginViewModel
+import com.pmb.auth.presentation.reentry.reentry_face_detection.ReentryFaceDetectionScreen
+import com.pmb.auth.presentation.reentry.reentry_face_detection.viewModel.ReentryFaceDetectionViewModel
+import com.pmb.auth.presentation.reentry.reentry_password.ReentryPasswordScreen
+import com.pmb.auth.presentation.reentry.reentry_password.viewModel.ReentryPasswordViewModel
 import com.pmb.auth.presentation.register.account_opening.AccountOpeningScreen
 import com.pmb.auth.presentation.register.check_postal_code.CheckPostalCodeScreen
 import com.pmb.auth.presentation.register.check_postal_code.viewModel.CheckPostalCodeViewModel
@@ -75,6 +79,8 @@ sealed class AuthScreens(route: String, arguments: Map<String, String> = emptyMa
     data object AuthenticationSelectServices : AuthScreens(route = "authentication_select_services")
     data object FeeDetails : AuthScreens(route = "fee_details")
     data object OpenAccount : AuthScreens(route = "open_account")
+    data object ReentryPassword : AuthScreens(route = "reentry_password")
+    data object ReentryFaceDetection : AuthScreens(route = "reentry_face_detection")
 }
 
 
@@ -197,6 +203,18 @@ fun NavGraphBuilder.authScreensHandle(
         SelectJobInformationScreen(
             navigationManager,
             viewModel = hiltViewModel<SelectJobInformationViewModel>()
+        )
+    }
+    composable(route = AuthScreens.ReentryPassword.route) {
+        ReentryPasswordScreen(
+            navigationManager = navigationManager,
+            viewModel = hiltViewModel<ReentryPasswordViewModel>()
+        )
+    }
+    composable(route = AuthScreens.ReentryFaceDetection.route) {
+        ReentryFaceDetectionScreen(
+            navigationManager = navigationManager,
+            viewModel = hiltViewModel<ReentryFaceDetectionViewModel>()
         )
     }
 }

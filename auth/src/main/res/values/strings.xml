@@ -69,4 +69,6 @@
     <string name="deposit_information">اطلاعات حساب</string>
     <string name="opening_branches_list">لیست شعب بانک ملت</string>
     <string name="search_job_description">جستجو در مشاغل</string>
+    <string name="enter_face_detection">ورود با اسکن چهره</string>
+    <string name="face_detection_description">لطغا دوربین رو مقابل صورت خود قرار دهید.</string>
 </resources>

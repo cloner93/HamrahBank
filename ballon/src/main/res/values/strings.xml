@@ -4,7 +4,7 @@
     <string name="min_char_in_password">حداقل ۸ کاراکتر</string>
     <string name="upper_case">حروف بزرگ</string>
     <string name="lowercase">حروف کوچک</string>
-    <string name="digit">حروف کوچک</string>
+    <string name="digit">عدد09123456789</string>
     <string name="special_char"><![CDATA[علامت (مانند ٪>@)]]></string>
     <string name="real_carrency">ریال</string>
     <string name="toman">تومان</string>
