@@ -19,6 +19,7 @@
     <string name="msg_forget_password_auth">جهت ثبت رمز عبور جدید، باید از طریق یکی روش‌های زیر اقدام به احراز هویت نمایید.</string>
     <string name="mellat_signiture_app">اپلیکیشن امضای ملت</string>
     <string name="video_authentication_process">فرآیند احراز هویت تصویری</string>
+    <string name="visual_authentication">احراز هویت تصویری</string>
     <string name="bank_card_information">اطلاعات کارت بانکی</string>
     <string name="msg_changed_new_password">رمز عبور جدید با موفقیت ثبت شد!</string>
     <string name="complete">تمام</string>
@@ -55,6 +56,7 @@
     <string name="tax_amount"> %s ریال کارمزد</string>
     <string name="activation_internet_bank"> فعالسازی اینترنت بانک</string>
     <string name="receive_internet_card"> دریافت کارت بانکی</string>
+    <string name="bank_card">  کارت بانکی</string>
     <string name="show_details">مشاهده جزئیات</string>
     <string name="check_authentication_data">اطلاعات شما در دست بررسی می باشد.</string>
     <string name="result_authentication_info">نتایج بررسی حداکثر طی دو روز کاری از طریق پیامک به اطلاع شما خواهد رسید. سپس می توانید مراحل باقی مانده را تکمیل کنید.</string>
@@ -71,4 +73,6 @@
     <string name="search_job_description">جستجو در مشاغل</string>
     <string name="enter_face_detection">ورود با اسکن چهره</string>
     <string name="face_detection_description">لطغا دوربین رو مقابل صورت خود قرار دهید.</string>
+    <string name="authentication_type_description"> جهت تعریف رمز ورود جدید، یکی از روش های زیر را انتخاب نمایید:</string>
+    <string name="mellat_signature_app">برنامه امضای ملت</string>
 </resources>

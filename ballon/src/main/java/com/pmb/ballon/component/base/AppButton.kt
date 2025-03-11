@@ -14,7 +14,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.pmb.ballon.models.AppButton
+import com.pmb.ballon.models.IconStyle
 import com.pmb.ballon.models.TextStyle
+import com.pmb.ballon.ui.theme.AppTheme
 
 
 @Composable
@@ -60,6 +62,32 @@ fun AppButtonWithIcon(
             Spacer(modifier = Modifier.size(spacer))
         }
         BaseAppText(title = title, style = textStyle)
+    }
+}
+
+@Composable
+fun AppButtonWithWeightIcon(
+    modifier: Modifier = Modifier,
+    title: String,
+    colors: ButtonColors = AppButton.buttonColors(),
+    textStyle: TextStyle = TextStyle.defaultButton(),
+    enable: Boolean = true,
+    iconStyle: IconStyle = IconStyle(tint = AppTheme.colorScheme.foregroundNeutralDefault),
+    @DrawableRes icon: Int? = null,
+    onClick: () -> Unit
+) {
+    Button(
+        modifier = modifier,
+        shape = RoundedCornerShape(12.dp),
+        colors = colors,
+        enabled = enable,
+        onClick = onClick
+    ) {
+        BaseAppText(title = title, style = textStyle)
+        icon?.let {
+            Spacer(modifier = Modifier.weight(1f))
+            AppIcon(icon = icon, iconStyle)
+        }
     }
 }
 

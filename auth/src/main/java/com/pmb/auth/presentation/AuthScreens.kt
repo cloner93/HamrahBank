@@ -6,6 +6,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
+import com.pmb.auth.presentation.choose_authentication_type.ChooseAuthenticationTypeScreen
 import com.pmb.auth.presentation.ekyc.authentication.AuthenticationScreen
 import com.pmb.auth.presentation.ekyc.authentication_confirm.AuthenticationConfirmScreen
 import com.pmb.auth.presentation.ekyc.authentication_confirm.viewModel.AuthenticationConfirmStepViewModel
@@ -81,6 +82,7 @@ sealed class AuthScreens(route: String, arguments: Map<String, String> = emptyMa
     data object OpenAccount : AuthScreens(route = "open_account")
     data object ReentryPassword : AuthScreens(route = "reentry_password")
     data object ReentryFaceDetection : AuthScreens(route = "reentry_face_detection")
+    data object ChooseAuthenticationType : AuthScreens(route = "choose_authentication_type")
 }
 
 
@@ -216,5 +218,8 @@ fun NavGraphBuilder.authScreensHandle(
             navigationManager = navigationManager,
             viewModel = hiltViewModel<ReentryFaceDetectionViewModel>()
         )
+    }
+    composable(route = AuthScreens.ChooseAuthenticationType.route) {
+        ChooseAuthenticationTypeScreen(navigationManager)
     }
 }
