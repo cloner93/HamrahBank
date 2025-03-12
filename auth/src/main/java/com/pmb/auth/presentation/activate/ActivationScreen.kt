@@ -71,7 +71,7 @@ fun ActivationScreen(navigationManager: NavigationManager, viewModel: Activation
                             color = AppTheme.colorScheme.foregroundPrimaryDefault,
                         )
                     ) {
-                        append(stringResource(R.string.rules))
+                        append(stringResource(R.string.usage_rules))
                     }
                     append(" ")
                     append(stringResource(R.string.rules_read_and_accepted))

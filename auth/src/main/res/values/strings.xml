@@ -67,6 +67,7 @@
     <string name="national_id_information">لطفا سریال کارت ملی خود را وارد نمایید. (محل سریال کارت در تصویر نشان داده شده است)</string>
     <string name="total">مبلغ کل</string>
     <string name="rules">قوانین افتتاح حساب بانک ملت </string>
+    <string name="usage_rules">قوانین استفاده از همراه بانک </string>
     <string name="rules_read_and_accepted"> را مطالعه کردم و آن ها را می پذیرم.</string>
     <string name="card_sending_info">کارت به آدرس ثبت شده ارسال می‌گردد.</string>
     <string name="inquiry">استعلام</string>
