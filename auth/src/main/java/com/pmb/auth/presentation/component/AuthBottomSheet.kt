@@ -123,9 +123,10 @@ fun ShowPersianDatePickerBottomSheet(
 
     AppBottomSheet(
         isVisible = isVisible,
+        cancelable = true,
         onDismiss = { onDismiss() },
         content = { nestedConnection ->
-        Column(
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(color = AppTheme.colorScheme.onForegroundNeutralDefault)
