@@ -1,4 +1,4 @@
-package com.pmb.auth.presentation.activate.viewModel
+package com.pmb.auth.presentation.activation.activate.viewModel
 
 import com.pmb.core.platform.AlertModelState
 import com.pmb.core.platform.BaseViewState

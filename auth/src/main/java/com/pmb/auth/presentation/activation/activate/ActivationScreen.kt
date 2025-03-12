@@ -1,4 +1,4 @@
-package com.pmb.auth.presentation.activate
+package com.pmb.auth.presentation.activation.activate
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,9 +22,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.pmb.auth.R
-import com.pmb.auth.presentation.activate.viewModel.ActivationViewActions
-import com.pmb.auth.presentation.activate.viewModel.ActivationViewEvents
-import com.pmb.auth.presentation.activate.viewModel.ActivationViewModel
+import com.pmb.auth.presentation.activation.activate.viewModel.ActivationViewActions
+import com.pmb.auth.presentation.activation.activate.viewModel.ActivationViewEvents
+import com.pmb.auth.presentation.activation.activate.viewModel.ActivationViewModel
 import com.pmb.auth.presentation.component.RoundedCornerCheckboxComponent
 import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.base.AppButton

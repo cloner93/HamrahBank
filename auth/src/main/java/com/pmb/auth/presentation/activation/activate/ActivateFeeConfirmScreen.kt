@@ -1,4 +1,4 @@
-package com.pmb.auth.presentation.activate
+package com.pmb.auth.presentation.activation.activate
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController

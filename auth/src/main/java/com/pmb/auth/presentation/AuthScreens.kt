@@ -6,9 +6,9 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
-import com.pmb.auth.presentation.activate.ActivationScreen
-import com.pmb.auth.presentation.activate.viewModel.ActivationViewModel
-import com.pmb.auth.presentation.choose_authentication_type.ChooseAuthenticationTypeScreen
+import com.pmb.auth.presentation.activation.activate.ActivationScreen
+import com.pmb.auth.presentation.activation.activate.viewModel.ActivationViewModel
+import com.pmb.auth.presentation.activation.choose_authentication_type.ChooseAuthenticationTypeScreen
 import com.pmb.auth.presentation.ekyc.authentication.AuthenticationScreen
 import com.pmb.auth.presentation.ekyc.authentication_confirm.AuthenticationConfirmScreen
 import com.pmb.auth.presentation.ekyc.authentication_confirm.viewModel.AuthenticationConfirmStepViewModel

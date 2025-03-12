@@ -1,4 +1,4 @@
-package com.pmb.auth.presentation.activate.viewModel
+package com.pmb.auth.presentation.activation.activate.viewModel
 
 import androidx.lifecycle.viewModelScope
 import com.pmb.auth.domain.activate.entity.ActivateParams

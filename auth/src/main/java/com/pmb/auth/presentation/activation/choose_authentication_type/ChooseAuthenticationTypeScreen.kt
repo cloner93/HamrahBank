@@ -1,4 +1,4 @@
-package com.pmb.auth.presentation.choose_authentication_type
+package com.pmb.auth.presentation.activation.choose_authentication_type
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
