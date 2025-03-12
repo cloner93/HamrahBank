@@ -49,6 +49,7 @@
     <string name="repeated_sentence">من درس ریاضی را دوست دارم.</string>
     <string name="select_services">انتخاب خدمات</string>
     <string name="fee_details">مشاهده کارمزدها</string>
+    <string name="hamrah_activation_tax">کارمزد فعالسازی همراه بانک</string>
     <string name="open_account">افتتاح حساب</string>
     <string name="address">آدرس</string>
     <string name="take_your_face_photo_continue">در صورتی که تصویر، مورد تاییدتان است، دکمه ادامه را فشار بدهید.</string>
@@ -79,4 +80,5 @@
     <string name="authentication_type_password_description"> جهت تعریف رمز ورود جدید، یکی از روش های زیر را انتخاب نمایید:</string>
     <string name="authentication_type_activation_description"> جهت فعالسازی همراه بانک خود، یکی از روش های زیر را انتخاب نمایید:</string>
     <string name="mellat_signature_app">برنامه امضای ملت</string>
+    <string name="tax_account_number">شماره حساب کسر کارمزد</string>
 </resources>

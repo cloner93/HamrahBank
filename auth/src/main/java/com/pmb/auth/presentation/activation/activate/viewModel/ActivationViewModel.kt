@@ -1,8 +1,8 @@
 package com.pmb.auth.presentation.activation.activate.viewModel
 
 import androidx.lifecycle.viewModelScope
-import com.pmb.auth.domain.activate.entity.ActivateParams
-import com.pmb.auth.domain.activate.useCase.ActivationUserUseCase
+import com.pmb.auth.domain.activation.activate.entity.ActivateParams
+import com.pmb.auth.domain.activation.activate.useCase.ActivationUserUseCase
 import com.pmb.core.platform.AlertModelState
 import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.platform.Result

@@ -1,6 +1,7 @@
 package com.pmb.auth.di
 
-import com.pmb.auth.data.activate.ActivateRepositoryImpl
+import com.pmb.auth.data.activation.activate.ActivateRepositoryImpl
+import com.pmb.auth.data.activation.tax_details.ActivationTaxDetailsRepositoryImpl
 import com.pmb.auth.data.ekyc.authentication_confirm_step.AuthenticationStepConfirmRepositoryImpl
 import com.pmb.auth.data.ekyc.authentication_select_services.AuthenticationSelectServicesRepositoryImpl
 import com.pmb.auth.data.ekyc.face_photo.FacePhotoRepositoryImpl
@@ -18,7 +19,8 @@ import com.pmb.auth.data.register.deposit_information.DepositInformationReposito
 import com.pmb.auth.data.register.national_id.RegisterNationalIdRepositoryImpl
 import com.pmb.auth.data.register.search_opening_branch.OpeningBranchRepositoryImpl
 import com.pmb.auth.data.register.select_job_information.SelectJobInformationRepositoryImpl
-import com.pmb.auth.domain.activate.repository.ActivateRepository
+import com.pmb.auth.domain.activation.activate.repository.ActivateRepository
+import com.pmb.auth.domain.activation.tax_details.repository.ActivationTaxDetailsRepository
 import com.pmb.auth.domain.ekyc.authentication_confirm_step.repository.AuthenticationConfirmStepRepository
 import com.pmb.auth.domain.ekyc.authentication_select_services.repository.AuthenticationSelectServicesRepository
 import com.pmb.auth.domain.ekyc.capture_video.repository.CapturingVideoRepository
@@ -106,5 +108,6 @@ abstract class RepositoryModule {
     @Binds
     abstract fun bindSelectJobInformationRepository(selectJobInformationRepositoryImpl: SelectJobInformationRepositoryImpl): SelectJobInformationRepository
 
-
+    @Binds
+    abstract fun bindActivationTaxDetailsRepository(activationTaxDetailsRepositoryImpl: ActivationTaxDetailsRepositoryImpl): ActivationTaxDetailsRepository
 }

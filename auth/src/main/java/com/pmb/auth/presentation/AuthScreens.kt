@@ -8,6 +8,8 @@ import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import com.pmb.auth.presentation.activation.activate.ActivationScreen
 import com.pmb.auth.presentation.activation.activate.viewModel.ActivationViewModel
+import com.pmb.auth.presentation.activation.activation_tax_details.ActivationTaxDetailsScreen
+import com.pmb.auth.presentation.activation.activation_tax_details.viewModel.ActivationTaxDetailsViewModel
 import com.pmb.auth.presentation.activation.choose_authentication_type.ChooseAuthenticationTypeScreen
 import com.pmb.auth.presentation.ekyc.authentication.AuthenticationScreen
 import com.pmb.auth.presentation.ekyc.authentication_confirm.AuthenticationConfirmScreen
@@ -87,6 +89,7 @@ sealed class AuthScreens(route: String, arguments: Map<String, String> = emptyMa
     data object ReentryFaceDetection : AuthScreens(route = "reentry_face_detection")
     data object ChooseAuthenticationType : AuthScreens(route = "choose_authentication_type")
     data object ActivationScreen : AuthScreens(route = "activation")
+    data object ActivationTaxDetailsScreen : AuthScreens(route = "activation_tax_details")
 }
 
 
@@ -228,5 +231,11 @@ fun NavGraphBuilder.authScreensHandle(
     }
     composable(route = AuthScreens.ActivationScreen.route) {
         ActivationScreen(navigationManager, viewModel = hiltViewModel<ActivationViewModel>())
+    }
+    composable(route = AuthScreens.ActivationTaxDetailsScreen.route) {
+        ActivationTaxDetailsScreen(
+            navigationManager,
+            viewModel = hiltViewModel<ActivationTaxDetailsViewModel>()
+        )
     }
 }

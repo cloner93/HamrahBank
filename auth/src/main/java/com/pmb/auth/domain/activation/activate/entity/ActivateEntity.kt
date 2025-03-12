@@ -1,4 +1,4 @@
-package com.pmb.auth.domain.activate.entity
+package com.pmb.auth.domain.activation.activate.entity
 
 data class ActivateEntity(
     val isSuccess: Boolean

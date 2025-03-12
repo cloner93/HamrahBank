@@ -1,8 +1,8 @@
-package com.pmb.auth.domain.activate.useCase
+package com.pmb.auth.domain.activation.activate.useCase
 
-import com.pmb.auth.domain.activate.entity.ActivateEntity
-import com.pmb.auth.domain.activate.entity.ActivateParams
-import com.pmb.auth.domain.activate.repository.ActivateRepository
+import com.pmb.auth.domain.activation.activate.entity.ActivateEntity
+import com.pmb.auth.domain.activation.activate.entity.ActivateParams
+import com.pmb.auth.domain.activation.activate.repository.ActivateRepository
 import com.pmb.core.platform.BaseUseCase
 import com.pmb.core.platform.Result
 import kotlinx.coroutines.flow.Flow
