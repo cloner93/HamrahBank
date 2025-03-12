@@ -8,6 +8,7 @@
     <string name="login">ورود</string>
     <string name="forget_password">فراموشی رمز عبور</string>
     <string name="phone_number">شماره موبایل</string>
+    <string name="mobile_number">شماره تلفن همراه</string>
     <string name="national_id">کد ملی</string>
     <string name="postal_code">کد پستی</string>
     <string name="national_id_serial">سریال کارت ملی</string>
@@ -26,6 +27,7 @@
     <string name="select_new_password">انتخاب رمز عبور جدید</string>
     <string name="msg_select_new_password">به دلیل حفظ امنیت حساب شما، باید یک رمز عبور جدید انتخاب کنید.</string>
     <string name="hamrah_bank_activate">فعالسازی همراه بانک</string>
+    <string name="activation">فعالسازی</string>
     <string name="msg_first_login_confirm_header">کد ورود به شماره تلفن همراه شما ارسال شد. لطفا آن را وارد نمایید.</string>
     <string name="otp">کد ورود</string>
     <string name="re_send">ارسال مجدد</string>
@@ -73,6 +75,7 @@
     <string name="search_job_description">جستجو در مشاغل</string>
     <string name="enter_face_detection">ورود با اسکن چهره</string>
     <string name="face_detection_description">لطغا دوربین رو مقابل صورت خود قرار دهید.</string>
-    <string name="authentication_type_description"> جهت تعریف رمز ورود جدید، یکی از روش های زیر را انتخاب نمایید:</string>
+    <string name="authentication_type_password_description"> جهت تعریف رمز ورود جدید، یکی از روش های زیر را انتخاب نمایید:</string>
+    <string name="authentication_type_activation_description"> جهت فعالسازی همراه بانک خود، یکی از روش های زیر را انتخاب نمایید:</string>
     <string name="mellat_signature_app">برنامه امضای ملت</string>
 </resources>

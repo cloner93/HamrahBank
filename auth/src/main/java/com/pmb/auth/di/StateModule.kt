@@ -1,6 +1,6 @@
 package com.pmb.auth.di
 
-import com.pmb.auth.presentation.activate.viewModel.ActivateViewState
+import com.pmb.auth.presentation.activate.viewModel.ActivationViewState
 import com.pmb.auth.presentation.ekyc.authentication_confirm.viewModel.AuthenticationConfirmStepViewState
 import com.pmb.auth.presentation.ekyc.authentication_select_services.viewModel.AuthenticationSelectServicesViewState
 import com.pmb.auth.presentation.ekyc.authentication_video.viewModel.AuthenticationCapturingVideoViewState
@@ -50,7 +50,7 @@ object StateModule {
 
     @Provides
     @Singleton
-    fun provideActivateViewState(): ActivateViewState = ActivateViewState()
+    fun provideActivateViewState(): ActivationViewState = ActivationViewState()
 
     @Provides
     @Singleton

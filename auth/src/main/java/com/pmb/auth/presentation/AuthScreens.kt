@@ -6,6 +6,8 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
+import com.pmb.auth.presentation.activate.ActivationScreen
+import com.pmb.auth.presentation.activate.viewModel.ActivationViewModel
 import com.pmb.auth.presentation.choose_authentication_type.ChooseAuthenticationTypeScreen
 import com.pmb.auth.presentation.ekyc.authentication.AuthenticationScreen
 import com.pmb.auth.presentation.ekyc.authentication_confirm.AuthenticationConfirmScreen
@@ -47,6 +49,7 @@ import com.pmb.auth.presentation.register.search_opening_branch.SearchOpeningBra
 import com.pmb.auth.presentation.register.search_opening_branch.viewModel.SearchOpeningBranchViewModel
 import com.pmb.auth.presentation.register.select_job_information.SelectJobInformationScreen
 import com.pmb.auth.presentation.register.select_job_information.viewModel.SelectJobInformationViewModel
+import com.pmb.auth.utils.ComingType
 import com.pmb.core.presentation.NavigationManager
 import com.pmb.core.presentation.Screen
 
@@ -83,6 +86,7 @@ sealed class AuthScreens(route: String, arguments: Map<String, String> = emptyMa
     data object ReentryPassword : AuthScreens(route = "reentry_password")
     data object ReentryFaceDetection : AuthScreens(route = "reentry_face_detection")
     data object ChooseAuthenticationType : AuthScreens(route = "choose_authentication_type")
+    data object ActivationScreen : AuthScreens(route = "activation")
 }
 
 
@@ -220,6 +224,9 @@ fun NavGraphBuilder.authScreensHandle(
         )
     }
     composable(route = AuthScreens.ChooseAuthenticationType.route) {
-        ChooseAuthenticationTypeScreen(navigationManager)
+        ChooseAuthenticationTypeScreen(navigationManager, comingType = ComingType.COMING_PASSWORD)
+    }
+    composable(route = AuthScreens.ActivationScreen.route) {
+        ActivationScreen(navigationManager, viewModel = hiltViewModel<ActivationViewModel>())
     }
 }

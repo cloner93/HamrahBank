@@ -19,8 +19,6 @@ class ActivateRepositoryImpl @Inject constructor() : ActivateRepository {
             activateParams.takeIf {
                 it.nationalId == accountSampleModel.nationalId
                         && it.mobileNumber == accountSampleModel.mobileNumber
-                        && it.password == accountSampleModel.passWord
-                        && it.userName == accountSampleModel.userName
             }
                 ?.let {
                     emit(Result.Success(ActivateEntity(isSuccess = true)))

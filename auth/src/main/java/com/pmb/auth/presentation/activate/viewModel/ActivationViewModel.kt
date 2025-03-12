@@ -11,24 +11,33 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ActivateViewModel @Inject constructor(
-    initialState: ActivateViewState,
+class ActivationViewModel @Inject constructor(
+    initialState: ActivationViewState,
     private val activationUserUseCase: ActivationUserUseCase
-) : BaseViewModel<ActivateViewActions, ActivateViewState, ActivateViewEvents>(initialState) {
-    override fun handle(action: ActivateViewActions) {
+) : BaseViewModel<ActivationViewActions, ActivationViewState, ActivationViewEvents>(initialState) {
+    override fun handle(action: ActivationViewActions) {
         when (action) {
-            ActivateViewActions.ClearAlert -> setState { it.copy(loading = false) }
-            is ActivateViewActions.ActiveUser -> handleActivationUser(action)
+            ActivationViewActions.ClearAlert -> setState { it.copy(loading = false) }
+            is ActivationViewActions.ActiveUser -> handleActivationUser(action)
+            is ActivationViewActions.SelectRules -> {
+                handleSelectRules()
+            }
         }
     }
 
-    private fun handleActivationUser(action: ActivateViewActions.ActiveUser) {
+    private fun handleSelectRules() {
+        setState {
+            it.copy(
+                isChecked = !it.isChecked
+            )
+        }
+    }
+
+    private fun handleActivationUser(action: ActivationViewActions.ActiveUser) {
         viewModelScope.launch {
             activationUserUseCase.invoke(
                 ActivateParams(
-                    userName = action.userName,
                     mobileNumber = action.mobileNumber,
-                    password = action.password,
                     nationalId = action.nationalId
                 )
             ).collect { result ->
@@ -70,7 +79,7 @@ class ActivateViewModel @Inject constructor(
                                 loading = false
                             )
                         }
-                        postEvent(ActivateViewEvents.ActiveUserSucceed)
+                        postEvent(ActivationViewEvents.ActiveUserSucceed)
                     }
                 }
             }

@@ -5,8 +5,6 @@ data class ActivateEntity(
 )
 
 data class ActivateParams(
-    val userName: String,
     val mobileNumber: String,
-    val password: String,
     val nationalId: String
 )

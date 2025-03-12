@@ -13,6 +13,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.pmb.auth.R
+import com.pmb.auth.utils.ComingType
 import com.pmb.ballon.component.base.AppButtonWithWeightIcon
 import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppImage
@@ -26,7 +27,7 @@ import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.core.presentation.NavigationManager
 
 @Composable
-fun ChooseAuthenticationTypeScreen(navigationManager: NavigationManager) {
+fun ChooseAuthenticationTypeScreen(navigationManager: NavigationManager, comingType: ComingType) {
     AppContent(
         modifier = Modifier.padding(horizontal = 16.dp),
         topBar = {
@@ -44,14 +45,18 @@ fun ChooseAuthenticationTypeScreen(navigationManager: NavigationManager) {
     ) {
         Spacer(modifier = Modifier.size(30.dp))
         AppImage(
-            image = painterResource(com.pmb.ballon.R.drawable.img_key),
+            image = if (comingType == ComingType.COMING_PASSWORD) painterResource(com.pmb.ballon.R.drawable.img_key) else painterResource(
+                com.pmb.ballon.R.drawable.img_document
+            ),
             style = ImageStyle(size = Size.FIX(all = 128.dp))
         )
         Spacer(modifier = Modifier.size(16.dp))
         Headline4Text(
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth(),
-            text = stringResource(R.string.authentication_type_description),
+            text = if (comingType == ComingType.COMING_PASSWORD) stringResource(R.string.authentication_type_password_description) else stringResource(
+                R.string.authentication_type_activation_description
+            ),
             color = AppTheme.colorScheme.onBackgroundPrimaryActive
         )
         Spacer(modifier = Modifier.weight(1f))

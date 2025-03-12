@@ -1,6 +1,5 @@
 package com.pmb.auth.presentation.activate
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -17,36 +16,38 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.pmb.auth.R
-import com.pmb.auth.presentation.activate.viewModel.ActivateViewActions
-import com.pmb.auth.presentation.activate.viewModel.ActivateViewEvents
-import com.pmb.auth.presentation.activate.viewModel.ActivateViewModel
+import com.pmb.auth.presentation.activate.viewModel.ActivationViewActions
+import com.pmb.auth.presentation.activate.viewModel.ActivationViewEvents
+import com.pmb.auth.presentation.activate.viewModel.ActivationViewModel
+import com.pmb.auth.presentation.component.RoundedCornerCheckboxComponent
 import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppContent
+import com.pmb.ballon.component.base.AppImage
 import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.component.base.AppMobileTextField
 import com.pmb.ballon.component.base.AppNationalIdTextField
-import com.pmb.ballon.component.base.AppSingleTextField
-import com.pmb.ballon.component.text_field.AppPasswordTextField
+import com.pmb.ballon.component.base.AppTopBar
+import com.pmb.ballon.ui.theme.AppTheme
+import com.pmb.core.presentation.NavigationManager
 
 @Composable
-fun ActivateScreen(navController: NavController, viewModel: ActivateViewModel) {
+fun ActivationScreen(navigationManager: NavigationManager, viewModel: ActivationViewModel) {
     var mobile by remember { mutableStateOf("") }
-    var username by remember { mutableStateOf("") }
     var nationalId by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
     val viewState by viewModel.viewState.collectAsState()
     var isMobile by remember { mutableStateOf(false) }
     var isNationalId by remember { mutableStateOf(false) }
-    var isUsername by remember { mutableStateOf(false) }
-    var isPassword by remember { mutableStateOf(false) }
     LaunchedEffect(Unit) {
         viewModel.viewEvent.collect { event ->
             when (event) {
-                ActivateViewEvents.ActiveUserSucceed -> {
+                ActivationViewEvents.ActiveUserSucceed -> {
                 }
             }
         }
@@ -54,35 +55,57 @@ fun ActivateScreen(navController: NavController, viewModel: ActivateViewModel) {
     AppContent(
         modifier = Modifier.padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
+        topBar = {
+            AppTopBar(
+                title = stringResource(R.string.activation),
+                onBack = { navigationManager.navigateBack() })
+        },
         footer = {
+            RoundedCornerCheckboxComponent(
+                modifier = Modifier.fillMaxWidth()
+                    .padding(horizontal = 24.dp),
+                title = buildAnnotatedString {
+                    withStyle(
+                        style = SpanStyle(
+                            fontWeight = FontWeight.Normal,
+                            color = AppTheme.colorScheme.foregroundPrimaryDefault,
+                        )
+                    ) {
+                        append(stringResource(R.string.rules))
+                    }
+                    append(" ")
+                    append(stringResource(R.string.rules_read_and_accepted))
+                },
+                isChecked = viewState.isChecked
+            ) {
+                viewModel.handle(ActivationViewActions.SelectRules)
+            }
+            Spacer(modifier = Modifier.size(10.dp))
             AppButton(modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 24.dp),
                 title = stringResource(R.string._continue),
-                enable = !viewState.loading && isMobile && isNationalId && isUsername && isPassword,
+                enable = !viewState.loading && isMobile && viewState.isChecked,
                 onClick = {
                     viewModel.handle(
-                        ActivateViewActions.ActiveUser(
+                        ActivationViewActions.ActiveUser(
                             mobileNumber = mobile,
-                            password = password,
                             nationalId = nationalId,
-                            userName = username
                         )
                     )
                 })
 
         },
         content = {
-            Image(
+            AppImage(
                 modifier = Modifier.size(56.dp),
-                painter = painterResource(com.pmb.ballon.R.drawable.img_mellat_logo),
-                contentDescription = "mellat logo"
+                image = painterResource(com.pmb.ballon.R.drawable.img_mellat_logo),
             )
 
             Spacer(modifier = Modifier.size(32.dp))
 
             AppMobileTextField(value = mobile,
-                label = stringResource(R.string.phone_number),
+                label = stringResource(R.string.mobile_number),
                 onValidate = { isMobile = it },
                 onValueChange = { mobile = it })
 
@@ -95,23 +118,6 @@ fun ActivateScreen(navController: NavController, viewModel: ActivateViewModel) {
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            AppSingleTextField(
-                modifier = Modifier.fillMaxWidth(),
-                value = username,
-                label = stringResource(com.pmb.auth.R.string.username),
-                onValueChange = {
-                    username = it
-                    isUsername = it.length >= 6
-                },
-            )
-
-            Spacer(modifier = Modifier.size(24.dp))
-
-            AppPasswordTextField(modifier = Modifier.fillMaxWidth(),
-                value = password,
-                label = stringResource(com.pmb.auth.R.string.password),
-                onValidate = { isPassword = it.isValid },
-                onValueChange = { password = it })
         })
     if (viewState.loading) {
         AppLoading()
