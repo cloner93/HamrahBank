@@ -20,6 +20,8 @@ import com.pmb.auth.presentation.register.deposit_information.viewModel.DepositI
 import com.pmb.auth.presentation.register.national_id.viewModel.RegisterNationalIdViewState
 import com.pmb.auth.presentation.register.search_opening_branch.viewModel.SearchOpeningBranchViewState
 import com.pmb.auth.presentation.register.select_job_information.viewModel.SelectJobInformationViewState
+import com.pmb.auth.presentation.scan_card_info.card_info.viewModel.CardInfoViewState
+import com.pmb.auth.presentation.scan_card_info.scan_card.viewModel.ScanCardViewState
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -122,4 +124,11 @@ object StateModule {
     @Singleton
     fun provideActivationTaxDetailsViewState(): ActivationTaxDetailsViewState =
         ActivationTaxDetailsViewState()
+
+    @Provides
+    @Singleton
+    fun provideCardInfoViewState(): CardInfoViewState = CardInfoViewState()
+    @Provides
+    @Singleton
+    fun provideScanCardViewState():ScanCardViewState = ScanCardViewState()
 }

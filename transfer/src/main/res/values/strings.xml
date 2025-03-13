@@ -24,7 +24,6 @@
     <string name="confirm_and_transfer">تایید و انتقال</string>
     <string name="month">ماه</string>
     <string name="year">سال</string>
-    <string name="second_pass">رمز دوم</string>
-    <string name="get_dynamic_pass">دریافت رمز پویا</string>
+
     <string name="mony_transfer_receipt">رسید انتقال وجه</string>
 </resources>

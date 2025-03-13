@@ -51,6 +51,10 @@ import com.pmb.auth.presentation.register.search_opening_branch.SearchOpeningBra
 import com.pmb.auth.presentation.register.search_opening_branch.viewModel.SearchOpeningBranchViewModel
 import com.pmb.auth.presentation.register.select_job_information.SelectJobInformationScreen
 import com.pmb.auth.presentation.register.select_job_information.viewModel.SelectJobInformationViewModel
+import com.pmb.auth.presentation.scan_card_info.card_info.CardInfoScreen
+import com.pmb.auth.presentation.scan_card_info.card_info.viewModel.CardInfoViewModel
+import com.pmb.auth.presentation.scan_card_info.scan_card.ScanCardScreen
+import com.pmb.auth.presentation.scan_card_info.scan_card.viewModel.ScanCardViewModel
 import com.pmb.auth.utils.ComingType
 import com.pmb.core.presentation.NavigationManager
 import com.pmb.core.presentation.Screen
@@ -90,6 +94,8 @@ sealed class AuthScreens(route: String, arguments: Map<String, String> = emptyMa
     data object ChooseAuthenticationType : AuthScreens(route = "choose_authentication_type")
     data object ActivationScreen : AuthScreens(route = "activation")
     data object ActivationTaxDetailsScreen : AuthScreens(route = "activation_tax_details")
+    data object CardInformation : AuthScreens(route = "card_information")
+    data object ScanCard : AuthScreens(route = "scan_card")
 }
 
 
@@ -236,6 +242,20 @@ fun NavGraphBuilder.authScreensHandle(
         ActivationTaxDetailsScreen(
             navigationManager,
             viewModel = hiltViewModel<ActivationTaxDetailsViewModel>()
+        )
+    }
+    composable(
+        route = AuthScreens.CardInformation.route
+    ) {
+        CardInfoScreen(
+            navigationManager,
+            viewModel = hiltViewModel<CardInfoViewModel>()
+        )
+    }
+    composable(route = AuthScreens.ScanCard.route){
+        ScanCardScreen(
+            navigationManager,
+            viewModel = hiltViewModel<ScanCardViewModel>()
         )
     }
 }

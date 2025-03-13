@@ -17,4 +17,6 @@
     <string name="year">سال</string>
     <string name="confirm">تایید</string>
     <string name="rial">ريال</string>
+    <string name="second_pass">رمز دوم</string>
+    <string name="get_dynamic_pass">دریافت رمز پویا</string>
 </resources>
