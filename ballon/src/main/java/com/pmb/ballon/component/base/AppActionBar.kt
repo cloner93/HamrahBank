@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.CloudQueue
 import androidx.compose.runtime.Composable
@@ -61,7 +62,7 @@ fun AppTopBar(title: String, onBack: (() -> Unit)? = null, endIcon: ClickableIco
         title = title,
         startIcon = onBack?.let {
             ClickableIcon(
-                IconType.ImageVector(Icons.AutoMirrored.Filled.ArrowForward),
+                IconType.ImageVector(Icons.AutoMirrored.Filled.ArrowBack),
                 onClick = onBack
             )
         },

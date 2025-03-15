@@ -19,6 +19,7 @@ import com.pmb.auth.data.register.deposit_information.DepositInformationReposito
 import com.pmb.auth.data.register.national_id.RegisterNationalIdRepositoryImpl
 import com.pmb.auth.data.register.search_opening_branch.OpeningBranchRepositoryImpl
 import com.pmb.auth.data.register.select_job_information.SelectJobInformationRepositoryImpl
+import com.pmb.auth.data.scan_card_info.card_confirmation.CardInformationConfirmationRepositoryImpl
 import com.pmb.auth.data.scan_card_info.card_info.CardInfoRepositoryImpl
 import com.pmb.auth.domain.activation.activate.repository.ActivateRepository
 import com.pmb.auth.domain.activation.tax_details.repository.ActivationTaxDetailsRepository
@@ -39,6 +40,7 @@ import com.pmb.auth.domain.register.deposit_information.repository.DepositInform
 import com.pmb.auth.domain.register.national_id.repository.RegisterNationalIdRepository
 import com.pmb.auth.domain.register.search_opening_branch.repository.OpeningBranchRepository
 import com.pmb.auth.domain.register.select_job_information.repository.SelectJobInformationRepository
+import com.pmb.auth.domain.scan_card_info.card_confirmation.repository.CardInformationConfirmationRepository
 import com.pmb.auth.domain.scan_card_info.card_info.repository.CardInfoRepository
 import dagger.Binds
 import dagger.Module
@@ -115,4 +117,7 @@ abstract class RepositoryModule {
 
     @Binds
     abstract fun bindCardInfoRepository(cardInfoRepositoryImpl: CardInfoRepositoryImpl): CardInfoRepository
+
+    @Binds
+    abstract fun bindCardInformationConfirmationRepository(cardInformationConfirmationRepositoryImpl: CardInformationConfirmationRepositoryImpl): CardInformationConfirmationRepository
 }

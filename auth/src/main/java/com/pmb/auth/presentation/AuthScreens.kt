@@ -51,6 +51,8 @@ import com.pmb.auth.presentation.register.search_opening_branch.SearchOpeningBra
 import com.pmb.auth.presentation.register.search_opening_branch.viewModel.SearchOpeningBranchViewModel
 import com.pmb.auth.presentation.register.select_job_information.SelectJobInformationScreen
 import com.pmb.auth.presentation.register.select_job_information.viewModel.SelectJobInformationViewModel
+import com.pmb.auth.presentation.scan_card_info.card_confirm.CardInformationConfirmScreen
+import com.pmb.auth.presentation.scan_card_info.card_confirm.viewModel.CardInformationConfirmViewModel
 import com.pmb.auth.presentation.scan_card_info.card_info.CardInfoScreen
 import com.pmb.auth.presentation.scan_card_info.card_info.viewModel.CardInfoViewModel
 import com.pmb.auth.presentation.scan_card_info.scan_card.ScanCardScreen
@@ -92,10 +94,11 @@ sealed class AuthScreens(route: String, arguments: Map<String, String> = emptyMa
     data object ReentryPassword : AuthScreens(route = "reentry_password")
     data object ReentryFaceDetection : AuthScreens(route = "reentry_face_detection")
     data object ChooseAuthenticationType : AuthScreens(route = "choose_authentication_type")
-    data object ActivationScreen : AuthScreens(route = "activation")
+    data object Activation : AuthScreens(route = "activation")
     data object ActivationTaxDetailsScreen : AuthScreens(route = "activation_tax_details")
     data object CardInformation : AuthScreens(route = "card_information")
     data object ScanCard : AuthScreens(route = "scan_card")
+    data object CardInformationConfirmation : AuthScreens("card_information_confirmation")
 }
 
 
@@ -235,7 +238,7 @@ fun NavGraphBuilder.authScreensHandle(
     composable(route = AuthScreens.ChooseAuthenticationType.route) {
         ChooseAuthenticationTypeScreen(navigationManager, comingType = ComingType.COMING_PASSWORD)
     }
-    composable(route = AuthScreens.ActivationScreen.route) {
+    composable(route = AuthScreens.Activation.route) {
         ActivationScreen(navigationManager, viewModel = hiltViewModel<ActivationViewModel>())
     }
     composable(route = AuthScreens.ActivationTaxDetailsScreen.route) {
@@ -252,10 +255,16 @@ fun NavGraphBuilder.authScreensHandle(
             viewModel = hiltViewModel<CardInfoViewModel>()
         )
     }
-    composable(route = AuthScreens.ScanCard.route){
+    composable(route = AuthScreens.ScanCard.route) {
         ScanCardScreen(
             navigationManager,
             viewModel = hiltViewModel<ScanCardViewModel>()
+        )
+    }
+    composable(route = AuthScreens.CardInformationConfirmation.route) {
+        CardInformationConfirmScreen(
+            navigationManager,
+            viewModel = hiltViewModel<CardInformationConfirmViewModel>()
         )
     }
 }
