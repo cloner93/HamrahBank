@@ -1,6 +1,5 @@
 package com.pmb.auth.data.register.deposit_information
 
-import com.pmb.auth.domain.register.deposit_information.entity.AnnualIncomingPrediction
 import com.pmb.auth.domain.register.deposit_information.entity.BranchCity
 import com.pmb.auth.domain.register.deposit_information.entity.BranchCityEntity
 import com.pmb.auth.domain.register.deposit_information.entity.BranchCityParams
@@ -31,18 +30,17 @@ class DepositInformationRepositoryImpl @Inject constructor() : DepositInformatio
             BranchProvince(id = 2, province = "قزوین"),
         )
 
-        val annualIncomingPrediction = listOf(
-            AnnualIncomingPrediction(id = 0, income = "10000"),
-            AnnualIncomingPrediction(id = 1, income = "200000000"),
-            AnnualIncomingPrediction(id = 2, income = "5000000000")
-        )
+//        val annualIncomingPrediction = listOf(
+//            AnnualIncomingPrediction(id = 0, income = "10000"),
+//            AnnualIncomingPrediction(id = 1, income = "200000000"),
+//            AnnualIncomingPrediction(id = 2, income = "5000000000")
+//        )
         emit(
             Result.Success(
                 DepositInformationEntity(
                     isSuccess = true,
                     depositType = depositType,
                     branchProvince = branchProvince,
-                    annualIncomingPrediction = annualIncomingPrediction
                 )
             )
         )

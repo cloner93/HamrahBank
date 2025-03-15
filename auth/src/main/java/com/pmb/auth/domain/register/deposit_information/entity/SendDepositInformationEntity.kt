@@ -9,5 +9,4 @@ data class SendDepositInformationParams(
     val branchProvince: Int?,
     val branchCity: Int?,
     val openingBranch: Int?,
-    val annualIncomingPrediction: Int?,
 )

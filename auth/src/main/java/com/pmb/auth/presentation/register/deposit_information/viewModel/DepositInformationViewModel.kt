@@ -56,11 +56,17 @@ class DepositInformationViewModel @Inject constructor(
             is DepositInformationViewActions.SetOpeningBranch -> {
                 handleSetOpeningBranch(action)
             }
-
-            is DepositInformationViewActions.AnnualIncomingPrediction -> {
-                handleAnnualIncomingPrediction(action)
+            is DepositInformationViewActions.SelectRules ->{
+                handleSelectRules()
             }
+        }
+    }
 
+    private fun handleSelectRules() {
+        setState {
+            it.copy(
+                isChecked = !it.isChecked
+            )
         }
     }
 
@@ -71,7 +77,6 @@ class DepositInformationViewModel @Inject constructor(
                     branchCity = action.cityId
                 ) ?: run {
                     SendDepositInformationParams(
-                        annualIncomingPrediction = null,
                         branchProvince = null,
                         openingBranch = null,
                         branchCity = action.cityId,
@@ -82,23 +87,23 @@ class DepositInformationViewModel @Inject constructor(
         }
     }
 
-    private fun handleAnnualIncomingPrediction(action: DepositInformationViewActions.AnnualIncomingPrediction) {
-        setState {
-            it.copy(
-                sendDepositInformationParams = it.sendDepositInformationParams?.copy(
-                    annualIncomingPrediction = action.annualIncomingPrediction
-                ) ?: run {
-                    SendDepositInformationParams(
-                        branchCity = null,
-                        branchProvince = null,
-                        openingBranch = null,
-                        annualIncomingPrediction = action.annualIncomingPrediction,
-                        depositType = null
-                    )
-                }
-            )
-        }
-    }
+//    private fun handleAnnualIncomingPrediction(action: DepositInformationViewActions.AnnualIncomingPrediction) {
+//        setState {
+//            it.copy(
+//                sendDepositInformationParams = it.sendDepositInformationParams?.copy(
+//                    annualIncomingPrediction = action.annualIncomingPrediction
+//                ) ?: run {
+//                    SendDepositInformationParams(
+//                        branchCity = null,
+//                        branchProvince = null,
+//                        openingBranch = null,
+//                        annualIncomingPrediction = action.annualIncomingPrediction,
+//                        depositType = null
+//                    )
+//                }
+//            )
+//        }
+//    }
 
     private fun handleSetOpeningBranch(action: DepositInformationViewActions.SetOpeningBranch) {
         setState {
@@ -110,7 +115,6 @@ class DepositInformationViewModel @Inject constructor(
                     SendDepositInformationParams(
                         branchCity = null,
                         branchProvince = null,
-                        annualIncomingPrediction = null,
                         openingBranch = action.openingBranchId.id,
                         depositType = null
                     )
@@ -129,7 +133,6 @@ class DepositInformationViewModel @Inject constructor(
                         branchCity = null,
                         branchProvince = null,
                         openingBranch = null,
-                        annualIncomingPrediction = null,
                         depositType = action.depositType
                     )
                 }
@@ -227,7 +230,6 @@ class DepositInformationViewModel @Inject constructor(
                                         branchProvince = action.provinceId,
                                         branchCity = null,
                                         openingBranch = null,
-                                        annualIncomingPrediction = null,
                                         depositType = null
                                     )
                                 }

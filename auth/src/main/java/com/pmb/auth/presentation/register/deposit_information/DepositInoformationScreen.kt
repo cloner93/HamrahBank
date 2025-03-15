@@ -15,10 +15,15 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.pmb.auth.R
 import com.pmb.auth.domain.register.search_opening_branch.entity.OpeningBranch
 import com.pmb.auth.presentation.AuthScreens
+import com.pmb.auth.presentation.component.RoundedCornerCheckboxComponent
 import com.pmb.auth.presentation.register.deposit_information.viewModel.DepositInformationViewActions
 import com.pmb.auth.presentation.register.deposit_information.viewModel.DepositInformationViewEvents
 import com.pmb.auth.presentation.register.deposit_information.viewModel.DepositInformationViewModel
@@ -29,6 +34,7 @@ import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.component.base.AppTopBar
+import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.core.presentation.NavigationManager
 import com.pmb.core.utils.CollectAsEffect
 
@@ -67,10 +73,30 @@ fun DepositInformationScreen(
             )
         },
         footer = {
+            RoundedCornerCheckboxComponent(
+                modifier = Modifier.fillMaxWidth()
+                    .padding(horizontal = 24.dp),
+                title = buildAnnotatedString {
+                    withStyle(
+                        style = SpanStyle(
+                            fontWeight = FontWeight.Normal,
+                            color = AppTheme.colorScheme.foregroundPrimaryDefault,
+                        )
+                    ) {
+                        append(stringResource(R.string.rules))
+                    }
+                    append(" ")
+                    append(stringResource(R.string.rules_read_and_accepted))
+                },
+                isChecked = viewState.isChecked
+            ) {
+                viewModel.handle(DepositInformationViewActions.SelectRules)
+            }
+            Spacer(modifier = Modifier.size(22.dp))
             AppButton(modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 16.dp, end = 16.dp, top = 16.dp),
-                enable = !viewState.isLoading && viewState.depositInformation != null && viewState.branchCity != null,
+                enable = !viewState.isLoading && viewState.depositInformation != null && viewState.branchCity != null && viewState.isChecked,
                 title = stringResource(R.string._continue),
                 onClick = {
                     viewState.sendDepositInformationParams?.let {
@@ -174,26 +200,7 @@ fun DepositInformationScreen(
 
                     )
             }
-            Spacer(modifier = Modifier.size(12.dp))
-            CustomSpinner(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                options = viewState.depositInformation?.annualIncomingPrediction?.map { it.income },
-                labelString = "پیش بینی درآمد سالیانه",
-                displayText = viewState.depositInformation?.annualIncomingPrediction?.findLast {
-                    it.id == (viewState.sendDepositInformationParams?.annualIncomingPrediction
-                        ?: -1)
-                }?.income ?: "",
-                isEnabled = viewState.depositInformation?.annualIncomingPrediction?.isNotEmpty() == true
-            ) { type ->
-                viewState.depositInformation?.annualIncomingPrediction?.findLast { it.income == type }?.id?.let {
-                    viewModel.handle(
-                        DepositInformationViewActions.AnnualIncomingPrediction(
-                            it
-                        )
-                    )
-                }
-            }
+
         }
     }
     if (viewState.isLoading) {

@@ -17,7 +17,8 @@ sealed interface DepositInformationViewActions : BaseViewAction {
 
     data class DepositType(val depositType: Int) : DepositInformationViewActions
     data class SetOpeningBranch(val openingBranchId: OpeningBranch) : DepositInformationViewActions
-    data class AnnualIncomingPrediction(val annualIncomingPrediction: Int) :
-        DepositInformationViewActions
+    data object SelectRules : DepositInformationViewActions
+//    data class AnnualIncomingPrediction(val annualIncomingPrediction: Int) :
+//        DepositInformationViewActions
 }
 

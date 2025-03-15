@@ -56,7 +56,7 @@ fun CustomSpinner(
                 .menuAnchor(MenuAnchorType.PrimaryNotEditable, true)
                 .clickable {
                     if (isEnabled)
-                        expanded = true
+                        expanded = !expanded
                 }
         )
 

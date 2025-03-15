@@ -4,7 +4,6 @@ data class DepositInformationEntity(
     val isSuccess: Boolean,
     val depositType: List<DepositType>,
     val branchProvince: List<BranchProvince>,
-    val annualIncomingPrediction: List<AnnualIncomingPrediction>,
 )
 
 data class DepositType(

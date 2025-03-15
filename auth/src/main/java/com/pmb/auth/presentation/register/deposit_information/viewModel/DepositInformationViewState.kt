@@ -13,5 +13,6 @@ data class DepositInformationViewState(
     val depositInformation: DepositInformationEntity? = null,
     val branchCity: BranchCityEntity? = null,
     val openedBranch: OpeningBranch? = null,
-    val sendDepositInformationParams: SendDepositInformationParams? = null
+    val sendDepositInformationParams: SendDepositInformationParams? = null,
+    val isChecked :Boolean =false
 ) : BaseViewState
