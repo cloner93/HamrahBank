@@ -53,6 +53,7 @@ fun DepositInformationScreen(
             }
         }
     }
+
     navigationManager.getCurrentScreenFlowData<OpeningBranch?>(
         "openingBranch",
         null

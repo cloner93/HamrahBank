@@ -17,6 +17,7 @@ import com.pmb.auth.presentation.new_password.viewModel.NewPasswordViewState
 import com.pmb.auth.presentation.reentry.reentry_password.viewModel.ReentryPasswordViewState
 import com.pmb.auth.presentation.register.check_postal_code.viewModel.CheckPostalCodeViewState
 import com.pmb.auth.presentation.register.deposit_information.viewModel.DepositInformationViewState
+import com.pmb.auth.presentation.register.job_information.viewModel.JobInformationViewState
 import com.pmb.auth.presentation.register.national_id.viewModel.RegisterNationalIdViewState
 import com.pmb.auth.presentation.register.search_opening_branch.viewModel.SearchOpeningBranchViewState
 import com.pmb.auth.presentation.register.select_job_information.viewModel.SelectJobInformationViewState
@@ -138,4 +139,7 @@ object StateModule {
     @Singleton
     fun provideCardInformationConfirmViewState(): CardInformationConfirmViewState =
         CardInformationConfirmViewState()
+    @Provides
+    @Singleton
+    fun provideJobInformationViewState():JobInformationViewState = JobInformationViewState()
 }

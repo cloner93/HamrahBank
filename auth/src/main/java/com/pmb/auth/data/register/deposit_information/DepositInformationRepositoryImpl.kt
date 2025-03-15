@@ -30,11 +30,6 @@ class DepositInformationRepositoryImpl @Inject constructor() : DepositInformatio
             BranchProvince(id = 2, province = "قزوین"),
         )
 
-//        val annualIncomingPrediction = listOf(
-//            AnnualIncomingPrediction(id = 0, income = "10000"),
-//            AnnualIncomingPrediction(id = 1, income = "200000000"),
-//            AnnualIncomingPrediction(id = 2, income = "5000000000")
-//        )
         emit(
             Result.Success(
                 DepositInformationEntity(

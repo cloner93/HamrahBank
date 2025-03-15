@@ -16,6 +16,7 @@ import com.pmb.auth.data.login.LoginRepositoryImpl
 import com.pmb.auth.data.new_password.NewPasswordRepositoryImpl
 import com.pmb.auth.data.register.check_postal_code.CheckPostalCodeRepositoryImpl
 import com.pmb.auth.data.register.deposit_information.DepositInformationRepositoryImpl
+import com.pmb.auth.data.register.job_information.JobInformationRepositoryImpl
 import com.pmb.auth.data.register.national_id.RegisterNationalIdRepositoryImpl
 import com.pmb.auth.data.register.search_opening_branch.OpeningBranchRepositoryImpl
 import com.pmb.auth.data.register.select_job_information.SelectJobInformationRepositoryImpl
@@ -37,6 +38,7 @@ import com.pmb.auth.domain.login.repository.LoginRepository
 import com.pmb.auth.domain.new_password.repository.NewPasswordRepository
 import com.pmb.auth.domain.register.check_postal_code.repository.CheckPostalCodeRepository
 import com.pmb.auth.domain.register.deposit_information.repository.DepositInformationRepository
+import com.pmb.auth.domain.register.job_information.repository.JobInformationRepository
 import com.pmb.auth.domain.register.national_id.repository.RegisterNationalIdRepository
 import com.pmb.auth.domain.register.search_opening_branch.repository.OpeningBranchRepository
 import com.pmb.auth.domain.register.select_job_information.repository.SelectJobInformationRepository
@@ -120,4 +122,7 @@ abstract class RepositoryModule {
 
     @Binds
     abstract fun bindCardInformationConfirmationRepository(cardInformationConfirmationRepositoryImpl: CardInformationConfirmationRepositoryImpl): CardInformationConfirmationRepository
+
+    @Binds
+    abstract fun bindJobInformationRepository(jobInformationRepositoryImpl: JobInformationRepositoryImpl): JobInformationRepository
 }

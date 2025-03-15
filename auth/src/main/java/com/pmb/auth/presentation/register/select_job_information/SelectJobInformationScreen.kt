@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.pmb.auth.R
+import com.pmb.auth.domain.register.select_job_information.entity.JobInformation
 import com.pmb.auth.presentation.register.select_job_information.viewModel.SelectJobInformationViewActions
 import com.pmb.auth.presentation.register.select_job_information.viewModel.SelectJobInformationViewModel
 import com.pmb.ballon.component.AlertComponent
@@ -68,6 +69,10 @@ fun SelectJobInformationScreen(
             BodyMediumText(
                 text = selectJobInformation.jobInformation,
                 modifier = Modifier.clickable {
+                    navigationManager.setPreviousScreenData<JobInformation?>(
+                        "jobInformation",
+                        selectJobInformation
+                    )
                     navigationManager.navigateBack()
                 },
                 color = AppTheme.colorScheme.onBackgroundNeutralDefault

@@ -15,8 +15,3 @@ data class BranchProvince(
     val id: Int,
     val province: String
 )
-
-data class AnnualIncomingPrediction(
-    val id: Int,
-    val income: String
-)

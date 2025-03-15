@@ -45,6 +45,8 @@ import com.pmb.auth.presentation.register.check_postal_code.CheckPostalCodeScree
 import com.pmb.auth.presentation.register.check_postal_code.viewModel.CheckPostalCodeViewModel
 import com.pmb.auth.presentation.register.deposit_information.DepositInformationScreen
 import com.pmb.auth.presentation.register.deposit_information.viewModel.DepositInformationViewModel
+import com.pmb.auth.presentation.register.job_information.JobInformationScreen
+import com.pmb.auth.presentation.register.job_information.viewModel.JobInformationViewModel
 import com.pmb.auth.presentation.register.national_id.RegisterNationalIdScreen
 import com.pmb.auth.presentation.register.national_id.viewModel.RegisterNationalIdViewModel
 import com.pmb.auth.presentation.register.search_opening_branch.SearchOpeningBranchScreen
@@ -75,6 +77,7 @@ sealed class AuthScreens(route: String, arguments: Map<String, String> = emptyMa
     data object SelectJobInformation :
         AuthScreens(route = "select_job_information")
 
+    data object JobInformation : AuthScreens(route = "job_information")
     data object CheckPostalCode : AuthScreens(route = "check_postal_code")
     data object DepositInformation : AuthScreens(route = "deposit_information")
     data object SearchOpeningBranch :
@@ -265,6 +268,12 @@ fun NavGraphBuilder.authScreensHandle(
         CardInformationConfirmScreen(
             navigationManager,
             viewModel = hiltViewModel<CardInformationConfirmViewModel>()
+        )
+    }
+    composable(route = AuthScreens.JobInformation.route) {
+        JobInformationScreen(
+            navigationManager,
+            viewModel = hiltViewModel<JobInformationViewModel>()
         )
     }
 }
