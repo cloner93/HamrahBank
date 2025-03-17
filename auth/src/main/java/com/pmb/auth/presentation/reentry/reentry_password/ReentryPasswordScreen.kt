@@ -60,7 +60,7 @@ fun ReentryPasswordScreen(
     AppContent(
         modifier = Modifier.padding(horizontal = 16.dp),
         topBar = {
-            Spacer(modifier = Modifier.size(20.dp))
+            Spacer(modifier = Modifier.size(24.dp))
             Box(modifier = Modifier.fillMaxWidth()) {
                 AppImage(
                     modifier = Modifier
@@ -75,7 +75,7 @@ fun ReentryPasswordScreen(
         },
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.size(20.dp))
+        Spacer(modifier = Modifier.size(32.dp))
         TextImage(
             modifier = Modifier,
             spacer = 0.dp,
@@ -90,11 +90,12 @@ fun ReentryPasswordScreen(
                 textAlign = TextAlign.Center
             )
         )
+        Spacer(modifier = Modifier.size(32.dp))
         BodySmallText(
             text = "${stringResource(R.string.username)}: ${viewState.userData?.appUserName}",
             color = AppTheme.colorScheme.onBackgroundPrimarySubdued
         )
-        Spacer(modifier = Modifier.size(16.dp))
+        Spacer(modifier = Modifier.size(32.dp))
         AppPasswordTextField(value = password,
             label = stringResource(R.string.password),
             conditionMessage = false,
@@ -119,7 +120,7 @@ fun ReentryPasswordScreen(
         Spacer(modifier = Modifier.size(8.dp))
 
         AppTextButton(modifier = Modifier.fillMaxWidth(),
-            title = stringResource(com.pmb.auth.R.string.forget_password),
+            title = stringResource(R.string.forget_password),
             onClick = {
                 navigationManager.navigate(AuthScreens.ForgetPassword)
             })

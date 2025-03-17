@@ -52,7 +52,7 @@ fun AppButtonWithIcon(
     onClick: () -> Unit
 ) {
     Button(
-        modifier = modifier,
+        modifier = modifier.heightIn(46.dp),
         shape = RoundedCornerShape(12.dp),
         colors = colors,
         enabled = enable,

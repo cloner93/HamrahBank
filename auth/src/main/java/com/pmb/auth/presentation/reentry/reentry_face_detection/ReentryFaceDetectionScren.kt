@@ -118,7 +118,7 @@ fun ReentryFaceDetectionScreen(
             color = AppTheme.colorScheme.onBackgroundPrimarySubdued
 
         )
-        Spacer(modifier = Modifier.size(20.dp))
+        Spacer(modifier = Modifier.size(41.dp))
         AnimatedVisibility(
             visible = !viewState.photoCaptured,
             exit = fadeOut(tween(100, easing = LinearEasing)),
