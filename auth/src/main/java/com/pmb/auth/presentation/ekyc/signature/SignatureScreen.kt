@@ -48,7 +48,6 @@ import com.pmb.ballon.component.base.AppImage
 import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.BodyMediumText
-import com.pmb.ballon.component.base.BodySmallText
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.camera.platform.PhotoViewActions
 import com.pmb.core.presentation.NavigationManager
@@ -142,17 +141,14 @@ fun SignatureScreen(
         Spacer(modifier = Modifier.size(24.dp))
 
         BodyMediumText(
-            text = stringResource(R.string.take_your_signature),
+            text = if (!viewState.photoCaptured) stringResource(R.string.take_your_signature) else stringResource(
+                R.string.signature_continue
+            ),
             textAlign = TextAlign.Center,
             color = AppTheme.colorScheme.onBackgroundPrimarySubdued
 
         )
-        BodySmallText(
-            text = stringResource(R.string.coverage_signature_message),
-            textAlign = TextAlign.Center,
-            color = AppTheme.colorScheme.onBackgroundPrimarySubdued
-        )
-        Spacer(modifier = Modifier.size(20.dp))
+        Spacer(modifier = Modifier.size(44.dp))
         AnimatedVisibility(
             visible = !viewState.photoCaptured,
             exit = fadeOut(tween(100, easing = LinearEasing)),

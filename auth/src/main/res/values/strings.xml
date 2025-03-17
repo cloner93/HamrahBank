@@ -39,8 +39,8 @@
     <string name="account_signature">امضای حساب</string>
     <string name="account_authentication">شروع احراز هویت چهره</string>
     <string name="start_account_authentication">احراز هویت چهره</string>
-    <string name="take_your_signature">لطفا از امضای خود بر روی برگه کاملا سفید عکس بگیرید.</string>
-    <string name="coverage_signature_message">لطفا مطمئن شوید که امضای شما کامل در کادر قرار گیرد.</string>
+    <string name="take_your_signature">لطفا مطمئن شوید که امضای شما کامل در کادر قرار گیرد.\n لطفا از امضای خود بر روی برگه کاملا سفید عکس بگیرید.</string>
+    <string name="signature_continue">در صورتی که تصویر، مورد تاییدتان است، دکمه ادامه را فشار دهید.</string>
     <string name="birthday">تاریخ تولد</string>
     <string name="face_photo">تصویر از چهره</string>
     <string name="video_authentication">ویدئو از چهره</string>
