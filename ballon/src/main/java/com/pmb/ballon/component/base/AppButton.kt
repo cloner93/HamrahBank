@@ -2,6 +2,7 @@ package com.pmb.ballon.component.base
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -29,7 +30,7 @@ fun AppButton(
     onClick: () -> Unit
 ) {
     Button(
-        modifier = modifier,
+        modifier = modifier.heightIn(min = 46.dp),
         shape = RoundedCornerShape(12.dp),
         colors = colors,
         enabled = enable,

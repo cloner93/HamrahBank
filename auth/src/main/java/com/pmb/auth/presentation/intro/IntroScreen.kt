@@ -1,5 +1,7 @@
 package com.pmb.auth.presentation.intro
 
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,14 +14,20 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.pmb.auth.R
 import com.pmb.auth.presentation.AuthScreens
-import com.pmb.ballon.component.TextImage
 import com.pmb.ballon.component.base.AppButton
+import com.pmb.ballon.component.base.AppImage
 import com.pmb.ballon.component.base.AppOutlineButton
+import com.pmb.ballon.models.ImageStyle
+import com.pmb.ballon.models.Size
 import com.pmb.core.presentation.NavigationManager
 
 @Composable
@@ -28,10 +36,28 @@ fun IntroScreen(
     modifier: Modifier = Modifier,
 ) {
     Box(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier
+            .fillMaxSize()
+            .background(
+                brush = Brush.linearGradient(
+                    colors = listOf(Color(0xFFFBE7EB), Color.White),
+                    start = Offset(0f, 0f),
+                    end = Offset(1000f, 2000f)
+                )
+            ),
         contentAlignment = Alignment.Center
     ) {
-
+        Canvas(
+            modifier = Modifier
+                .fillMaxSize()
+                .alpha(0.45f)
+        ) {
+            drawCircle(
+                color = Color.White,
+                radius = 418.dp.toPx(),
+                center = Offset(46.dp.toPx() + 418.dp.toPx(), (-256).dp.toPx() + 418.dp.toPx())
+            )
+        }
         Column(modifier = modifier.matchParentSize()) {
             Column(
                 modifier = modifier
@@ -41,9 +67,13 @@ fun IntroScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                TextImage(
-                    image = com.pmb.ballon.R.drawable.img_mellat_logo,
-                    text = stringResource(R.string.mellat_bank)
+                AppImage(
+                    image = painterResource(com.pmb.ballon.R.drawable.img_mellat_logo),
+                    style = ImageStyle(size = Size.FIX(all = 128.dp))
+                )
+                Spacer(modifier = Modifier.size(8.dp))
+                AppImage(
+                    image = painterResource(com.pmb.ballon.R.drawable.ic_mellat_description),
                 )
             }
             Column(
@@ -74,28 +104,3 @@ fun IntroScreen(
     }
 }
 
-
-@Preview
-@Composable
-private fun SplashViewPreview() {
-
-    Box {
-        Column {
-            Spacer(modifier = Modifier.fillMaxHeight())
-
-            AppButton(
-                modifier = Modifier.fillMaxWidth(),
-                title = stringResource(R.string.login_to_hamrah_bank)
-            ) {
-
-            }
-
-            AppButton(
-                modifier = Modifier.fillMaxWidth(),
-                title = stringResource(R.string.register)
-            ) {
-            }
-        }
-
-    }
-}

@@ -41,6 +41,8 @@ import com.pmb.auth.presentation.reentry.reentry_face_detection.viewModel.Reentr
 import com.pmb.auth.presentation.reentry.reentry_password.ReentryPasswordScreen
 import com.pmb.auth.presentation.reentry.reentry_password.viewModel.ReentryPasswordViewModel
 import com.pmb.auth.presentation.register.account_opening.AccountOpeningScreen
+import com.pmb.auth.presentation.register.authentication_information.AuthenticationInformationScreen
+import com.pmb.auth.presentation.register.authentication_information.viewModel.AuthenticationInformationViewModel
 import com.pmb.auth.presentation.register.check_postal_code.CheckPostalCodeScreen
 import com.pmb.auth.presentation.register.check_postal_code.viewModel.CheckPostalCodeViewModel
 import com.pmb.auth.presentation.register.deposit_information.DepositInformationScreen
@@ -102,6 +104,7 @@ sealed class AuthScreens(route: String, arguments: Map<String, String> = emptyMa
     data object CardInformation : AuthScreens(route = "card_information")
     data object ScanCard : AuthScreens(route = "scan_card")
     data object CardInformationConfirmation : AuthScreens("card_information_confirmation")
+    data object AuthenticationInformation : AuthScreens("authentication_information")
 }
 
 
@@ -274,6 +277,12 @@ fun NavGraphBuilder.authScreensHandle(
         JobInformationScreen(
             navigationManager,
             viewModel = hiltViewModel<JobInformationViewModel>()
+        )
+    }
+    composable(route = AuthScreens.AuthenticationInformation.route) {
+        AuthenticationInformationScreen(
+            navigationManager,
+            viewModel = hiltViewModel<AuthenticationInformationViewModel>()
         )
     }
 }
