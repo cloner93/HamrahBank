@@ -57,7 +57,7 @@ fun RegisterNationalIdScreen(
         modifier = Modifier.padding(horizontal = 24.dp),
         topBar = {
             AppTopBar(
-                title = stringResource(com.pmb.auth.R.string.national_id_serial),
+                title = stringResource(R.string.national_id_serial),
                 onBack = { navigationManager.navigateBack() })
         },
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -78,7 +78,7 @@ fun RegisterNationalIdScreen(
     ) {
         Spacer(modifier = Modifier.size(24.dp))
         BodyMediumText(
-            text = stringResource(com.pmb.auth.R.string.national_id_information),
+            text = stringResource(R.string.national_id_information),
             textAlign = TextAlign.Center,
             color = AppTheme.colorScheme.onBackgroundPrimarySubdued
         )
@@ -86,7 +86,7 @@ fun RegisterNationalIdScreen(
         AppSingleTextField(
             modifier = Modifier.fillMaxWidth(),
             value = nationalSerialId,
-            label = stringResource(com.pmb.auth.R.string.national_id_serial),
+            label = stringResource(R.string.national_id_serial),
             onValueChange = {
                 nationalSerialId = it
             },

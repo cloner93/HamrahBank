@@ -81,7 +81,7 @@ fun CheckPostalCodeScreen(
         Spacer(modifier = Modifier.size(24.dp))
         BodyMediumText(
             modifier = Modifier.fillMaxWidth(),
-            text = stringResource(com.pmb.auth.R.string.card_sending_info),
+            text = stringResource(R.string.card_sending_info),
             textAlign = TextAlign.Center,
             color = AppTheme.colorScheme.onBackgroundPrimarySubdued
         )
@@ -89,7 +89,7 @@ fun CheckPostalCodeScreen(
         AppNumberTextField(
             modifier = Modifier.fillMaxWidth(),
             value = postalCode,
-            label = stringResource(com.pmb.auth.R.string.postal_code),
+            label = stringResource(R.string.postal_code),
             onValueChange = {
                 if (postalCode.length < 10) postalCode = it
             },
