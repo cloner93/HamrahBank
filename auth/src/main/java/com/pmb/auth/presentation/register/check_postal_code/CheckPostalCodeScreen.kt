@@ -85,7 +85,7 @@ fun CheckPostalCodeScreen(
             textAlign = TextAlign.Center,
             color = AppTheme.colorScheme.onBackgroundPrimarySubdued
         )
-        Spacer(modifier = Modifier.size(16.dp))
+        Spacer(modifier = Modifier.size(24.dp))
         AppNumberTextField(
             modifier = Modifier.fillMaxWidth(),
             value = postalCode,

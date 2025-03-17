@@ -95,19 +95,19 @@ fun AuthenticationSelectServicesScreen(
             }
         ) {
 
-            Spacer(modifier = Modifier.size(16.dp))
+            Spacer(modifier = Modifier.size(24.dp))
             Headline6Text(
                 text = stringResource(R.string.select_services_title),
                 color = AppTheme.colorScheme.onBackgroundNeutralDefault,
                 textAlign = TextAlign.Center
             )
-            Spacer(modifier = Modifier.size(30.dp))
+            Spacer(modifier = Modifier.size(60.dp))
             BodySmallText(
                 text = stringResource(R.string.select_services_description),
                 color = AppTheme.colorScheme.onBackgroundPrimarySubdued,
                 textAlign = TextAlign.Center
             )
-            Spacer(modifier = Modifier.size(10.dp))
+            Spacer(modifier = Modifier.size(12.dp))
             selectServices.selectServicesList.forEach { selectServiceObject ->
                 RoundedCornerCheckboxComponent(
                     title = selectServiceObject.title,
@@ -120,7 +120,7 @@ fun AuthenticationSelectServicesScreen(
 
                     viewModel.changeSelectServicesFlag(selectServiceObject.id)
                 }
-                Spacer(modifier = Modifier.size(10.dp))
+                Spacer(modifier = Modifier.size(12.dp))
             }
         }
     }
