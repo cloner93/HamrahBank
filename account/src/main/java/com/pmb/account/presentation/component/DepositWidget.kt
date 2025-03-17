@@ -1,5 +1,6 @@
 package com.pmb.account.presentation.component
 
+import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -18,6 +19,7 @@ import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.outlined.MoreHoriz
 import androidx.compose.material.icons.outlined.Visibility
+import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
@@ -26,11 +28,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import com.pmb.ballon.R
 import com.pmb.ballon.component.base.AppButtonIcon
 import com.pmb.ballon.component.base.AppIcon
 import com.pmb.ballon.component.base.BodyMediumText
@@ -42,6 +46,7 @@ import com.pmb.ballon.models.Size
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.ballon.ui.theme.HamrahBankTheme
 import com.pmb.core.utils.toCurrency
+import java.util.Locale
 
 data class DepositModel(
     val title: String,
@@ -49,13 +54,15 @@ data class DepositModel(
     val amount: Double,
     val currency: String,
     val ibanNumber: String,
-    val cardNumber: String
+    val cardNumber: String,
+    var isSelected: Boolean = false
 )
 
 @Composable
 fun DepositWidget(
     modifier: Modifier = Modifier,
     item: DepositModel,
+    isAmountVisible: Boolean,
     moreClick: () -> Unit,
     onAmountVisibilityClick: () -> Unit,
     onDepositListChipsClick: () -> Unit,
@@ -81,7 +88,7 @@ fun DepositWidget(
                     onClick = moreClick
                 )
                 AppButtonIcon(
-                    icon = Icons.Outlined.Visibility,
+                    icon = if (isAmountVisible) Icons.Outlined.Visibility else Icons.Outlined.VisibilityOff,
                     onClick = onAmountVisibilityClick
                 )
                 Spacer(modifier = Modifier.weight(1f))
@@ -101,9 +108,13 @@ fun DepositWidget(
             CaptionText(modifier = Modifier.padding(horizontal = 8.dp), text = item.title)
             Spacer(modifier = Modifier.height(8.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Headline2Text(text = item.amount.toCurrency())
-                Spacer(modifier = Modifier.width(6.dp))
-                BodySmallText(text = item.currency)
+                if (isAmountVisible) {
+                    Headline2Text(text = item.amount.toCurrency())
+                    Spacer(modifier = Modifier.width(6.dp))
+                    BodySmallText(text = item.currency)
+                } else {
+                    Headline2Text(text = "********")
+                }
             }
         }
     }
@@ -147,18 +158,53 @@ private fun DepositPrev() {
         title = "حساب قرض الحسنه",
         depositNumber = "1232324-56",
         amount = 10000023400.0,
-        currency = stringResource(com.pmb.ballon.R.string.real_carrency),
+        currency = stringResource(R.string.real_carrency),
         ibanNumber = "IR1234567890098765432112",
         cardNumber = "6219861920241234",
     )
-    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+    CompositionLocalProvider(
+        LocalLayoutDirection provides LayoutDirection.Rtl,
+        LocalConfiguration provides Configuration().apply {
+            setLocale(Locale("fa"))
+
+        }) {
         HamrahBankTheme {
+
             DepositWidget(
                 item = dip,
+                isAmountVisible = true,
                 moreClick = {},
-                onAmountVisibilityClick = { },
-                onDepositListChipsClick = { }
-            )
+                onAmountVisibilityClick = { }
+            ) { }
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun DepositPrev2() {
+    val dip = DepositModel(
+        title = "حساب قرض الحسنه",
+        depositNumber = "1232324-56",
+        amount = 10000023400.0,
+        currency = stringResource(R.string.real_carrency),
+        ibanNumber = "IR1234567890098765432112",
+        cardNumber = "6219861920241234",
+    )
+    CompositionLocalProvider(
+        LocalLayoutDirection provides LayoutDirection.Rtl,
+        LocalConfiguration provides Configuration().apply {
+            setLocale(Locale("fa"))
+
+        }) {
+        HamrahBankTheme {
+
+            DepositWidget(
+                item = dip,
+                isAmountVisible = false,
+                moreClick = {},
+                onAmountVisibilityClick = { }
+            ) { }
         }
     }
 }

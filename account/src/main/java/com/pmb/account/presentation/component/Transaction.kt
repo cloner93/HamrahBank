@@ -1,5 +1,6 @@
 package com.pmb.account.presentation.component
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,7 +21,11 @@ import com.pmb.ballon.models.Size
 import com.pmb.core.utils.toCurrency
 
 enum class TransactionType {
-    WITHDRAWAL, RECEIVE
+    DEPOSIT,
+    WITHDRAWAL,
+    TRANSFER,
+    RECEIVE,
+    FEE
 }
 
 
@@ -33,8 +38,15 @@ data class TransactionModel(
 )
 
 @Composable
-fun TransactionRow(item: TransactionModel) {
-    Row(modifier = Modifier.height(48.dp), verticalAlignment = Alignment.CenterVertically) {
+fun TransactionRow(item: TransactionModel, isAmountVisible: Boolean, onClick: () -> Unit = {}) {
+    Row(
+        modifier = Modifier
+            .height(48.dp)
+            .clickable {
+                onClick()
+            },
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         AppImage(
             image = if (item.type == TransactionType.WITHDRAWAL) R.drawable.ic_withdraw else R.drawable.ic_receive,
             style = ImageStyle(size = Size.FIX(42.dp))
@@ -47,9 +59,13 @@ fun TransactionRow(item: TransactionModel) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Headline6Text(text = item.title)
                 Spacer(modifier = Modifier.weight(1f))
-                Headline6Text(text = item.amount.toCurrency())
-                Spacer(modifier = Modifier.width(6.dp))
-                CaptionText(text = item.currency)
+                if (isAmountVisible) {
+                    Headline6Text(text = item.amount.toCurrency())
+                    Spacer(modifier = Modifier.width(6.dp))
+                    CaptionText(text = item.currency)
+                } else {
+                    Headline6Text(text = "********")
+                }
             }
             CaptionText(text = item.date)
         }
