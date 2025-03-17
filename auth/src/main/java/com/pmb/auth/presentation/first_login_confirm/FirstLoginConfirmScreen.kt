@@ -1,5 +1,6 @@
 package com.pmb.auth.presentation.first_login_confirm
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -27,6 +28,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.pmb.auth.R
+import com.pmb.auth.presentation.component.ChipWithIcon
 import com.pmb.auth.presentation.component.ShowInvalidLoginBottomSheet
 import com.pmb.auth.presentation.first_login_confirm.viewModel.FirstLoginConfirmViewActions
 import com.pmb.auth.presentation.first_login_confirm.viewModel.FirstLoginConfirmViewEvents
@@ -97,7 +99,7 @@ fun FirstLoginConfirmScreen(
             textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.size(32.dp))
-        ChipWithIcon(value = phonenumber, clickable = { navigationManager.navigateBack() })
+        ChipWithIcon(value = phonenumber, icon = com.pmb.ballon.R.drawable.ic_edit,clickable = { navigationManager.navigateBack() })
         Spacer(modifier = Modifier.size(32.dp))
         AppNumberTextField(
             modifier = Modifier.fillMaxWidth(),
@@ -151,31 +153,3 @@ fun FirstLoginConfirmScreen(
         })
 }
 
-@Composable
-fun ChipWithIcon(value: String, clickable: () -> Unit) {
-    Box(
-        modifier = Modifier
-            .wrapContentSize()
-            .height(32.dp)
-            .clip(shape = RoundedCornerShape(16.dp))
-            .border(
-                width = 1.dp,
-                color = AppTheme.colorScheme.strokeNeutral1Default,
-                shape = RoundedCornerShape(16.dp)
-            )
-            .clickable { clickable.invoke() }
-            .padding(horizontal = 10.dp, vertical = 6.dp),
-    ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            AppIcon(
-                icon = Icons.Default.Edit, // Edit icon
-                style = IconStyle(
-                    tint = AppTheme.colorScheme.onBackgroundNeutralSubdued,
-                    size = Size.FIX(18.dp)
-                )
-            )
-            Spacer(modifier = Modifier.size(6.dp))
-            BodySmallText(text = value, color = AppTheme.colorScheme.onBackgroundNeutralDefault)
-        }
-    }
-}
