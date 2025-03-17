@@ -117,6 +117,14 @@ fun JobInformationScreen(
                     annualIncome = it
                 }
             }
+            AppButton(modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 16.dp, end = 16.dp, top = 16.dp),
+                enable = false,
+                title = stringResource(R.string.upload_document),
+                onClick = {
+
+                })
         }
     }
     if (viewState.isLoading) {

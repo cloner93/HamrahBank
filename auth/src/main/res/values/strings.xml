@@ -87,4 +87,5 @@
     <string name="card_number">شماره کارت</string>
     <string name="or">یا</string>
     <string name="card_scan">اسکن کارت بانکی</string>
+    <string name="upload_document">آپلود مدارک</string>
 </resources>
