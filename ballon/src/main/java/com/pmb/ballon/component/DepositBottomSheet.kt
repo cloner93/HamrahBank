@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
@@ -49,7 +50,8 @@ fun DepositBottomSheet(
     onSelect: (DepositBottomSheetModel) -> Unit
 ) {
     var isVisible by remember { mutableStateOf(true) }
-    AppBottomSheet(isVisible = isVisible,
+    AppBottomSheet(
+        isVisible = isVisible,
         cancelable = true,
         dragHandle = { BottomSheetDefaults.DragHandle() },
         onDismiss = { onDismiss() },
@@ -59,8 +61,11 @@ fun DepositBottomSheet(
             ) {
                 title?.let { Headline6Text(text = it) }
                 LazyColumn {
-                    items(items.size) { item ->
-                        DepositRow(items[item])
+                    items(items) { item ->
+                        DepositRow(item, onClick = { selectedItem ->
+                            isVisible = false
+                            onSelect(selectedItem)
+                        })
                     }
                 }
             }
@@ -70,26 +75,31 @@ fun DepositBottomSheet(
 @Composable
 private fun DepositRow(
     deposit: DepositBottomSheetModel,
-    selected: Boolean = false,
     onClick: (DepositBottomSheetModel) -> Unit = {}
 ) {
+    var checkBoxState by remember { mutableStateOf(deposit.selected) }
+
     Row(
         modifier = Modifier
             .padding(end = 12.dp, top = 12.dp, bottom = 12.dp)
             .clickable {
-                onClick(deposit)
+                checkBoxState = !checkBoxState
+                onClick(deposit.copy(selected = checkBoxState))
             },
         verticalAlignment = Alignment.CenterVertically
     ) {
-        CircleCheckbox(selected = selected) {}
+        CircleCheckbox(selected = checkBoxState, onChecked = {
+            checkBoxState = !checkBoxState
+            onClick(deposit.copy(selected = checkBoxState))
+        })
+
         Column(modifier = Modifier.weight(1f)) {
             Headline6Text(text = deposit.title)
             Spacer(modifier = Modifier.height(4.dp))
             CaptionText(text = deposit.desc)
         }
-        Column(
-            horizontalAlignment = Alignment.End
-        ) {
+
+        Column(horizontalAlignment = Alignment.End) {
             BodyMediumText(
                 text = deposit.depositNumber,
                 color = AppTheme.colorScheme.onBackgroundNeutralDefault
@@ -101,7 +111,6 @@ private fun DepositRow(
                 CaptionText(text = deposit.currency)
             }
         }
-        // check button
     }
 }
 
@@ -132,6 +141,25 @@ private fun DepositItemPrev() {
         desc = "تنخواه",
         depositNumber = "123456",
         amount = 100323232.233,
+        currency = stringResource(R.string.real_carrency),
+        ibanNumber = "IR1234567890098765432112",
+        cardNumber = "6219861920241234",
+        state = 1,
+    )
+    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+        DepositRow(deposit)
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun DepositItem2Prev() {
+    val deposit = DepositBottomSheetModel(
+        title = "حساب قرض الحسنه آقای مشتاق مودت",
+        desc = "تنخواه",
+        depositNumber = "123456",
+        amount = 100323232.233,
+        selected = true,
         currency = stringResource(R.string.real_carrency),
         ibanNumber = "IR1234567890098765432112",
         cardNumber = "6219861920241234",

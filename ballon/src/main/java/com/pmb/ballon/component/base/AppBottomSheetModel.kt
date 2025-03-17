@@ -8,6 +8,8 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.graphics.Color
+import com.pmb.ballon.ui.theme.AppTheme
 import kotlinx.coroutines.launch
 
 
@@ -40,6 +42,7 @@ fun AppBottomSheet(
     isVisible: Boolean,
     cancelable: Boolean = false,
     onDismiss: () -> Unit,
+    containerColor: Color = AppTheme.colorScheme.background1Neutral,
     dragHandle: @Composable () -> Unit = {},
     content: @Composable ColumnScope.() -> Unit
 ) {
@@ -68,6 +71,7 @@ fun AppBottomSheet(
                 onDismiss() // Trigger onDismiss after hiding
             }
         },
+        containerColor = containerColor,
         sheetState = sheetState,
         dragHandle = dragHandle,
         content = content
