@@ -22,6 +22,8 @@ import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppImage
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.BodyMediumText
+import com.pmb.ballon.models.ImageStyle
+import com.pmb.ballon.models.Size
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.core.presentation.NavigationManager
 
@@ -31,7 +33,7 @@ fun AuthenticationScreen(navigationManager: NavigationManager) {
         modifier = Modifier.padding(horizontal = 16.dp),
         topBar = {
             AppTopBar(
-                title = stringResource(R.string.account_authentication),
+                title = stringResource(R.string.start_account_authentication),
                 onBack = {
                     navigationManager.navigateBack()
                 }
@@ -43,26 +45,26 @@ fun AuthenticationScreen(navigationManager: NavigationManager) {
                 .fillMaxWidth()
                 .padding(start = 16.dp, end = 16.dp, top = 16.dp),
                 enable = true,
-                title = stringResource(R.string.start_account_authentication),
+                title = stringResource(R.string.account_authentication),
                 onClick = {
                     navigationManager.navigate(AuthScreens.FacePhotoCapture)
                 })
         },
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Spacer(modifier = Modifier.size(30.dp))
+        Spacer(modifier = Modifier.size(24.dp))
         AppImage(
-            modifier = Modifier.size(128.dp),
+            style =ImageStyle(size = Size.FIX(128.dp)),
             image = painterResource(com.pmb.ballon.R.drawable.ic_authentication),
         )
 
-        Spacer(modifier = Modifier.size(30.dp))
+        Spacer(modifier = Modifier.size(32.dp))
         BodyMediumText(
             text = stringResource(R.string.start_authentication_description),
             color = AppTheme.colorScheme.onBackgroundPrimarySubdued,
             textAlign = TextAlign.Center
         )
-        Spacer(modifier = Modifier.size(16.dp))
+        Spacer(modifier = Modifier.size(32.dp))
         BodyMediumText(
             modifier = Modifier.fillMaxWidth(),
             text = buildAnnotatedString {

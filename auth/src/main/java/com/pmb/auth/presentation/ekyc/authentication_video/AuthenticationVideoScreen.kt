@@ -58,6 +58,7 @@ import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppImage
 import com.pmb.ballon.component.base.AppLoading
+import com.pmb.ballon.component.base.AppOutlineButton
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.component.base.Headline4Text
@@ -195,14 +196,24 @@ fun AuthenticationVideoScreen(
             AnimatedVisibility(
                 visible = viewState.videoCaptured,
             ) {
-                AppButton(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp, top = 16.dp),
-                    enable = true,
-                    title = stringResource(R.string._continue),
-                    onClick = {
-                        viewModel.handle(AuthenticationCapturingVideoViewActions.SendVideo("FF"))
-                    })
+                Column {
+                    AppOutlineButton(
+                        modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp, top = 16.dp),
+                        title = stringResource(R.string.record_again),
+                        onClick = {
+                            viewModel.handle(AuthenticationCapturingVideoViewActions.ClearVideo)
+                        }
+                    )
+                    Spacer(modifier = Modifier.size(10.dp))
+                    AppButton(modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 16.dp, end = 16.dp, top = 16.dp),
+                        enable = true,
+                        title = stringResource(R.string._continue),
+                        onClick = {
+                            viewModel.handle(AuthenticationCapturingVideoViewActions.SendVideo("FF"))
+                        })
+                }
             }
         },
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -240,7 +251,7 @@ fun AuthenticationVideoScreen(
                     color = AppTheme.colorScheme.foregroundPrimaryDefault
                 )
         }
-        Spacer(modifier = Modifier.size(20.dp))
+        Spacer(modifier = Modifier.size(44.dp))
         if (viewState.savedFileUri != null && viewState.videoCaptured) {
             Box(
                 modifier = Modifier
@@ -271,19 +282,6 @@ fun AuthenticationVideoScreen(
                         )
                 )
 
-                IconButton(
-                    modifier = Modifier
-                        .align(Alignment.BottomStart)
-                        .padding(8.dp)
-                        .size(48.dp),
-                    onClick = {
-                        viewModel.handle(AuthenticationCapturingVideoViewActions.ClearVideo)
-                    }
-                ) {
-                    AppImage(
-                        image = painterResource(com.pmb.ballon.R.drawable.ic_rounded_delete),
-                    )
-                }
             }
         } else {
             Box(

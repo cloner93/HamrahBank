@@ -60,6 +60,7 @@
     <string name="activation_internet_bank"> فعالسازی اینترنت بانک</string>
     <string name="receive_internet_card"> دریافت کارت بانکی</string>
     <string name="bank_card">  کارت بانکی</string>
+    <string name="record_again">ضبط مجدد</string>
     <string name="show_details">مشاهده جزئیات</string>
     <string name="check_authentication_data">اطلاعات شما در دست بررسی می باشد.</string>
     <string name="result_authentication_info">نتایج بررسی حداکثر طی دو روز کاری از طریق پیامک به اطلاع شما خواهد رسید. سپس می توانید مراحل باقی مانده را تکمیل کنید.</string>
