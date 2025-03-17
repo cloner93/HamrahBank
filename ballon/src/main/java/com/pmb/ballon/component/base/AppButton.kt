@@ -101,7 +101,7 @@ fun AppOutlineButton(
     onClick: () -> Unit
 ) {
     OutlinedButton(
-        modifier = modifier,
+        modifier = modifier.heightIn(min=46.dp),
         shape = RoundedCornerShape(12.dp),
         colors = colors,
         enabled = enable,

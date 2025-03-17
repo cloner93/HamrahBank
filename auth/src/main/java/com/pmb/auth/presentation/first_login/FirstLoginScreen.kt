@@ -73,11 +73,6 @@ fun FirstLoginScreen(navigationManager: NavigationManager, viewModel: FirstLogin
                 })
         }
     ) {
-//        Column(
-//            modifier = Modifier
-//                .padding(24.dp),
-//            horizontalAlignment = Alignment.CenterHorizontally
-//        ) {
         Spacer(modifier = Modifier.size(24.dp))
 
         Image(
@@ -93,7 +88,7 @@ fun FirstLoginScreen(navigationManager: NavigationManager, viewModel: FirstLogin
             onValidate = { isMobile = it },
             onValueChange = { phoneNumber = it })
 
-        Spacer(modifier = Modifier.size(32.dp))
+        Spacer(modifier = Modifier.size(24.dp))
 
 
         AppSingleTextField(
@@ -106,7 +101,7 @@ fun FirstLoginScreen(navigationManager: NavigationManager, viewModel: FirstLogin
             },
         )
 
-        Spacer(modifier = Modifier.size(32.dp))
+        Spacer(modifier = Modifier.size(24.dp))
 
         AppPasswordTextField(modifier = Modifier.fillMaxWidth(),
             value = password,
@@ -136,10 +131,6 @@ fun FirstLoginScreen(navigationManager: NavigationManager, viewModel: FirstLogin
             onClick = {
                 navigationManager.navigate(AuthScreens.ForgetPassword)
             })
-
-//            Spacer(modifier = Modifier.weight(1f))
-
-//        }
     }
     if (viewState.loading) {
         AppLoading()
