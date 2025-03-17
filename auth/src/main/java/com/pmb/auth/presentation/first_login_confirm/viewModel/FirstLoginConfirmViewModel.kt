@@ -199,10 +199,11 @@ class FirstLoginConfirmViewModel @Inject constructor(
         remainingTime: Long,
         timerStatus: TimerStatus = TimerStatus.IS_LOADING
     ) {
+        if (viewState.value.timerState?.get(timerId)?.remainingTime == remainingTime) return
         setState {
             it.copy(
-                timerState = it.timerState?.toMutableMap().apply {
-                    this?.set(timerId, TimerState(remainingTime, timerStatus))
+                timerState = it.timerState?.toMutableMap()?.apply {
+                    this[timerId] = TimerState(remainingTime, timerStatus)
                 }
             )
         }

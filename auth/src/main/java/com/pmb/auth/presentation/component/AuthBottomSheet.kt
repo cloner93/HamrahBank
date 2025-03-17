@@ -64,40 +64,39 @@ fun ShowChangedNewPasswordBottomSheet(onDismiss: () -> Unit) {
 
 @Composable
 fun ShowInvalidLoginBottomSheet(expired: String, onDismiss: () -> Unit) {
-    var isVisible by remember { mutableStateOf(true) }
-    AppBottomSheet(
-        isVisible = isVisible,
-        onDismiss = { onDismiss() },
-        content = {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                TextImage(
-                    image = com.pmb.ballon.R.drawable.img_info_circle,
-                    text = stringResource(R.string.msg_could_not_login),
-                    imageStyle = ImageStyle(size = Size.FIX(80.dp)),
-                )
-                Spacer(modifier = Modifier.size(12.dp))
-                BodyMediumText(
-                    text = stringResource(R.string.msg_invalid_login_credentials),
-                    color = AppTheme.colorScheme.onBackgroundNeutralSubdued,
-                    textAlign = TextAlign.Center
-                )
-                Spacer(modifier = Modifier.size(24.dp))
-                AppTextButton(
-                    modifier = Modifier.fillMaxWidth(),
-                    title = "امکان  ورود مجدد تا ${expired}",
-                    enable = false,
-                    onClick = { isVisible = false })
-                Spacer(modifier = Modifier.size(8.dp))
-                AppButton(modifier = Modifier.fillMaxWidth(),
-                    title = stringResource(R.string.i_understand),
-                    onClick = { isVisible = false })
-            }
-        })
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        TextImage(
+            image = com.pmb.ballon.R.drawable.img_info_circle,
+            text = stringResource(R.string.msg_could_not_login),
+            imageStyle = ImageStyle(size = Size.FIX(80.dp)),
+        )
+        Spacer(modifier = Modifier.size(12.dp))
+        BodyMediumText(
+            text = stringResource(R.string.msg_invalid_login_credentials),
+            color = AppTheme.colorScheme.onBackgroundNeutralSubdued,
+            textAlign = TextAlign.Center
+        )
+        Spacer(modifier = Modifier.size(24.dp))
+        AppTextButton(
+            modifier = Modifier.fillMaxWidth(),
+            title = "امکان  ورود مجدد تا ${expired}",
+            enable = false,
+            onClick = {
+                onDismiss()
+            })
+        Spacer(modifier = Modifier.size(8.dp))
+        AppButton(modifier = Modifier.fillMaxWidth(),
+            title = stringResource(R.string.i_understand),
+            onClick = {
+                onDismiss()
+            })
+    }
+//        })
 }
 
 

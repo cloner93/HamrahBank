@@ -1,19 +1,13 @@
 package com.pmb.auth.presentation.first_login_confirm
 
-import androidx.annotation.DrawableRes
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
+import android.util.Log
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -23,7 +17,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -38,28 +31,41 @@ import com.pmb.auth.presentation.first_login_confirm.viewModel.TimerTypeId
 import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppContent
-import com.pmb.ballon.component.base.AppIcon
 import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.component.base.AppNumberTextField
 import com.pmb.ballon.component.base.AppTextButton
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.BodyMediumText
-import com.pmb.ballon.component.base.BodySmallText
-import com.pmb.ballon.models.IconStyle
-import com.pmb.ballon.models.Size
-import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.core.presentation.NavigationManager
 import com.pmb.home.presentation.HomeScreens
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FirstLoginConfirmScreen(
     navigationManager: NavigationManager,
     viewModel: FirstLoginConfirmViewModel
 ) {
+    val viewState by viewModel.viewState.collectAsState()
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+
+    // ✅ **Control BottomSheet with a stable state**
+    var showBottomSheet by remember { mutableStateOf(viewState.isShowBottomSheet) }
+
+    // ✅ **Listen to state changes but prevent recompositions**
+    LaunchedEffect(viewState.isShowBottomSheet) {
+        showBottomSheet = viewState.isShowBottomSheet
+        if (showBottomSheet) {
+            sheetState.show()
+        } else {
+            sheetState.hide()
+        }
+    }
+
+
     val phonenumber by remember { mutableStateOf(viewModel.getAccountModel().mobileNumber) }
     var otp by remember { mutableStateOf("") }
-    val viewState by viewModel.viewState.collectAsState()
+
     val title =
         if (viewState.timerState?.get(TimerTypeId.RESEND_TIMER)?.timerStatus == TimerStatus.IS_RUNNING) {
 
@@ -99,7 +105,10 @@ fun FirstLoginConfirmScreen(
             textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.size(32.dp))
-        ChipWithIcon(value = phonenumber, icon = com.pmb.ballon.R.drawable.ic_edit,clickable = { navigationManager.navigateBack() })
+        ChipWithIcon(
+            value = phonenumber,
+            icon = com.pmb.ballon.R.drawable.ic_edit,
+            clickable = { navigationManager.navigateBack() })
         Spacer(modifier = Modifier.size(32.dp))
         AppNumberTextField(
             modifier = Modifier.fillMaxWidth(),
@@ -138,18 +147,33 @@ fun FirstLoginConfirmScreen(
     if (viewState.alertModelState != null) {
         AlertComponent(viewState.alertModelState!!)
     }
-    if (viewState.isShowBottomSheet) ShowInvalidLoginBottomSheet(
-        expired =
-        "${viewState.calculateHour(TimerTypeId.LOCK_TIMER)}:${viewState.calculateMinute(TimerTypeId.LOCK_TIMER)}:${
-            viewState.calculateSecond(
-                TimerTypeId.LOCK_TIMER
-            )
-        }",
-        onDismiss = {
-            viewModel.handle(
-                FirstLoginConfirmViewActions.ClearBottomSheet
-            )
-            navigationManager.navigateBack()
-        })
+    if (showBottomSheet) {
+        ModalBottomSheet(
+            onDismissRequest = {
+                viewModel.handle(FirstLoginConfirmViewActions.ClearBottomSheet)
+                showBottomSheet = false
+                navigationManager.navigateBack()
+            },
+            sheetState = sheetState
+        ) {
+            ShowInvalidLoginBottomSheet(
+                expired =
+                "${viewState.calculateHour(TimerTypeId.LOCK_TIMER)}:${
+                    viewState.calculateMinute(
+                        TimerTypeId.LOCK_TIMER
+                    )
+                }:${
+                    viewState.calculateSecond(
+                        TimerTypeId.LOCK_TIMER
+                    )
+                }",
+                onDismiss = {
+                    viewModel.handle(
+                        FirstLoginConfirmViewActions.ClearBottomSheet
+                    )
+                    navigationManager.navigateBack()
+                })
+        }
+    }
 }
 
