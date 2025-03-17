@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -20,7 +21,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.pmb.account.R
 import com.pmb.account.presentation.component.CardModel
@@ -31,12 +35,12 @@ import com.pmb.ballon.component.base.AppFAB
 import com.pmb.ballon.models.IconStyle
 import com.pmb.ballon.models.MenuSheetModel
 import com.pmb.ballon.ui.theme.AppTheme
-import com.pmb.core.presentation.NavigationManager
+import com.pmb.ballon.ui.theme.HamrahBankTheme
 import kotlin.random.Random
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun CardsScreen(navigationManager: NavigationManager) {
+fun CardsScreen(/*navigationManager: NavigationManager*/) {
     var showDetailCardBottomSheet by remember { mutableStateOf(false) }
     var showFabBottomSheet by remember { mutableStateOf(false) }
     var currentCardModel by remember { mutableStateOf<CardModel?>(null) }
@@ -47,8 +51,8 @@ fun CardsScreen(navigationManager: NavigationManager) {
         floatingActionButton = {
             AppFAB(
                 icon = com.pmb.ballon.R.drawable.ic_add,
-                containerColor = Color(0xffE8E8EB),
-                contentColor = AppTheme.colorScheme.iconColor,
+                containerColor = AppTheme.colorScheme.foregroundNeutralDefault,
+                contentColor = AppTheme.colorScheme.onForegroundNeutralDefault,
                 onClick = { showFabBottomSheet = true })
         },
         floatingActionButtonPosition = FabPosition.Start // Optional: position the FAB
@@ -64,8 +68,16 @@ fun CardsScreen(navigationManager: NavigationManager) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 AppButtonIcon(
-                    icon = com.pmb.ballon.R.drawable.ic_help_filled,
-                    style = IconStyle(tint = Color(0xFFAAABAE)),
+                    icon = com.pmb.ballon.R.drawable.ic_help,
+                    style = IconStyle(tint = Color.Black),
+                    onClick = {
+
+                    })
+
+
+                AppButtonIcon(
+                    icon = com.pmb.ballon.R.drawable.ic_coins,
+                    style = IconStyle(tint = Color.Black),
                     onClick = {
 
                     })
@@ -147,7 +159,7 @@ fun CardsScreen(navigationManager: NavigationManager) {
 
 @Composable
 fun generateRandomCards(): List<CardModel> {
-    return List(5) {
+    return List(1) {
         CardModel(
             cardNumber = (1..16).map { Random.nextInt(0, 10) }
                 .joinToString(""), // Generates 16-digit card number
@@ -167,5 +179,15 @@ fun generateRandomCards(): List<CardModel> {
                 )
             }" // Random MM/YY
         )
+    }
+}
+
+@Preview
+@Composable
+private fun AccountScreenPrev() {
+    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+        HamrahBankTheme {
+            CardsScreen()
+        }
     }
 }

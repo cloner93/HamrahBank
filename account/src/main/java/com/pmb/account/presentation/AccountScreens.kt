@@ -22,7 +22,7 @@ sealed class AccountScreens(route: String, arguments: Map<String, String> = empt
 
 fun NavGraphBuilder.accountScreensHandle(navigationManager: NavigationManager) {
     composable(route = AccountScreens.Account.route) {
-        AccountScreen(navigationManager = navigationManager)
+        AccountScreen(/*navigationManager = navigationManager*/)
     }
 }
 
