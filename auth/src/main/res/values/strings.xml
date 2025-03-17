@@ -11,7 +11,7 @@
     <string name="mobile_number">شماره تلفن همراه</string>
     <string name="national_id">کد ملی</string>
     <string name="postal_code">کد پستی</string>
-    <string name="national_id_serial">سریال کارت ملی</string>
+    <string name="national_id_serial">سریال کارت ملی / کد رهگیری</string>
     <string name="new_password">رمز عبور جدید</string>
     <string name="re_new_password">تکرار رمز عبور جدید</string>
     <string name="_continue">ادامه</string>
@@ -65,7 +65,8 @@
     <string name="result_authentication_info">نتایج بررسی حداکثر طی دو روز کاری از طریق پیامک به اطلاع شما خواهد رسید. سپس می توانید مراحل باقی مانده را تکمیل کنید.</string>
     <string name="select_services_title">پس از افتتاح حساب، همراه بانک ملت به طور پیش فرض برای شما فعال خواهد شد.</string>
     <string name="select_services_description">در صورت تمایل می توانید دریافت سایر خدمات را نیز انتخاب نمایید.</string>
-    <string name="national_id_information">لطفا سریال کارت ملی خود را وارد نمایید. (محل سریال کارت در تصویر نشان داده شده است)</string>
+    <string name="national_id_information">لطفا سریال کارت ملی خود را وارد نمایید.\n
+(اگر در حال اقدام برای دریافت کارت ملی هستید، لطفا کد رهگیری را وارد نمایید.)</string>
     <string name="total">مبلغ کل</string>
     <string name="rules">قوانین افتتاح حساب بانک ملت </string>
     <string name="usage_rules">قوانین استفاده از همراه بانک </string>

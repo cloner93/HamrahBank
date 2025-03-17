@@ -82,7 +82,7 @@ fun RegisterNationalIdScreen(
             textAlign = TextAlign.Center,
             color = AppTheme.colorScheme.onBackgroundPrimarySubdued
         )
-        Spacer(modifier = Modifier.size(16.dp))
+        Spacer(modifier = Modifier.size(32.dp))
         AppSingleTextField(
             modifier = Modifier.fillMaxWidth(),
             value = nationalSerialId,
@@ -91,7 +91,7 @@ fun RegisterNationalIdScreen(
                 nationalSerialId = it
             },
         )
-        Spacer(modifier = Modifier.size(16.dp))
+        Spacer(modifier = Modifier.size(32.dp))
         AppImage(
             modifier = Modifier
                 .fillMaxWidth()
