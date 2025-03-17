@@ -86,25 +86,6 @@ class DepositInformationViewModel @Inject constructor(
             )
         }
     }
-
-//    private fun handleAnnualIncomingPrediction(action: DepositInformationViewActions.AnnualIncomingPrediction) {
-//        setState {
-//            it.copy(
-//                sendDepositInformationParams = it.sendDepositInformationParams?.copy(
-//                    annualIncomingPrediction = action.annualIncomingPrediction
-//                ) ?: run {
-//                    SendDepositInformationParams(
-//                        branchCity = null,
-//                        branchProvince = null,
-//                        openingBranch = null,
-//                        annualIncomingPrediction = action.annualIncomingPrediction,
-//                        depositType = null
-//                    )
-//                }
-//            )
-//        }
-//    }
-
     private fun handleSetOpeningBranch(action: DepositInformationViewActions.SetOpeningBranch) {
         setState {
             it.copy(

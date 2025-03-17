@@ -14,6 +14,7 @@ import com.pmb.auth.data.first_login_confirm.FirstLoginConfirmRepositoryImpl
 import com.pmb.auth.data.forget_password.ForgetPasswordRepositoryImpl
 import com.pmb.auth.data.login.LoginRepositoryImpl
 import com.pmb.auth.data.new_password.NewPasswordRepositoryImpl
+import com.pmb.auth.data.register.authentication_information.AuthenticationInformationRepositoryImpl
 import com.pmb.auth.data.register.check_postal_code.CheckPostalCodeRepositoryImpl
 import com.pmb.auth.data.register.deposit_information.DepositInformationRepositoryImpl
 import com.pmb.auth.data.register.job_information.JobInformationRepositoryImpl
@@ -36,6 +37,7 @@ import com.pmb.auth.domain.first_login_confirm.repository.FirstLoginConfirmRepos
 import com.pmb.auth.domain.forget_password.repository.ForgetPasswordRepository
 import com.pmb.auth.domain.login.repository.LoginRepository
 import com.pmb.auth.domain.new_password.repository.NewPasswordRepository
+import com.pmb.auth.domain.register.authentication_information.repository.AuthenticationInformationRepository
 import com.pmb.auth.domain.register.check_postal_code.repository.CheckPostalCodeRepository
 import com.pmb.auth.domain.register.deposit_information.repository.DepositInformationRepository
 import com.pmb.auth.domain.register.job_information.repository.JobInformationRepository
@@ -125,4 +127,7 @@ abstract class RepositoryModule {
 
     @Binds
     abstract fun bindJobInformationRepository(jobInformationRepositoryImpl: JobInformationRepositoryImpl): JobInformationRepository
+
+    @Binds
+    abstract fun bindAuthenticationInformationRepository(authenticationInformationRepositoryImpl: AuthenticationInformationRepositoryImpl): AuthenticationInformationRepository
 }

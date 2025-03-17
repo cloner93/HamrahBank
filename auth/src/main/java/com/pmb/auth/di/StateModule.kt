@@ -15,6 +15,7 @@ import com.pmb.auth.presentation.foget_password.viewmodel.ForgetPasswordViewStat
 import com.pmb.auth.presentation.login.viewmodel.LoginViewState
 import com.pmb.auth.presentation.new_password.viewModel.NewPasswordViewState
 import com.pmb.auth.presentation.reentry.reentry_password.viewModel.ReentryPasswordViewState
+import com.pmb.auth.presentation.register.authentication_information.viewModel.AuthenticationInformationViewState
 import com.pmb.auth.presentation.register.check_postal_code.viewModel.CheckPostalCodeViewState
 import com.pmb.auth.presentation.register.deposit_information.viewModel.DepositInformationViewState
 import com.pmb.auth.presentation.register.job_information.viewModel.JobInformationViewState
@@ -142,4 +143,8 @@ object StateModule {
     @Provides
     @Singleton
     fun provideJobInformationViewState():JobInformationViewState = JobInformationViewState()
+
+    @Provides
+    @Singleton
+    fun provideAuthenticationInformationViewState():AuthenticationInformationViewState = AuthenticationInformationViewState()
 }

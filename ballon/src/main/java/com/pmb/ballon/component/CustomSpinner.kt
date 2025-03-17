@@ -83,3 +83,77 @@ fun CustomSpinner(
         }
     }
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CustomSearchSpinner(
+    modifier: Modifier = Modifier,
+    options: List<String>?,
+    labelString: String,
+    displayText: String,
+    isEnabled: Boolean = false,
+    onSearchValue: (String) -> Unit = {},
+    onOptionSelected: (String) -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+    var isSelected by remember { mutableStateOf(false) }
+    var searchQuery by remember { mutableStateOf("") }
+    val filteredOptions = if (searchQuery.isNotEmpty() && searchQuery.length >= 2) {
+        options?.filter { it.contains(searchQuery, ignoreCase = true) } ?: emptyList()
+    } else {
+        options
+    }
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = {
+            if (isEnabled)
+                expanded = it
+        }
+    ) {
+        AppBaseTextField(
+            value = displayText,
+            onValueChange = {
+                searchQuery = it
+                onSearchValue(it)
+                expanded = true
+            },
+            label = labelString,
+            enabled = isEnabled,
+            trailingIcon = {
+                Icon(
+                    imageVector = if (expanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                    contentDescription = "Dropdown Icon",
+                )
+            },
+            modifier = modifier
+                .menuAnchor(MenuAnchorType.PrimaryNotEditable, true)
+                .clickable {
+                    if (isEnabled)
+                        expanded = !expanded
+                }
+        )
+
+        ExposedDropdownMenu(
+            expanded = expanded,
+            containerColor = Color.White,
+            onDismissRequest = { expanded = false }
+        ) {
+            filteredOptions?.forEach { option ->
+                DropdownMenuItem(
+                    text = {
+                        BodyMediumText(
+                            modifier = Modifier.padding(bottom = 6.dp),
+                            text = option,
+                        )
+                    },
+                    onClick = {
+                        onSearchValue(option)
+                        onOptionSelected(option)
+                        isSelected = true
+                        expanded = false
+                    }
+                )
+            }
+        }
+    }
+}

@@ -75,6 +75,7 @@
     <string name="card_sending_info">کارت به آدرس ثبت شده ارسال می‌گردد.</string>
     <string name="inquiry">استعلام</string>
     <string name="deposit_information">اطلاعات حساب</string>
+    <string name="authentication_information">اطلاعات هویتی</string>
     <string name="opening_branches_list">لیست شعب بانک ملت</string>
     <string name="search_job_description">جستجو در مشاغل</string>
     <string name="enter_face_detection">ورود با اسکن چهره</string>
@@ -89,4 +90,9 @@
     <string name="or">یا</string>
     <string name="card_scan">اسکن کارت بانکی</string>
     <string name="upload_document">آپلود مدارک</string>
+    <string name="birthday_place">محل تولد</string>
+    <string name="identify_place">محل صدور شناسنامه</string>
+    <string name="identify_area">حوزه صدور شناسنامه</string>
+    <string name="identify_day">تاریخ صدور شناسنامه</string>
+    <string name="education">تحصیلات</string>
 </resources>
