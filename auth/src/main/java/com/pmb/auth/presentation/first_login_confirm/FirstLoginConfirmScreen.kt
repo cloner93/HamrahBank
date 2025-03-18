@@ -20,6 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.pmb.auth.R
+import com.pmb.auth.presentation.AuthScreens
 import com.pmb.auth.presentation.component.ChipWithIcon
 import com.pmb.auth.presentation.component.ShowInvalidLoginBottomSheet
 import com.pmb.auth.presentation.first_login_confirm.viewModel.FirstLoginConfirmViewActions
@@ -27,6 +28,7 @@ import com.pmb.auth.presentation.first_login_confirm.viewModel.FirstLoginConfirm
 import com.pmb.auth.presentation.first_login_confirm.viewModel.FirstLoginConfirmViewModel
 import com.pmb.auth.presentation.first_login_confirm.viewModel.TimerStatus
 import com.pmb.auth.presentation.first_login_confirm.viewModel.TimerTypeId
+import com.pmb.auth.utils.ComingType
 import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppContent
@@ -43,7 +45,8 @@ import com.pmb.home.presentation.HomeScreens
 @Composable
 fun FirstLoginConfirmScreen(
     navigationManager: NavigationManager,
-    viewModel: FirstLoginConfirmViewModel
+    viewModel: FirstLoginConfirmViewModel,
+    comingType: ComingType = ComingType.COMING_LOGIN
 ) {
     val viewState by viewModel.viewState.collectAsState()
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -84,7 +87,10 @@ fun FirstLoginConfirmScreen(
         viewModel.viewEvent.collect { event ->
             when (event) {
                 FirstLoginConfirmViewEvents.FirstLoginConfirmSucceed -> {
-                    navigationManager.navigate(HomeScreens.Home)
+                    if (comingType === ComingType.COMING_LOGIN)
+                        navigationManager.navigate(HomeScreens.Home)
+                    else
+                        navigationManager.navigate(AuthScreens.AuthenticationInformation)
                 }
             }
         }

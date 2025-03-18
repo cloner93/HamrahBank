@@ -62,9 +62,9 @@
     <string name="bank_card">  کارت بانکی</string>
     <string name="record_again">ضبط مجدد</string>
     <string name="show_details">مشاهده جزئیات</string>
-    <string name="check_authentication_data">اطلاعات شما در دست بررسی می باشد.</string>
+    <string name="check_authentication_data">در حال بررسی‌ اطلاعات شما هستیم...</string>
     <string name="check_activation_data">فعالسازی همراه بانک ملت با موفقیت انجام شد.</string>
-    <string name="result_authentication_info">نتایج بررسی حداکثر طی دو روز کاری از طریق پیامک به اطلاع شما خواهد رسید. سپس می توانید مراحل باقی مانده را تکمیل کنید.</string>
+    <string name="result_authentication_info"> نتایج بررسی به زودی از طریق پیامک به شما اطلاع‌رسانی خواهد شد.</string>
     <string name="result_activation_info">رمز ورود به شماره همراه شما پیامک شد.</string>
     <string name="select_services_title">پس از افتتاح حساب، همراه بانک ملت به طور پیش فرض برای شما فعال خواهد شد.</string>
     <string name="select_services_description">در صورت تمایل می توانید دریافت سایر خدمات را نیز انتخاب نمایید.</string>
@@ -78,6 +78,7 @@
     <string name="inquiry">استعلام</string>
     <string name="deposit_information">اطلاعات حساب</string>
     <string name="authentication_information">اطلاعات هویتی</string>
+    <string name="job_information">اطلاعات شغلی</string>
     <string name="opening_branches_list">لیست شعب بانک ملت</string>
     <string name="search_job_description">جستجو در مشاغل</string>
     <string name="enter_face_detection">ورود با اسکن چهره</string>

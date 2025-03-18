@@ -10,6 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -23,6 +24,7 @@ import com.pmb.auth.domain.register.job_information.entity.AnnualIncomingPredict
 import com.pmb.auth.domain.register.select_job_information.entity.JobInformation
 import com.pmb.auth.presentation.AuthScreens
 import com.pmb.auth.presentation.register.job_information.viewModel.JobInformationViewActions
+import com.pmb.auth.presentation.register.job_information.viewModel.JobInformationViewEvents
 import com.pmb.auth.presentation.register.job_information.viewModel.JobInformationViewModel
 import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.CustomSpinner
@@ -53,10 +55,19 @@ fun JobInformationScreen(
             viewModel.handle(JobInformationViewActions.SetJobInformation(it))
         }
     }
+    LaunchedEffect(Unit) {
+        viewModel.viewEvent.collect { event ->
+            when (event) {
+                JobInformationViewEvents.SendJobInformationSucceed -> {
+                    navigationManager.navigate(AuthScreens.CheckPostalCode)
+                }
+            }
+        }
+    }
     AppContent(modifier = Modifier.padding(horizontal = 16.dp),
         topBar = {
             AppTopBar(
-                title = stringResource(R.string.deposit_information),
+                title = stringResource(R.string.job_information),
                 onBack = {
                     navigationManager.navigateBack()
                 }

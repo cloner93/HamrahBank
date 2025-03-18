@@ -51,7 +51,7 @@ fun RegisterNationalIdScreen(
             when (event) {
                 RegisterNationalIdViewEvents.RegisterNationalSucceed -> {
                     if (comingType == ComingType.COMING_REGISTER) {
-                        navigationManager.navigate(AuthScreens.Signature)
+                        navigationManager.navigate(AuthScreens.FirstLoginConfirm)
                     }else{
                         navigationManager.navigate(AuthScreens.Authentication)
                     }

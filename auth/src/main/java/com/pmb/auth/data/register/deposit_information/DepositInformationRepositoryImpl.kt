@@ -96,16 +96,12 @@ class DepositInformationRepositoryImpl @Inject constructor() : DepositInformatio
         flow {
             emit(Result.Loading)
             delay(2000)
-            params.depositType.takeIf { it != null && it > 0 }?.let {
-                emit(
-                    Result.Success(
-                        SendDepositInformationEntity(
-                            isSuccess = true,
-                        )
+            emit(
+                Result.Success(
+                    SendDepositInformationEntity(
+                        isSuccess = true,
                     )
                 )
-            } ?: run {
-                emit(Result.Error(message = "Your postal code is not valid"))
-            }
+            )
         }
 }

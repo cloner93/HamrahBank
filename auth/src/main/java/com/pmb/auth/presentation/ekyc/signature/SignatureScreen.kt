@@ -86,7 +86,7 @@ fun SignatureScreen(
         viewModel.viewEvent.collect { event ->
             when (event) {
                 SignatureViewEvents.SignaturePhotoCaptured -> {
-                    navigationManager.navigate(AuthScreens.Authentication)
+                    navigationManager.navigate(AuthScreens.AuthenticationSelectServices)
                 }
             }
         }

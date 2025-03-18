@@ -16,8 +16,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.pmb.auth.R
-import com.pmb.auth.presentation.AuthScreens
 import com.pmb.auth.presentation.component.ShowPersianDatePickerBottomSheet
+import com.pmb.auth.utils.ComingType
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppButtonIcon
 import com.pmb.ballon.component.base.AppClickableReadOnlyTextField
@@ -29,7 +29,10 @@ import com.pmb.ballon.component.base.IconType
 import com.pmb.core.presentation.NavigationManager
 
 @Composable
-fun AccountOpeningScreen(navigationManager: NavigationManager) {
+fun AccountOpeningScreen(
+    navigationManager: NavigationManager,
+    onNavigationCallBack: (ComingType) -> Unit
+) {
     var phoneNumber by remember { mutableStateOf("09128353268") }
     var nationalId by remember { mutableStateOf("0012345678") }
     var birthday by remember { mutableStateOf("1371/08/28") }
@@ -52,10 +55,11 @@ fun AccountOpeningScreen(navigationManager: NavigationManager) {
             AppButton(modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 16.dp, end = 16.dp, top = 16.dp),
-                enable = isMobile && isNationalId && isBirthday,
+                enable = true,
                 title = stringResource(R.string._continue),
                 onClick = {
-                    navigationManager.navigate(AuthScreens.RegisterNationalId)
+                    onNavigationCallBack(ComingType.COMING_REGISTER)
+
                 })
         },
         horizontalAlignment = Alignment.CenterHorizontally

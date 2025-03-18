@@ -42,7 +42,7 @@ fun AuthenticationSelectServicesScreen(
         viewModel.viewEvent.collect { event ->
             when (event) {
                 AuthenticationSelectServicesViewEvent.SelectServicesSucceed -> {
-                    navigationManager.navigate(AuthScreens.OpenAccount)
+                    navigationManager.navigate(AuthScreens.Authentication)
                 }
             }
         }
