@@ -55,6 +55,7 @@ fun JobInformationScreen(
             viewModel.handle(JobInformationViewActions.SetJobInformation(it))
         }
     }
+
     LaunchedEffect(Unit) {
         viewModel.viewEvent.collect { event ->
             when (event) {
