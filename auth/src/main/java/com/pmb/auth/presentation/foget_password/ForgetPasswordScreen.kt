@@ -19,6 +19,7 @@ import com.pmb.auth.presentation.component.ShowChangedNewPasswordBottomSheet
 import com.pmb.auth.presentation.foget_password.viewmodel.ForgetPasswordViewActions
 import com.pmb.auth.presentation.foget_password.viewmodel.ForgetPasswordViewEvents
 import com.pmb.auth.presentation.foget_password.viewmodel.ForgetPasswordViewModel
+import com.pmb.auth.utils.ComingType
 import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppContent
@@ -28,9 +29,13 @@ import com.pmb.ballon.component.base.AppNationalIdTextField
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.text_field.AppPasswordTextField
 import com.pmb.core.presentation.NavigationManager
+import com.pmb.core.utils.CollectAsEffect
 
 @Composable
-fun ForgetPasswordScreen(navigationManager: NavigationManager, viewModel: ForgetPasswordViewModel) {
+fun ForgetPasswordScreen(
+    navigationManager: NavigationManager, viewModel: ForgetPasswordViewModel,
+    onAuthenticationCallback: (ComingType) -> Unit
+) {
     var showBottomSheet by remember { mutableStateOf(false) }
     var mobile by remember { mutableStateOf("") }
     var nationalId by remember { mutableStateOf("") }
@@ -47,11 +52,23 @@ fun ForgetPasswordScreen(navigationManager: NavigationManager, viewModel: Forget
     LaunchedEffect(Unit) {
         viewModel.viewEvent.collect { event ->
             when (event) {
-                ForgetPasswordViewEvents.ResetPasswordSuccess -> showBottomSheet = true
+                ForgetPasswordViewEvents.ResetPasswordSuccess -> onAuthenticationCallback.invoke(
+                    ComingType.COMING_PASSWORD
+                )
+//                ForgetPasswordViewEvents.ResetPasswordSuccess -> showBottomSheet = true
             }
         }
     }
-
+    navigationManager.getCurrentScreenFlowData<ComingType?>(
+        "authentication",
+        null
+    )?.CollectAsEffect {
+        it.takeIf {
+            it != null
+        }?.also {
+            showBottomSheet = true
+        }
+    }
     AppContent(modifier = Modifier.padding(24.dp),
         topBar = {
             AppTopBar(title = stringResource(R.string.forget_password),
@@ -109,7 +126,10 @@ fun ForgetPasswordScreen(navigationManager: NavigationManager, viewModel: Forget
 
         })
 
-    if (showBottomSheet) ShowChangedNewPasswordBottomSheet(onDismiss = { showBottomSheet = false })
+    if (showBottomSheet) ShowChangedNewPasswordBottomSheet(onDismiss = {
+        showBottomSheet = false
+        navigationManager.navigateBack()
+    })
     if (viewState.loading) {
         AppLoading()
     }

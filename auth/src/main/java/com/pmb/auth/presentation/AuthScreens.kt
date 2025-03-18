@@ -1,5 +1,6 @@
 package com.pmb.auth.presentation
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
@@ -111,6 +112,7 @@ sealed class AuthScreens(route: String, arguments: Map<String, String> = emptyMa
 fun NavGraphBuilder.authScreensHandle(
     navigationManager: NavigationManager,
 ) {
+    var comingType = mutableStateOf<ComingType?>(null)
     composable(route = AuthScreens.Auth.route) {
         IntroScreen(navigationManager = navigationManager)
     }
@@ -139,7 +141,10 @@ fun NavGraphBuilder.authScreensHandle(
         ForgetPasswordScreen(
             navigationManager = navigationManager,
             viewModel = hiltViewModel<ForgetPasswordViewModel>()
-        )
+        ) {
+            comingType = mutableStateOf(it)
+            navigationManager.navigate(AuthScreens.ChooseAuthenticationType)
+        }
     }
     composable(route = AuthScreens.ForgetPasswordAuth.route) {
         ForgetPasswordAuthScreen(navigationManager = navigationManager)
@@ -242,7 +247,10 @@ fun NavGraphBuilder.authScreensHandle(
         )
     }
     composable(route = AuthScreens.ChooseAuthenticationType.route) {
-        ChooseAuthenticationTypeScreen(navigationManager, comingType = ComingType.COMING_PASSWORD)
+        ChooseAuthenticationTypeScreen(
+            navigationManager,
+            comingType = comingType.value ?: ComingType.COMING_ACTIVATION
+        )
     }
     composable(route = AuthScreens.Activation.route) {
         ActivationScreen(navigationManager, viewModel = hiltViewModel<ActivationViewModel>())
@@ -258,7 +266,8 @@ fun NavGraphBuilder.authScreensHandle(
     ) {
         CardInfoScreen(
             navigationManager,
-            viewModel = hiltViewModel<CardInfoViewModel>()
+            viewModel = hiltViewModel<CardInfoViewModel>(),
+            comingType = comingType.value ?:ComingType.COMING_ACTIVATION
         )
     }
     composable(route = AuthScreens.ScanCard.route) {

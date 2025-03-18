@@ -24,6 +24,9 @@ class NavigationManager(val navController: NavHostController, val startDestinati
     fun <T> setPreviousScreenData(key: String, value: T) {
         navController.previousBackStackEntry?.savedStateHandle?.set(key, value)
     }
+    fun <T> setCurrentScreenData(key: String, value: T) {
+        navController.currentBackStackEntry?.savedStateHandle?.set(key, value)
+    }
 
     fun <T> getCurrentScreenFlowData(key: String, value: T): StateFlow<T>? =
         navController.currentBackStackEntry?.savedStateHandle?.getStateFlow(

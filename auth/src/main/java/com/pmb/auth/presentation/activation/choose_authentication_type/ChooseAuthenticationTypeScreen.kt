@@ -13,6 +13,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.pmb.auth.R
+import com.pmb.auth.presentation.AuthScreens
 import com.pmb.auth.utils.ComingType
 import com.pmb.ballon.component.base.AppButtonWithWeightIcon
 import com.pmb.ballon.component.base.AppContent
@@ -74,7 +75,7 @@ fun ChooseAuthenticationTypeScreen(navigationManager: NavigationManager, comingT
                 typography = AppTheme.typography.bodyMedium
             ),
         ) {
-
+            navigationManager.navigate(AuthScreens.CardInformation)
         }
         AppButtonWithWeightIcon(
             modifier = Modifier

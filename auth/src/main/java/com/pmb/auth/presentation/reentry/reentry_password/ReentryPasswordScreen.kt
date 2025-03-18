@@ -110,7 +110,8 @@ fun ReentryPasswordScreen(
             title = if (password.isEmpty()) stringResource(R.string.enter_face_detection) else stringResource(
                 R.string.login
             ),
-            icon = if (password.isEmpty()) com.pmb.ballon.R.drawable.ic_face_id else null
+            icon = if (password.isEmpty()) com.pmb.ballon.R.drawable.ic_face_id else null,
+            enable = false
         ) {
             if (password.isEmpty())
                 navigationManager.navigate(AuthScreens.ReentryFaceDetection)
