@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.pmb.auth.R
+import com.pmb.auth.presentation.AuthScreens
 import com.pmb.auth.presentation.component.ShowChangedNewPasswordBottomSheet
 import com.pmb.auth.presentation.foget_password.viewmodel.ForgetPasswordViewActions
 import com.pmb.auth.presentation.foget_password.viewmodel.ForgetPasswordViewEvents
@@ -128,7 +129,7 @@ fun ForgetPasswordScreen(
 
     if (showBottomSheet) ShowChangedNewPasswordBottomSheet(onDismiss = {
         showBottomSheet = false
-        navigationManager.navigateBack()
+        navigationManager.navigate(AuthScreens.Auth)
     })
     if (viewState.loading) {
         AppLoading()

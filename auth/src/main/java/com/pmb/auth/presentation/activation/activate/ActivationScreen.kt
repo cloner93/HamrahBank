@@ -22,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.pmb.auth.R
+import com.pmb.auth.presentation.AuthScreens
 import com.pmb.auth.presentation.activation.activate.viewModel.ActivationViewActions
 import com.pmb.auth.presentation.activation.activate.viewModel.ActivationViewEvents
 import com.pmb.auth.presentation.activation.activate.viewModel.ActivationViewModel
@@ -48,6 +49,7 @@ fun ActivationScreen(navigationManager: NavigationManager, viewModel: Activation
         viewModel.viewEvent.collect { event ->
             when (event) {
                 ActivationViewEvents.ActiveUserSucceed -> {
+                    navigationManager.navigate(AuthScreens.ActivationTaxDetailsScreen)
                 }
             }
         }

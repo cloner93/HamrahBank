@@ -26,6 +26,7 @@ import com.pmb.auth.R
 import com.pmb.auth.presentation.activation.activation_tax_details.viewModel.ActivationTaxDetailsViewActions
 import com.pmb.auth.presentation.activation.activation_tax_details.viewModel.ActivationTaxDetailsViewEvents
 import com.pmb.auth.presentation.activation.activation_tax_details.viewModel.ActivationTaxDetailsViewModel
+import com.pmb.auth.utils.ComingType
 import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppContent
@@ -40,7 +41,8 @@ import com.pmb.core.presentation.NavigationManager
 @Composable
 fun ActivationTaxDetailsScreen(
     navigationManager: NavigationManager,
-    viewModel: ActivationTaxDetailsViewModel
+    viewModel: ActivationTaxDetailsViewModel,
+    onAuthenticationCallback: (ComingType) -> Unit
 ) {
     val viewState by viewModel.viewState.collectAsState()
     var accountNumber by remember {
@@ -50,10 +52,12 @@ fun ActivationTaxDetailsScreen(
         viewModel.viewEvent.collect { event ->
             when (event) {
                 ActivationTaxDetailsViewEvents.ConfirmTaxDetails -> {
+                    onAuthenticationCallback.invoke(ComingType.COMING_ACTIVATION)
                 }
             }
         }
     }
+
     AppContent(
         modifier = Modifier.padding(horizontal = 16.dp),
         backgroundColor = AppTheme.colorScheme.background2Neutral,

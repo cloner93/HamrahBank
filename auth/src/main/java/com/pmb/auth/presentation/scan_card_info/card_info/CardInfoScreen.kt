@@ -45,7 +45,6 @@ fun CardInfoScreen(
     var cardNumber by remember {
         mutableStateOf("")
     }
-    val scope = rememberCoroutineScope()
     var cvv2 by remember { mutableStateOf("") }
     var isCvv2 by remember { mutableStateOf(false) }
     var isCard by remember { mutableStateOf(false) }
@@ -80,14 +79,19 @@ fun CardInfoScreen(
                 enable = !viewState.isLoading && isCard && isPass2 && isCvv2,
                 title = stringResource(R.string._continue),
                 onClick = {
-                    navigationManager.navigateAndClearStack(AuthScreens.ForgetPassword)
-//                    scope.launch {
-//                        delay(200)
-                    navigationManager.setCurrentScreenData<ComingType>(
-                        "authentication",
-                        comingType
-                    )
-//                    }
+                    if (comingType == ComingType.COMING_PASSWORD) {
+                        navigationManager.navigateAndClearStack(AuthScreens.ForgetPassword)
+                        navigationManager.setCurrentScreenData<ComingType>(
+                            "authentication",
+                            comingType
+                        )
+                    } else {
+                        navigationManager.navigateAndClearStack(AuthScreens.AuthenticationConfirmStep)
+                        navigationManager.setCurrentScreenData<ComingType>(
+                            "authentication",
+                            comingType
+                        )
+                    }
                 })
         }
     ) {

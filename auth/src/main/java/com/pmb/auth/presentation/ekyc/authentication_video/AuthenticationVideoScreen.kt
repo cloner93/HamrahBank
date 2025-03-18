@@ -47,7 +47,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.pmb.auth.R
-import com.pmb.auth.presentation.AuthScreens
 import com.pmb.auth.presentation.ekyc.authentication_video.viewModel.AuthenticationCapturingVideoViewActions
 import com.pmb.auth.presentation.ekyc.authentication_video.viewModel.AuthenticationCapturingVideoViewEvents
 import com.pmb.auth.presentation.ekyc.authentication_video.viewModel.AuthenticationCapturingVideoViewModel
@@ -69,7 +68,8 @@ import com.pmb.core.presentation.NavigationManager
 @Composable
 fun AuthenticationVideoScreen(
     navigationManager: NavigationManager,
-    viewModel: AuthenticationCapturingVideoViewModel
+    viewModel: AuthenticationCapturingVideoViewModel,
+    onNavigationCallBack: () -> Unit
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
     val viewState by viewModel.viewState.collectAsState()
@@ -109,7 +109,7 @@ fun AuthenticationVideoScreen(
         viewModel.viewEvent.collect { event ->
             when (event) {
                 AuthenticationCapturingVideoViewEvents.VideoCaptured -> {
-                    navigationManager.navigate(AuthScreens.AuthenticationConfirmStep)
+                    onNavigationCallBack()
                 }
             }
         }
@@ -198,7 +198,9 @@ fun AuthenticationVideoScreen(
             ) {
                 Column {
                     AppOutlineButton(
-                        modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp, top = 16.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 16.dp, end = 16.dp, top = 16.dp),
                         title = stringResource(R.string.record_again),
                         onClick = {
                             viewModel.handle(AuthenticationCapturingVideoViewActions.ClearVideo)

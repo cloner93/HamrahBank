@@ -91,7 +91,7 @@ fun ChooseAuthenticationTypeScreen(navigationManager: NavigationManager, comingT
                 typography = AppTheme.typography.bodyMedium
             ),
         ) {
-
+            navigationManager.navigate(AuthScreens.RegisterNationalId)
         }
         AppButtonWithWeightIcon(
             modifier = Modifier

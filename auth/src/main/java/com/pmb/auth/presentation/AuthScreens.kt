@@ -1,5 +1,6 @@
 package com.pmb.auth.presentation
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
@@ -152,7 +153,8 @@ fun NavGraphBuilder.authScreensHandle(
     composable(route = AuthScreens.RegisterNationalId.route) {
         RegisterNationalIdScreen(
             navigationManager = navigationManager,
-            viewModel = hiltViewModel<RegisterNationalIdViewModel>()
+            viewModel = hiltViewModel<RegisterNationalIdViewModel>(),
+            comingType = comingType.value ?:ComingType.COMING_REGISTER
         )
     }
     composable(route = AuthScreens.Signature.route) {
@@ -174,12 +176,19 @@ fun NavGraphBuilder.authScreensHandle(
         AuthenticationVideoScreen(
             navigationManager = navigationManager,
             viewModel = hiltViewModel<AuthenticationCapturingVideoViewModel>()
-        )
+        ){
+            navigationManager.navigateAndClearStack(AuthScreens.AuthenticationConfirmStep)
+            navigationManager.setCurrentScreenData<ComingType>(
+                "authentication",
+                comingType.value ?:ComingType.COMING_REGISTER
+            )
+            Log.d("comingType",comingType.value.toString())
+        }
     }
     composable(route = AuthScreens.AuthenticationConfirmStep.route) {
         AuthenticationConfirmScreen(
             navigationManager = navigationManager,
-            viewModel = hiltViewModel<AuthenticationConfirmStepViewModel>()
+            viewModel = hiltViewModel<AuthenticationConfirmStepViewModel>(),
         )
     }
     composable(route = AuthScreens.AuthenticationSelectServices.route) {
@@ -259,7 +268,10 @@ fun NavGraphBuilder.authScreensHandle(
         ActivationTaxDetailsScreen(
             navigationManager,
             viewModel = hiltViewModel<ActivationTaxDetailsViewModel>()
-        )
+        ){
+            comingType = mutableStateOf(it)
+            navigationManager.navigate(AuthScreens.ChooseAuthenticationType)
+        }
     }
     composable(
         route = AuthScreens.CardInformation.route

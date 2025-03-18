@@ -23,6 +23,7 @@ import com.pmb.auth.presentation.AuthScreens
 import com.pmb.auth.presentation.register.national_id.viewModel.RegisterNationalIdViewActions
 import com.pmb.auth.presentation.register.national_id.viewModel.RegisterNationalIdViewEvents
 import com.pmb.auth.presentation.register.national_id.viewModel.RegisterNationalIdViewModel
+import com.pmb.auth.utils.ComingType
 import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppContent
@@ -38,7 +39,8 @@ import com.pmb.core.presentation.NavigationManager
 @Composable
 fun RegisterNationalIdScreen(
     navigationManager: NavigationManager,
-    viewModel: RegisterNationalIdViewModel
+    viewModel: RegisterNationalIdViewModel,
+    comingType: ComingType = ComingType.COMING_REGISTER
 ) {
     val viewState by viewModel.viewState.collectAsState()
     var nationalSerialId by remember {
@@ -48,7 +50,11 @@ fun RegisterNationalIdScreen(
         viewModel.viewEvent.collect { event ->
             when (event) {
                 RegisterNationalIdViewEvents.RegisterNationalSucceed -> {
-                    navigationManager.navigate(AuthScreens.Signature)
+                    if (comingType == ComingType.COMING_REGISTER) {
+                        navigationManager.navigate(AuthScreens.Signature)
+                    }else{
+                        navigationManager.navigate(AuthScreens.Authentication)
+                    }
                 }
             }
         }

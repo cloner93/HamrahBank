@@ -69,7 +69,7 @@ fun FirstLoginScreen(navigationManager: NavigationManager, viewModel: FirstLogin
                 .fillMaxWidth(),
                 title = stringResource(com.pmb.auth.R.string.hamrah_bank_activate),
                 onClick = {
-
+                    navigationManager.navigate(AuthScreens.Activation)
                 })
         }
     ) {

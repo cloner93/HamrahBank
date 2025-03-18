@@ -63,7 +63,9 @@
     <string name="record_again">ضبط مجدد</string>
     <string name="show_details">مشاهده جزئیات</string>
     <string name="check_authentication_data">اطلاعات شما در دست بررسی می باشد.</string>
+    <string name="check_activation_data">فعالسازی همراه بانک ملت با موفقیت انجام شد.</string>
     <string name="result_authentication_info">نتایج بررسی حداکثر طی دو روز کاری از طریق پیامک به اطلاع شما خواهد رسید. سپس می توانید مراحل باقی مانده را تکمیل کنید.</string>
+    <string name="result_activation_info">رمز ورود به شماره همراه شما پیامک شد.</string>
     <string name="select_services_title">پس از افتتاح حساب، همراه بانک ملت به طور پیش فرض برای شما فعال خواهد شد.</string>
     <string name="select_services_description">در صورت تمایل می توانید دریافت سایر خدمات را نیز انتخاب نمایید.</string>
     <string name="national_id_information">لطفا سریال کارت ملی خود را وارد نمایید.\n
