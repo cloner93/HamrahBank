@@ -54,12 +54,14 @@ fun TextImage(
     modifier: Modifier = Modifier,
     @DrawableRes image: Int,
     text: String,
-    imageStyle: ImageStyle = ImageStyle(size = Size.FIX(all = 128.dp))
+    spacer: Dp = 24.dp,
+    imageStyle: ImageStyle = ImageStyle(size = Size.FIX(all = 128.dp)),
 ) {
     TextImage(
         modifier = modifier,
         image = IconType.Painter(painterResource(id = image)),
         text = text,
+        spacer = spacer,
         imageStyle = imageStyle
     )
 }

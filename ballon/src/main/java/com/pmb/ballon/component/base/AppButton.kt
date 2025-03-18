@@ -1,5 +1,9 @@
 package com.pmb.ballon.component.base
 
+import androidx.annotation.DrawableRes
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
@@ -8,9 +12,12 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.pmb.ballon.models.AppButton
+import com.pmb.ballon.models.IconStyle
 import com.pmb.ballon.models.TextStyle
+import com.pmb.ballon.ui.theme.AppTheme
 
 
 @Composable
@@ -23,7 +30,7 @@ fun AppButton(
     onClick: () -> Unit
 ) {
     Button(
-        modifier = modifier,
+        modifier = modifier.heightIn(min = 46.dp),
         shape = RoundedCornerShape(12.dp),
         colors = colors,
         enabled = enable,
@@ -33,6 +40,57 @@ fun AppButton(
     }
 }
 
+@Composable
+fun AppButtonWithIcon(
+    modifier: Modifier = Modifier,
+    title: String,
+    colors: ButtonColors = AppButton.buttonColors(),
+    textStyle: TextStyle = TextStyle.defaultButton(),
+    enable: Boolean = true,
+    @DrawableRes icon: Int? = null,
+    spacer: Dp = 10.dp,
+    onClick: () -> Unit
+) {
+    Button(
+        modifier = modifier.heightIn(46.dp),
+        shape = RoundedCornerShape(12.dp),
+        colors = colors,
+        enabled = enable,
+        onClick = onClick
+    ) {
+        icon?.let {
+            AppIcon(icon = icon)
+            Spacer(modifier = Modifier.size(spacer))
+        }
+        BaseAppText(title = title, style = textStyle)
+    }
+}
+
+@Composable
+fun AppButtonWithWeightIcon(
+    modifier: Modifier = Modifier,
+    title: String,
+    colors: ButtonColors = AppButton.buttonColors(),
+    textStyle: TextStyle = TextStyle.defaultButton(),
+    enable: Boolean = true,
+    iconStyle: IconStyle = IconStyle(tint = AppTheme.colorScheme.foregroundNeutralDefault),
+    @DrawableRes icon: Int? = null,
+    onClick: () -> Unit
+) {
+    Button(
+        modifier = modifier,
+        shape = RoundedCornerShape(12.dp),
+        colors = colors,
+        enabled = enable,
+        onClick = onClick
+    ) {
+        BaseAppText(title = title, style = textStyle)
+        icon?.let {
+            Spacer(modifier = Modifier.weight(1f))
+            AppIcon(icon = icon, iconStyle)
+        }
+    }
+}
 
 @Composable
 fun AppOutlineButton(
@@ -43,7 +101,7 @@ fun AppOutlineButton(
     onClick: () -> Unit
 ) {
     OutlinedButton(
-        modifier = modifier,
+        modifier = modifier.heightIn(min=46.dp),
         shape = RoundedCornerShape(12.dp),
         colors = colors,
         enabled = enable,
@@ -76,7 +134,7 @@ fun AppTextButton(
 @Preview
 @Composable
 private fun AppButtonPreview() {
-    AppButton(title = "Test") {
+    AppButtonWithIcon(title = "Test") {
 
     }
 }

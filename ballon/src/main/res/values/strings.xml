@@ -4,7 +4,7 @@
     <string name="min_char_in_password">حداقل ۸ کاراکتر</string>
     <string name="upper_case">حروف بزرگ</string>
     <string name="lowercase">حروف کوچک</string>
-    <string name="digit">حروف کوچک</string>
+    <string name="digit">عدد09123456789</string>
     <string name="special_char"><![CDATA[علامت (مانند ٪>@)]]></string>
     <string name="real_carrency">ریال</string>
     <string name="toman">تومان</string>
@@ -12,4 +12,17 @@
     <string name="transfer_and_receive">انتقال و دریافت</string>
     <string name="account_card">کارت و سپرده</string>
     <string name="profile">پروفایل</string>
+    <string name="day">روز</string>
+    <string name="month">ماه</string>
+    <string name="year">سال</string>
+    <string name="confirm">تایید</string>
+    <string name="rial">ريال</string>
+    <string name="second_pass">رمز دوم</string>
+    <string name="get_dynamic_pass">دریافت رمز پویا</string>
+    <string name="name">نام</string>
+    <string name="family">نام خانوادگی</string>
+    <string name="card_number">شماره کارت</string>
+    <string name="cvv2">CVV2</string>
+    <string name="year_month">ماه/سال</string>
+
 </resources>
