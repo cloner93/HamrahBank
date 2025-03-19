@@ -3,6 +3,7 @@ package com.pmb.account.presentation
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.pmb.account.presentation.account.AccountScreen
+import com.pmb.account.presentation.balance.BalanceScreen
 import com.pmb.core.presentation.NavigationManager
 import com.pmb.core.presentation.Screen
 
@@ -10,6 +11,7 @@ import com.pmb.core.presentation.Screen
 sealed class AccountScreens(route: String, arguments: Map<String, String> = emptyMap()) :
     Screen(route = route, arguments = arguments) {
     data object Account : AccountScreens(route = "account")
+    data object Balance : AccountScreens(route = "balance")
 
     companion object {
         fun fromRoute(route: String?): AccountScreens? =
@@ -22,7 +24,10 @@ sealed class AccountScreens(route: String, arguments: Map<String, String> = empt
 
 fun NavGraphBuilder.accountScreensHandle(navigationManager: NavigationManager) {
     composable(route = AccountScreens.Account.route) {
-        AccountScreen(/*navigationManager = navigationManager*/)
+        AccountScreen(navigationManager = navigationManager)
+    }
+    composable(route = AccountScreens.Balance.route) {
+        BalanceScreen(navigationManager = navigationManager)
     }
 }
 

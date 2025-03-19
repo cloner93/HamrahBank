@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.pmb.account.R
+import com.pmb.account.presentation.AccountScreens
 import com.pmb.account.presentation.component.DepositCarouselWidget
 import com.pmb.account.presentation.component.DepositModel
 import com.pmb.account.presentation.component.ShareDepositBottomSheet
@@ -52,10 +53,11 @@ import com.pmb.ballon.models.MenuSheetModel
 import com.pmb.ballon.models.TextStyle
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.ballon.ui.theme.HamrahBankTheme
+import com.pmb.core.presentation.NavigationManager
 
 
 @Composable
-fun DepositsScreen() {
+fun DepositsScreen(navigationManager: NavigationManager) {
     val viewModel = hiltViewModel<DepositsViewModel>()
     val viewState by viewModel.viewState.collectAsState()
     val menuItems = listOf(
@@ -84,7 +86,7 @@ fun DepositsScreen() {
                 }
 
                 is DepositsViewEvents.DepositSelectionChanged -> {
-                    Toast.makeText(context, "TODO ->$event", Toast.LENGTH_LONG).show()
+//                    Toast.makeText(context, "TODO ->$event", Toast.LENGTH_LONG).show()
 
                 }
 
@@ -119,7 +121,7 @@ fun DepositsScreen() {
                 }
 
                 is DepositsViewEvents.NavigateToBalanceScreen -> {
-                    Toast.makeText(context, "TODO ->$event", Toast.LENGTH_LONG).show()
+                    navigationManager.navigate(AccountScreens.Balance)
                 }
             }
         }
@@ -281,7 +283,7 @@ fun DepositsScreen() {
 private fun DepositsScreenPrev() {
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
         HamrahBankTheme {
-            DepositsScreen()
+//            DepositsScreen()
         }
     }
 }
