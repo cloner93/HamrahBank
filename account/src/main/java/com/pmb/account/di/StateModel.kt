@@ -1,7 +1,8 @@
 package com.pmb.account.di
 
-import com.pmb.account.presentation.balance.BalanceViewState
+import com.pmb.account.presentation.balance.viewmodel.BalanceViewState
 import com.pmb.account.presentation.deposits.viewmodel.DepositsViewState
+import com.pmb.account.presentation.transactions.viewmodel.TransactionsViewState
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,5 +20,9 @@ object StateModule {
     @Provides
     @Singleton
     fun provideBalanceViewState(): BalanceViewState = BalanceViewState()
+
+    @Provides
+    @Singleton
+    fun provideTransactionsViewState(): TransactionsViewState = TransactionsViewState()
 
 }
