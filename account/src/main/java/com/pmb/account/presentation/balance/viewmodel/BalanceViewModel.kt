@@ -1,9 +1,10 @@
-package com.pmb.account.presentation.balance
+package com.pmb.account.presentation.balance.viewmodel
 
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewModelScope
-import com.pmb.account.presentation.component.DepositModel
+import com.pmb.account.presentation.balance.DepositsChartModel
 import com.pmb.account.usecase.deposits.GetDepositsUseCase
+import com.pmb.account.utils.mapToDepositsChartModel
 import com.pmb.core.platform.BaseViewAction
 import com.pmb.core.platform.BaseViewEvent
 import com.pmb.core.platform.BaseViewModel
@@ -56,21 +57,6 @@ class BalanceViewModel @Inject constructor(
         }
     }
 
-}
-
-
-fun List<DepositModel>.mapToDepositsChartModel(): MutableList<DepositsChartModel> {
-    val totalSum = this.sumOf { it.amount }
-    return this.mapIndexed { index, it ->
-        DepositsChartModel(
-            value = (it.amount * 100 / totalSum).toFloat(),
-            color = generateColorByIndex(index),
-            title = it.title,
-            depositNumber = it.depositNumber,
-            amount = it.amount,
-            currency = it.currency
-        )
-    }.toMutableList()
 }
 
 fun generateColorByIndex(index: Int): Color {

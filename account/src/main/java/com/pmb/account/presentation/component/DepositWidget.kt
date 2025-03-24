@@ -2,21 +2,16 @@ package com.pmb.account.presentation.component
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.outlined.MoreHoriz
 import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material.icons.outlined.VisibilityOff
@@ -26,8 +21,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
@@ -36,7 +29,6 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.pmb.ballon.R
 import com.pmb.ballon.component.base.AppButtonIcon
-import com.pmb.ballon.component.base.AppIcon
 import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.component.base.BodySmallText
 import com.pmb.ballon.component.base.CaptionText
@@ -95,8 +87,13 @@ fun DepositWidget(
 
                 ChipWithIcon(
                     value = "سپرده ها",
+                    startIcon = Icons.Default.ArrowDropDown,
+                    startIconStyle = IconStyle(
+                        tint = AppTheme.colorScheme.onBackgroundNeutralDefault,
+                        size = Size.FIX(18.dp)
+                    ),
                     clickable = onDepositListChipsClick,
-                    icon = Icons.Default.ArrowDropDown
+                    assetColor = AppTheme.colorScheme.onBackgroundNeutralDefault
                 )
             }
             Spacer(modifier = Modifier.height(12.dp))
@@ -120,35 +117,47 @@ fun DepositWidget(
     }
 }
 
-@Composable
+/*@Composable
 fun ChipWithIcon(
     modifier: Modifier = Modifier,
     value: String,
-    icon: ImageVector,
-    clickable: () -> Unit
+    startIcon: ImageVector? = null,
+    startIconStyle: IconStyle = IconStyle(),
+    endIcon: ImageVector? = null,
+    endIconStyle: IconStyle = IconStyle(),
+    clickable: () -> Unit,
+    roundedShape: Dp = 16.dp,
+    color: Color = AppTheme.colorScheme.backgroundTintPrimaryDefault,
+    assetColor: Color = AppTheme.colorScheme.onBackgroundTintPrimaryDefault,
 ) {
     Box(
         modifier = modifier
             .wrapContentSize()
             .height(32.dp)
-            .clip(shape = RoundedCornerShape(16.dp))
-            .background(color = AppTheme.colorScheme.backgroundTintPrimaryDefault)
+            .clip(shape = RoundedCornerShape(roundedShape))
+            .background(color = color)
             .clickable { clickable.invoke() }
             .padding(horizontal = 10.dp, vertical = 6.dp),
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            AppIcon(
-                icon = icon,
-                style = IconStyle(
-                    tint = AppTheme.colorScheme.onBackgroundTintPrimaryDefault,
-                    size = Size.FIX(18.dp)
+            if (startIcon != null) {
+                AppIcon(
+                    icon = startIcon,
+                    style = startIconStyle
                 )
-            )
-            Spacer(modifier = Modifier.size(6.dp))
-            BodySmallText(text = value, color = AppTheme.colorScheme.onBackgroundTintPrimaryDefault)
+                Spacer(modifier = Modifier.size(6.dp))
+            }
+            BodySmallText(text = value, color = assetColor)
+            if (endIcon != null) {
+                Spacer(modifier = Modifier.size(6.dp))
+                AppIcon(
+                    icon = endIcon,
+                    style = endIconStyle
+                )
+            }
         }
     }
-}
+}*/
 
 
 @Preview
@@ -163,11 +172,7 @@ private fun DepositPrev() {
         cardNumber = "6219861920241234",
     )
     CompositionLocalProvider(
-        LocalLayoutDirection provides LayoutDirection.Rtl,
-        LocalConfiguration provides Configuration().apply {
-            setLocale(Locale("fa"))
-
-        }) {
+        LocalLayoutDirection provides LayoutDirection.Rtl) {
         HamrahBankTheme {
 
             DepositWidget(
@@ -207,11 +212,4 @@ private fun DepositPrev2() {
             ) { }
         }
     }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-private fun TPrev() {
-    ChipWithIcon(value = "سپرده ها", clickable = { }, icon = Icons.Default.Edit)
 }

@@ -1,5 +1,7 @@
 package com.pmb.account.utils
 
+import com.pmb.account.presentation.balance.DepositsChartModel
+import com.pmb.account.presentation.balance.viewmodel.generateColorByIndex
 import com.pmb.account.presentation.component.DepositModel
 import com.pmb.ballon.models.DepositBottomSheetModel
 
@@ -32,4 +34,18 @@ internal fun List<DepositModel>.mapToDepositMenu(): List<DepositBottomSheetModel
         list.add(deposit)
     }
     return list
+}
+
+fun List<DepositModel>.mapToDepositsChartModel(): MutableList<DepositsChartModel> {
+    val totalSum = this.sumOf { it.amount }
+    return this.mapIndexed { index, it ->
+        DepositsChartModel(
+            value = (it.amount * 100 / totalSum).toFloat(),
+            color = generateColorByIndex(index),
+            title = it.title,
+            depositNumber = it.depositNumber,
+            amount = it.amount,
+            currency = it.currency
+        )
+    }.toMutableList()
 }

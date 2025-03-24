@@ -12,7 +12,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.pmb.account.presentation.balance.DepositsChartModel
-import com.pmb.account.presentation.balance.mapToDepositsChartModel
+import com.pmb.account.utils.mapToDepositsChartModel
 
 @Composable
 internal fun PieChart(
