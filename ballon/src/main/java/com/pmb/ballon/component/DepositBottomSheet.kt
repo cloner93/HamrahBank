@@ -79,10 +79,16 @@ private fun DepositRow(
 ) {
     var checkBoxState by remember { mutableStateOf(deposit.selected) }
 
+    val color =
+        if (deposit.state == 1)
+            AppTheme.colorScheme.onBackgroundNeutralDefault
+        else
+            AppTheme.colorScheme.onBackgroundNeutralDisabled
+
     Row(
         modifier = Modifier
             .padding(end = 12.dp, top = 12.dp, bottom = 12.dp)
-            .clickable {
+            .clickable(deposit.state == 1) {
                 checkBoxState = !checkBoxState
                 onClick(deposit.copy(selected = checkBoxState))
             },
@@ -94,21 +100,21 @@ private fun DepositRow(
         })
 
         Column(modifier = Modifier.weight(1f)) {
-            Headline6Text(text = deposit.title)
+            Headline6Text(text = deposit.title, color = color)
             Spacer(modifier = Modifier.height(4.dp))
-            CaptionText(text = deposit.desc)
+            CaptionText(text = deposit.desc, color = color)
         }
 
         Column(horizontalAlignment = Alignment.End) {
             BodyMediumText(
                 text = deposit.depositNumber,
-                color = AppTheme.colorScheme.onBackgroundNeutralDefault
+                color = color
             )
             Spacer(modifier = Modifier.height(4.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Headline6Text(text = deposit.amount.toCurrency())
+                Headline6Text(text = deposit.amount.toCurrency(), color = color)
                 Spacer(modifier = Modifier.width(4.dp))
-                CaptionText(text = deposit.currency)
+                CaptionText(text = deposit.currency, color = color)
             }
         }
     }
@@ -118,7 +124,10 @@ private fun DepositRow(
 fun CircleCheckbox(selected: Boolean, enabled: Boolean = false, onChecked: () -> Unit) {
     val imageVector = if (selected) Icons.Filled.CheckCircle else Icons.Outlined.Circle
     val tint =
-        if (selected) AppTheme.colorScheme.onBackgroundNeutralCTA else AppTheme.colorScheme.onBackgroundNeutralSubdued
+        if (selected)
+            AppTheme.colorScheme.onBackgroundNeutralCTA
+        else
+            AppTheme.colorScheme.onBackgroundNeutralSubdued
 
     IconButton(
         onClick = { onChecked() },
@@ -164,6 +173,25 @@ private fun DepositItem2Prev() {
         ibanNumber = "IR1234567890098765432112",
         cardNumber = "6219861920241234",
         state = 1,
+    )
+    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+        DepositRow(deposit)
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun DepositItemDisablePrev() {
+    val deposit = DepositBottomSheetModel(
+        title = "حساب قرض الحسنه",
+        desc = "تنخواه",
+        depositNumber = "123456",
+        amount = 100323232.233,
+        selected = false,
+        currency = stringResource(R.string.real_carrency),
+        ibanNumber = "IR1234567890098765432112",
+        cardNumber = "6219861920241234",
+        state = 0,
     )
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
         DepositRow(deposit)
