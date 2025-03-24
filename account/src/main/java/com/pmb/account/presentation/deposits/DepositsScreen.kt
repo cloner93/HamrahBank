@@ -35,19 +35,19 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.pmb.account.R
 import com.pmb.account.presentation.AccountScreens
 import com.pmb.account.presentation.component.DepositCarouselWidget
-import com.pmb.account.presentation.component.DepositModel
 import com.pmb.account.presentation.component.ShareDepositBottomSheet
 import com.pmb.account.presentation.component.ShareDepositBottomSheetContent
 import com.pmb.account.presentation.component.TransactionRow
 import com.pmb.account.presentation.deposits.viewmodel.DepositsViewActions
 import com.pmb.account.presentation.deposits.viewmodel.DepositsViewEvents
 import com.pmb.account.presentation.deposits.viewmodel.DepositsViewModel
+import com.pmb.account.utils.mapToDepositMenu
+import com.pmb.account.utils.mapToDepositModel
 import com.pmb.ballon.component.DepositBottomSheet
 import com.pmb.ballon.component.MenuBottomSheet
 import com.pmb.ballon.component.MenuItem
 import com.pmb.ballon.component.base.AppButtonIcon
 import com.pmb.ballon.component.base.RoundedTopColumn
-import com.pmb.ballon.models.DepositBottomSheetModel
 import com.pmb.ballon.models.IconStyle
 import com.pmb.ballon.models.MenuSheetModel
 import com.pmb.ballon.models.TextStyle
@@ -101,8 +101,7 @@ fun DepositsScreen(navigationManager: NavigationManager) {
                 }
 
                 is DepositsViewEvents.NavigateToTransactionsList -> {
-                    Toast.makeText(context, "TODO ->$event", Toast.LENGTH_LONG).show()
-
+                    navigationManager.navigate(AccountScreens.Transactions)
                 }
 
                 is DepositsViewEvents.RefreshCompleted -> {
@@ -286,34 +285,4 @@ private fun DepositsScreenPrev() {
 //            DepositsScreen()
         }
     }
-}
-
-private fun DepositBottomSheetModel.mapToDepositModel(): DepositModel {
-    return DepositModel(
-        title = this.title,
-        depositNumber = this.depositNumber,
-        amount = this.amount,
-        currency = this.currency,
-        ibanNumber = this.ibanNumber,
-        cardNumber = this.cardNumber
-    )
-}
-
-private fun List<DepositModel>.mapToDepositMenu(): List<DepositBottomSheetModel> {
-    val list = mutableListOf<DepositBottomSheetModel>()
-    for (item in this) {
-        val deposit = DepositBottomSheetModel(
-            title = item.title,
-            desc = "اقزودن نام",
-            depositNumber = item.depositNumber,
-            amount = item.amount,
-            currency = item.currency,
-            ibanNumber = item.ibanNumber,
-            selected = item.isSelected,
-            state = 1,
-            cardNumber = item.cardNumber
-        )
-        list.add(deposit)
-    }
-    return list
 }
