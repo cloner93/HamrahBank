@@ -8,7 +8,7 @@ class DepositsRepository @Inject constructor() {
         return listOf(
             DepositModel(
                 "حساب سرمایه گذاری بلند مدت",
-                "97974632",
+                "123456",
                 3_200_000.0,
                 "ریال",
                 "IR1234567890098765432112",

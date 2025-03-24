@@ -11,21 +11,42 @@ class TransactionsRepository @Inject constructor() {
                 TransactionModel(
                     TransactionType.RECEIVE,
                     "واریز حقوق",
-                    15_000_000.0,
+                    1_000_000.0,
                     "ریال",
                     "امروز ساعت ۱۰:۳۰"
                 ),
                 TransactionModel(
-                    TransactionType.WITHDRAWAL,
-                    "برداشت از خودپرداز",
-                    2_000_000.0,
+                    TransactionType.RECEIVE,
+                    "واریز حقوق",
+                    5_000_000.0,
                     "ریال",
-                    "دیروز ساعت ۱۸:۲۰"
+                    "امروز ساعت ۱۰:۳۰"
+                ),
+                TransactionModel(
+                    TransactionType.RECEIVE,
+                    "واریز حقوق",
+                    9_000_000.0,
+                    "ریال",
+                    "امروز ساعت ۱۰:۳۰"
                 ),
                 TransactionModel(
                     TransactionType.TRANSFER,
                     "انتقال به حساب دیگر",
                     3_500_000.0,
+                    "ریال",
+                    "۳ روز پیش ساعت ۱۴:۱۵"
+                ),
+                TransactionModel(
+                    TransactionType.TRANSFER,
+                    "انتقال به حساب دیگر",
+                    500_000.0,
+                    "ریال",
+                    "۳ روز پیش ساعت ۱۴:۱۵"
+                ),
+                TransactionModel(
+                    TransactionType.TRANSFER,
+                    "انتقال به حساب دیگر",
+                    900_000.0,
                     "ریال",
                     "۳ روز پیش ساعت ۱۴:۱۵"
                 )
