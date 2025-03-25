@@ -7,9 +7,13 @@ import androidx.compose.material3.SheetState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.Color
 import com.pmb.ballon.ui.theme.AppTheme
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import kotlinx.coroutines.launch
 
 
@@ -44,7 +48,7 @@ fun AppBottomSheet(
     onDismiss: () -> Unit,
     containerColor: Color = AppTheme.colorScheme.background1Neutral,
     dragHandle: @Composable () -> Unit = {},
-    content: @Composable ColumnScope.() -> Unit
+    content: @Composable ColumnScope.(NestedScrollConnection) -> Unit
 ) {
     val sheetState =
         if (cancelable) rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -52,6 +56,9 @@ fun AppBottomSheet(
             skipPartiallyExpanded = true,
             confirmValueChange = { false })
     val scope = rememberCoroutineScope()
+
+    // Nested Scroll Connection
+    val nestedScrollConnection = remember { object : NestedScrollConnection {} }
 
     LaunchedEffect(isVisible) {
         if (isVisible) {
@@ -64,6 +71,7 @@ fun AppBottomSheet(
     }
 
     ModalBottomSheet(
+        modifier = Modifier.nestedScroll(nestedScrollConnection), // اتصال Scroll
         onDismissRequest = {
             scope.launch {
                 if (sheetState.isVisible)
@@ -74,6 +82,6 @@ fun AppBottomSheet(
         containerColor = containerColor,
         sheetState = sheetState,
         dragHandle = dragHandle,
-        content = content
+        content = { content(nestedScrollConnection) }
     )
 }

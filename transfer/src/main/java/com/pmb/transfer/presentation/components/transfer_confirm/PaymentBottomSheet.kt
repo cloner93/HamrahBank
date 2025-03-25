@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.pmb.ballon.component.DynamicPassCardInputField
 import com.pmb.ballon.component.base.AppBottomSheet
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppNumberTextField
@@ -76,6 +77,7 @@ fun PaymentBottomSheet(
                 )
                 Spacer(modifier = Modifier.size(32.dp))
                 DynamicPassCardInputField(
+                    modifier = Modifier.padding(16.dp),
                     dyPass = pass2,
                     retryEnabled = retryEnabled,
                     onValueChange = {

@@ -50,7 +50,7 @@ fun ProfileScreen(navigationManager: NavigationManager, viewModel: ProfileViewMo
         ) {
             TextImage(
                 modifier = Modifier.padding(all = 32.dp),
-                image = R.drawable.profile_placeholder,
+                image = com.pmb.ballon.R.drawable.profile_placeholder,
                 text = viewState.userData?.userName ?: ""
             )
 
