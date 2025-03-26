@@ -9,6 +9,7 @@ import com.pmb.ballon.models.DepositBottomSheetModel
 internal fun DepositBottomSheetModel.mapToDepositModel(): DepositModel {
     return DepositModel(
         title = this.title,
+        desc = this.desc,
         depositNumber = this.depositNumber,
         amount = this.amount,
         currency = this.currency,
@@ -22,7 +23,7 @@ internal fun List<DepositModel>.mapToDepositMenu(): List<DepositBottomSheetModel
     for (item in this) {
         val deposit = DepositBottomSheetModel(
             title = item.title,
-            desc = "اقزودن نام",
+            desc = item.desc,
             depositNumber = item.depositNumber,
             amount = item.amount,
             currency = item.currency,

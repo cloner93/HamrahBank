@@ -40,6 +40,7 @@ fun DepositCarouselWidget(
 private fun DepositCardPrev() {
     val dip = DepositModel(
         title = "حساب قرض الحسنه آقای مشتاق مودت",
+        desc = "تنخواه",
         depositNumber = "123456",
         amount = 10000023400.0,
         currency = stringResource(R.string.real_carrency),

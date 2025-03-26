@@ -16,6 +16,7 @@ class GetDepositsUseCase @Inject constructor(
             deposits.map { deposit ->
                 DepositModel(
                     title = deposit.title,
+                    desc = deposit.desc,
                     depositNumber = deposit.depositNumber,
                     amount = deposit.amount,
                     currency = deposit.currency,

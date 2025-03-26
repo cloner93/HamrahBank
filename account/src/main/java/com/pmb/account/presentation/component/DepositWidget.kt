@@ -42,6 +42,7 @@ import java.util.Locale
 
 data class DepositModel(
     val title: String,
+    val desc: String?,
     val depositNumber: String,
     val amount: Double,
     val currency: String,
@@ -165,6 +166,7 @@ fun ChipWithIcon(
 private fun DepositPrev() {
     val dip = DepositModel(
         title = "حساب قرض الحسنه",
+        desc = "تنخواه",
         depositNumber = "1232324-56",
         amount = 10000023400.0,
         currency = stringResource(R.string.real_carrency),
@@ -190,6 +192,7 @@ private fun DepositPrev() {
 private fun DepositPrev2() {
     val dip = DepositModel(
         title = "حساب قرض الحسنه",
+        desc = "تنخواه",
         depositNumber = "1232324-56",
         amount = 10000023400.0,
         currency = stringResource(R.string.real_carrency),

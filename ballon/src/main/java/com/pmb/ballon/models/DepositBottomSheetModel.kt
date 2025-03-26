@@ -2,7 +2,7 @@ package com.pmb.ballon.models
 
 data class DepositBottomSheetModel(
     val title: String,
-    val desc: String,
+    val desc: String?,
     val amount: Double,
     var selected: Boolean = false,
     val state: Int,

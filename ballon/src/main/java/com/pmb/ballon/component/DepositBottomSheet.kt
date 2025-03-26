@@ -102,7 +102,7 @@ private fun DepositRow(
         Column(modifier = Modifier.weight(1f)) {
             Headline6Text(text = deposit.title, color = color)
             Spacer(modifier = Modifier.height(4.dp))
-            CaptionText(text = deposit.desc, color = color)
+            CaptionText(text = deposit.desc ?: "", color = color)
         }
 
         Column(horizontalAlignment = Alignment.End) {

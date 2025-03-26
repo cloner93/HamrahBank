@@ -8,6 +8,7 @@ class DepositsRepository @Inject constructor() {
         return listOf(
             DepositModel(
                 "حساب سرمایه گذاری بلند مدت",
+                "حساب دسته چک",
                 "123456",
                 3_200_000.0,
                 "ریال",
@@ -16,6 +17,7 @@ class DepositsRepository @Inject constructor() {
             ),
             DepositModel(
                 "حساب مشترک",
+                "تنخواه",
                 "82768947",
                 4_700_000.0,
                 "ریال",
@@ -24,6 +26,7 @@ class DepositsRepository @Inject constructor() {
             ),
             DepositModel(
                 "حساب جاری",
+                null,
                 "746384",
                 2_300_000.0,
                 "ریال",
@@ -32,6 +35,7 @@ class DepositsRepository @Inject constructor() {
             ),
             DepositModel(
                 "حساب قرض الحسنه خانواده",
+                "کیف پول خانواده",
                 "572839",
                 5_000_000.0,
                 "ریال",

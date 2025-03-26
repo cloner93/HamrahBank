@@ -25,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -47,7 +48,7 @@ import com.pmb.ballon.ui.theme.HamrahBankTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ShareDepositBottomSheet(
-    content: @Composable ColumnScope.() -> Unit,
+    content: @Composable ColumnScope.(NestedScrollConnection) -> Unit,
     onDismiss: () -> Unit
 ) {
     var isVisible by remember { mutableStateOf(true) }
@@ -239,6 +240,7 @@ fun ShareDepositBottomSheetContent(
 private fun ContentPreview() {
     val dip = DepositModel(
         title = "حساب قرض الحسنه آقای مشتاق مودت",
+        desc = "تنخواه",
         depositNumber = "123456",
         amount = 10000023400.0,
         currency = stringResource(com.pmb.ballon.R.string.real_carrency),
