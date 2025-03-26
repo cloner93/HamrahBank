@@ -1,7 +1,10 @@
 package com.pmb.account.presentation.transactions.filterScreen
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,6 +26,7 @@ import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.ui.theme.AppTheme
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun TransactionFilterScreen() {
     Column(
@@ -74,6 +78,7 @@ fun TransactionFilterScreen() {
                 borderColor = AppTheme.colorScheme.strokeNeutral1Default,
                 fillMaxWidth = true
             )
+
         }
 
         Spacer(modifier = Modifier.height(44.dp))
@@ -88,6 +93,61 @@ fun TransactionFilterScreen() {
             text = "انتخاب تاریخ",
             color = AppTheme.colorScheme.onBackgroundNeutralSubdued
         )
+        Spacer(modifier = Modifier.height(24.dp))
+        FlowRow(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            maxItemsInEachRow = 3,
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+
+            ChipWithIcon(
+                modifier = Modifier.weight(1f),
+                fillMaxWidth = true,
+                value = "امروز",
+                clickable = { },
+                color = Color.White,
+                assetColor = Color.Black,
+                borderColor = AppTheme.colorScheme.strokeNeutral1Default,
+            )
+            ChipWithIcon(
+                modifier = Modifier.weight(1f),
+                fillMaxWidth = true,
+                value = "هفته گذشته",
+                clickable = { },
+                color = Color.White,
+                assetColor = Color.Black,
+                borderColor = AppTheme.colorScheme.strokeNeutral1Default,
+            )
+
+            ChipWithIcon(
+                modifier = Modifier.weight(1f),
+                fillMaxWidth = true,
+                value = "ماه گذشته",
+                clickable = { },
+                color = Color.White,
+                assetColor = Color.Black,
+                borderColor = AppTheme.colorScheme.strokeNeutral1Default,
+            )
+            ChipWithIcon(
+                modifier = Modifier.weight(1f),
+                fillMaxWidth = true,
+                value = "ماه جاری",
+                clickable = { },
+                color = Color.White,
+                assetColor = Color.Black,
+                borderColor = AppTheme.colorScheme.strokeNeutral1Default,
+            )
+            ChipWithIcon(
+                modifier = Modifier.weight(1f),
+                fillMaxWidth = true,
+                value = "انتخاب بازه دلخواه",
+                clickable = { },
+                color = Color.White,
+                assetColor = Color.Black,
+                borderColor = AppTheme.colorScheme.strokeNeutral1Default,
+            )
+        }
     }
 }
 

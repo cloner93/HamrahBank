@@ -38,7 +38,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -49,6 +48,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.pmb.account.R
+import com.pmb.account.presentation.AccountScreens
 import com.pmb.account.presentation.component.ChipWithIcon
 import com.pmb.account.presentation.component.DepositModel
 import com.pmb.account.presentation.component.TransactionModel
@@ -111,7 +111,7 @@ fun TransactionsScreen(navigationManager: NavigationManager) {
                 }
 
                 TransactionsViewEvents.NavigateToTransactionFilterScreen -> {
-
+                    navigationManager.navigate(AccountScreens.TransactionsFilter)
                 }
 
                 TransactionsViewEvents.NavigateToTransactionInfoScreen -> {
@@ -204,7 +204,8 @@ fun SendReceiveTransactionsSection(
         "حواله",
         "سود ماهیانه"
     )
-    RowOfMonth(modifier = Modifier.padding(bottom = 32.dp))
+
+    RowOfMonth(modifier = Modifier.padding(bottom = 32.dp), 0)
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -236,7 +237,7 @@ fun SendReceiveTransactionsSection(
                 verticalArrangement = Arrangement.spacedBy(24.dp)
             ) {
                 items(tempList.size) { item ->
-                    SingleRoe(
+                    SingleRow(
                         title = tempList[item],
                         amount = 12300.0,
                         onClick = onTransactionClick
@@ -260,7 +261,8 @@ private fun AllTransactionsSection(
         },
         onFilterItemClick = {
             viewModel.handle(TransactionsViewActions.RemoveFilterFromList(it))
-        }, onStatementClick = {
+        },
+        onStatementClick = {
             viewModel.handle(TransactionsViewActions.NavigateToDepositStatementScreen)
         })
     LazyColumn(
@@ -287,7 +289,7 @@ private fun SendTransactionsSection(
         "حواله",
         "پرداخت قبض",
     )
-    RowOfMonth(modifier = Modifier.padding(bottom = 32.dp))
+    RowOfMonth(modifier = Modifier.padding(bottom = 32.dp), 0)
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -319,7 +321,7 @@ private fun SendTransactionsSection(
                 verticalArrangement = Arrangement.spacedBy(24.dp)
             ) {
                 items(tempList.size) { item ->
-                    SingleRoe(
+                    SingleRow(
                         title = tempList[item],
                         amount = 12300.0,
                         onClick = onTransactionClick
@@ -332,7 +334,7 @@ private fun SendTransactionsSection(
 }
 
 @Composable
-private fun SingleRoe(
+private fun SingleRow(
     title: String,
     amount: Double,
     onClick: () -> Unit
@@ -342,7 +344,7 @@ private fun SingleRoe(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Headline6Text(text = title)
-        Spacer(modifier = Modifier.weight(1f))//Color/On Background/Neutral/Subdued
+        Spacer(modifier = Modifier.weight(1f))
         CaptionText(
             text = amount.toCurrency(),
             color = AppTheme.colorScheme.onBackgroundNeutralSubdued
@@ -401,7 +403,7 @@ fun AppTopBar(
                     shape = RoundedCornerShape(12.dp)
                 ),
             roundedShape = 12.dp,
-            value = model?.depositNumber ?: "N/A",
+            value = model?.desc ?: (model?.depositNumber).toString(),
             startIcon = Icons.Default.ArrowDropDown,
             clickable = onClick,
             color = Color.Transparent,
@@ -486,19 +488,38 @@ private fun StatementAndFilters(
     }
 }
 
-@Composable
-fun RowOfMonth(modifier: Modifier = Modifier) {
 
-    val months = listOf(
-        "فروردین", "اردیبهشت", "خرداد", "تیر",
-        "مرداد", "شهریور", "مهر", "آبان",
-        "آذر", "دی", "بهمن", "اسفند"
+@Composable
+fun RowOfMonth(modifier: Modifier = Modifier, currentMonth: Int) {
+    val realMonth: List<Pair<String, Int>> = listOf(
+        "فروردین" to 0,
+        "اردیبهشت" to 1,
+        "خرداد" to 2,
+        "تیر" to 3,
+        "مرداد" to 4,
+        "شهریور" to 5,
+        "مهر" to 6,
+        "آبان" to 7,
+        "آذر" to 8,
+        "دی" to 9,
+        "بهمن" to 10,
+        "اسفند" to 11,
     )
-    var selectedMonth by remember { mutableStateOf(3) }
+
+    val showMonth = realMonth.apply {
+        val shiftIndex = (currentMonth + 2) % this.size
+
+        this.drop(shiftIndex) + this.take(shiftIndex)
+    }
+
+    var selectedMonth by remember { mutableIntStateOf(currentMonth) }
     val listState = rememberLazyListState()
 
     LaunchedEffect(selectedMonth) {
-        listState.animateScrollToItem(selectedMonth, scrollOffset = -100)
+        val index = showMonth.indexOfFirst { it.second == selectedMonth }
+        if (index != -1) {
+            listState.animateScrollToItem(index, scrollOffset = (showMonth.size / 2) * -70)
+        }
     }
     LazyRow(
         modifier = modifier.fillMaxWidth(),
@@ -506,14 +527,14 @@ fun RowOfMonth(modifier: Modifier = Modifier) {
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         contentPadding = PaddingValues(horizontal = 16.dp)
     ) {
-        itemsIndexed(months) { index, month ->
-            val isSelected = index == selectedMonth
+        itemsIndexed(showMonth) { _, month ->
+            val isSelected = month.second == selectedMonth
             MonthItem(
-                month = month,
+                month = month.first,
                 isSelected = isSelected,
-                onClick = { selectedMonth = index },
+                onClick = { selectedMonth = month.second },
                 year = "1404",
-                isEnabled = months.last() != month // todo fix it
+                isEnabled = showMonth.last() != month
             )
         }
     }
@@ -521,6 +542,7 @@ fun RowOfMonth(modifier: Modifier = Modifier) {
 
 @Composable
 fun MonthItem(
+    modifier: Modifier = Modifier,
     year: String,
     month: String,
     isSelected: Boolean,
@@ -528,7 +550,7 @@ fun MonthItem(
     onClick: () -> Unit
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .clip(RoundedCornerShape(8.dp))
             .background(
                 if (isSelected)
