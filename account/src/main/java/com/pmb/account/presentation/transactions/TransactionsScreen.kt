@@ -491,7 +491,7 @@ private fun StatementAndFilters(
 
 @Composable
 fun RowOfMonth(modifier: Modifier = Modifier, currentMonth: Int) {
-    val realMonth: List<Pair<String, Int>> = listOf(
+    val realMonth = listOf(
         "فروردین" to 0,
         "اردیبهشت" to 1,
         "خرداد" to 2,
@@ -506,10 +506,9 @@ fun RowOfMonth(modifier: Modifier = Modifier, currentMonth: Int) {
         "اسفند" to 11,
     )
 
-    val showMonth = realMonth.apply {
-        val shiftIndex = (currentMonth + 2) % this.size
-
-        this.drop(shiftIndex) + this.take(shiftIndex)
+    val showMonth = run {
+        val shiftIndex = (currentMonth + 2) % realMonth.size
+        realMonth.drop(shiftIndex) + realMonth.take(shiftIndex)
     }
 
     var selectedMonth by remember { mutableIntStateOf(currentMonth) }
