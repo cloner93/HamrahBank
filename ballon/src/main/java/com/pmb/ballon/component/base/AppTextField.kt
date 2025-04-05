@@ -50,6 +50,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.pmb.ballon.models.AppTextField
 import com.pmb.ballon.ui.theme.AppTheme
+import com.pmb.ballon.ui.theme.appFontFamily
 import com.pmb.core.utils.isIranianNationalId
 import com.pmb.core.utils.isMobile
 
@@ -133,7 +134,7 @@ fun AppBaseTextField(
             BasicTextField(
                 value = value,
                 onValueChange = onValueChange,
-                textStyle = TextStyle(fontSize = 16.sp, color = inputColor),
+                textStyle = TextStyle(fontSize = 16.sp, color = inputColor, fontFamily = appFontFamily),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(
@@ -147,6 +148,7 @@ fun AppBaseTextField(
                 visualTransformation = visualTransformation,
                 keyboardOptions = keyboardOptions,
                 keyboardActions = keyboardActions,
+
 //                keyboardActions = KeyboardActions(
 //                    onDone = {
 //                        focusRequester.freeFocus()     // Clear the focus
