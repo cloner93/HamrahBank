@@ -1,6 +1,5 @@
 package com.pmb.account.presentation.transactions.filterScreen
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -24,6 +23,8 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,8 +44,11 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.pmb.account.R
 import com.pmb.account.presentation.component.ChipWithIcon
+import com.pmb.account.presentation.transactions.filterScreen.viewmodel.TransactionsFilterViewActions
+import com.pmb.account.presentation.transactions.filterScreen.viewmodel.TransactionsFilterViewModel
 import com.pmb.ballon.component.PersianDatePicker
 import com.pmb.ballon.component.base.AppBottomSheet
 import com.pmb.ballon.component.base.AppButton
@@ -72,16 +76,17 @@ import com.pmb.ballon.ui.theme.AppTheme
 @Composable
 fun TransactionFilterScreen() {
 
-    var transactionType: TransactionType? by remember { mutableStateOf(null) }
-    var dateType: DateType? by remember { mutableStateOf(null) }
+    val viewModel = hiltViewModel<TransactionsFilterViewModel>()
+    val viewState by viewModel.viewState.collectAsState()
 
-    var from by remember { mutableStateOf("") }
-    var to by remember { mutableStateOf("") }
+    LaunchedEffect(Unit) {
+        viewModel.viewEvent.collect { event ->
+            /*when (event) {
+            }*/
+        }
+    }
 
     val focusRequesterTo = remember { FocusRequester() }
-
-    var showFromPicker by remember { mutableStateOf(false) }
-    var showToPicker by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -94,7 +99,9 @@ fun TransactionFilterScreen() {
 
         AppTopBar(
             title = "فیلتر ها",
-            onBack = {}
+            onBack = {
+                viewModel.handle(TransactionsFilterViewActions.NavigateBack)
+            }
         )
         Spacer(modifier = Modifier.height(24.dp))
         BodyMediumText(
@@ -109,9 +116,13 @@ fun TransactionFilterScreen() {
                 modifier = Modifier.weight(1f),
                 value = "همه",
                 clickable = {
-                    transactionType = TransactionType.ALL
+                    if (viewState.transactionType == TransactionType.ALL)
+                        viewModel.handle(TransactionsFilterViewActions.SelectTransactionType(null))
+                    viewModel.handle(
+                        TransactionsFilterViewActions.SelectTransactionType(TransactionType.ALL)
+                    )
                 },
-                color = if (transactionType == TransactionType.ALL) AppTheme.colorScheme.stateLayerNeutralPressed else Color.White,
+                color = if (viewState.transactionType == TransactionType.ALL) AppTheme.colorScheme.stateLayerNeutralPressed else Color.White,
                 assetColor = Color.Black,
                 borderColor = AppTheme.colorScheme.strokeNeutral1Default,
                 fillMaxWidth = true
@@ -121,9 +132,15 @@ fun TransactionFilterScreen() {
                 modifier = Modifier.weight(1f),
                 value = "برداشت",
                 clickable = {
-                    transactionType = TransactionType.SEND
+                    if (viewState.transactionType == TransactionType.SEND)
+                        viewModel.handle(TransactionsFilterViewActions.SelectTransactionType(null))
+                    viewModel.handle(
+                        TransactionsFilterViewActions.SelectTransactionType(
+                            TransactionType.SEND
+                        )
+                    )
                 },
-                color = if (transactionType == TransactionType.SEND) AppTheme.colorScheme.stateLayerNeutralPressed else Color.White,
+                color = if (viewState.transactionType == TransactionType.SEND) AppTheme.colorScheme.stateLayerNeutralPressed else Color.White,
                 assetColor = Color.Black,
                 borderColor = AppTheme.colorScheme.strokeNeutral1Default,
                 fillMaxWidth = true
@@ -133,9 +150,15 @@ fun TransactionFilterScreen() {
                 modifier = Modifier.weight(1f),
                 value = "واریز",
                 clickable = {
-                    transactionType = TransactionType.RECEIVE
+                    if (viewState.transactionType == TransactionType.RECEIVE)
+                        viewModel.handle(TransactionsFilterViewActions.SelectTransactionType(null))
+                    viewModel.handle(
+                        TransactionsFilterViewActions.SelectTransactionType(
+                            TransactionType.RECEIVE
+                        )
+                    )
                 },
-                color = if (transactionType == TransactionType.RECEIVE) AppTheme.colorScheme.stateLayerNeutralPressed else Color.White,
+                color = if (viewState.transactionType == TransactionType.RECEIVE) AppTheme.colorScheme.stateLayerNeutralPressed else Color.White,
                 assetColor = Color.Black,
                 borderColor = AppTheme.colorScheme.strokeNeutral1Default,
                 fillMaxWidth = true
@@ -154,8 +177,10 @@ fun TransactionFilterScreen() {
             modifier = Modifier.fillMaxWidth(),
             label = "از",
             action = ImeAction.Next,
-            value = from,
-            onValueChange = { from = it },
+            value = viewState.fromDate,
+            onValueChange = {
+                viewModel.handle(TransactionsFilterViewActions.ChangeFromPrice(it))
+            },
             onAction = {
                 focusRequesterTo.requestFocus()
             }
@@ -165,8 +190,10 @@ fun TransactionFilterScreen() {
             modifier = Modifier.fillMaxWidth(),
             label = "تا",
             action = ImeAction.Done,
-            value = to,
-            onValueChange = { to = it },
+            value = viewState.toDate,
+            onValueChange = {
+                viewModel.handle(TransactionsFilterViewActions.ChangeToPrice(it))
+            },
             focusRequester = focusRequesterTo,
             onAction = {
 
@@ -191,9 +218,13 @@ fun TransactionFilterScreen() {
                 fillMaxWidth = true,
                 value = "امروز",
                 clickable = {
-                    dateType = DateType.TODAY
+                    viewModel.handle(
+                        TransactionsFilterViewActions.SelectDateType(
+                            DateType.TODAY
+                        )
+                    )
                 },
-                color = if (dateType == DateType.TODAY) AppTheme.colorScheme.stateLayerNeutralPressed else Color.White,
+                color = if (viewState.dateType == DateType.TODAY) AppTheme.colorScheme.stateLayerNeutralPressed else Color.White,
                 assetColor = Color.Black,
                 borderColor = AppTheme.colorScheme.strokeNeutral1Default,
             )
@@ -202,9 +233,13 @@ fun TransactionFilterScreen() {
                 fillMaxWidth = true,
                 value = "هفته گذشته",
                 clickable = {
-                    dateType = DateType.LAST_WEEK
+                    viewModel.handle(
+                        TransactionsFilterViewActions.SelectDateType(
+                            DateType.LAST_WEEK
+                        )
+                    )
                 },
-                color = if (dateType == DateType.LAST_WEEK) AppTheme.colorScheme.stateLayerNeutralPressed else Color.White,
+                color = if (viewState.dateType == DateType.LAST_WEEK) AppTheme.colorScheme.stateLayerNeutralPressed else Color.White,
                 assetColor = Color.Black,
                 borderColor = AppTheme.colorScheme.strokeNeutral1Default,
             )
@@ -214,9 +249,13 @@ fun TransactionFilterScreen() {
                 fillMaxWidth = true,
                 value = "ماه گذشته",
                 clickable = {
-                    dateType = DateType.LAST_MONTH
+                    viewModel.handle(
+                        TransactionsFilterViewActions.SelectDateType(
+                            DateType.LAST_MONTH
+                        )
+                    )
                 },
-                color = if (dateType == DateType.LAST_MONTH) AppTheme.colorScheme.stateLayerNeutralPressed else Color.White,
+                color = if (viewState.dateType == DateType.LAST_MONTH) AppTheme.colorScheme.stateLayerNeutralPressed else Color.White,
                 assetColor = Color.Black,
                 borderColor = AppTheme.colorScheme.strokeNeutral1Default,
             )
@@ -225,9 +264,14 @@ fun TransactionFilterScreen() {
                 fillMaxWidth = true,
                 value = "ماه جاری",
                 clickable = {
-                    dateType = DateType.CURRENT_MONTH
+
+                    viewModel.handle(
+                        TransactionsFilterViewActions.SelectDateType(
+                            DateType.CURRENT_MONTH
+                        )
+                    )
                 },
-                color = if (dateType == DateType.CURRENT_MONTH) AppTheme.colorScheme.stateLayerNeutralPressed else Color.White,
+                color = if (viewState.dateType == DateType.CURRENT_MONTH) AppTheme.colorScheme.stateLayerNeutralPressed else Color.White,
                 assetColor = Color.Black,
                 borderColor = AppTheme.colorScheme.strokeNeutral1Default,
             )
@@ -236,15 +280,19 @@ fun TransactionFilterScreen() {
                 fillMaxWidth = true,
                 value = "انتخاب بازه دلخواه",
                 clickable = {
-                    dateType = DateType.CUSTOM
+                    viewModel.handle(
+                        TransactionsFilterViewActions.SelectDateType(
+                            DateType.CUSTOM
+                        )
+                    )
                 },
-                color = if (dateType == DateType.CUSTOM) AppTheme.colorScheme.stateLayerNeutralPressed else Color.White,
+                color = if (viewState.dateType == DateType.CUSTOM) AppTheme.colorScheme.stateLayerNeutralPressed else Color.White,
                 assetColor = Color.Black,
                 borderColor = AppTheme.colorScheme.strokeNeutral1Default,
             )
         }
 
-        if (dateType == DateType.CUSTOM) {
+        if (viewState.dateType == DateType.CUSTOM) {
             Column {
                 Spacer(modifier = Modifier.height(32.dp))
                 AppClickableReadOnlyTextField(
@@ -258,7 +306,7 @@ fun TransactionFilterScreen() {
                         )
                     },
                     onClick = {
-                        showFromPicker = true
+                        viewModel.handle(TransactionsFilterViewActions.ShowFromDatePicker)
                     })
 
                 Spacer(modifier = Modifier.height(24.dp))
@@ -273,31 +321,31 @@ fun TransactionFilterScreen() {
                         )
                     },
                     onClick = {
-                        showToPicker = true
+                        viewModel.handle(TransactionsFilterViewActions.ShowToDatePicker)
                     })
             }
         }
     }
 
-    if (showFromPicker) {
+    if (viewState.showFromDatePicker) {
         ShowPersianDatePickerBottomSheet(
             onChangeValue = { year, month, day ->
-//                viewModel.handle(AuthenticationInformationViewActions.SetIdentifyDay("$day/$month/$year"))
-                Log.d("TAG", "TransactionFilterScreen: $day/$month/$year")
-                showFromPicker = false
+                viewModel.handle(TransactionsFilterViewActions.CloseToDatePicker("$year$month$day"))
             },
-            onDismiss = { showFromPicker = false },
+            onDismiss = {
+                viewModel.handle(TransactionsFilterViewActions.CloseToDatePicker(null))
+            },
             title = "از تاریخ"
         )
     }
-    if (showToPicker) {
+    if (viewState.showToDatePicker) {
         ShowPersianDatePickerBottomSheet(
             onChangeValue = { year, month, day ->
-//                viewModel.handle(AuthenticationInformationViewActions.SetIdentifyDay("$day/$month/$year"))
-                Log.d("TAG", "TransactionFilterScreen: $day/$month/$year")
-                showToPicker = false
+                viewModel.handle(TransactionsFilterViewActions.CloseFromDatePicker("$year$month$day"))
             },
-            onDismiss = { showToPicker = false },
+            onDismiss = {
+                viewModel.handle(TransactionsFilterViewActions.CloseFromDatePicker(null))
+            },
             title = "تا تاریخ"
         )
     }
@@ -310,7 +358,6 @@ enum class TransactionType {
 enum class DateType {
     TODAY, LAST_WEEK, LAST_MONTH, CURRENT_MONTH, CUSTOM
 }
-
 
 @Composable
 fun ShowPersianDatePickerBottomSheet(
