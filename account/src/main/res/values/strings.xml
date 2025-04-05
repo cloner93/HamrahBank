@@ -23,4 +23,7 @@
     <string name="adding_and_activating_a_bank_card">افزودن و فعال‌سازی بن‌کارت</string>
     <string name="copy_all_data">کپی همه موارد</string>
     <string name="share_all_data">اشتراک گذاری همه</string>
+    <string name="birthday">تاریخ تولد</string>
+    <string name="_continue">ادامه</string>
+    <string name="from">از تاریخ</string>
 </resources>
