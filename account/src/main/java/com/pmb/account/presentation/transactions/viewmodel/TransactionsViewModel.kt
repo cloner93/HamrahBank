@@ -4,7 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.pmb.account.presentation.component.DepositModel
 import com.pmb.account.presentation.component.TransactionModel
 import com.pmb.account.presentation.component.TransactionType
-import com.pmb.account.presentation.transactions.TransactionFilter
+import com.pmb.account.presentation.transactions.filterScreen.viewmodel.entity.TransactionFilter
 import com.pmb.account.usecase.deposits.GetDepositsUseCase
 import com.pmb.account.usecase.deposits.GetTransactionsUseCase
 import com.pmb.core.platform.BaseViewAction
@@ -16,7 +16,6 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-
 class TransactionsViewModel @Inject constructor(
     initialState: TransactionsViewState,
     private val getDepositsUseCase: GetDepositsUseCase,
@@ -52,12 +51,11 @@ class TransactionsViewModel @Inject constructor(
             }
 
             is TransactionsViewActions.RemoveFilterFromList -> {
-
-//                setState {
-//                    it.copy(
-//                        filterList =
-//                    )
-//                }
+                setState {
+                    it.copy(
+                        transactionFilter = action.item
+                    )
+                }
             }
 
             TransactionsViewActions.ShowDepositListBottomSheet -> {
@@ -71,6 +69,12 @@ class TransactionsViewModel @Inject constructor(
 
                 if (action.model != null) {
                     selectDeposit(action.model.depositNumber)
+                }
+            }
+
+            is TransactionsViewActions.UpdateFilterList -> {
+                setState {
+                    it.copy(transactionFilter = action.data)
                 }
             }
         }
@@ -193,14 +197,15 @@ sealed interface TransactionsViewActions : BaseViewAction {
     object NavigateToTransactionFilterScreen : TransactionsViewActions
     object NavigateToDepositStatementScreen : TransactionsViewActions
     object NavigateToTransactionInfoScreen : TransactionsViewActions
-    class RemoveFilterFromList(val item: Int) : TransactionsViewActions
+    class RemoveFilterFromList(val item: TransactionFilter) : TransactionsViewActions
+    class UpdateFilterList(val data: TransactionFilter) : TransactionsViewActions
     class CloseDepositListBottomSheet(val model: DepositModel?) : TransactionsViewActions
 }
 
 data class TransactionsViewState(
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
-    val filterList: List<TransactionFilter> = emptyList(),
+    val transactionFilter: TransactionFilter? = null,
     val allTransactions: List<TransactionModel> = emptyList(),
     val sendTransactions: List<TransactionModel> = emptyList(),
     val totalSendTransactions: Double = 0.0,

@@ -37,7 +37,7 @@ fun NavGraphBuilder.accountScreensHandle(navigationManager: NavigationManager) {
         TransactionsScreen(navigationManager = navigationManager)
     }
     composable(route = AccountScreens.TransactionsFilter.route) {
-        TransactionFilterScreen()
+        TransactionFilterScreen(navigationManager = navigationManager)
     }
 }
 
