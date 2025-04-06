@@ -98,4 +98,7 @@
     <string name="identify_area">حوزه صدور شناسنامه</string>
     <string name="identify_day">تاریخ صدور شناسنامه</string>
     <string name="education">تحصیلات</string>
+    <string name="mellat_signature_desc">جهت احراز هویت از این روش، باید از نصب بودن برنامه امضای ملت بر روی گوشی همراه و همچنین دریافت گواهینامه امضای الکترونیک اطمینان حاصل کنید.</string>
+    <string name="enter_mellat_signature_app">ورود به برنامه امضای ملت</string>
+    <string name="download_mellat_signature_app">دریافت برنامه امضای ملت</string>
 </resources>
