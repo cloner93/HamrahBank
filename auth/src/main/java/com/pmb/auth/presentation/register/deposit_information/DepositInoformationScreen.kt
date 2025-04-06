@@ -13,6 +13,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -24,6 +27,7 @@ import com.pmb.auth.R
 import com.pmb.auth.domain.register.search_opening_branch.entity.OpeningBranch
 import com.pmb.auth.presentation.AuthScreens
 import com.pmb.auth.presentation.component.RoundedCornerCheckboxComponent
+import com.pmb.auth.presentation.component.UsageRoleBottomSheet
 import com.pmb.auth.presentation.register.deposit_information.viewModel.DepositInformationViewActions
 import com.pmb.auth.presentation.register.deposit_information.viewModel.DepositInformationViewEvents
 import com.pmb.auth.presentation.register.deposit_information.viewModel.DepositInformationViewModel
@@ -53,7 +57,7 @@ fun DepositInformationScreen(
             }
         }
     }
-
+    var showBottomSheet by remember { mutableStateOf(false) }
     navigationManager.getCurrentScreenFlowData<OpeningBranch?>(
         "openingBranch",
         null
@@ -64,7 +68,8 @@ fun DepositInformationScreen(
             viewModel.handle(DepositInformationViewActions.SetOpeningBranch(it))
         }
     }
-    AppContent(modifier = Modifier.padding(horizontal = 16.dp),
+    AppContent(
+        modifier = Modifier.padding(horizontal = 16.dp),
         topBar = {
             AppTopBar(
                 title = stringResource(R.string.deposit_information),
@@ -75,8 +80,12 @@ fun DepositInformationScreen(
         },
         footer = {
             RoundedCornerCheckboxComponent(
-                modifier = Modifier.fillMaxWidth()
-                    .padding(horizontal = 24.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 24.dp)
+                    .clickable {
+                        showBottomSheet = true
+                    },
                 title = buildAnnotatedString {
                     withStyle(
                         style = SpanStyle(
@@ -91,12 +100,13 @@ fun DepositInformationScreen(
                 },
                 isChecked = viewState.isChecked
             ) {
-                viewModel.handle(DepositInformationViewActions.SelectRules)
+                showBottomSheet = true
             }
             Spacer(modifier = Modifier.size(22.dp))
-            AppButton(modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp, top = 16.dp),
+            AppButton(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp, end = 16.dp, top = 16.dp),
                 enable = !viewState.isLoading && viewState.depositInformation != null && viewState.branchCity != null && viewState.isChecked,
                 title = stringResource(R.string._continue),
                 onClick = {
@@ -168,24 +178,26 @@ fun DepositInformationScreen(
                 }
             }
             Spacer(modifier = Modifier.size(12.dp))
-            Box(modifier = Modifier
-                .fillMaxWidth()
-                .clickable(true) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable(true) {
 
-                    navigationManager.navigateWithString(
-                        AuthScreens.SearchOpeningBranch.createRoute(
-                            viewState.sendDepositInformationParams?.branchCity ?: -1,
-                            viewState.branchCity?.branchCity?.findLast {
-                                it.id == (viewState.sendDepositInformationParams?.branchCity ?: -1)
-                            }?.city ?: "",
-                            viewState.depositInformation?.branchProvince?.findLast {
-                                it.id == (viewState.sendDepositInformationParams?.branchProvince
-                                    ?: -1)
-                            }?.province ?: ""
+                        navigationManager.navigateWithString(
+                            AuthScreens.SearchOpeningBranch.createRoute(
+                                viewState.sendDepositInformationParams?.branchCity ?: -1,
+                                viewState.branchCity?.branchCity?.findLast {
+                                    it.id == (viewState.sendDepositInformationParams?.branchCity
+                                        ?: -1)
+                                }?.city ?: "",
+                                viewState.depositInformation?.branchProvince?.findLast {
+                                    it.id == (viewState.sendDepositInformationParams?.branchProvince
+                                        ?: -1)
+                                }?.province ?: ""
+                            )
                         )
-                    )
 
-                }) {
+                    }) {
                 AppBaseTextField(
                     value = viewState.openedBranch?.openingBranch ?: "",
                     onValueChange = {},
@@ -209,6 +221,17 @@ fun DepositInformationScreen(
     }
     if (viewState.alertModelState != null) {
         AlertComponent(viewState.alertModelState!!)
+    }
+    if (showBottomSheet) {
+        UsageRoleBottomSheet(
+            title = stringResource(R.string.rules),
+            desc = stringResource(R.string.usage_role_desc),
+            onAccept = {
+                showBottomSheet = false
+                viewModel.handle(DepositInformationViewActions.SelectRules)
+            }) {
+            showBottomSheet = false
+        }
     }
 }
 

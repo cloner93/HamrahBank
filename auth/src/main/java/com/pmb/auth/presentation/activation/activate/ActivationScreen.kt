@@ -1,5 +1,6 @@
 package com.pmb.auth.presentation.activation.activate
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -27,6 +28,7 @@ import com.pmb.auth.presentation.activation.activate.viewModel.ActivationViewAct
 import com.pmb.auth.presentation.activation.activate.viewModel.ActivationViewEvents
 import com.pmb.auth.presentation.activation.activate.viewModel.ActivationViewModel
 import com.pmb.auth.presentation.component.RoundedCornerCheckboxComponent
+import com.pmb.auth.presentation.component.UsageRoleBottomSheet
 import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppContent
@@ -45,6 +47,7 @@ fun ActivationScreen(navigationManager: NavigationManager, viewModel: Activation
     val viewState by viewModel.viewState.collectAsState()
     var isMobile by remember { mutableStateOf(false) }
     var isNationalId by remember { mutableStateOf(false) }
+    var showBottomSheet by remember { mutableStateOf(false) }
     LaunchedEffect(Unit) {
         viewModel.viewEvent.collect { event ->
             when (event) {
@@ -64,8 +67,12 @@ fun ActivationScreen(navigationManager: NavigationManager, viewModel: Activation
         },
         footer = {
             RoundedCornerCheckboxComponent(
-                modifier = Modifier.fillMaxWidth()
-                    .padding(horizontal = 24.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 24.dp)
+                    .clickable {
+                        showBottomSheet = true
+                    },
                 title = buildAnnotatedString {
                     withStyle(
                         style = SpanStyle(
@@ -80,12 +87,14 @@ fun ActivationScreen(navigationManager: NavigationManager, viewModel: Activation
                 },
                 isChecked = viewState.isChecked
             ) {
-                viewModel.handle(ActivationViewActions.SelectRules)
+                showBottomSheet = true
+
             }
             Spacer(modifier = Modifier.size(10.dp))
-            AppButton(modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 24.dp),
+            AppButton(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 24.dp),
                 title = stringResource(R.string._continue),
                 enable = !viewState.loading && isMobile && viewState.isChecked,
                 onClick = {
@@ -106,14 +115,16 @@ fun ActivationScreen(navigationManager: NavigationManager, viewModel: Activation
 
             Spacer(modifier = Modifier.size(32.dp))
 
-            AppMobileTextField(value = mobile,
+            AppMobileTextField(
+                value = mobile,
                 label = stringResource(R.string.mobile_number),
                 onValidate = { isMobile = it },
                 onValueChange = { mobile = it })
 
             Spacer(modifier = Modifier.size(24.dp))
 
-            AppNationalIdTextField(value = nationalId,
+            AppNationalIdTextField(
+                value = nationalId,
                 label = stringResource(R.string.national_id),
                 onValidate = { isNationalId = it },
                 onValueChange = { nationalId = it })
@@ -126,6 +137,17 @@ fun ActivationScreen(navigationManager: NavigationManager, viewModel: Activation
     }
     if (viewState.alertModelState != null) {
         AlertComponent(viewState.alertModelState!!)
+    }
+    if (showBottomSheet) {
+        UsageRoleBottomSheet(
+            title = stringResource(R.string.usage_rules),
+            desc = stringResource(R.string.usage_role_desc),
+            onAccept = {
+                showBottomSheet = false
+                viewModel.handle(ActivationViewActions.SelectRules)
+            }) {
+            showBottomSheet = false
+        }
     }
 }
 

@@ -51,10 +51,8 @@ fun FirstLoginConfirmScreen(
     val viewState by viewModel.viewState.collectAsState()
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
-    // ✅ **Control BottomSheet with a stable state**
     var showBottomSheet by remember { mutableStateOf(viewState.isShowBottomSheet) }
 
-    // ✅ **Listen to state changes but prevent recompositions**
     LaunchedEffect(viewState.isShowBottomSheet) {
         showBottomSheet = viewState.isShowBottomSheet
         if (showBottomSheet) {
