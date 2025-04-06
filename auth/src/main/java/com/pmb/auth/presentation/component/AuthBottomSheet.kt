@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
@@ -22,7 +24,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.pmb.auth.R
-import com.pmb.auth.presentation.AuthScreens
 import com.pmb.ballon.component.PersianDatePicker
 import com.pmb.ballon.component.TextImage
 import com.pmb.ballon.component.base.AppBottomSheet
@@ -71,6 +72,45 @@ fun ShowChangedNewPasswordBottomSheet(onDismiss: () -> Unit) {
 }
 
 @Composable
+fun UsageRoleBottomSheet(title: String, desc: String, onAccept: () -> Unit, onDismiss: () -> Unit) {
+    var isVisible by remember { mutableStateOf(true) }
+    AppBottomSheet(
+        isVisible = isVisible,
+        onDismiss = { onDismiss() },
+        cancelable = true,
+        content = { nestedScrollConnection ->
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(rememberScrollState())
+                    .nestedScroll(nestedScrollConnection)
+                    .padding(16.dp)
+            ) {
+                Spacer(Modifier.size(16.dp))
+                AppTopBar(
+                    title = title, startIcon = ClickableIcon(
+                        icon = IconType.ImageVector(Icons.Default.Close),
+                        onClick = { isVisible = false })
+                )
+                Spacer(Modifier.size(16.dp))
+                BodyMediumText(
+                    textAlign = TextAlign.Center,
+                    text = desc,
+                    color = AppTheme.colorScheme.onBackgroundNeutralDefault
+                )
+                Spacer(Modifier.size(16.dp))
+                AppButton(
+                    modifier = Modifier.fillMaxWidth(),
+                    title = stringResource(R.string.accept),
+                    onClick = {
+                        onAccept()
+                    })
+            }
+        }
+    )
+}
+
+@Composable
 fun ShowMellatSignatureBottomSheet(onDismiss: () -> Unit) {
     var isVisible by remember { mutableStateOf(true) }
     val context = LocalContext.current
@@ -87,13 +127,16 @@ fun ShowMellatSignatureBottomSheet(onDismiss: () -> Unit) {
                 Spacer(modifier = Modifier.size(20.dp))
                 Headline3Text(text = stringResource(R.string.mellat_signature_app))
                 Spacer(modifier = Modifier.size(32.dp))
-                BodyLargeText(text = stringResource(R.string.mellat_signature_desc), textAlign = TextAlign.Center)
+                BodyLargeText(
+                    text = stringResource(R.string.mellat_signature_desc),
+                    textAlign = TextAlign.Center
+                )
                 Spacer(modifier = Modifier.size(24.dp))
                 AppButton(
                     modifier = Modifier.fillMaxWidth(),
                     title = stringResource(R.string.enter_mellat_signature_app),
                     onClick = {
-                        context.openApp("com.bpm.moba","https://www.bankmellat.ir")
+                        context.openApp("com.bpm.moba", "https://www.bankmellat.ir")
                         isVisible = false
                     })
                 Spacer(modifier = Modifier.size(16.dp))
