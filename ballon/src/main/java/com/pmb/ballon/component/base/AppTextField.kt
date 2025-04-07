@@ -59,9 +59,9 @@ fun AppBaseTextField(
     trailingIcon: @Composable (() -> Unit) = @Composable {},
     visualTransformation: VisualTransformation = VisualTransformation.None,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
     onFocused: ((Boolean) -> Unit)? = null,
     bordered: Boolean = true,
-    keyboardActions: KeyboardActions = KeyboardActions.Default,
     singleLine: Boolean = false,
     maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
     minLines: Int = 1,
@@ -244,8 +244,11 @@ fun AppNumberTextField(
     value: String,
     label: String,
     bordered: Boolean = true,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
+    keyboardOptions: KeyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
     trailingIcon: @Composable (() -> Unit)? = null,
     enabled: Boolean = true,
+    focusRequester: FocusRequester = remember { FocusRequester() },
     onFocused: ((Boolean) -> Unit)? = null,
     onValueChange: (String) -> Unit,
 ) {
@@ -256,6 +259,8 @@ fun AppNumberTextField(
         enabled = enabled,
         singleLine = true,
         bordered = bordered,
+        keyboardActions = keyboardActions,
+        focusRequester = focusRequester,
         onValueChange = { newText ->
             // Ensure that the input consists of only digits
             if (newText.all { it.isDigit() }) {
@@ -267,7 +272,7 @@ fun AppNumberTextField(
             if (trailingIcon != null) trailingIcon()
             else if (value.isNotEmpty()) AppButtonIcon(icon = Icons.Default.Close) { onValueChange("") }
         },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+        keyboardOptions = keyboardOptions
     )
 }
 
