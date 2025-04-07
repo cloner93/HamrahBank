@@ -125,7 +125,7 @@ fun BodyLargeText(
     BaseAppText(
         modifier = modifier, title = text, style = TextStyle(
             color = color,
-            typography = AppTheme.typography.buttonLarge,
+            typography = AppTheme.typography.bodyLarge,
             textAlign = textAlign
         )
     )

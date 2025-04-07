@@ -16,6 +16,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -25,14 +26,19 @@ import com.pmb.ballon.component.PersianDatePicker
 import com.pmb.ballon.component.TextImage
 import com.pmb.ballon.component.base.AppBottomSheet
 import com.pmb.ballon.component.base.AppButton
+import com.pmb.ballon.component.base.AppOutlineButton
 import com.pmb.ballon.component.base.AppTextButton
 import com.pmb.ballon.component.base.AppTopBar
+import com.pmb.ballon.component.base.BodyLargeText
 import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.component.base.ClickableIcon
+import com.pmb.ballon.component.base.Headline3Text
 import com.pmb.ballon.component.base.IconType
 import com.pmb.ballon.models.ImageStyle
 import com.pmb.ballon.models.Size
 import com.pmb.ballon.ui.theme.AppTheme
+import com.pmb.core.utils.openApp
+import com.pmb.core.utils.openWebPage
 
 @Composable
 fun ShowChangedNewPasswordBottomSheet(onDismiss: () -> Unit) {
@@ -53,11 +59,54 @@ fun ShowChangedNewPasswordBottomSheet(onDismiss: () -> Unit) {
                     imageStyle = ImageStyle(size = Size.FIX(80.dp)),
                 )
                 Spacer(modifier = Modifier.size(24.dp))
-                AppButton(modifier = Modifier.fillMaxWidth(),
+                AppButton(
+                    modifier = Modifier.fillMaxWidth(),
                     title = stringResource(R.string.complete),
                     onClick = {
                         isVisible = false
                     })
+            }
+        })
+}
+
+@Composable
+fun ShowMellatSignatureBottomSheet(onDismiss: () -> Unit) {
+    var isVisible by remember { mutableStateOf(true) }
+    val context = LocalContext.current
+    AppBottomSheet(
+        isVisible = isVisible,
+        onDismiss = { onDismiss() },
+        content = {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Spacer(modifier = Modifier.size(20.dp))
+                Headline3Text(text = stringResource(R.string.mellat_signature_app))
+                Spacer(modifier = Modifier.size(32.dp))
+                BodyLargeText(
+                    text = stringResource(R.string.mellat_signature_desc),
+                    textAlign = TextAlign.Center
+                )
+                Spacer(modifier = Modifier.size(24.dp))
+                AppButton(
+                    modifier = Modifier.fillMaxWidth(),
+                    title = stringResource(R.string.enter_mellat_signature_app),
+                    onClick = {
+                        context.openApp("com.bpm.moba", "https://www.bankmellat.ir")
+                        isVisible = false
+                    })
+                Spacer(modifier = Modifier.size(16.dp))
+                AppOutlineButton(
+                    modifier = Modifier.fillMaxWidth(),
+                    title = stringResource(R.string.download_mellat_signature_app),
+                    onClick = {
+                        context.openWebPage("https://www.bankmellat.ir")
+                        isVisible = false
+                    }
+                )
             }
         })
 }
@@ -90,7 +139,8 @@ fun ShowInvalidLoginBottomSheet(expired: String, onDismiss: () -> Unit) {
                 onDismiss()
             })
         Spacer(modifier = Modifier.size(8.dp))
-        AppButton(modifier = Modifier.fillMaxWidth(),
+        AppButton(
+            modifier = Modifier.fillMaxWidth(),
             title = stringResource(R.string.i_understand),
             onClick = {
                 onDismiss()
@@ -150,7 +200,8 @@ fun ShowPersianDatePickerBottomSheet(
                     }
                 )
                 Spacer(modifier = Modifier.size(8.dp))
-                AppButton(modifier = Modifier.fillMaxWidth(),
+                AppButton(
+                    modifier = Modifier.fillMaxWidth(),
                     title = stringResource(R.string._continue),
                     onClick = {
                         isVisible = false
