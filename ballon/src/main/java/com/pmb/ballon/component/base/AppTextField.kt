@@ -1,10 +1,9 @@
 package com.pmb.ballon.component.base
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -12,7 +11,6 @@ import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -22,13 +20,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.Close
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldColors
-import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -36,13 +30,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
@@ -54,159 +46,89 @@ import com.pmb.ballon.ui.theme.appFontFamily
 import com.pmb.core.utils.isIranianNationalId
 import com.pmb.core.utils.isMobile
 
-
 @Composable
 fun AppBaseTextField(
+    modifier: Modifier = Modifier,
     value: String,
     onValueChange: (String) -> Unit,
-    modifier: Modifier = Modifier,
+    focusRequester: FocusRequester = remember { FocusRequester() },
     enabled: Boolean = true,
     readOnly: Boolean = false,
-    textStyle: TextStyle = LocalTextStyle.current,
     label: String? = null,
     leadingIcon: @Composable (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit) = @Composable {},
-    error: Boolean = false,
-    onFocused: ((Boolean) -> Unit)? = null,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    onFocused: ((Boolean) -> Unit)? = null,
+    bordered: Boolean = true,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     singleLine: Boolean = false,
     maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
     minLines: Int = 1,
     interactionSource: MutableInteractionSource? = null,
-    shape: Shape = TextFieldDefaults.shape,
-    bordered: Boolean = true,
-    colors: TextFieldColors = AppTextField.defaultColors(),
     onClick: (() -> Unit)? = null
 ) {
     var isFocused by remember { mutableStateOf(false) }
-    val focusRequester = remember { FocusRequester() }
-
-
-    val borderColor = if (error) colors.errorIndicatorColor
-    else if (!enabled) colors.disabledIndicatorColor
-    else if (isFocused) colors.focusedIndicatorColor
-    else colors.unfocusedIndicatorColor
-
-    val labelColor = if (error) colors.errorLabelColor
-    else if (!enabled) colors.disabledLabelColor
-    else if (isFocused) colors.focusedLabelColor
-    else colors.unfocusedLabelColor
-
-    val inputColor = if (error) colors.errorTextColor
-    else if (!enabled) colors.disabledTextColor
-    else if (isFocused) colors.focusedTextColor
-    else colors.unfocusedTextColor
-
-    Box(
+    OutlinedTextField(
         modifier = modifier
             .fillMaxWidth()
             .defaultMinSize(minHeight = 56.dp)
-            .clip(RoundedCornerShape(12.dp))
-            .background(color = Color.Transparent)
-            .then(
-                if (bordered) Modifier.border(
-                    border = BorderStroke(if (isFocused) 2.dp else 1.dp, borderColor),
-                    shape = RoundedCornerShape(12.dp)
-                ) else Modifier
-            )
-    ) {
-        // Label above text field when focused or not empty
-
-        if ((isFocused || value.isNotEmpty()) && label != null) Text(
-            text = label,
-            fontSize = 12.sp,
-            fontWeight = FontWeight.Normal,
-            color = labelColor,
-            modifier = Modifier.padding(
-                top = 4.dp, start = 16.dp, end = 16.dp
-            ) // Adjust padding to position above
-        )
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .defaultMinSize(minHeight = 56.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            BasicTextField(
-                value = value,
-                onValueChange = onValueChange,
-                textStyle = TextStyle(fontSize = 16.sp, color = inputColor, fontFamily = appFontFamily),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(
-                        top = if (value.isNotEmpty() || isFocused) 10.dp else 0.dp, bottom = 8.dp
-                    )
-                    .weight(1f)
-                    .onFocusChanged { focusState ->
-                        isFocused = focusState.isFocused
-                        onFocused?.invoke(isFocused)
-                    },
-                visualTransformation = visualTransformation,
-                keyboardOptions = keyboardOptions,
-                keyboardActions = keyboardActions,
-
-//                keyboardActions = KeyboardActions(
-//                    onDone = {
-//                        focusRequester.freeFocus()     // Clear the focus
-//                        keyboardActions.onDone
-//                    },
-//                    onGo = keyboardActions.onGo,
-//                    onNext = keyboardActions.onNext,
-//                    onPrevious = keyboardActions.onPrevious,
-//                    onSearch = keyboardActions.onSearch,
-//                    onSend = keyboardActions.onSend
-//                ),
-                enabled = if (readOnly && onClick != null) false else enabled,
-                readOnly = readOnly,
-//                textStyle = textStyle,
-                singleLine = singleLine,
-                maxLines = maxLines,
-                minLines = minLines,
-                interactionSource = interactionSource,
-                decorationBox = { innerTextField ->
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(start = 16.dp, top = 16.dp),
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Box(modifier = Modifier.weight(1f)) {
-                            if (value.isEmpty() && !isFocused && label != null) {
-                                BodyMediumText(
-                                    modifier = Modifier.padding(bottom = 6.dp),
-                                    text = label,
-                                    color = labelColor
-                                )
-                            }
-                            innerTextField()
-                        }
-                    }
-                },
-            )
-
-            // Trailing Icon
+            .focusRequester(focusRequester)
+            .clickable(enabled = onClick != null) {
+                onClick?.let {
+                    onClick()
+                }
+            }
+            .onFocusChanged { focusState ->
+                isFocused = focusState.isFocused
+                onFocused?.invoke(isFocused)
+            },
+        value = value,
+        enabled = if (readOnly) false else enabled,
+        onValueChange = { input ->
+            onValueChange(input)
+        },
+        label = {
+            label?.let {
+                BodyMediumText(
+                    text = it,
+                    color = AppTheme.colorScheme.onBackgroundNeutralDefault
+                )
+            }
+        },
+        visualTransformation = visualTransformation,
+        keyboardOptions = keyboardOptions,
+        keyboardActions = keyboardActions,
+        textStyle = TextStyle(
+            fontSize = 16.sp,
+            fontFamily = appFontFamily
+        ),
+        leadingIcon = leadingIcon,
+        trailingIcon = {
             trailingIcon()
-        }
-
-
-        onClick?.let {
-            Button(
-                onClick = it,
-                shape = RoundedCornerShape(12.dp),
-                colors = ButtonDefaults.textButtonColors(),
-                modifier = modifier
-                    .fillMaxSize()
-                    .height(56.dp),
-                content = { })
-        }
-    }
+        },
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedBorderColor = if (bordered) AppTextField.defaultColors().focusedIndicatorColor else Color.Transparent,
+            disabledBorderColor = if (bordered) AppTextField.defaultColors().disabledIndicatorColor else Color.Transparent,
+            unfocusedBorderColor = if (bordered) AppTextField.defaultColors().unfocusedIndicatorColor else Color.Transparent,
+            focusedLabelColor = AppTextField.defaultColors().focusedLabelColor,
+            unfocusedLabelColor = AppTextField.defaultColors().unfocusedLabelColor,
+            cursorColor = AppTheme.colorScheme.onBackgroundNeutralDefault,
+            errorBorderColor = AppTextField.defaultColors().errorIndicatorColor,
+            errorLabelColor = AppTextField.defaultColors().errorLabelColor,
+            disabledLabelColor = AppTextField.defaultColors().disabledLabelColor,
+            errorTextColor = AppTextField.defaultColors().errorTextColor,
+            disabledTextColor = AppTextField.defaultColors().disabledTextColor,
+            focusedTextColor = AppTextField.defaultColors().focusedTextColor,
+            unfocusedTextColor = AppTextField.defaultColors().unfocusedTextColor
+        ),
+        maxLines = maxLines,
+        minLines = minLines,
+        singleLine = singleLine,
+        shape = RoundedCornerShape(12.dp),
+        interactionSource = interactionSource
+    )
 }
-
 
 @Composable
 fun AppSingleTextField(
@@ -324,7 +246,6 @@ fun AppNumberTextField(
     bordered: Boolean = true,
     trailingIcon: @Composable (() -> Unit)? = null,
     enabled: Boolean = true,
-    error: Boolean = false,
     onFocused: ((Boolean) -> Unit)? = null,
     onValueChange: (String) -> Unit,
 ) {
@@ -333,7 +254,6 @@ fun AppNumberTextField(
         value = value,
         label = label,
         enabled = enabled,
-        error = error,
         singleLine = true,
         bordered = bordered,
         onValueChange = { newText ->
@@ -410,7 +330,8 @@ fun AppSearchTextField(
                         innerTextField()
                     }
                     if (query.isNotEmpty()) {
-                        AppButtonIcon(icon = IconType.ImageVector(imageVector = Icons.Outlined.Close),
+                        AppButtonIcon(
+                            icon = IconType.ImageVector(imageVector = Icons.Outlined.Close),
                             onClick = { onValueChange("") })
                     }
                 }
