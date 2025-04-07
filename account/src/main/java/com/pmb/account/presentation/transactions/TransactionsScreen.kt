@@ -483,13 +483,13 @@ private fun StatementAndFilters(
             }
 
             transactionFilter.fromPrice?.let {
-                chips.add("از $it ریال" to {
+                chips.add("از ${it.toCurrency()} ریال" to {
                     onFilterItemClick.invoke(transactionFilter.copy(fromPrice = null))
                 })
             }
 
             transactionFilter.toPrice?.let {
-                chips.add("تا $it ریال" to {
+                chips.add("تا ${it.toCurrency()} ریال" to {
                     onFilterItemClick.invoke(transactionFilter.copy(toPrice = null))
                 })
             }
