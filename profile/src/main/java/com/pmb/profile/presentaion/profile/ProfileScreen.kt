@@ -7,23 +7,42 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.MenuItem
 import com.pmb.ballon.component.TextImage
 import com.pmb.ballon.component.base.AppContent
+import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.models.IconStyle
 import com.pmb.ballon.models.TextStyle
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.core.presentation.NavigationManager
 import com.pmb.profile.R
+import com.pmb.profile.presentaion.profile.viewModel.ProfileViewActions
+import com.pmb.profile.presentaion.profile.viewModel.ProfileViewEvents
+import com.pmb.profile.presentaion.profile.viewModel.ProfileViewModel
 
 
 @Composable
-fun ProfileScreen(navigationManager: NavigationManager) {
+fun ProfileScreen(navigationManager: NavigationManager, viewModel: ProfileViewModel) {
+    val viewState by viewModel.viewState.collectAsState()
+    LaunchedEffect(Unit) {
+        viewModel.viewEvent.collect { event ->
+            when (event) {
+                ProfileViewEvents.LogoutAccountSucceed -> {
+                    // in the future based on our logic and business can we call it and change some thing else  or navigate other screen
+                    Unit
+                }
+            }
+        }
+    }
     AppContent {
         Column(
             modifier = Modifier.padding(16.dp),
@@ -31,8 +50,8 @@ fun ProfileScreen(navigationManager: NavigationManager) {
         ) {
             TextImage(
                 modifier = Modifier.padding(all = 32.dp),
-                image = R.drawable.profile_placeholder,
-                text = "مشتاق مودت"
+                image = com.pmb.ballon.R.drawable.profile_placeholder,
+                text = viewState.userData?.userName ?: ""
             )
 
             Column(
@@ -197,11 +216,16 @@ fun ProfileScreen(navigationManager: NavigationManager) {
                     endIcon = com.pmb.ballon.R.drawable.ic_arrow_left,
                     clickable = false,
                     onItemClick = {
-
+                        viewModel.handle(ProfileViewActions.LogoutAccount)
                     })
             }
-
             Spacer(modifier = Modifier.height(16.dp))
         }
+    }
+    if (viewState.loading) {
+        AppLoading()
+    }
+    if (viewState.alertModelState != null) {
+        AlertComponent(viewState.alertModelState!!)
     }
 }

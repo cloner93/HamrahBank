@@ -4,7 +4,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.CloudQueue
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -61,7 +62,7 @@ fun AppTopBar(title: String, onBack: (() -> Unit)? = null, endIcon: ClickableIco
         title = title,
         startIcon = onBack?.let {
             ClickableIcon(
-                IconType.ImageVector(Icons.Filled.ArrowForward),
+                IconType.ImageVector(Icons.AutoMirrored.Filled.ArrowBack),
                 onClick = onBack
             )
         },
@@ -75,7 +76,7 @@ private fun AppTopBarPreview() {
     AppTopBar(
         title = "test toolbar",
         startIcon = ClickableIcon(IconType.ImageVector(Icons.Default.CloudQueue), onClick = {}),
-        endIcon = ClickableIcon(IconType.ImageVector(Icons.Filled.ArrowForward), onClick = {})
+        endIcon = ClickableIcon(IconType.ImageVector(Icons.AutoMirrored.Filled.ArrowForward), onClick = {})
     )
 }
 
@@ -87,6 +88,6 @@ private fun AppTopBarPreview2() {
         title = "test toolbar",
         requiredHeight = false,
         startIcon = ClickableIcon(IconType.ImageVector(Icons.Default.CloudQueue), onClick = {}),
-        endIcon = ClickableIcon(IconType.ImageVector(Icons.Filled.ArrowForward), onClick = {})
+        endIcon = ClickableIcon(IconType.ImageVector(Icons.AutoMirrored.Filled.ArrowForward), onClick = {})
     )
 }

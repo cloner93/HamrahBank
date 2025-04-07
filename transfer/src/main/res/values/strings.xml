@@ -24,8 +24,7 @@
     <string name="confirm_and_transfer">تایید و انتقال</string>
     <string name="month">ماه</string>
     <string name="year">سال</string>
-    <string name="second_pass">رمز دوم</string>
-    <string name="get_dynamic_pass">دریافت رمز پویا</string>
+
     <string name="mony_transfer_receipt">رسید انتقال وجه</string>
     <string name="msg_transfer_empty">"هنوز انتقال وجهی انجام نداده‌اید. "</string>
     <string name="msg_favorite_destination_empty">هنوز مقصد برگزیده‌ای ندارید.</string>

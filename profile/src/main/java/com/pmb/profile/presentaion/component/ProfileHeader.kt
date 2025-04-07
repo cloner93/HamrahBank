@@ -2,7 +2,6 @@ package com.pmb.profile.presentaion.component
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
@@ -16,7 +15,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.pmb.profile.R
 
 @Composable
 fun ProfileHeader(profileUrl: String, title: String) {
@@ -27,7 +25,7 @@ fun ProfileHeader(profileUrl: String, title: String) {
                 .data(profileUrl)
                 .crossfade(true)
                 .build(),
-            placeholder = painterResource(R.drawable.profile_placeholder),
+            placeholder = painterResource(com.pmb.ballon.R.drawable.profile_placeholder),
             contentDescription = "ProfileImageHeader",
             contentScale = ContentScale.Crop
         )
@@ -39,6 +37,9 @@ fun ProfileHeader(profileUrl: String, title: String) {
 
 @Preview
 @Composable
-fun ProfileHeaderPreview(){
-    ProfileHeader(profileUrl = "https://gama.ir/uploads/user/avatars/avatar_AiP0QACGVS7w3O5JH9Z3.jpg", title = "I am Pooriak Khalaj")
+fun ProfileHeaderPreview() {
+    ProfileHeader(
+        profileUrl = "https://gama.ir/uploads/user/avatars/avatar_AiP0QACGVS7w3O5JH9Z3.jpg",
+        title = "I am Pooriak Khalaj"
+    )
 }

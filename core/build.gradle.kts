@@ -44,7 +44,7 @@ dependencies {
     api(libs.androidx.appcompat)
     api(libs.material)
     api(libs.navigation.compose)
-
+    api(libs.androidx.exifinterface)
     // DI > Hilt
     api(libs.android.hilt)
     kapt(libs.android.hilt.compiler)
@@ -52,7 +52,7 @@ dependencies {
 
     //viewmodel
     api(libs.lifecycle.viewmodel.ktx)
-
+    api(libs.androidx.activity.compose)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

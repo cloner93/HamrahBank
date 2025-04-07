@@ -22,6 +22,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
@@ -34,6 +36,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
@@ -74,15 +77,16 @@ fun AppBaseTextField(
     shape: Shape = TextFieldDefaults.shape,
     bordered: Boolean = true,
     colors: TextFieldColors = AppTextField.defaultColors(),
+    onClick: (() -> Unit)? = null
 ) {
     var isFocused by remember { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }
 
 
-    val borderColor = if (error) AppTheme.colorScheme.strokeNeutral2Error
-    else if (!enabled) Color.Transparent
-    else if (isFocused) AppTheme.colorScheme.strokeNeutral2Active
-    else AppTheme.colorScheme.strokeNeutral1Default
+    val borderColor = if (error) colors.errorIndicatorColor
+    else if (!enabled) colors.disabledIndicatorColor
+    else if (isFocused) colors.focusedIndicatorColor
+    else colors.unfocusedIndicatorColor
 
     val labelColor = if (error) colors.errorLabelColor
     else if (!enabled) colors.disabledLabelColor
@@ -98,6 +102,8 @@ fun AppBaseTextField(
         modifier = modifier
             .fillMaxWidth()
             .defaultMinSize(minHeight = 56.dp)
+            .clip(RoundedCornerShape(12.dp))
+            .background(color = Color.Transparent)
             .then(
                 if (bordered) Modifier.border(
                     border = BorderStroke(if (isFocused) 2.dp else 1.dp, borderColor),
@@ -152,7 +158,7 @@ fun AppBaseTextField(
 //                    onSearch = keyboardActions.onSearch,
 //                    onSend = keyboardActions.onSend
 //                ),
-                enabled = enabled,
+                enabled = if (readOnly && onClick != null) false else enabled,
                 readOnly = readOnly,
 //                textStyle = textStyle,
                 singleLine = singleLine,
@@ -184,19 +190,36 @@ fun AppBaseTextField(
             // Trailing Icon
             trailingIcon()
         }
+
+
+        onClick?.let {
+            Button(
+                onClick = it,
+                shape = RoundedCornerShape(12.dp),
+                colors = ButtonDefaults.textButtonColors(),
+                modifier = modifier
+                    .fillMaxSize()
+                    .height(56.dp),
+                content = { })
+        }
     }
 }
 
 
 @Composable
 fun AppSingleTextField(
-    modifier: Modifier = Modifier, value: String, label: String, onValueChange: (String) -> Unit
+    modifier: Modifier = Modifier,
+    value: String,
+    label: String,
+    readOnly: Boolean = false,
+    onValueChange: (String) -> Unit
 ) {
     AppBaseTextField(
         modifier = modifier.fillMaxWidth(),
         value = value,
         label = label,
         singleLine = true,
+        readOnly = readOnly,
         onValueChange = onValueChange,
         trailingIcon = @Composable {
             if (value.isNotEmpty()) AppButtonIcon(icon = Icons.Default.Close) { onValueChange("") }
@@ -218,6 +241,25 @@ fun AppMultiTextField(
             if (value.isNotEmpty()) AppButtonIcon(icon = Icons.Default.Close) { onValueChange("") }
         },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+    )
+}
+
+@Composable
+fun AppClickableReadOnlyTextField(
+    modifier: Modifier = Modifier,
+    value: String,
+    label: String,
+    trailingIcon: @Composable () -> Unit = @Composable {},
+    onClick: () -> Unit,
+) {
+    AppBaseTextField(
+        modifier = modifier,
+        value = value,
+        label = label,
+        onValueChange = {}, // Read-only: Do nothing on value change
+        readOnly = true,    // Makes the field read-only
+        trailingIcon = trailingIcon,
+        onClick = onClick,
     )
 }
 
@@ -289,7 +331,7 @@ fun AppNumberTextField(
         value = value,
         label = label,
         enabled = enabled,
-        error  = error,
+        error = error,
         singleLine = true,
         bordered = bordered,
         onValueChange = { newText ->
