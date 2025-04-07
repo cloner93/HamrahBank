@@ -30,7 +30,7 @@ import com.pmb.transfer.presentation.TransferScreens
 import com.pmb.transfer.presentation.components.ClientBankProfileInfo
 
 @Composable
-fun AmountScreen(navigationManager: NavigationManager) {
+fun TransferAmountScreen(navigationManager: NavigationManager) {
     var isValid by remember { mutableStateOf(false) }
     var identifierNumber by remember { mutableStateOf("") }
     val clientBank by remember { mutableStateOf<TransactionClientBank>(transactionClientBanks.first()) }

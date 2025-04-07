@@ -27,4 +27,11 @@
     <string name="second_pass">رمز دوم</string>
     <string name="get_dynamic_pass">دریافت رمز پویا</string>
     <string name="mony_transfer_receipt">رسید انتقال وجه</string>
+    <string name="msg_transfer_empty">"هنوز انتقال وجهی انجام نداده‌اید. "</string>
+    <string name="msg_favorite_destination_empty">هنوز مقصد برگزیده‌ای ندارید.</string>
+    <string name="recently_destinations">مقاصد اخیر</string>
+    <string name="edit_recent_destinations">ویرایش مقاصد اخیر</string>
+    <string name="edit_favorites">ویرایش برگزیده‌ها</string>
+    <string name="msg_remove_favorite_destination">آیا از حذف «%1$s» از مقاصد برگزیده اطمینان دارید؟</string>
+    <string name="select_from_favorites">انتخاب از برگزیده‌ها</string>
 </resources>

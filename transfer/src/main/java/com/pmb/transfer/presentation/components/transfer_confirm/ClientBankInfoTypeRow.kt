@@ -16,12 +16,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.pmb.ballon.component.ItemColumn
+import com.pmb.ballon.component.base.AppButtonIcon
+import com.pmb.ballon.component.base.AppIcon
+import com.pmb.ballon.component.base.ClickableIcon
+import com.pmb.ballon.models.IconStyle
 import com.pmb.ballon.models.TextStyle
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.transfer.domain.BankIdentifierNumberType
 import com.pmb.transfer.domain.TransactionClientBank
 import com.pmb.transfer.presentation.components.ProfileAndThumbnail
 import com.pmb.transfer.utils.BankUtil
+import kotlinx.coroutines.withContext
 
 @Composable
 fun ClientBankInfoTypeRow(
@@ -38,6 +43,7 @@ fun ClientBankInfoTypeRow(
         typography = AppTheme.typography.caption,
         textAlign = TextAlign.Start
     ),
+    endIcon: ClickableIcon? = null,
     onClick: ((TransactionClientBank) -> Unit)? = null
 ) {
     val text = when (info.type) {
@@ -56,8 +62,9 @@ fun ClientBankInfoTypeRow(
             else Modifier
         )
 
+
     Row(
-        modifier = modifier
+        modifier = modifier.fillMaxWidth()
             .padding(vertical = 10.dp, horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -68,10 +75,14 @@ fun ClientBankInfoTypeRow(
         )
         Spacer(modifier = Modifier.width(12.dp))
         ItemColumn(
+            modifier = Modifier.weight(1f),
             title = info.clientBank.name,
             subtitle = text,
             titleStyle = titleStyle,
             subtitleStyle = subtitleStyle
         )
+        if (endIcon != null) {
+            AppButtonIcon(icon = endIcon.icon, style = IconStyle(tint = endIcon.tint), onClick = endIcon.onClick)
+        }
     }
 }

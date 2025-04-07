@@ -64,6 +64,9 @@ fun TransferSearchHistoryScreen(navigationManager: NavigationManager) {
             TransactionClientBankList(
                 items = transactionClientBanks,
                 isFavorite = false,
+                onEditClick = {
+                    navigationManager.navigate(TransferScreens.TransferEditLatestDestination)
+                },
                 onClick = {
                     navigationManager.navigate(TransferScreens.TransferDestinationInput)
                 }

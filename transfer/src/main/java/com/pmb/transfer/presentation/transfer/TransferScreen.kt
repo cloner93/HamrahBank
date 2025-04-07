@@ -21,8 +21,10 @@ import com.pmb.ballon.models.isScrollingUp
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.core.presentation.NavigationManager
 import com.pmb.transfer.R
+import com.pmb.transfer.domain.clientBanks
 import com.pmb.transfer.domain.transactionClientBanks
 import com.pmb.transfer.presentation.TransferScreens
+import com.pmb.transfer.presentation.components.FavoriteContactsView
 import com.pmb.transfer.presentation.components.TransactionClientBankList
 
 @Composable
@@ -36,24 +38,37 @@ fun TransferScreen(navigationManager: NavigationManager) {
         ) {
             AppTopBar(
                 title = stringResource(R.string.fund_transfer),
-                onBack = {
-                    navigationManager.navigateBack()
-                },
+                startIcon = ClickableIcon(
+                    icon = IconType.Painter(painterResource(com.pmb.ballon.R.drawable.ic_question_circle)),
+                    onClick = {
+
+                    }),
                 endIcon = ClickableIcon(
                     icon = IconType.Painter(painterResource(com.pmb.ballon.R.drawable.ic_search)),
                     onClick = {
                         navigationManager.navigate(TransferScreens.TransferDestinationSearch)
                     })
             )
+
             if (transactionClientBanks.isEmpty()) {
                 EmptyList(
                     iconType = IconType.Painter(painterResource(R.drawable.img_bank_card_shrare_money)),
                     message = stringResource(R.string.msg_dont_have_transfer_yet)
                 )
             } else {
+                FavoriteContactsView(items = clientBanks,
+                    onEditClick = {
+                        navigationManager.navigate(TransferScreens.TransferEditFavorite )
+                }, onClick = {
+                    navigationManager.navigate(TransferScreens.TransferDestinationInput)
+                })
+
                 TransactionClientBankList(
                     items = transactionClientBanks,
                     state = lazyListState,
+                    onEditClick = {
+                        navigationManager.navigate(TransferScreens.TransferEditLatestDestination )
+                    },
                     onClick = {
                         navigationManager.navigate(TransferScreens.TransferDestinationInput)
                     }
@@ -61,6 +76,7 @@ fun TransferScreen(navigationManager: NavigationManager) {
             }
 
         }
+
         ExtendFAB(
             extended = lazyListState.isScrollingUp(),
             text = stringResource(R.string.new_transfer),

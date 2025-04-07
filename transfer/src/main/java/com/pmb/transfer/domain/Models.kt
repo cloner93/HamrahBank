@@ -16,6 +16,7 @@ enum class BankIdentifierNumberType { ACCOUNT, CARD, IBAN }
 data class TransactionClientBank(
     val clientBank: ClientBank,
     val type: BankIdentifierNumberType,
+    val favorite: Boolean = false
 )
 
 

@@ -23,6 +23,7 @@ fun AppContent(
     topBar: (@Composable (ColumnScope.() -> Unit))? = null,
     verticalArrangement: Arrangement.Vertical = Arrangement.Top,
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
+    requiredVerticalScroll: Boolean = false,
     footer: (@Composable (ColumnScope.() -> Unit))? = null,
     content: @Composable (ColumnScope.() -> Unit)
 ) {
@@ -37,7 +38,7 @@ fun AppContent(
             modifier = modifier
                 .weight(1f)
                 .fillMaxWidth()
-                .verticalScroll(rememberScrollState()),
+                .then(if (requiredVerticalScroll) Modifier.verticalScroll(rememberScrollState()) else Modifier),
             verticalArrangement = verticalArrangement,
             horizontalAlignment = horizontalAlignment
         ) {
