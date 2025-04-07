@@ -501,7 +501,7 @@ fun MBTextField(
     label: String,
     action: ImeAction,
     value: String,
-    onValueChange: (String) -> Unit,
+    onValueChange: (String?) -> Unit,
     focusRequester: FocusRequester = remember { FocusRequester() },
     onAction: () -> Unit = {}
 ) {
@@ -512,7 +512,11 @@ fun MBTextField(
             .focusRequester(focusRequester),
         value = value,
         onValueChange = { input ->
-            if (input.all { it.isDigit() }) onValueChange(input)
+            if (input.isEmpty())
+                onValueChange(null)
+            else if (input.all { it.isDigit() })
+                onValueChange(input)
+
         },
         label = {
             BodyMediumText(

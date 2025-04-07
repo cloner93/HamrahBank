@@ -123,8 +123,8 @@ sealed interface TransactionsFilterViewActions : BaseViewAction {
     object NavigateBack : TransactionsFilterViewActions
     class SelectTransactionType(val type: TransactionType?) : TransactionsFilterViewActions
     class SelectDateType(val type: DateType?) : TransactionsFilterViewActions
-    class ChangeFromPrice(val fromPrice: String) : TransactionsFilterViewActions
-    class ChangeToPrice(val toPrice: String) : TransactionsFilterViewActions
+    class ChangeFromPrice(val fromPrice: String?) : TransactionsFilterViewActions
+    class ChangeToPrice(val toPrice: String?) : TransactionsFilterViewActions
 
     object ShowFromDatePicker : TransactionsFilterViewActions
     class CloseFromDatePicker(val date: String?) : TransactionsFilterViewActions
@@ -140,8 +140,8 @@ data class TransactionsFilterViewState(
     val isLoading: Boolean = false,
     val transactionType: TransactionType? = null,
     val dateType: DateType? = null,
-    val fromPrice: String? = "",
-    val toPrice: String? = "",
+    val fromPrice: String? = null,
+    val toPrice: String? = null,
     val showFromDatePicker: Boolean = false,
     val showToDatePicker: Boolean = false,
     val fromDate: String? = null,
