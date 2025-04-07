@@ -6,8 +6,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
@@ -69,45 +67,6 @@ fun ShowChangedNewPasswordBottomSheet(onDismiss: () -> Unit) {
                     })
             }
         })
-}
-
-@Composable
-fun UsageRoleBottomSheet(title: String, desc: String, onAccept: () -> Unit, onDismiss: () -> Unit) {
-    var isVisible by remember { mutableStateOf(true) }
-    AppBottomSheet(
-        isVisible = isVisible,
-        onDismiss = { onDismiss() },
-        cancelable = true,
-        content = { nestedScrollConnection ->
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .verticalScroll(rememberScrollState())
-                    .nestedScroll(nestedScrollConnection)
-                    .padding(16.dp)
-            ) {
-                Spacer(Modifier.size(16.dp))
-                AppTopBar(
-                    title = title, startIcon = ClickableIcon(
-                        icon = IconType.ImageVector(Icons.Default.Close),
-                        onClick = { isVisible = false })
-                )
-                Spacer(Modifier.size(16.dp))
-                BodyMediumText(
-                    textAlign = TextAlign.Center,
-                    text = desc,
-                    color = AppTheme.colorScheme.onBackgroundNeutralDefault
-                )
-                Spacer(Modifier.size(16.dp))
-                AppButton(
-                    modifier = Modifier.fillMaxWidth(),
-                    title = stringResource(R.string.accept),
-                    onClick = {
-                        onAccept()
-                    })
-            }
-        }
-    )
 }
 
 @Composable
