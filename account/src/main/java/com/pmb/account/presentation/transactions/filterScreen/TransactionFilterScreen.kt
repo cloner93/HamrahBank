@@ -13,31 +13,23 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.outlined.FilterAltOff
 import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -45,36 +37,32 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.pmb.account.R
 import com.pmb.account.presentation.component.ChipWithIcon
+import com.pmb.account.presentation.component.ShowPersianDatePickerBottomSheet
 import com.pmb.account.presentation.transactions.filterScreen.viewmodel.TransactionsFilterViewActions
 import com.pmb.account.presentation.transactions.filterScreen.viewmodel.TransactionsFilterViewEvents
 import com.pmb.account.presentation.transactions.filterScreen.viewmodel.TransactionsFilterViewModel
 import com.pmb.account.presentation.transactions.filterScreen.viewmodel.entity.TransactionFilter
-import com.pmb.ballon.component.PersianDatePicker
-import com.pmb.ballon.component.base.AppBottomSheet
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppButtonIcon
 import com.pmb.ballon.component.base.AppClickableReadOnlyTextField
+import com.pmb.ballon.component.base.AppNumberTextField
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.component.base.ButtonMediumText
-import com.pmb.ballon.component.base.ClickableIcon
 import com.pmb.ballon.component.base.IconType
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.core.presentation.NavigationManager
 
-
-// TODO:
-/**
-- handle numbers in textFields ---> set separator
- */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun TransactionFilterScreen(navigationManager: NavigationManager) {
 
     val viewModel = hiltViewModel<TransactionsFilterViewModel>()
     val viewState by viewModel.viewState.collectAsState()
+
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusRequesterTo = remember { FocusRequester() }
 
     LaunchedEffect(Unit) {
         viewModel.viewEvent.collect { event ->
@@ -94,8 +82,6 @@ fun TransactionFilterScreen(navigationManager: NavigationManager) {
             }
         }
     }
-
-    val focusRequesterTo = remember { FocusRequester() }
 
     Box(
         modifier = Modifier
@@ -199,31 +185,54 @@ fun TransactionFilterScreen(navigationManager: NavigationManager) {
             )
             Spacer(modifier = Modifier.height(24.dp))
 
-            MBTextField(
+            AppNumberTextField(
                 modifier = Modifier.fillMaxWidth(),
                 label = "از",
-                action = ImeAction.Next,
                 value = viewState.fromPrice ?: "",
-                onValueChange = {
+                keyboardActions = KeyboardActions(
+                    onNext = {
+                        focusRequesterTo.requestFocus()
+                    },
+                    onDone = {
+                        focusRequesterTo.requestFocus()
+                        keyboardController?.hide()
+                    }
+                ),
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Next
+                ),
+                onValueChange = { it ->
                     viewModel.handle(TransactionsFilterViewActions.ChangeFromPrice(it))
+
                 },
-                onAction = {
-                    focusRequesterTo.requestFocus()
-                }
+                trailingIcon = {
+                    BodyMediumText(
+                        text = stringResource(com.pmb.ballon.R.string.real_carrency),
+                        color = AppTheme.colorScheme.onBackgroundNeutralSubdued
+                    )
+                },
             )
             Spacer(modifier = Modifier.height(24.dp))
-            MBTextField(
+
+            AppNumberTextField(
                 modifier = Modifier.fillMaxWidth(),
                 label = "تا",
-                action = ImeAction.Done,
                 value = viewState.toPrice ?: "",
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Done
+                ),
                 onValueChange = {
                     viewModel.handle(TransactionsFilterViewActions.ChangeToPrice(it))
                 },
                 focusRequester = focusRequesterTo,
-                onAction = {
-
-                }
+                trailingIcon = {
+                    BodyMediumText(
+                        text = stringResource(com.pmb.ballon.R.string.real_carrency),
+                        color = AppTheme.colorScheme.onBackgroundNeutralSubdued
+                    )
+                },
             )
 
             Spacer(modifier = Modifier.height(44.dp))
@@ -383,15 +392,15 @@ fun TransactionFilterScreen(navigationManager: NavigationManager) {
                         .clickable {
                             viewModel.handle(TransactionsFilterViewActions.ClearFilters)
                         }) {
-                    ButtonMediumText(
-                        modifier = Modifier.padding(horizontal = 8.dp),
-                        text = "حذف فیلترها",
-                        color = AppTheme.colorScheme.onBackgroundErrorDefault
-                    )
                     Icon(
                         imageVector = Icons.Outlined.FilterAltOff,
                         contentDescription = null,
                         tint = AppTheme.colorScheme.onBackgroundErrorDefault
+                    )
+                    ButtonMediumText(
+                        modifier = Modifier.padding(horizontal = 8.dp),
+                        text = "حذف فیلترها",
+                        color = AppTheme.colorScheme.onBackgroundErrorDefault
                     )
                 }
 
@@ -442,113 +451,4 @@ enum class DateType(val string: String) {
     LAST_MONTH("ماه گذشته"),
     CURRENT_MONTH("ماه جاری"),
     CUSTOM("انتخاب بازه دلخواه")
-}
-
-@Composable
-fun ShowPersianDatePickerBottomSheet(
-    onChangeValue: (year: String, month: String, day: String) -> Unit,
-    onDismiss: () -> Unit,
-    title: String
-) {
-    var isVisible by remember { mutableStateOf(true) }
-    var _year by remember { mutableStateOf("") }
-    var _month by remember { mutableStateOf("") }
-    var _day by remember { mutableStateOf("") }
-
-    AppBottomSheet(
-        isVisible = isVisible,
-        cancelable = true,
-        onDismiss = { onDismiss() },
-        content = { nestedConnection ->
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(color = AppTheme.colorScheme.onForegroundNeutralDefault)
-                    .padding(24.dp)
-                    .nestedScroll(nestedConnection),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                AppTopBar(
-                    title = title,
-                    requiredHeight = false,
-                    startIcon = ClickableIcon(
-                        icon = IconType.ImageVector(Icons.Default.Close),
-                        onClick = { isVisible = false })
-                )
-                Spacer(modifier = Modifier.size(24.dp))
-                PersianDatePicker(
-                    onChangeValue = { year, month, day ->
-                        _year = year
-                        _month = month
-                        _day = day
-                    }
-                )
-                Spacer(modifier = Modifier.size(8.dp))
-                AppButton(
-                    modifier = Modifier.fillMaxWidth(),
-                    title = stringResource(R.string._continue),
-                    onClick = {
-                        isVisible = false
-                        onChangeValue(_year, _month, _day)
-                    })
-            }
-        })
-}
-
-@Composable
-fun MBTextField(
-    modifier: Modifier,
-    label: String,
-    action: ImeAction,
-    value: String,
-    onValueChange: (String?) -> Unit,
-    focusRequester: FocusRequester = remember { FocusRequester() },
-    onAction: () -> Unit = {}
-) {
-    val keyboardController = LocalSoftwareKeyboardController.current
-
-    OutlinedTextField(
-        modifier = modifier
-            .focusRequester(focusRequester),
-        value = value,
-        onValueChange = { input ->
-            if (input.isEmpty())
-                onValueChange(null)
-            else if (input.all { it.isDigit() })
-                onValueChange(input)
-
-        },
-        label = {
-            BodyMediumText(
-                text = label,
-                color = AppTheme.colorScheme.onBackgroundNeutralDefault
-            )
-        },
-        keyboardOptions = KeyboardOptions.Default.copy(
-            keyboardType = KeyboardType.Number,
-            imeAction = action
-        ),
-        keyboardActions = KeyboardActions(
-            onNext = { onAction() },
-            onDone = {
-                onAction()
-                keyboardController?.hide()
-            }
-        ),
-        trailingIcon = {
-            BodyMediumText(
-                text = stringResource(com.pmb.ballon.R.string.real_carrency),
-                color = AppTheme.colorScheme.onBackgroundNeutralSubdued
-            )
-        },
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = AppTheme.colorScheme.onBackgroundNeutralDefault,
-            unfocusedBorderColor = AppTheme.colorScheme.strokeNeutral1Default,
-            focusedLabelColor = AppTheme.colorScheme.onBackgroundNeutralDefault,
-            unfocusedLabelColor = AppTheme.colorScheme.strokeNeutral1Default,
-            cursorColor = AppTheme.colorScheme.onBackgroundNeutralDefault,
-            errorBorderColor = AppTheme.colorScheme.onBackgroundErrorDefault,
-        ),
-        singleLine = true
-    )
 }
