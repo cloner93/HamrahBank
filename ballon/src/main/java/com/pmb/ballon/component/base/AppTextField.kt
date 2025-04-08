@@ -173,6 +173,7 @@ fun AppClickableReadOnlyTextField(
     modifier: Modifier = Modifier,
     value: String,
     label: String,
+    enabled: Boolean = true,
     trailingIcon: @Composable () -> Unit = @Composable {},
     onClick: () -> Unit,
 ) {
@@ -182,6 +183,7 @@ fun AppClickableReadOnlyTextField(
         label = label,
         onValueChange = {}, // Read-only: Do nothing on value change
         readOnly = true,    // Makes the field read-only
+        enabled = enabled,
         trailingIcon = trailingIcon,
         onClick = onClick,
     )

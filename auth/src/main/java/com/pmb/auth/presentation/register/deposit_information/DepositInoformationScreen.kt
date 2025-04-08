@@ -2,7 +2,6 @@ package com.pmb.auth.presentation.register.deposit_information
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -36,8 +35,8 @@ import com.pmb.auth.presentation.register.deposit_information.viewModel.DepositI
 import com.pmb.auth.presentation.register.deposit_information.viewModel.DepositInformationViewModel
 import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.CustomSpinner
-import com.pmb.ballon.component.base.AppBaseTextField
 import com.pmb.ballon.component.base.AppButton
+import com.pmb.ballon.component.base.AppClickableReadOnlyTextField
 import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.component.base.AppTopBar
@@ -193,11 +192,11 @@ fun DepositInformationScreen(
                     }
                 }
                 Spacer(modifier = Modifier.size(12.dp))
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable(true) {
 
+                AppClickableReadOnlyTextField(
+                    value = viewState.openedBranch?.openingBranch ?: "",
+                    onClick = {
+                        if (viewState.sendDepositInformationParams?.branchCity != null)
                             navigationManager.navigateWithString(
                                 AuthScreens.SearchOpeningBranch.createRoute(
                                     viewState.sendDepositInformationParams?.branchCity ?: -1,
@@ -211,23 +210,18 @@ fun DepositInformationScreen(
                                     }?.province ?: ""
                                 )
                             )
-
-                        }) {
-                    AppBaseTextField(
-                        value = viewState.openedBranch?.openingBranch ?: "",
-                        onValueChange = {},
-                        readOnly = true,
-                        label = "شعبه افتتاح کننده",
-                        enabled = viewState.sendDepositInformationParams?.branchCity != null,
-                        trailingIcon = {
-                            Icon(
-                                imageVector = Icons.Default.KeyboardArrowDown,
-                                contentDescription = "down Icon",
-                            )
-                        },
-
+                    },
+                    label = "شعبه افتتاح کننده",
+                    enabled = viewState.sendDepositInformationParams?.branchCity != null,
+                    trailingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.KeyboardArrowDown,
+                            contentDescription = "down Icon",
                         )
-                }
+                    },
+
+                    )
+
 
             }
         }

@@ -1,7 +1,5 @@
 package com.pmb.auth.presentation.register.job_information
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -28,8 +26,8 @@ import com.pmb.auth.presentation.register.job_information.viewModel.JobInformati
 import com.pmb.auth.presentation.register.job_information.viewModel.JobInformationViewModel
 import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.CustomSpinner
-import com.pmb.ballon.component.base.AppBaseTextField
 import com.pmb.ballon.component.base.AppButton
+import com.pmb.ballon.component.base.AppClickableReadOnlyTextField
 import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.component.base.AppTopBar
@@ -65,7 +63,8 @@ fun JobInformationScreen(
             }
         }
     }
-    AppContent(modifier = Modifier.padding(horizontal = 16.dp),
+    AppContent(
+        modifier = Modifier.padding(horizontal = 16.dp),
         topBar = {
             AppTopBar(
                 title = stringResource(R.string.job_information),
@@ -75,9 +74,10 @@ fun JobInformationScreen(
             )
         }, footer = {
 
-            AppButton(modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp, top = 16.dp),
+            AppButton(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp, end = 16.dp, top = 16.dp),
                 enable = !viewState.isLoading && viewState.jobInformation != null,
                 title = stringResource(R.string._continue),
                 onClick = {
@@ -92,28 +92,19 @@ fun JobInformationScreen(
                 })
         }) {
         viewState.data?.let {
-            Box(modifier = Modifier
-                .fillMaxWidth()
-                .clickable(true) {
-
+            AppClickableReadOnlyTextField(
+                onClick = {
                     navigationManager.navigate(AuthScreens.SelectJobInformation)
-
-                }) {
-                AppBaseTextField(
-                    value = viewState.jobInformation?.jobInformation ?: "",
-                    onValueChange = {},
-                    readOnly = true,
-                    label = "انتخاب شغل",
-                    enabled = true,
-                    trailingIcon = {
-                        Icon(
-                            imageVector = Icons.Default.KeyboardArrowDown,
-                            contentDescription = "down Icon",
-                        )
-                    },
-
+                },
+                value = viewState.jobInformation?.jobInformation ?: "",
+                label = "انتخاب شغل",
+                trailingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.KeyboardArrowDown,
+                        contentDescription = "down Icon",
                     )
-            }
+                },
+            )
             Spacer(modifier = Modifier.size(24.dp))
             CustomSpinner(
                 modifier = Modifier
@@ -129,9 +120,10 @@ fun JobInformationScreen(
                     annualIncome = it
                 }
             }
-            AppButton(modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp, top = 16.dp),
+            AppButton(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp, end = 16.dp, top = 16.dp),
                 enable = false,
                 title = stringResource(R.string.upload_document),
                 onClick = {
