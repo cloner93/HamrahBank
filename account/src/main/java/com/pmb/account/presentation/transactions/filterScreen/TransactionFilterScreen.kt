@@ -54,6 +54,13 @@ import com.pmb.ballon.component.base.IconType
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.core.presentation.NavigationManager
 
+/**
+TODO checkList TransactionFilterScreen.kt
+ *
+ * - add separator to amount fields
+ * - change shown data in fields
+ */
+
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun TransactionFilterScreen(navigationManager: NavigationManager) {
@@ -345,7 +352,6 @@ fun TransactionFilterScreen(navigationManager: NavigationManager) {
                 Column {
                     Spacer(modifier = Modifier.height(32.dp))
                     AppClickableReadOnlyTextField(
-                        modifier = Modifier.height(56.dp),
                         value = viewState.fromDate ?: "",
                         label = "از تاریخ",
                         trailingIcon = {
@@ -360,7 +366,6 @@ fun TransactionFilterScreen(navigationManager: NavigationManager) {
 
                     Spacer(modifier = Modifier.height(24.dp))
                     AppClickableReadOnlyTextField(
-                        modifier = Modifier.height(56.dp),
                         value = viewState.toDate ?: "",
                         label = "تا تاریخ",
                         trailingIcon = {
@@ -386,22 +391,30 @@ fun TransactionFilterScreen(navigationManager: NavigationManager) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Row(
-                    modifier = Modifier
-                        .padding(horizontal = 10.dp, vertical = 8.dp)
-                        .clickable {
-                            viewModel.handle(TransactionsFilterViewActions.ClearFilters)
-                        }) {
-                    Icon(
-                        imageVector = Icons.Outlined.FilterAltOff,
-                        contentDescription = null,
-                        tint = AppTheme.colorScheme.onBackgroundErrorDefault
-                    )
-                    ButtonMediumText(
-                        modifier = Modifier.padding(horizontal = 8.dp),
-                        text = "حذف فیلترها",
-                        color = AppTheme.colorScheme.onBackgroundErrorDefault
-                    )
+                if (
+                    viewState.transactionType != null ||
+                    viewState.fromPrice != null ||
+                    viewState.toPrice != null ||
+                    viewState.dateType != null ||
+                    viewState.fromDate != null
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .padding(horizontal = 10.dp, vertical = 8.dp)
+                            .clickable {
+                                viewModel.handle(TransactionsFilterViewActions.ClearFilters)
+                            }) {
+                        Icon(
+                            imageVector = Icons.Outlined.FilterAltOff,
+                            contentDescription = null,
+                            tint = AppTheme.colorScheme.onBackgroundErrorDefault
+                        )
+                        ButtonMediumText(
+                            modifier = Modifier.padding(horizontal = 8.dp),
+                            text = "حذف فیلترها",
+                            color = AppTheme.colorScheme.onBackgroundErrorDefault
+                        )
+                    }
                 }
 
                 Spacer(modifier = Modifier.height(12.dp))

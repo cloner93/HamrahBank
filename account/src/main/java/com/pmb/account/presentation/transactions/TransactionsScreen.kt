@@ -83,6 +83,18 @@ import com.pmb.core.presentation.NavigationManager
 import com.pmb.core.utils.CollectAsEffect
 import com.pmb.core.utils.toCurrency
 
+/**
+TODO checkList TransactionsScreen.kt
+ *
+ * - apply filter on shown list
+ * - open each item on receipt screen
+ * - handle search button
+ * - change change icon of transactions
+ * - apply paddings
+ * - pass filter to filter screen if TransactionFilter nonNull
+ */
+
+
 @Composable
 fun TransactionsScreen(navigationManager: NavigationManager) {
     val viewModel = hiltViewModel<TransactionsViewModel>()
@@ -111,7 +123,7 @@ fun TransactionsScreen(navigationManager: NavigationManager) {
                 }
 
                 TransactionsViewEvents.NavigateToDepositStatementScreen -> {
-
+                    navigationManager.navigate(AccountScreens.DepositStatement)
                 }
 
                 TransactionsViewEvents.NavigateToTransactionFilterScreen -> {
@@ -152,12 +164,12 @@ fun TransactionsScreen(navigationManager: NavigationManager) {
                     viewModel.handle(TransactionsViewActions.NavigateBack)
                 }
             ),
-            endIcon = ClickableIcon(
+            endIcon = if (selectedOption.intValue == 0) ClickableIcon(
                 IconType.ImageVector(Icons.Filled.Search),
                 onClick = {
                     viewModel.handle(TransactionsViewActions.NavigateToTransactionSearchScreen)
                 }
-            ),
+            ) else null,
             onClick = {
                 viewModel.handle(TransactionsViewActions.ShowDepositListBottomSheet)
             }

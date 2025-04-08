@@ -6,6 +6,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
+/**
+TODO checkList GetDepositsUseCase.kt
+ *
+ * - add @IoDispatcher private val coroutineDispatcher: CoroutineDispatcher
+ */
+
 class GetDepositsUseCase @Inject constructor(
     private val depositsRepository: DepositsRepository
 ) {
