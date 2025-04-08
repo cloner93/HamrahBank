@@ -66,7 +66,17 @@ class ScanCardViewModel @Inject constructor(
                     is Result.Success -> {
                         setState {
                             it.copy(
-                                isLoading = false
+                                isLoading = false,
+                                alertModelState = null,
+                                hasCameraPermission = false,
+                                hasFilePermissions = false,
+                                isCameraReady = false,
+                                isFrontCamera = false,
+                                isCapturingPhoto = false,
+                                photoCaptured = false,
+                                savedFileUri = null,
+                                cameraHasError = null,
+                                isCameraLoading = false
                             )
                         }
                         postEvent(ScanCardViewEvents.SendScanCard)
