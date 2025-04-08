@@ -101,7 +101,17 @@ class SignatureViewModel @Inject constructor(
                     is Result.Loading -> {
                         setState {
                             it.copy(
-                                isLoading = true
+                                isLoading = false,
+                                alertModelState = null,
+                                hasCameraPermission = false,
+                                hasFilePermissions = false,
+                                isCameraReady = false,
+                                isFrontCamera = false,
+                                isCapturingPhoto = false,
+                                photoCaptured = false,
+                                savedFileUri = null,
+                                cameraHasError = null,
+                                isCameraLoading = false
                             )
                         }
                     }

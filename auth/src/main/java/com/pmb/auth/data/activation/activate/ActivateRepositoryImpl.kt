@@ -17,8 +17,7 @@ class ActivateRepositoryImpl @Inject constructor() : ActivateRepository {
             emit(Result.Loading)
             delay(2000)
             activateParams.takeIf {
-                it.nationalId == accountSampleModel.nationalId
-                        && it.mobileNumber == accountSampleModel.mobileNumber
+                it.mobileNumber == accountSampleModel.mobileNumber
             }
                 ?.let {
                     emit(Result.Success(ActivateEntity(isSuccess = true)))

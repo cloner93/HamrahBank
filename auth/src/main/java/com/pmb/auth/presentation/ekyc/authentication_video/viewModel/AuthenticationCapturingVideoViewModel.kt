@@ -59,9 +59,11 @@ class AuthenticationCapturingVideoViewModel @Inject constructor(
             is VideoViewActions.PreviewCamera -> {
                 previewCamera(action)
             }
-            is AuthenticationCapturingVideoViewActions.ClearVideo->{
+
+            is AuthenticationCapturingVideoViewActions.ClearVideo -> {
                 clearVideo()
             }
+
             is AuthenticationCapturingVideoViewActions.SendVideo -> {
                 handleSendFacePhoto(action)
             }
@@ -85,7 +87,19 @@ class AuthenticationCapturingVideoViewModel @Inject constructor(
                     is Result.Success -> {
                         setState {
                             it.copy(
-                                isLoading = false
+                                isLoading = false,
+                                alertModelState = null,
+                                timerState = null,
+                                hasCameraPermission = false,
+                                hasFilePermissions = false,
+                                isCameraReady = false,
+                                isFrontCamera = false,
+                                isCapturingVideo = false,
+                                videoCaptured = false,
+                                savedFileUri = null,
+                                cameraHasError = null,
+                                isCameraLoading = false,
+                                isCompressing = false
                             )
                         }
                         postEvent(AuthenticationCapturingVideoViewEvents.VideoCaptured)
@@ -343,6 +357,7 @@ class AuthenticationCapturingVideoViewModel @Inject constructor(
         })
 
     }
+
     private fun clearVideo() {
         viewModelScope.launch {
             setState {
@@ -383,6 +398,7 @@ class AuthenticationCapturingVideoViewModel @Inject constructor(
             }
         }
     }
+
     private fun videoCapturing() {
 
     }
