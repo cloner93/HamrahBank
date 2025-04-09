@@ -348,6 +348,8 @@ fun TransactionFilterScreen(navigationManager: NavigationManager) {
                 )
             }
 
+
+
             if (viewState.dateType == DateType.CUSTOM) {
                 Column {
                     Spacer(modifier = Modifier.height(32.dp))
@@ -379,15 +381,10 @@ fun TransactionFilterScreen(navigationManager: NavigationManager) {
                         })
                 }
             }
-        }
 
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.BottomCenter)
-                .background(color = AppTheme.colorScheme.background1Neutral)
-                .padding(16.dp)
-        ) {
+            Spacer(modifier = Modifier.height(34.dp))
+
+
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -427,6 +424,16 @@ fun TransactionFilterScreen(navigationManager: NavigationManager) {
                     })
             }
         }
+
+        /* Box(
+             modifier = Modifier
+                 .fillMaxWidth()
+                 .align(Alignment.BottomCenter)
+                 .background(color = AppTheme.colorScheme.background1Neutral)
+                 .padding(16.dp)
+         ) {
+
+         }*/
     }
 
 

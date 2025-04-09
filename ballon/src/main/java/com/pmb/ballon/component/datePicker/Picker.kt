@@ -1,4 +1,4 @@
-package com.pmb.ballon.component
+package com.pmb.ballon.component.datePicker
 
 import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.Box
@@ -34,9 +34,9 @@ import kotlinx.coroutines.flow.map
 
 @Composable
 fun Picker(
+    modifier: Modifier = Modifier,
     items: List<String>,
     state: PickerState = rememberPickerState(),
-    modifier: Modifier = Modifier,
     startIndex: Int = 0,
     visibleItemsCount: Int = 3,
     textModifier: Modifier = Modifier,

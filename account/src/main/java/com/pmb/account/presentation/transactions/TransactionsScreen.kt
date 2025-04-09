@@ -682,7 +682,13 @@ fun TransactionRow(item: TransactionModel, onClick: () -> Unit = {}) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         AppImage(
-            image = if (item.type == TransactionType.WITHDRAWAL) R.drawable.ic_withdraw else R.drawable.ic_receive,
+            image = when (item.type) {
+                TransactionType.DEPOSIT -> R.drawable.ic_transfer
+                TransactionType.WITHDRAWAL -> R.drawable.ic_transfer
+                TransactionType.TRANSFER -> R.drawable.ic_transfer
+                TransactionType.RECEIVE -> R.drawable.ic_receive
+                TransactionType.FEE -> R.drawable.ic_transfer
+            },
             style = ImageStyle(size = Size.FIX(42.dp))
         )
         Spacer(modifier = Modifier.width(13.dp))
