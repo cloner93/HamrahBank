@@ -24,6 +24,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.pmb.account.presentation.component.ChipWithIcon
+import com.pmb.account.presentation.component.ShowPersianDatePickerBottomSheet
 import com.pmb.account.presentation.transactions.statement.viewmodel.DepositStatementViewActions
 import com.pmb.account.presentation.transactions.statement.viewmodel.DepositStatementViewEvents
 import com.pmb.account.presentation.transactions.statement.viewmodel.DepositStatementViewModel
@@ -229,7 +230,7 @@ fun DepositStatementScreen(navigationManager: NavigationManager) {
                             )
                         },
                         onClick = {
-//                        viewModel.handle(DepositStatementViewActions.ShowFromDatePicker)
+                            viewModel.handle(DepositStatementViewActions.ShowFromDatePicker)
                         })
 
                     Spacer(modifier = Modifier.height(24.dp))
@@ -243,7 +244,7 @@ fun DepositStatementScreen(navigationManager: NavigationManager) {
                             )
                         },
                         onClick = {
-//                        viewModel.handle(DepositStatementViewActions.ShowToDatePicker)
+                            viewModel.handle(DepositStatementViewActions.ShowToDatePicker)
                         })
                 }
             }
@@ -269,6 +270,28 @@ fun DepositStatementScreen(navigationManager: NavigationManager) {
         }
     }
 
+    if (viewState.showFromDatePicker) {
+        ShowPersianDatePickerBottomSheet(
+            onChangeValue = { year, month, day ->
+                viewModel.handle(DepositStatementViewActions.CloseFromDatePicker("$year$month$day"))
+            },
+            onDismiss = {
+                viewModel.handle(DepositStatementViewActions.CloseFromDatePicker(null))
+            },
+            title = "از تاریخ"
+        )
+    }
+    if (viewState.showToDatePicker) {
+        ShowPersianDatePickerBottomSheet(
+            onChangeValue = { year, month, day ->
+                viewModel.handle(DepositStatementViewActions.CloseToDatePicker("$year$month$day"))
+            },
+            onDismiss = {
+                viewModel.handle(DepositStatementViewActions.CloseToDatePicker(null))
+            },
+            title = "تا تاریخ"
+        )
+    }
 }
 
 enum class DateType(val string: String) {
