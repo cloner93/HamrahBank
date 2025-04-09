@@ -110,7 +110,7 @@ fun ActivationScreen(navigationManager: NavigationManager, viewModel: Activation
                         .fillMaxWidth()
                         .padding(horizontal = 24.dp),
                     title = stringResource(R.string._continue),
-                    enable = !viewState.loading && isMobile && viewState.isChecked,
+                    enable = !viewState.loading && isMobile && isNationalId && viewState.isChecked,
                     onClick = {
                         viewModel.handle(
                             ActivationViewActions.ActiveUser(

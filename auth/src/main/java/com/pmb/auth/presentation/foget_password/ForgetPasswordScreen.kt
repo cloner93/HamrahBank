@@ -56,7 +56,6 @@ fun ForgetPasswordScreen(
                 ForgetPasswordViewEvents.ResetPasswordSuccess -> onAuthenticationCallback.invoke(
                     ComingType.COMING_PASSWORD
                 )
-//                ForgetPasswordViewEvents.ResetPasswordSuccess -> showBottomSheet = true
             }
         }
     }
@@ -80,7 +79,7 @@ fun ForgetPasswordScreen(
                 .fillMaxWidth()
                 .padding(horizontal = 24.dp),
                 title = stringResource(R.string._continue),
-                enable = !viewState.loading && isMobile && isNationalId && isPassword && isRePassword && password == rePassword || true,
+                enable = !viewState.loading && isMobile && isNationalId && isPassword && isRePassword && password == rePassword ,
                 onClick = {
                     viewModel.handle(
                         ForgetPasswordViewActions.ResetPassword(

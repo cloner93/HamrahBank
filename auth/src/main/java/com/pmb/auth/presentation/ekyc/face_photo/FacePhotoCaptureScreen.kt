@@ -1,5 +1,6 @@
 package com.pmb.auth.presentation.ekyc.face_photo
 
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.view.PreviewView
@@ -181,6 +182,7 @@ fun FacePhotoCaptureScreen(
         AnimatedVisibility(
             visible = !viewState.isCapturingPhoto && viewState.photoCaptured,
         ) {
+            Log.d("cameraState","image is showing")
             PreviewRoundedImageComponent(
                 modifier = Modifier
                     .fillMaxWidth()
