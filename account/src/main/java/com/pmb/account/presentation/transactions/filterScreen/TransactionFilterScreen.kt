@@ -1,23 +1,18 @@
 package com.pmb.account.presentation.transactions.filterScreen
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.FilterAltOff
 import androidx.compose.material3.Icon
@@ -46,6 +41,7 @@ import com.pmb.account.presentation.transactions.filterScreen.viewmodel.entity.T
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppButtonIcon
 import com.pmb.ballon.component.base.AppClickableReadOnlyTextField
+import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppNumberTextField
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.BodyMediumText
@@ -90,23 +86,60 @@ fun TransactionFilterScreen(navigationManager: NavigationManager) {
         }
     }
 
-    Box(
-        modifier = Modifier
-            .background(color = AppTheme.colorScheme.background1Neutral)
-            .fillMaxSize()
-            .padding(all = 12.dp)
-            .verticalScroll(rememberScrollState()),
-    ) {
-        Column(
-            horizontalAlignment = Alignment.Start
-        ) {
-
+    AppContent(
+        modifier = Modifier.padding(horizontal = 16.dp),
+        topBar = {
             AppTopBar(
                 title = "فیلتر ها",
                 onBack = {
                     viewModel.handle(TransactionsFilterViewActions.NavigateBack)
                 }
             )
+        }
+        , footer = {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                if (
+                    viewState.transactionType != null ||
+                    viewState.fromPrice != null ||
+                    viewState.toPrice != null ||
+                    viewState.dateType != null ||
+                    viewState.fromDate != null
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .padding(horizontal = 10.dp, vertical = 8.dp)
+                            .clickable {
+                                viewModel.handle(TransactionsFilterViewActions.ClearFilters)
+                            }) {
+                        Icon(
+                            imageVector = Icons.Outlined.FilterAltOff,
+                            contentDescription = null,
+                            tint = AppTheme.colorScheme.onBackgroundErrorDefault
+                        )
+                        ButtonMediumText(
+                            modifier = Modifier.padding(horizontal = 8.dp),
+                            text = "حذف فیلترها",
+                            color = AppTheme.colorScheme.onBackgroundErrorDefault
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                AppButton(
+                    modifier = Modifier.fillMaxWidth(),
+                    title = "اعمال فیلترها",
+                    onClick = {
+                        viewModel.handle(TransactionsFilterViewActions.ApplyFilters)
+                    })
+            }
+        }
+    ) {
+        Column(
+            horizontalAlignment = Alignment.Start
+        ) {
             Spacer(modifier = Modifier.height(24.dp))
             BodyMediumText(
                 text = "نوع تراکنش",
@@ -348,8 +381,6 @@ fun TransactionFilterScreen(navigationManager: NavigationManager) {
                 )
             }
 
-
-
             if (viewState.dateType == DateType.CUSTOM) {
                 Column {
                     Spacer(modifier = Modifier.height(32.dp))
@@ -381,61 +412,8 @@ fun TransactionFilterScreen(navigationManager: NavigationManager) {
                         })
                 }
             }
-
-            Spacer(modifier = Modifier.height(34.dp))
-
-
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                if (
-                    viewState.transactionType != null ||
-                    viewState.fromPrice != null ||
-                    viewState.toPrice != null ||
-                    viewState.dateType != null ||
-                    viewState.fromDate != null
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .padding(horizontal = 10.dp, vertical = 8.dp)
-                            .clickable {
-                                viewModel.handle(TransactionsFilterViewActions.ClearFilters)
-                            }) {
-                        Icon(
-                            imageVector = Icons.Outlined.FilterAltOff,
-                            contentDescription = null,
-                            tint = AppTheme.colorScheme.onBackgroundErrorDefault
-                        )
-                        ButtonMediumText(
-                            modifier = Modifier.padding(horizontal = 8.dp),
-                            text = "حذف فیلترها",
-                            color = AppTheme.colorScheme.onBackgroundErrorDefault
-                        )
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                AppButton(
-                    modifier = Modifier.fillMaxWidth(),
-                    title = "اعمال فیلترها",
-                    onClick = {
-                        viewModel.handle(TransactionsFilterViewActions.ApplyFilters)
-                    })
-            }
         }
-
-        /* Box(
-             modifier = Modifier
-                 .fillMaxWidth()
-                 .align(Alignment.BottomCenter)
-                 .background(color = AppTheme.colorScheme.background1Neutral)
-                 .padding(16.dp)
-         ) {
-
-         }*/
     }
-
 
     if (viewState.showFromDatePicker) {
         ShowPersianDatePickerBottomSheet(

@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -65,6 +64,7 @@ import com.pmb.account.utils.mapToDepositModel
 import com.pmb.ballon.component.DepositBottomSheet
 import com.pmb.ballon.component.DynamicTabSelector
 import com.pmb.ballon.component.base.AppButtonIcon
+import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppIcon
 import com.pmb.ballon.component.base.AppImage
 import com.pmb.ballon.component.base.BodySmallText
@@ -150,30 +150,29 @@ fun TransactionsScreen(navigationManager: NavigationManager) {
             }
         }
 
-    Column(
-        modifier = Modifier
-            .background(color = AppTheme.colorScheme.background1Neutral)
-            .fillMaxSize()
-            .padding(all = 12.dp)
-    ) {
-        AppTopBar(
-            model = viewState.selectedDeposit,
-            startIcon = ClickableIcon(
-                IconType.ImageVector(Icons.Filled.ArrowForward),
+    AppContent (
+        modifier = Modifier.padding(horizontal = 16.dp),
+        topBar = {
+            AppTopBar(
+                model = viewState.selectedDeposit,
+                startIcon = ClickableIcon(
+                    IconType.ImageVector(Icons.Filled.ArrowForward),
+                    onClick = {
+                        viewModel.handle(TransactionsViewActions.NavigateBack)
+                    }
+                ),
+                endIcon = if (selectedOption.intValue == 0) ClickableIcon(
+                    IconType.ImageVector(Icons.Filled.Search),
+                    onClick = {
+                        viewModel.handle(TransactionsViewActions.NavigateToTransactionSearchScreen)
+                    }
+                ) else null,
                 onClick = {
-                    viewModel.handle(TransactionsViewActions.NavigateBack)
+                    viewModel.handle(TransactionsViewActions.ShowDepositListBottomSheet)
                 }
-            ),
-            endIcon = if (selectedOption.intValue == 0) ClickableIcon(
-                IconType.ImageVector(Icons.Filled.Search),
-                onClick = {
-                    viewModel.handle(TransactionsViewActions.NavigateToTransactionSearchScreen)
-                }
-            ) else null,
-            onClick = {
-                viewModel.handle(TransactionsViewActions.ShowDepositListBottomSheet)
-            }
-        )
+            )
+        }
+    ){
         DynamicTabSelector(
             modifier = Modifier
                 .fillMaxWidth()

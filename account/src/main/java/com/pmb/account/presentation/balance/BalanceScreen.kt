@@ -5,13 +5,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -29,6 +27,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.pmb.account.presentation.balance.viewmodel.BalanceViewEvents
 import com.pmb.account.presentation.balance.viewmodel.BalanceViewModel
 import com.pmb.account.presentation.component.PieChart
+import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.component.base.BodySmallText
@@ -54,18 +53,16 @@ fun BalanceScreen(navigationManager: NavigationManager) {
         }
     }
 
-    Column(
-        modifier = Modifier
-            .background(color = AppTheme.colorScheme.background3Neutral)
-            .fillMaxSize()
-            .padding(all = 12.dp), horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+    AppContent(
+        modifier = Modifier.padding(horizontal = 16.dp),
+        topBar = {
+            AppTopBar(
+                title = "دارایی ها",
+                onBack = {
+                    navigationManager.navigateBack()
+                })
+        }) {
 
-        AppTopBar(
-            title = "دارایی ها",
-            onBack = {
-                navigationManager.navigateBack()
-            })
         Card(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(16.dp),
@@ -109,10 +106,8 @@ fun BalanceScreen(navigationManager: NavigationManager) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
-                LazyColumn {
-                    items(viewState.deposits.size) { item ->
-                        DepositRow(viewState.deposits[item]) { }
-                    }
+                viewState.deposits.forEach {
+                    DepositRow(it) { }
                 }
             }
         }
