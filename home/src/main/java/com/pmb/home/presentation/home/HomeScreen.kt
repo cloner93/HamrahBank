@@ -40,7 +40,6 @@ fun HomeScreen(
 ) {
     val viewState by viewModel.viewState.collectAsState()
     AppContent(
-        scrollState = null,
         modifier = Modifier.padding(horizontal = 16.dp),
         topBar = {
             Box(

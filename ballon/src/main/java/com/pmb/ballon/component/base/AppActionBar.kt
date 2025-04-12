@@ -14,7 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.pmb.ballon.models.TextStyle
 
-data class ClickableIcon(val icon: IconType, val onClick: () -> Unit)
+data class ClickableIcon(val icon: IconType, val tint: androidx.compose.ui.graphics.Color? = null, val onClick: () -> Unit)
 sealed class IconType {
     data class Painter(val painter: androidx.compose.ui.graphics.painter.Painter) : IconType()
     data class ImageVector(val imageVector: androidx.compose.ui.graphics.vector.ImageVector) :

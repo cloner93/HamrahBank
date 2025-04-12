@@ -12,31 +12,40 @@ import androidx.compose.ui.unit.dp
 import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.component.base.Headline6Text
 import com.pmb.ballon.ui.theme.AppTheme
-import com.pmb.transfer.domain.ClientBank
+import com.pmb.transfer.domain.entity.BankIdentifierNumberType
+import com.pmb.transfer.domain.entity.TransactionClientBankEntity
 import com.pmb.transfer.utils.BankUtil
 
 
 @Composable
-fun ClientBankProfileInfo(clientBank: ClientBank, profileSize: Dp = 44.dp, iconSize: Dp = 22.dp) {
+fun ClientBankProfileInfo(
+    item: TransactionClientBankEntity,
+    profileSize: Dp = 44.dp,
+    iconSize: Dp = 22.dp
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         ProfileAndThumbnail(
-            profileUrl = clientBank.profileUrl,
-            icon = BankUtil.getLogo(clientBank.cardNumber),
+            profileUrl = item.clientBankEntity.profileUrl,
+            icon = BankUtil.getLogo(item.clientBankEntity.cardNumber),
             imageSize = profileSize,
             iconSize = iconSize
         )
         Spacer(modifier = Modifier.size(12.dp))
         Headline6Text(
-            text = clientBank.name,
+            text = item.clientBankEntity.name,
             color = AppTheme.colorScheme.onBackgroundNeutralDefault
         )
         Spacer(modifier = Modifier.size(4.dp))
         BodyMediumText(
-            text = clientBank.accountNumber,
+            text = when(item.type){
+                BankIdentifierNumberType.ACCOUNT -> item.clientBankEntity.accountNumber
+                BankIdentifierNumberType.CARD -> item.clientBankEntity.cardNumber
+                BankIdentifierNumberType.IBAN -> item.clientBankEntity.iban
+            },
             color = AppTheme.colorScheme.onBackgroundNeutralSubdued
         )
     }
