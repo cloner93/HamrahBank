@@ -53,6 +53,7 @@ class AuthenticationCapturingVideoViewModel @Inject constructor(
             }
 
             is VideoViewActions.RequestFilePermission -> requestFilePermission(action)
+            is VideoViewActions.RequestAudioPermission -> requestAudioPermission(action)
             is VideoViewActions.VideoCaptured -> videoCaptured()
             is VideoViewActions.CapturingVideo -> videoCapturing()
             is VideoViewActions.ToggleCamera -> toggleCamera()
@@ -150,13 +151,34 @@ class AuthenticationCapturingVideoViewModel @Inject constructor(
     private fun requestCameraPermission(action: VideoViewActions.RequestCameraPermission) {
         viewModelScope.launch {
 
-            permissionDispatcher.initialize(action.managedActivityResultLauncher)
+            permissionDispatcher.initialize(singlePermissionLauncher = action.managedActivityResultLauncher)
             permissionDispatcher.requestSinglePermission(
                 permission = android.Manifest.permission.CAMERA,
                 onPermissionGranted = {
+                    Log.i("per", "You have permission for using camera")
+                    setState { state ->
+                        state.copy(hasCameraPermission = true)
+                    }
+                },
+                onPermissionDenied = {
+                    setState { state ->
+                        Log.i("per", "You don't have permission for using camera")
+                        state.copy(cameraHasError = "You don't have permission for using camera")
+                    }
+                }
+            )
+        }
+    }
+    private fun requestAudioPermission(action: VideoViewActions.RequestAudioPermission) {
+        viewModelScope.launch {
+
+            permissionDispatcher.initialize(singlePermissionLauncher = action.managedActivityResultLauncher)
+            permissionDispatcher.requestSinglePermission(
+                permission = android.Manifest.permission.RECORD_AUDIO,
+                onPermissionGranted = {
                     setState { state ->
                         Log.i("per", "You have permission for using camera")
-                        state.copy(hasCameraPermission = true)
+                        state.copy(hasAudioPermissions = true, hasCameraPermission = true, hasFilePermissions = true)
                     }
                 },
                 onPermissionDenied = {
@@ -176,7 +198,7 @@ class AuthenticationCapturingVideoViewModel @Inject constructor(
                 permissions = arrayOf(
                     android.Manifest.permission.READ_EXTERNAL_STORAGE,
                     android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    android.Manifest.permission.RECORD_AUDIO
+//                    android.Manifest.permission.RECORD_AUDIO
                 ),
                 onPermissionGranted = {
                     setState { state ->
