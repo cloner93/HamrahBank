@@ -12,6 +12,7 @@ class CustomColors(
     strokeInverted1: Color,
     strokeInverted2: Color,
     foregroundNeutralDefault: Color,
+    foregroundNeutralRest: Color,
     foregroundNeutralDisabled: Color,
     foregroundPrimaryDefault: Color,
     foregroundSuccessDefault: Color,
@@ -83,6 +84,8 @@ class CustomColors(
     var foregroundNeutralDisabled by mutableStateOf(foregroundNeutralDisabled)
         private set
     var foregroundPrimaryDefault by mutableStateOf(foregroundPrimaryDefault)
+        private set
+    var foregroundNeutralRest by mutableStateOf(foregroundNeutralRest)
         private set
     var foregroundSuccessDefault by mutableStateOf(foregroundSuccessDefault)
         private set
@@ -197,6 +200,7 @@ class CustomColors(
         strokeInverted1: Color = this.strokeInverted1,
         strokeInverted2: Color = this.strokeInverted2,
         foregroundNeutralDefault: Color = this.foregroundNeutralDefault,
+        foregroundNeutralRest: Color = this.foregroundNeutralRest,
         foregroundNeutralDisabled: Color = this.foregroundNeutralDisabled,
         foregroundPrimaryDefault: Color = this.foregroundPrimaryDefault,
         foregroundSuccessDefault: Color = this.foregroundSuccessDefault,
@@ -258,6 +262,7 @@ class CustomColors(
         strokeInverted1 = strokeInverted1,
         strokeInverted2 = strokeInverted2,
         foregroundNeutralDefault = foregroundNeutralDefault,
+        foregroundNeutralRest= foregroundNeutralRest,
         foregroundNeutralDisabled = foregroundNeutralDisabled,
         foregroundPrimaryDefault = foregroundPrimaryDefault,
         foregroundSuccessDefault = foregroundSuccessDefault,
@@ -322,6 +327,7 @@ class CustomColors(
         strokeInverted1 = other.strokeInverted1
         strokeInverted2 = other.strokeInverted2
         foregroundNeutralDefault = other.foregroundNeutralDefault
+        foregroundNeutralRest = other.foregroundNeutralRest
         foregroundNeutralDisabled = other.foregroundNeutralDisabled
         foregroundPrimaryDefault = other.foregroundPrimaryDefault
         foregroundSuccessDefault = other.foregroundSuccessDefault
@@ -386,6 +392,7 @@ fun lightColors() = CustomColors(
     strokeInverted1 = Color(0xFFFFFFFF),
     strokeInverted2 = Color(0xFFFFFFFF),
     foregroundNeutralDefault = Color(0xFF161618),
+    foregroundNeutralRest = Color(0xFFB8B8BC),
     foregroundNeutralDisabled = Color(0xFFE2E2E4),
     foregroundPrimaryDefault = Color(0xFFC11332),
     foregroundSuccessDefault = Color(0xFF388E3C),
@@ -450,6 +457,7 @@ fun darkColors() = CustomColors(
     strokeInverted1 = Color(0xFF2D2D30),
     strokeInverted2 = Color(0xFF2D2D30),
     foregroundNeutralDefault = Color(0xFFB8B8BC),
+    foregroundNeutralRest = Color(0xFFB8B8BC),
     foregroundNeutralDisabled = Color(0xFF434349),
     foregroundPrimaryDefault = Color(0xFF550816),
     foregroundSuccessDefault = Color(0xFF144111),
