@@ -1,18 +1,13 @@
 package com.pmb.account.presentation.transactions.statement
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -31,6 +26,7 @@ import com.pmb.account.presentation.transactions.statement.viewmodel.DepositStat
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppButtonIcon
 import com.pmb.ballon.component.base.AppClickableReadOnlyTextField
+import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.component.base.IconType
@@ -58,22 +54,37 @@ fun DepositStatementScreen(navigationManager: NavigationManager) {
         }
     }
 
-    Box(
-        modifier = Modifier
-            .background(color = AppTheme.colorScheme.background1Neutral)
-            .fillMaxSize()
-            .padding(all = 12.dp)
-            .verticalScroll(rememberScrollState()),
-    ) {
-        Column(
-            horizontalAlignment = Alignment.Start
-        ) {
+    AppContent(
+        modifier = Modifier.padding(horizontal = 16.dp),
+        scrollState = null,
+        topBar = {
             AppTopBar(
                 title = "دریافت صورت\u200Cحساب",
                 onBack = {
                     viewModel.handle(DepositStatementViewActions.NavigateBack)
                 }
             )
+        },
+        footer = {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                AppButton(
+                    modifier = Modifier.fillMaxWidth(),
+                    enable = viewState.dateType != null,
+                    title = "اعمال فیلترها",
+                    onClick = {
+                        viewModel.handle(DepositStatementViewActions.Apply)
+                    })
+            }
+        }
+    ) {
+        Column(
+            horizontalAlignment = Alignment.Start
+        ) {
             Spacer(modifier = Modifier.height(24.dp))
             BodyMediumText(
                 text = "انتخاب مدت زمان مورد نظر",
@@ -247,25 +258,6 @@ fun DepositStatementScreen(navigationManager: NavigationManager) {
                             viewModel.handle(DepositStatementViewActions.ShowToDatePicker)
                         })
                 }
-            }
-        }
-
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.BottomCenter)
-                .background(color = AppTheme.colorScheme.background1Neutral)
-        ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                AppButton(
-                    modifier = Modifier.fillMaxWidth(),
-                    enable = viewState.dateType != null,
-                    title = "اعمال فیلترها",
-                    onClick = {
-                        viewModel.handle(DepositStatementViewActions.Apply)
-                    })
             }
         }
     }

@@ -88,6 +88,7 @@ fun TransactionFilterScreen(navigationManager: NavigationManager) {
 
     AppContent(
         modifier = Modifier.padding(horizontal = 16.dp),
+        scrollState = null,
         topBar = {
             AppTopBar(
                 title = "فیلتر ها",
@@ -95,9 +96,12 @@ fun TransactionFilterScreen(navigationManager: NavigationManager) {
                     viewModel.handle(TransactionsFilterViewActions.NavigateBack)
                 }
             )
-        }
-        , footer = {
+        },
+        footer = {
             Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 if (

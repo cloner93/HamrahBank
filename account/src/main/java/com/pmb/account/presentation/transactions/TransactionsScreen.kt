@@ -152,6 +152,7 @@ fun TransactionsScreen(navigationManager: NavigationManager) {
 
     AppContent (
         modifier = Modifier.padding(horizontal = 16.dp),
+        scrollState = null,
         topBar = {
             AppTopBar(
                 model = viewState.selectedDeposit,
