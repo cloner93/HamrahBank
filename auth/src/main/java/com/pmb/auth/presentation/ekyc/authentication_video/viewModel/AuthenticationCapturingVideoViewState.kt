@@ -11,6 +11,7 @@ data class AuthenticationCapturingVideoViewState(
     val timerState: Map<TimerTypeId, TimerState>? = null,
     override val hasCameraPermission: Boolean = false,
     override val hasFilePermissions: Boolean = false,
+    override val hasAudioPermissions: Boolean = false,
     override val isCameraReady: Boolean = false,
     override val isFrontCamera: Boolean = false,
     override val isCapturingVideo: Boolean = false,

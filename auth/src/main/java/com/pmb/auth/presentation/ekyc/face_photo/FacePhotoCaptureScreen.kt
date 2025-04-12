@@ -84,6 +84,9 @@ fun FacePhotoCaptureScreen(
     LaunchedEffect(viewState.hasCameraPermission) {
         viewModel.handle(PhotoViewActions.RequestFilePermission(multiplePermissionLauncher))
     }
+    LaunchedEffect(viewState.hasCameraPermission) {
+        viewModel.handle(PhotoViewActions.RequestFilePermission(multiplePermissionLauncher))
+    }
     LaunchedEffect(Unit) {
         viewModel.viewEvent.collect { event ->
             when (event) {

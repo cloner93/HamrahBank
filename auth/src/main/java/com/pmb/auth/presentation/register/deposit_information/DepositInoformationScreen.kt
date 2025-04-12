@@ -245,7 +245,7 @@ fun DepositInformationScreen(
                 )
             }, footer = {
                 AppButton(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.padding(16.dp).fillMaxWidth(),
                     title = stringResource(R.string.accept),
                     onClick = {
                         showBottomSheet = false
