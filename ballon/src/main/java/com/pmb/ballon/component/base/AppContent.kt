@@ -1,5 +1,6 @@
 package com.pmb.ballon.component.base
 
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -23,6 +24,7 @@ fun AppContent(
     topBar: (@Composable (ColumnScope.() -> Unit))? = null,
     verticalArrangement: Arrangement.Vertical = Arrangement.Top,
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
+    scrollState: ScrollState? = rememberScrollState(),
     footer: (@Composable (ColumnScope.() -> Unit))? = null,
     content: @Composable (ColumnScope.() -> Unit)
 ) {
@@ -37,7 +39,12 @@ fun AppContent(
             modifier = modifier
                 .weight(1f)
                 .fillMaxWidth()
-                .verticalScroll(rememberScrollState()),
+                .then(
+                    if (scrollState != null)
+                        Modifier.verticalScroll(scrollState)
+                    else
+                        Modifier
+                ),
             verticalArrangement = verticalArrangement,
             horizontalAlignment = horizontalAlignment
         ) {
