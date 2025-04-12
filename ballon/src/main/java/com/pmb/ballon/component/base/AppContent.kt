@@ -23,7 +23,7 @@ fun AppContent(
     topBar: (@Composable (ColumnScope.() -> Unit))? = null,
     verticalArrangement: Arrangement.Vertical = Arrangement.Top,
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
-    requiredVerticalScroll: Boolean = false,
+    requiredVerticalScroll: Boolean = true,
     footer: (@Composable (ColumnScope.() -> Unit))? = null,
     content: @Composable (ColumnScope.() -> Unit)
 ) {
