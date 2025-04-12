@@ -1,10 +1,12 @@
 package com.pmb.home.presentation
 
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.pmb.core.presentation.NavigationManager
 import com.pmb.core.presentation.Screen
 import com.pmb.home.presentation.home.HomeScreen
+import com.pmb.home.presentation.home.viewModel.HomeViewModel
 
 sealed class HomeScreens(route: String, arguments: Map<String, String> = emptyMap()) :
     Screen(route = route, arguments = arguments) {
@@ -20,6 +22,9 @@ sealed class HomeScreens(route: String, arguments: Map<String, String> = emptyMa
 
 fun NavGraphBuilder.homeScreensHandle(navigationManager: NavigationManager) {
     composable(route = HomeScreens.Home.route) {
-        HomeScreen(navigationManager = navigationManager)
+        HomeScreen(
+            navigationManager = navigationManager,
+            viewModel = hiltViewModel<HomeViewModel>()
+        )
     }
 }

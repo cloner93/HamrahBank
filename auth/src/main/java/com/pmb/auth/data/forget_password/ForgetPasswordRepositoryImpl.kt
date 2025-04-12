@@ -20,7 +20,7 @@ class ForgetPasswordRepositoryImpl @Inject constructor(
         val accountSampleModel = AccountSampleModel()
         emit(Result.Loading)
         delay(2000)
-        if (nationalId == accountSampleModel.nationalId && mobileNumber == accountSampleModel.mobileNumber) {
+        if (mobileNumber == accountSampleModel.mobileNumber) {
             emit(Result.Success(ForgetPasswordEntity(isSuccess = true)))
         } else {
             emit(Result.Error(message = "forget password failed"))

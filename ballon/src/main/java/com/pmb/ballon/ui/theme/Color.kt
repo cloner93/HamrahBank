@@ -81,11 +81,11 @@ class CustomColors(
         private set
     var foregroundNeutralDefault by mutableStateOf(foregroundNeutralDefault)
         private set
-    var foregroundNeutralRest by mutableStateOf(foregroundNeutralRest)
-        private set
     var foregroundNeutralDisabled by mutableStateOf(foregroundNeutralDisabled)
         private set
     var foregroundPrimaryDefault by mutableStateOf(foregroundPrimaryDefault)
+        private set
+    var foregroundNeutralRest by mutableStateOf(foregroundNeutralRest)
         private set
     var foregroundSuccessDefault by mutableStateOf(foregroundSuccessDefault)
         private set
