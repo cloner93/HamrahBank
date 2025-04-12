@@ -64,7 +64,7 @@ fun AppNavHost(navController: NavHostController, innerPadding: PaddingValues) {
         mutableStateOf(
             NavigationManager(
                 navController = navController,
-                startDestination = AccountScreens.Account/* AuthScreens.Auth*/
+                startDestination = HomeScreens.Home
             )
         )
     }
