@@ -34,6 +34,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -44,7 +45,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.pmb.account.R
@@ -58,7 +62,6 @@ import com.pmb.account.presentation.transactions.filterScreen.viewmodel.entity.T
 import com.pmb.account.presentation.transactions.viewmodel.TransactionsViewActions
 import com.pmb.account.presentation.transactions.viewmodel.TransactionsViewEvents
 import com.pmb.account.presentation.transactions.viewmodel.TransactionsViewModel
-import com.pmb.account.presentation.transactions.viewmodel.TransactionsViewState
 import com.pmb.account.utils.mapToDepositMenu
 import com.pmb.account.utils.mapToDepositModel
 import com.pmb.ballon.component.DepositBottomSheet
@@ -79,6 +82,7 @@ import com.pmb.ballon.models.Size
 import com.pmb.ballon.models.TextStyle
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.ballon.ui.theme.AppTypography
+import com.pmb.ballon.ui.theme.HamrahBankTheme
 import com.pmb.core.presentation.NavigationManager
 import com.pmb.core.utils.CollectAsEffect
 import com.pmb.core.utils.toCurrency
@@ -150,7 +154,7 @@ fun TransactionsScreen(navigationManager: NavigationManager) {
             }
         }
 
-    AppContent (
+    AppContent(
         modifier = Modifier.padding(horizontal = 16.dp),
         scrollState = null,
         topBar = {
@@ -173,7 +177,7 @@ fun TransactionsScreen(navigationManager: NavigationManager) {
                 }
             )
         }
-    ){
+    ) {
         DynamicTabSelector(
             modifier = Modifier
                 .fillMaxWidth()
@@ -188,7 +192,19 @@ fun TransactionsScreen(navigationManager: NavigationManager) {
 
         when (selectedOption.intValue) {
             0 -> {
-                AllTransactionsSection(viewModel, viewState)
+                AllTransactionsSection(
+                    transactionList = viewState.allTransactions,
+                    transactionFilter = viewState.transactionFilter,
+                    onFilterClick = {
+                        viewModel.handle(TransactionsViewActions.NavigateToTransactionFilterScreen)
+                    }, onFilterItemClick = {
+                        viewModel.handle(TransactionsViewActions.RemoveFilterFromList(it))
+                    }, onStatementClick = {
+                        viewModel.handle(TransactionsViewActions.NavigateToDepositStatementScreen)
+                    }
+                ) {
+                    viewModel.handle(TransactionsViewActions.NavigateToTransactionInfoScreen)
+                }
             }
 
             1 -> {
@@ -198,7 +214,7 @@ fun TransactionsScreen(navigationManager: NavigationManager) {
             }
 
             2 -> {
-                SendReceiveTransactionsSection(viewState.totalReceiveTransactions) {}
+                ReceiveTransactionsSection(viewState.totalReceiveTransactions) {}
             }
         }
 
@@ -220,7 +236,7 @@ fun TransactionsScreen(navigationManager: NavigationManager) {
 }
 
 @Composable
-fun SendReceiveTransactionsSection(
+fun ReceiveTransactionsSection(
     totalReceiveTransaction: Double,
     onTransactionClick: () -> Unit = {}
 ) {
@@ -277,27 +293,31 @@ fun SendReceiveTransactionsSection(
 
 @Composable
 private fun AllTransactionsSection(
-    viewModel: TransactionsViewModel,
-    viewState: TransactionsViewState
+    transactionList: List<TransactionModel> = emptyList(),
+    transactionFilter: TransactionFilter? = null,
+    onFilterClick: () -> Unit = {},
+    onFilterItemClick: (TransactionFilter) -> Unit = {},
+    onStatementClick: () -> Unit = {},
+    onTransactionItemClick: () -> Unit = {},
 ) {
     StatementAndFilters(
-        transactionFilter = viewState.transactionFilter,
+        transactionFilter = transactionFilter,
         onFilterClick = {
-            viewModel.handle(TransactionsViewActions.NavigateToTransactionFilterScreen)
+            onFilterClick()
         },
         onFilterItemClick = {
-            viewModel.handle(TransactionsViewActions.RemoveFilterFromList(it))
+            onFilterItemClick(it)
         },
         onStatementClick = {
-            viewModel.handle(TransactionsViewActions.NavigateToDepositStatementScreen)
+            onStatementClick()
         })
     LazyColumn(
         contentPadding = PaddingValues(12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        items(viewState.allTransactions.size) { item ->
-            TransactionRow(viewState.allTransactions[item]) {
-                viewModel.handle(TransactionsViewActions.NavigateToTransactionInfoScreen)
+        items(transactionList.size) { item ->
+            TransactionRow(transactionList[item]) {
+                onTransactionItemClick()
             }
         }
     }
@@ -716,6 +736,89 @@ fun TransactionRow(item: TransactionModel, onClick: () -> Unit = {}) {
                 )
             }
             CaptionText(text = item.date)
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun AllTransactionsSectionFiledPreview() {
+    val transactionList = listOf<TransactionModel>(
+        TransactionModel(
+            TransactionType.RECEIVE,
+            "واریز حقوق",
+            1_000_000.0,
+            "ریال",
+            "امروز ساعت ۱۰:۳۰"
+        ),
+        TransactionModel(
+            TransactionType.TRANSFER,
+            "انتقال",
+            1_000_000.0,
+            "ریال",
+            "امروز ساعت ۱۰:۳۰"
+        ),
+
+        )
+    val transactionFilter =
+        TransactionFilter(
+            transactionType = com.pmb.account.presentation.transactions.filterScreen.TransactionType.RECEIVE,
+            fromPrice = "1654",
+            toPrice = "3214",
+            dateType = null,
+            fromDate = null,
+            toDate = null
+        )
+
+    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+        HamrahBankTheme {
+            Column {
+                AllTransactionsSection(
+                    transactionList = transactionList,
+                    transactionFilter = transactionFilter
+                )
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun AllTransactionsSectionEmptyPreview() {
+
+    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+        HamrahBankTheme {
+            Column {
+                AllTransactionsSection(
+                    transactionList = listOf<TransactionModel>(),
+                    transactionFilter = null
+                )
+            }
+        }
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+private fun SendTransactionsSectionPreview() {
+    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+        HamrahBankTheme {
+            Column {
+                SendTransactionsSection(totalSentTransaction = 12000000.0)
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ReceiveTransactionsSectionPreview() {
+    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+        HamrahBankTheme {
+            Column {
+                ReceiveTransactionsSection(totalReceiveTransaction = 1000000.0)
+            }
         }
     }
 }
