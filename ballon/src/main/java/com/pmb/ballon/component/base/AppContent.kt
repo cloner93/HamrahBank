@@ -24,7 +24,7 @@ fun AppContent(
     topBar: (@Composable (ColumnScope.() -> Unit))? = null,
     verticalArrangement: Arrangement.Vertical = Arrangement.Top,
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
-    scrollState: ScrollState? = rememberScrollState(),
+    scrollState: ScrollState?,
     footer: (@Composable (ColumnScope.() -> Unit))? = null,
     content: @Composable (ColumnScope.() -> Unit)
 ) {

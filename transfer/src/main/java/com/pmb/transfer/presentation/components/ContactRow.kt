@@ -10,22 +10,23 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.pmb.ballon.component.base.CaptionText
-import com.pmb.transfer.domain.ClientBank
+import com.pmb.transfer.domain.entity.ClientBankEntity
+import com.pmb.transfer.domain.entity.TransactionClientBankEntity
 import com.pmb.transfer.utils.BankUtil
 
 @Composable
-fun ContactRow(clientBank: ClientBank, onClick: (ClientBank) -> Unit) {
+fun ContactRow(item: TransactionClientBankEntity, onClick: (TransactionClientBankEntity) -> Unit) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .padding(horizontal = 12.dp)
-            .clickable { onClick(clientBank) }
+            .clickable { onClick(item) }
     ) {
         ProfileAndThumbnail(
-            profileUrl = clientBank.profileUrl,
-            icon = BankUtil.getLogo(clientBank.cardNumber),
+            profileUrl = item.clientBankEntity.profileUrl,
+            icon = BankUtil.getLogo(item.clientBankEntity.cardNumber),
         )
         Spacer(modifier = Modifier.height(6.dp))
-        CaptionText(text = clientBank.name)
+        CaptionText(text = item.clientBankEntity.name)
     }
 }

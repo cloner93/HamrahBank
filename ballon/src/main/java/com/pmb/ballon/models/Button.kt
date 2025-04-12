@@ -23,6 +23,20 @@ object AppButton {
         )
 
     @Composable
+    fun buttonRedColors(
+        containerColor: Color = AppTheme.colorScheme.foregroundErrorDefault, // Background color
+        contentColor: Color = AppTheme.colorScheme.onForegroundNeutralDefault, // Text color
+        disabledContainerColor: Color = AppTheme.colorScheme.foregroundNeutralDisabled, // Disabled background color
+        disabledContentColor: Color = AppTheme.colorScheme.onForegroundNeutralDisabled // Disabled text color
+    ): ButtonColors =
+        ButtonDefaults.buttonColors(
+            containerColor = containerColor,
+            contentColor = contentColor,
+            disabledContainerColor = disabledContainerColor,
+            disabledContentColor = disabledContentColor
+        )
+
+    @Composable
     fun outlinedButtonColors(
         containerColor: Color = Color.Transparent, // Background color
         contentColor: Color = AppTheme.colorScheme.onBackgroundTintNeutralDefault, // Text color
@@ -40,6 +54,20 @@ object AppButton {
     fun textButtonColors(
         containerColor: Color = Color.Transparent, // Background color
         contentColor: Color = AppTheme.colorScheme.onBackgroundTintNeutralDefault, // Text color
+        disabledContainerColor: Color = Color.Transparent, // Disabled background color
+        disabledContentColor: Color = AppTheme.colorScheme.onForegroundNeutralDisabled // Disabled text color
+    ): ButtonColors =
+        ButtonDefaults.outlinedButtonColors(
+            containerColor = containerColor,
+            contentColor = contentColor,
+            disabledContainerColor = disabledContainerColor,
+            disabledContentColor = disabledContentColor
+        )
+
+    @Composable
+    fun textButtonRedColors(
+        containerColor: Color = Color.Transparent, // Background color
+        contentColor: Color = AppTheme.colorScheme.onBackgroundNeutralCTA, // Text color
         disabledContainerColor: Color = Color.Transparent, // Disabled background color
         disabledContentColor: Color = AppTheme.colorScheme.onForegroundNeutralDisabled // Disabled text color
     ): ButtonColors =

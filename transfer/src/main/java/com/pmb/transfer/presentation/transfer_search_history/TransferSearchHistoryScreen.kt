@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -18,20 +20,42 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.EmptyList
 import com.pmb.ballon.component.base.AppButtonIcon
+import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.component.base.AppSearchTextField
 import com.pmb.ballon.component.base.IconType
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.core.presentation.NavigationManager
 import com.pmb.transfer.R
-import com.pmb.transfer.domain.transactionClientBanks
+import com.pmb.transfer.domain.entity.TransactionClientBankEntity
 import com.pmb.transfer.presentation.TransferScreens
 import com.pmb.transfer.presentation.components.TransactionClientBankList
+import com.pmb.transfer.presentation.transfer_search_history.viewmodel.TransferSearchHistoryViewActions
+import com.pmb.transfer.presentation.transfer_search_history.viewmodel.TransferSearchHistoryViewEvents
+import com.pmb.transfer.presentation.transfer_search_history.viewmodel.TransferSearchHistoryViewModel
 
 @Composable
-fun TransferSearchHistoryScreen(navigationManager: NavigationManager) {
+fun TransferSearchHistoryScreen(
+    navigationManager: NavigationManager,
+    viewModel: TransferSearchHistoryViewModel,
+    selectedAccount: (TransactionClientBankEntity) -> Unit
+) {
+    val viewState by viewModel.viewState.collectAsState()
     var query by remember { mutableStateOf("") }
+
+    // Handle one-time events such as navigation or showing toasts
+    LaunchedEffect(Unit) {
+        viewModel.viewEvent.collect { event ->
+            when (event) {
+                is TransferSearchHistoryViewEvents.TransferDestinationAmount -> {
+                    selectedAccount(event.item)
+                    navigationManager.navigate(TransferScreens.TransferAmount)
+                }
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -51,23 +75,32 @@ fun TransferSearchHistoryScreen(navigationManager: NavigationManager) {
                 modifier = Modifier.padding(end = 16.dp),
                 hint = stringResource(R.string.hint_transfer_account_search),
                 query = query,
-                onValueChange = { query = it }
+                onValueChange = {
+                    query = it
+                    viewModel.handle(TransferSearchHistoryViewActions.SearchAccounts(it))
+                }
             )
         }
 
-        if (transactionClientBanks.isEmpty()) {
+        if (viewState.accounts.isEmpty() && !viewState.loading) {
             EmptyList(
                 iconType = IconType.Painter(painterResource(R.drawable.img_bank_card_shrare_money)),
                 message = stringResource(R.string.msg_dont_have_transfer_yet)
             )
         } else {
             TransactionClientBankList(
-                items = transactionClientBanks,
+                items = viewState.accounts,
                 isFavorite = false,
+                onEditClick = {
+                    navigationManager.navigate(TransferScreens.TransferEditLatestDestination)
+                },
                 onClick = {
-                    navigationManager.navigate(TransferScreens.TransferDestinationInput)
+                    viewModel.handle(TransferSearchHistoryViewActions.SelectAccount(it))
                 }
             )
         }
     }
+
+    if (viewState.loading) AppLoading()
+    viewState.alertState?.let { AlertComponent(it) }
 }

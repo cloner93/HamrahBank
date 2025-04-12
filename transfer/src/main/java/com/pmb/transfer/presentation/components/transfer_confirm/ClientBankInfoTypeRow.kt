@@ -16,16 +16,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.pmb.ballon.component.ItemColumn
+import com.pmb.ballon.component.base.AppButtonIcon
+import com.pmb.ballon.component.base.ClickableIcon
+import com.pmb.ballon.models.IconStyle
 import com.pmb.ballon.models.TextStyle
 import com.pmb.ballon.ui.theme.AppTheme
-import com.pmb.transfer.domain.BankIdentifierNumberType
-import com.pmb.transfer.domain.TransactionClientBank
+import com.pmb.transfer.domain.entity.BankIdentifierNumberType
+import com.pmb.transfer.domain.entity.TransactionClientBankEntity
 import com.pmb.transfer.presentation.components.ProfileAndThumbnail
 import com.pmb.transfer.utils.BankUtil
 
 @Composable
 fun ClientBankInfoTypeRow(
-    info: TransactionClientBank,
+    info: TransactionClientBankEntity,
     enable: Boolean = true,
     background: Color = Color.Unspecified,
     titleStyle: TextStyle = TextStyle(
@@ -38,12 +41,13 @@ fun ClientBankInfoTypeRow(
         typography = AppTheme.typography.caption,
         textAlign = TextAlign.Start
     ),
-    onClick: ((TransactionClientBank) -> Unit)? = null
+    endIcon: ClickableIcon? = null,
+    onClick: ((TransactionClientBankEntity) -> Unit)? = null
 ) {
     val text = when (info.type) {
-        BankIdentifierNumberType.ACCOUNT -> info.clientBank.accountNumber
-        BankIdentifierNumberType.CARD -> info.clientBank.cardNumber.toString()
-        BankIdentifierNumberType.IBAN -> info.clientBank.iban
+        BankIdentifierNumberType.ACCOUNT -> info.clientBankEntity.accountNumber
+        BankIdentifierNumberType.CARD -> info.clientBankEntity.cardNumber.toString()
+        BankIdentifierNumberType.IBAN -> info.clientBankEntity.iban
     }
 
     // Chain the modifiers directly or reassign
@@ -56,22 +60,32 @@ fun ClientBankInfoTypeRow(
             else Modifier
         )
 
+
     Row(
         modifier = modifier
+            .fillMaxWidth()
             .padding(vertical = 10.dp, horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         ProfileAndThumbnail(
-            profileUrl = info.clientBank.profileUrl,
-            icon = BankUtil.getLogo(info.clientBank.cardNumber),
+            profileUrl = info.clientBankEntity.profileUrl,
+            icon = BankUtil.getLogo(info.clientBankEntity.cardNumber),
             imageSize = 44.dp,
         )
         Spacer(modifier = Modifier.width(12.dp))
         ItemColumn(
-            title = info.clientBank.name,
+            modifier = Modifier.weight(1f),
+            title = info.clientBankEntity.name,
             subtitle = text,
             titleStyle = titleStyle,
             subtitleStyle = subtitleStyle
         )
+        if (endIcon != null) {
+            AppButtonIcon(
+                icon = endIcon.icon,
+                style = IconStyle(tint = endIcon.tint),
+                onClick = endIcon.onClick
+            )
+        }
     }
 }

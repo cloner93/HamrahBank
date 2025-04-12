@@ -55,7 +55,7 @@ fun ItemColumn(
     BaseItemColumn(
         modifier = modifier,
         title = { BaseAppText(title = title, style = titleStyle) },
-        subtitle = { BaseAppText(title = title, style = subtitleStyle) },
+        subtitle = { BaseAppText(title = subtitle, style = subtitleStyle) },
         bottomDivider = bottomDivider
     )
 }

@@ -3,12 +3,12 @@ package com.pmb.transfer.utils
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
-import com.pmb.transfer.domain.Bank
+import com.pmb.transfer.domain.entity.Bank
 
 object BankUtil {
 
     @Composable
-    fun getLogo(cardNumber: Long): Painter {
+    fun getLogo(cardNumber: String): Painter {
         return painterResource(com.pmb.ballon.R.drawable.ic_mellat_circle)
     }
 

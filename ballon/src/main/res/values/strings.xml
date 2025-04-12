@@ -13,6 +13,8 @@
     <string name="transfer_and_receive">انتقال و دریافت</string>
     <string name="account_card">کارت و سپرده</string>
     <string name="profile">پروفایل</string>
+    <string name="delete">حذف</string>
+    <string name="cancel">انصراف</string>
     <string name="day">روز</string>
     <string name="month">ماه</string>
     <string name="year">سال</string>

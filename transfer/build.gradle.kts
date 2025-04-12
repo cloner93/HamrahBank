@@ -2,6 +2,9 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.android.hilt)
+    alias(libs.plugins.kotlin.kapt)
+    id("kotlin-parcelize")
 }
 
 android {
@@ -47,6 +50,10 @@ android {
 dependencies {
     implementation(project(":core"))
     implementation(project(":ballon"))
+    // DI > Hilt
+    implementation(libs.android.hilt)
+    kapt(libs.android.hilt.compiler)
+    implementation(libs.hilt.navigation.compose)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

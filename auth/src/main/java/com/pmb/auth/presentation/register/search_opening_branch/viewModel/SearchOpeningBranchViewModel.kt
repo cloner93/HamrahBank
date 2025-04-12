@@ -124,7 +124,6 @@ class SearchOpeningBranchViewModel @Inject constructor(
                                                 setState { state -> state.copy(alertModelState = null) }
                                             }
                                         )
-
                                     )
                                 }
                             }
