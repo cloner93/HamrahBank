@@ -48,7 +48,8 @@ class MainActivity : ComponentActivity() {
                 HamrahBankTheme {
                     val navController = rememberNavController()
 
-                    Scaffold(modifier = Modifier.fillMaxSize(),
+                    Scaffold(
+                        modifier = Modifier.fillMaxSize(),
                         bottomBar = { CheckBottomBar(navController) }) { innerPadding ->
                         AppNavHost(navController = navController, innerPadding = innerPadding)
                     }
@@ -64,7 +65,7 @@ fun AppNavHost(navController: NavHostController, innerPadding: PaddingValues) {
         mutableStateOf(
             NavigationManager(
                 navController = navController,
-                startDestination = AuthScreens.Auth
+                startDestination = HomeScreens.Home
             )
         )
     }
@@ -110,7 +111,7 @@ private fun CheckBottomBar(navController: NavHostController) {
         AppBottomBar(tabBarItems = bottomNavItems) { selectedItem ->
             when (selectedItem) {
                 BottomNavItem.Home -> navigationManager.navigate(HomeScreens.Home)
-                BottomNavItem.Transfer -> navigationManager.navigate(TransferScreens.Transfer)
+                BottomNavItem.Transfer -> navigationManager.navigate(TransferScreens.TransferGraph)
                 BottomNavItem.AccountCard -> navigationManager.navigate(AccountScreens.Account)
                 BottomNavItem.Profile -> navigationManager.navigate(ProfileScreens.Profile)
             }

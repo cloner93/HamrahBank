@@ -8,12 +8,17 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.EmptyList
 import com.pmb.ballon.component.ExtendFAB
+import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.ClickableIcon
 import com.pmb.ballon.component.base.IconType
@@ -21,15 +26,38 @@ import com.pmb.ballon.models.isScrollingUp
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.core.presentation.NavigationManager
 import com.pmb.transfer.R
-import com.pmb.transfer.domain.clientBanks
-import com.pmb.transfer.domain.transactionClientBanks
+import com.pmb.transfer.domain.entity.TransactionClientBankEntity
 import com.pmb.transfer.presentation.TransferScreens
 import com.pmb.transfer.presentation.components.FavoriteContactsView
 import com.pmb.transfer.presentation.components.TransactionClientBankList
+import com.pmb.transfer.presentation.transfer.viewmodel.TransferViewActions
+import com.pmb.transfer.presentation.transfer.viewmodel.TransferViewEvents
+import com.pmb.transfer.presentation.transfer.viewmodel.TransferViewModel
 
 @Composable
-fun TransferScreen(navigationManager: NavigationManager) {
+fun TransferScreen(
+    navigationManager: NavigationManager,
+    viewModel: TransferViewModel,
+    selectedItem: (TransactionClientBankEntity) -> Unit
+) {
     val lazyListState = rememberLazyListState()
+    val viewState by viewModel.viewState.collectAsState()
+
+    // Handle one-time events such as navigation or showing toasts
+    LaunchedEffect(Unit) {
+        viewModel.viewEvent.collect { event ->
+            when (event) {
+                TransferViewEvents.TransferDestination -> {
+                    navigationManager.navigate(TransferScreens.TransferDestinationInput)
+                }
+
+                is TransferViewEvents.TransferDestinationAmount -> {
+                    selectedItem.invoke(event.item)
+                    navigationManager.navigate(TransferScreens.TransferAmount)
+                }
+            }
+        }
+    }
     Box(contentAlignment = Alignment.BottomCenter) {
         Column(
             modifier = Modifier
@@ -50,30 +78,33 @@ fun TransferScreen(navigationManager: NavigationManager) {
                     })
             )
 
-            if (transactionClientBanks.isEmpty()) {
-                EmptyList(
-                    iconType = IconType.Painter(painterResource(R.drawable.img_bank_card_shrare_money)),
-                    message = stringResource(R.string.msg_dont_have_transfer_yet)
-                )
-            } else {
-                FavoriteContactsView(items = clientBanks,
-                    onEditClick = {
-                        navigationManager.navigate(TransferScreens.TransferEditFavorite )
-                }, onClick = {
-                    navigationManager.navigate(TransferScreens.TransferDestinationInput)
-                })
+            if (!viewState.loading)
+                if (viewState.accounts.isEmpty() && viewState.favoriteAccounts.isEmpty()) {
+                    EmptyList(
+                        iconType = IconType.Painter(painterResource(R.drawable.img_bank_card_shrare_money)),
+                        message = stringResource(R.string.msg_dont_have_transfer_yet)
+                    )
+                } else {
+                    FavoriteContactsView(
+                        items = viewState.favoriteAccounts,
+                        onEditClick = {
+                            navigationManager.navigate(TransferScreens.TransferEditFavorite)
+                        }, onClick = {
+                            viewModel.handle(TransferViewActions.SelectAccount(it))
+                        })
 
-                TransactionClientBankList(
-                    items = transactionClientBanks,
-                    state = lazyListState,
-                    onEditClick = {
-                        navigationManager.navigate(TransferScreens.TransferEditLatestDestination )
-                    },
-                    onClick = {
-                        navigationManager.navigate(TransferScreens.TransferDestinationInput)
-                    }
-                )
-            }
+                    if (viewState.accounts.isNotEmpty())
+                        TransactionClientBankList(
+                            items = viewState.accounts,
+                            state = lazyListState,
+                            onEditClick = {
+                                navigationManager.navigate(TransferScreens.TransferEditLatestDestination)
+                            },
+                            onClick = {
+                                viewModel.handle(TransferViewActions.SelectAccount(it))
+                            }
+                        )
+                }
 
         }
 
@@ -82,8 +113,11 @@ fun TransferScreen(navigationManager: NavigationManager) {
             text = stringResource(R.string.new_transfer),
             icon = IconType.ImageVector(imageVector = Icons.Default.Add),
             onClick = {
-                navigationManager.navigate(TransferScreens.TransferDestinationInput)
+                viewModel.handle(TransferViewActions.NavigateToDestinationInput)
             }
         )
     }
+
+    if (viewState.loading) AppLoading()
+    viewState.alertState?.let { AlertComponent(it) }
 }

@@ -12,16 +12,16 @@ import com.pmb.ballon.component.HeaderList
 import com.pmb.ballon.component.base.IconType
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.transfer.R
-import com.pmb.transfer.domain.TransactionClientBank
+import com.pmb.transfer.domain.entity.TransactionClientBankEntity
 import com.pmb.transfer.presentation.components.transfer_confirm.ClientBankInfoTypeRow
 
 @Composable
 fun TransactionClientBankList(
-    items: List<TransactionClientBank>,
+    items: List<TransactionClientBankEntity>,
     state: LazyListState = rememberLazyListState(),
     isFavorite: Boolean = true,
     onEditClick: () -> Unit,
-    onClick: (TransactionClientBank) -> Unit
+    onClick: (TransactionClientBankEntity) -> Unit
 ) {
     LazyColumn(modifier = Modifier.fillMaxSize(), state = state) {
         if (isFavorite)

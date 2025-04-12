@@ -33,4 +33,5 @@
     <string name="edit_favorites">ویرایش برگزیده‌ها</string>
     <string name="msg_remove_favorite_destination">آیا از حذف «%1$s» از مقاصد برگزیده اطمینان دارید؟</string>
     <string name="select_from_favorites">انتخاب از برگزیده‌ها</string>
+    <string name="transfer_amount_title">مبلغ انتقال وجه</string>
 </resources>

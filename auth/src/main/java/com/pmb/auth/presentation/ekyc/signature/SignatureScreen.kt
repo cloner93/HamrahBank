@@ -202,6 +202,5 @@ fun SignatureScreen(
     if (viewState.alertModelState != null) {
         AlertComponent(viewState.alertModelState!!)
     }
-
 }
 

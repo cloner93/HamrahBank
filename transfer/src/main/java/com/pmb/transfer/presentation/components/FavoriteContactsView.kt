@@ -16,13 +16,14 @@ import com.pmb.ballon.component.base.BodySmallText
 import com.pmb.ballon.component.base.IconType
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.transfer.R
-import com.pmb.transfer.domain.ClientBank
+import com.pmb.transfer.domain.entity.ClientBankEntity
+import com.pmb.transfer.domain.entity.TransactionClientBankEntity
 
 @Composable
 fun FavoriteContactsView(
-    items: List<ClientBank>,
+    items: List<TransactionClientBankEntity>,
     onEditClick: () -> Unit,
-    onClick: (ClientBank) -> Unit
+    onClick: (TransactionClientBankEntity) -> Unit
 ) {
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -46,7 +47,7 @@ fun FavoriteContactsView(
         else
             LazyRow {
                 items(items.size) { index ->
-                    ContactRow(clientBank = items[index], onClick = onClick)
+                    ContactRow(item = items[index], onClick = onClick)
                 }
             }
     }

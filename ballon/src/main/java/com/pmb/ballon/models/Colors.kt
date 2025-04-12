@@ -45,7 +45,7 @@ object MenuItemColors {
             disabledContentColor = AppTheme.colorScheme.onBackgroundNeutralDisabled
         ),
         endIconColor: ObjectColors = ObjectColors(
-            contentColor = AppTheme.colorScheme.foregroundNeutralDefault,
+            contentColor = AppTheme.colorScheme.foregroundNeutralRest,
             errorContentColor = AppTheme.colorScheme.onBackgroundNeutralSubdued,
             disabledContentColor = AppTheme.colorScheme.onBackgroundNeutralDisabled,
         ),

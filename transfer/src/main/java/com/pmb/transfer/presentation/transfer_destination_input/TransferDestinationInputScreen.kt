@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -18,10 +20,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.base.AppBaseTextField
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppImage
+import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.component.base.AppTextButton
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.models.ImageStyle
@@ -29,18 +33,34 @@ import com.pmb.ballon.models.Size
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.core.presentation.NavigationManager
 import com.pmb.transfer.R
-import com.pmb.transfer.domain.BankIdentifierNumberType
-import com.pmb.transfer.domain.ClientBank
-import com.pmb.transfer.domain.TransactionClientBank
+import com.pmb.transfer.domain.entity.TransactionClientBankEntity
 import com.pmb.transfer.presentation.TransferScreens
 import com.pmb.transfer.presentation.components.transfer_confirm.ClientBankInfoTypeRow
+import com.pmb.transfer.presentation.transfer_destination_input.viewmodel.TransferDestinationInputViewActions
+import com.pmb.transfer.presentation.transfer_destination_input.viewmodel.TransferDestinationInputViewEvents
+import com.pmb.transfer.presentation.transfer_destination_input.viewmodel.TransferDestinationInputViewModel
 import com.pmb.transfer.utils.BankUtil
 
 @Composable
-fun DestinationInputScreen(navigationManager: NavigationManager) {
+fun DestinationInputScreen(
+    navigationManager: NavigationManager,
+    viewModel: TransferDestinationInputViewModel,
+    selectedAccount: (TransactionClientBankEntity) -> Unit
+) {
+    val viewState by viewModel.viewState.collectAsState()
     var isValid by remember { mutableStateOf(false) }
     var identifierNumber by remember { mutableStateOf("") }
-    var clientBank by remember { mutableStateOf<TransactionClientBank?>(null) }
+
+    LaunchedEffect(Unit) {
+        viewModel.viewEvent.collect { event ->
+            when (event) {
+                is TransferDestinationInputViewEvents.NavigateToDestinationAmount -> {
+                    selectedAccount(event.value)
+                    navigationManager.navigate(TransferScreens.TransferAmount)
+                }
+            }
+        }
+    }
 
     Box(modifier = Modifier.background(color = AppTheme.colorScheme.background1Neutral))
     {
@@ -58,12 +78,16 @@ fun DestinationInputScreen(navigationManager: NavigationManager) {
                     title = stringResource(R.string.next),
                     enable = isValid,
                     onClick = {
-                        navigationManager.navigate(TransferScreens.TransferAmount)
+                        viewModel.handle(
+                            TransferDestinationInputViewActions.CheckAccount(identifierNumber)
+                        )
                     })
             }
         ) {
             Column(
-                modifier = Modifier.fillMaxSize().padding(top = 24.dp),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(top = 24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 AppBaseTextField(
@@ -75,19 +99,6 @@ fun DestinationInputScreen(navigationManager: NavigationManager) {
                         if (newText.all { it.isDigit() }) {
                             identifierNumber = newText
                             isValid = BankUtil.getBankByCardNumber(identifierNumber) != null
-                            if (isValid) {
-                                clientBank = TransactionClientBank(
-                                    clientBank = ClientBank(
-                                        name = "محمد صادقی",
-                                        phoneNumber = "09123456789",
-                                        profileUrl = "https://randomuser.me/api/portraits/men/1.jpg",
-                                        cardNumber = 6037991234567890,
-                                        accountNumber = "1234567890123456",
-                                        iban = "IR820540102680020817909002"
-                                    ),
-                                    type = BankIdentifierNumberType.CARD
-                                )
-                            }
                         }
                     },
                     label = stringResource(R.string.card_account_iban_number),
@@ -104,7 +115,7 @@ fun DestinationInputScreen(navigationManager: NavigationManager) {
 
                 Spacer(modifier = Modifier.height(32.dp))
 
-                if (clientBank == null)
+                if (viewState.accountDetail == null)
                     AppTextButton(
                         title = stringResource(R.string.select_from_favorites),
                         colors = com.pmb.ballon.models.AppButton.textButtonRedColors(),
@@ -112,17 +123,23 @@ fun DestinationInputScreen(navigationManager: NavigationManager) {
                             navigationManager.navigate(TransferScreens.TransferSelectFavorite)
                         })
 
-                clientBank?.let {
+                viewState.accountDetail?.let {
                     Box(modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)) {
                         ClientBankInfoTypeRow(
                             info = it,
                             background = Color(0xFFF3F3F7),
                             onClick = {
-                                navigationManager.navigate(TransferScreens.TransferAmount)
+                                navigationManager.apply {
+                                    setCurrentScreenData("transferData", null)
+                                    navigate(TransferScreens.TransferAmount)
+                                }
                             })
                     }
                 }
             }
         }
     }
+
+    if (viewState.loading) AppLoading()
+    viewState.alertState?.let { AlertComponent(it) }
 }

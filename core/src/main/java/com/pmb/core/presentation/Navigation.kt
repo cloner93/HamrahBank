@@ -1,6 +1,11 @@
 package com.pmb.core.presentation
 
 import android.net.Uri
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.ViewModel
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.flow.StateFlow
 
@@ -24,6 +29,7 @@ class NavigationManager(val navController: NavHostController, val startDestinati
     fun <T> setPreviousScreenData(key: String, value: T) {
         navController.previousBackStackEntry?.savedStateHandle?.set(key, value)
     }
+
     fun <T> setCurrentScreenData(key: String, value: T) {
         navController.currentBackStackEntry?.savedStateHandle?.set(key, value)
     }
@@ -33,6 +39,24 @@ class NavigationManager(val navController: NavHostController, val startDestinati
             key, value
         )
 
+    fun <T> getPreviousScreenData(key: String): T? =
+        navController.previousBackStackEntry?.savedStateHandle?.get<T>(key)
+
+    fun <T> setDestinationScreenData(screen: Screen, key: String, value: T) {
+        navController.getBackStackEntry(screen.route).savedStateHandle.set(key, value)
+    }
+
+
+    @Composable
+    inline fun <reified T : ViewModel> retrieveSharedViewModel(
+        screen: Screen,
+        navBackStackEntry: NavBackStackEntry
+    ): T {
+        val parentEntry = remember(navBackStackEntry) {
+            navController.getBackStackEntry(screen.route)
+        }
+        return hiltViewModel(parentEntry)
+    }
 
     fun navigateAndClearStack(screen: Screen) {
         navController.navigate(screen.route) {
