@@ -24,7 +24,7 @@ fun AppContent(
     topBar: (@Composable (ColumnScope.() -> Unit))? = null,
     verticalArrangement: Arrangement.Vertical = Arrangement.Top,
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
-    scrollState: ScrollState?,
+    scrollState: ScrollState? = rememberScrollState(), // if your screen has scrollable item like lazyColumn, pass it null, By default your screen is scrollable.
     footer: (@Composable (ColumnScope.() -> Unit))? = null,
     content: @Composable (ColumnScope.() -> Unit)
 ) {
