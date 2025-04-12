@@ -28,7 +28,7 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun SliderPagerComponent(
-    images: List<String>,
+    images: List<Int>,
     modifier: Modifier = Modifier,
     isInfinitePageCount: Boolean,
     pageCount: Int,
@@ -64,15 +64,14 @@ fun SliderPagerComponent(
                     .data(imageUrl)
                     .crossfade(true)
                     .build(),
-                placeholder = painterResource(com.pmb.ballon.R.drawable.ic_bank_ansar),
+                placeholder = painterResource(imageUrl),
                 contentDescription = "SliderImageHeader",
             )
         }
 
         Row(
             modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                ,
+                .align(Alignment.CenterHorizontally),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -95,14 +94,3 @@ fun SliderPagerComponent(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun SliderPagerComponentPreview() {
-    SliderPagerComponent(
-        images = arrayListOf("1", "2","3","4"),
-        modifier = Modifier.fillMaxWidth(),
-        isInfinitePageCount = true,
-        pageCount = Int.MAX_VALUE,
-        isAutoScroll = false
-    )
-}
