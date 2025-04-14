@@ -39,6 +39,7 @@ import com.pmb.ballon.component.base.AppIcon
 import com.pmb.ballon.component.base.BodySmallText
 import com.pmb.ballon.component.base.CaptionText
 import com.pmb.ballon.component.base.Headline6Text
+import com.pmb.ballon.component.base.IconType
 import com.pmb.ballon.models.IconStyle
 import com.pmb.ballon.models.ImageStyle
 import com.pmb.ballon.models.Size
@@ -73,7 +74,7 @@ fun ShareDepositBottomSheetContent(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         TextImage(
-            image = R.drawable.bank_card_recieve,
+            image = IconType.Painter(painterResource(R.drawable.card_info)),
             text = stringResource(R.string.deposit_info),
             imageStyle = ImageStyle(size = Size.FIX(80.dp))
         )
