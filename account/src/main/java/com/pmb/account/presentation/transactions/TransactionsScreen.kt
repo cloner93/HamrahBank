@@ -139,7 +139,11 @@ fun TransactionsScreen(navigationManager: NavigationManager) {
                 }
 
                 TransactionsViewEvents.NavigateToTransactionSearchScreen -> {
-
+                    navigationManager.navigateWithString(
+                        AccountScreens.TransactionSearch.createRoute(
+                            viewState.selectedDeposit?.depositNumber!!
+                        )
+                    )
                 }
             }
         }

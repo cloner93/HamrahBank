@@ -259,4 +259,15 @@ class TransactionsRepository @Inject constructor() {
             else -> emptyList()
         }
     }
+    suspend fun searchTransactionsInDeposit(
+        depositId: String,
+        query: String
+    ): List<TransactionModel> {
+        // FIXME: edit it
+        return getTransactionsForDeposit(depositId).filter { transaction ->
+            transaction.title.contains(query, ignoreCase = true) ||
+                    transaction.amount.toString().contains(query, ignoreCase = true) ||
+                    transaction.date.contains(query, ignoreCase = true)
+        }
+    }
 }

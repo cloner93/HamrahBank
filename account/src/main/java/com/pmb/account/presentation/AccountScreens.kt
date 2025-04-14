@@ -1,11 +1,15 @@
 package com.pmb.account.presentation
 
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavType
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
 import com.pmb.account.presentation.account.AccountScreen
 import com.pmb.account.presentation.balance.BalanceScreen
 import com.pmb.account.presentation.transactions.TransactionsScreen
 import com.pmb.account.presentation.transactions.filterScreen.TransactionFilterScreen
+import com.pmb.account.presentation.transactions.search.TransactionSearchScreen
 import com.pmb.account.presentation.transactions.statement.DepositStatementScreen
 import com.pmb.core.presentation.NavigationManager
 import com.pmb.core.presentation.Screen
@@ -18,6 +22,9 @@ sealed class AccountScreens(route: String, arguments: Map<String, String> = empt
     data object Transactions : AccountScreens(route = "transactions")
     data object TransactionsFilter : AccountScreens(route = "transactionsFilter")
     data object DepositStatement : AccountScreens(route = "depositStatement")
+    data object TransactionSearch : AccountScreens(route = "transactionSearch/{depositId}") {
+        fun createRoute(depositId: String) = "transactionSearch/$depositId"
+    }
 
     companion object {
         fun fromRoute(route: String?): AccountScreens? =
@@ -44,7 +51,13 @@ fun NavGraphBuilder.accountScreensHandle(navigationManager: NavigationManager) {
     composable(route = AccountScreens.DepositStatement.route) {
         DepositStatementScreen(navigationManager = navigationManager)
     }
+    composable(
+        route = AccountScreens.TransactionSearch.route,
+        deepLinks = listOf(navDeepLink {
+            uriPattern = "myapp://transactionSearch/{depositId}"
+        }),
+        arguments = listOf(navArgument("depositId") { type = NavType.StringType })
+    ) {
+        TransactionSearchScreen(navigationManager = navigationManager)
+    }
 }
-
-
-
