@@ -2,34 +2,18 @@ package com.pmb.account.usecase.deposits
 
 import com.pmb.account.presentation.component.DepositModel
 import com.pmb.account.tempRepo.DepositsRepository
-import kotlinx.coroutines.Dispatchers
+import com.pmb.core.qualifier.IoDispatcher
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-/**
-TODO checkList GetDepositsUseCase.kt
- *
- * - add @IoDispatcher private val coroutineDispatcher: CoroutineDispatcher
- */
-
 class GetDepositsUseCase @Inject constructor(
-    private val depositsRepository: DepositsRepository
+    private val depositsRepository: DepositsRepository,
+    @IoDispatcher private val coroutineDispatcher: CoroutineDispatcher
 ) {
-    suspend operator fun invoke(): List<DepositModel> = withContext(Dispatchers.IO) {
+    suspend operator fun invoke(): List<DepositModel> = withContext(coroutineDispatcher) {
         try {
-            val deposits = depositsRepository.getDeposits()
-
-            deposits.map { deposit ->
-                DepositModel(
-                    title = deposit.title,
-                    desc = deposit.desc,
-                    depositNumber = deposit.depositNumber,
-                    amount = deposit.amount,
-                    currency = deposit.currency,
-                    ibanNumber = deposit.ibanNumber,
-                    cardNumber = deposit.cardNumber,
-                )
-            }
+            depositsRepository.getDeposits()
         } catch (e: Exception) {
             throw e
         }
