@@ -72,7 +72,11 @@ fun ShowPersianDatePickerBottomSheet(
                     title = stringResource(R.string._continue),
                     onClick = {
                         isVisible = false
-                        onChangeValue(_year, _month, _day)
+                        onChangeValue(
+                            _year,
+                            _month.toString().padStart(2, '0'),
+                            _day.toString().padStart(2, '0')
+                        )
                     })
             }
         })

@@ -495,12 +495,12 @@ private fun StatementAndFilters(
                     })
                 } else {
                     transactionFilter.fromDate?.let {
-                        chips.add("از $it" to {
+                        chips.add("از ${it.toPersianDate()}" to {
                             onFilterItemClick.invoke(transactionFilter.copy(fromDate = null))
                         })
                     }
                     transactionFilter.toDate?.let {
-                        chips.add("تا $it" to {
+                        chips.add("تا ${it.toPersianDate()}" to {
 
                             onFilterItemClick.invoke(transactionFilter.copy(toDate = null))
                         })
