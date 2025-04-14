@@ -101,18 +101,9 @@ class SignatureViewModel @Inject constructor(
                     is Result.Loading -> {
                         setState {
                             it.copy(
-                                isLoading = false,
-                                alertModelState = null,
-                                hasCameraPermission = false,
-                                hasFilePermissions = false,
-                                isCameraReady = false,
-                                isFrontCamera = false,
-                                isCapturingPhoto = false,
-                                photoCaptured = false,
-                                savedFileUri = null,
-                                cameraHasError = null,
-                                isCameraLoading = false
-                            )
+                                isLoading = true,
+
+                                )
                         }
                     }
 
@@ -135,10 +126,22 @@ class SignatureViewModel @Inject constructor(
                     }
 
                     is Result.Success -> {
-                        setState {
-                            it.copy(isLoading = false)
-                        }
                         postEvent(SignatureViewEvents.SignaturePhotoCaptured)
+                        setState {
+                            it.copy(
+                                isLoading = false, alertModelState = null,
+                                hasCameraPermission = false,
+                                hasFilePermissions = false,
+                                isCameraReady = false,
+                                isFrontCamera = false,
+                                isCapturingPhoto = false,
+                                photoCaptured = false,
+                                savedFileUri = null,
+                                cameraHasError = null,
+                                isCameraLoading = false
+                            )
+                        }
+
                     }
                 }
             }

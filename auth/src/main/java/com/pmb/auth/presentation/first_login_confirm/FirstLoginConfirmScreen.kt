@@ -1,5 +1,6 @@
 package com.pmb.auth.presentation.first_login_confirm
 
+import android.util.Log
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -50,7 +51,6 @@ fun FirstLoginConfirmScreen(
 ) {
     val viewState by viewModel.viewState.collectAsState()
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-
     var showBottomSheet by remember { mutableStateOf(viewState.isShowBottomSheet) }
 
     LaunchedEffect(viewState.isShowBottomSheet) {
@@ -85,6 +85,7 @@ fun FirstLoginConfirmScreen(
         viewModel.viewEvent.collect { event ->
             when (event) {
                 FirstLoginConfirmViewEvents.FirstLoginConfirmSucceed -> {
+
                     if (comingType === ComingType.COMING_LOGIN)
                         navigationManager.navigate(HomeScreens.Home)
                     else
@@ -97,8 +98,10 @@ fun FirstLoginConfirmScreen(
         modifier = Modifier.padding(horizontal = 16.dp),
         topBar = {
             AppTopBar(
-                title = stringResource(R.string.login),
-                onBack = { navigationManager.navigateBack() })
+                title = stringResource(R.string.otp),
+                onBack = {
+                    navigationManager.navigateBack()
+                })
         },
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -111,7 +114,12 @@ fun FirstLoginConfirmScreen(
         ChipWithIcon(
             value = phonenumber,
             icon = com.pmb.ballon.R.drawable.ic_edit,
-            clickable = { navigationManager.navigateBack() })
+            clickable = {
+                if (comingType === ComingType.COMING_LOGIN)
+                    navigationManager.navigateBack()
+                else
+                    navigationManager.navigateAndClearStack(AuthScreens.Register)
+            })
         Spacer(modifier = Modifier.size(32.dp))
         AppNumberTextField(
             modifier = Modifier.fillMaxWidth(),
@@ -120,7 +128,8 @@ fun FirstLoginConfirmScreen(
             onValueChange = { otp = it },
         )
         Spacer(modifier = Modifier.size(32.dp))
-        AppButton(modifier = Modifier.fillMaxWidth(),
+        AppButton(
+            modifier = Modifier.fillMaxWidth(),
             enable = otp.length >= 6,
             title = stringResource(R.string.login),
             onClick = {
@@ -131,7 +140,8 @@ fun FirstLoginConfirmScreen(
                 )
             })
         Spacer(modifier = Modifier.size(8.dp))
-        AppTextButton(modifier = Modifier.fillMaxWidth(),
+        AppTextButton(
+            modifier = Modifier.fillMaxWidth(),
             enable = viewState.timerState?.get(TimerTypeId.RESEND_TIMER)?.timerStatus == TimerStatus.IS_FINISHED,
             title = title,
             onClick = {
@@ -161,15 +171,15 @@ fun FirstLoginConfirmScreen(
         ) {
             ShowInvalidLoginBottomSheet(
                 expired =
-                "${viewState.calculateHour(TimerTypeId.LOCK_TIMER)}:${
-                    viewState.calculateMinute(
-                        TimerTypeId.LOCK_TIMER
-                    )
-                }:${
-                    viewState.calculateSecond(
-                        TimerTypeId.LOCK_TIMER
-                    )
-                }",
+                    "${viewState.calculateHour(TimerTypeId.LOCK_TIMER)}:${
+                        viewState.calculateMinute(
+                            TimerTypeId.LOCK_TIMER
+                        )
+                    }:${
+                        viewState.calculateSecond(
+                            TimerTypeId.LOCK_TIMER
+                        )
+                    }",
                 onDismiss = {
                     viewModel.handle(
                         FirstLoginConfirmViewActions.ClearBottomSheet

@@ -38,6 +38,7 @@ import com.pmb.auth.presentation.foget_password.viewmodel.ForgetPasswordViewMode
 import com.pmb.auth.presentation.intro.IntroScreen
 import com.pmb.auth.presentation.login.LoginScreen
 import com.pmb.auth.presentation.login.viewmodel.LoginViewModel
+import com.pmb.auth.presentation.preparation.PreparationScreen
 import com.pmb.auth.presentation.reentry.reentry_face_detection.ReentryFaceDetectionScreen
 import com.pmb.auth.presentation.reentry.reentry_face_detection.viewModel.ReentryFaceDetectionViewModel
 import com.pmb.auth.presentation.reentry.reentry_password.ReentryPasswordScreen
@@ -107,6 +108,7 @@ sealed class AuthScreens(route: String, arguments: Map<String, String> = emptyMa
     data object ScanCard : AuthScreens(route = "scan_card")
     data object CardInformationConfirmation : AuthScreens("card_information_confirmation")
     data object AuthenticationInformation : AuthScreens("authentication_information")
+    data object Preparation : AuthScreens("preparation")
 }
 
 
@@ -308,6 +310,11 @@ fun NavGraphBuilder.authScreensHandle(
         AuthenticationInformationScreen(
             navigationManager,
             viewModel = hiltViewModel<AuthenticationInformationViewModel>()
+        )
+    }
+    composable(route = AuthScreens.Preparation.route) {
+        PreparationScreen(
+            navigationManager
         )
     }
 }
