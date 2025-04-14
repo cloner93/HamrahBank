@@ -11,6 +11,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -48,6 +49,7 @@ import com.pmb.ballon.component.base.AppImage
 import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.BodyMediumText
+import com.pmb.ballon.component.base.BodySmallText
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.camera.platform.PhotoViewActions
 import com.pmb.core.presentation.NavigationManager
@@ -139,15 +141,40 @@ fun SignatureScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Spacer(modifier = Modifier.size(24.dp))
+        AnimatedVisibility(
+            visible = !viewState.photoCaptured,
+            exit = fadeOut(tween(100, easing = LinearEasing)),
+            enter = fadeIn(tween(100, easing = LinearEasing))
+        ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                BodyMediumText(
+                    text = if (!viewState.photoCaptured) stringResource(R.string.take_your_signature) else stringResource(
+                        R.string.signature_continue
+                    ),
+                    textAlign = TextAlign.Center,
+                    color = AppTheme.colorScheme.onBackgroundNeutralSubdued
 
-        BodyMediumText(
-            text = if (!viewState.photoCaptured) stringResource(R.string.take_your_signature) else stringResource(
-                R.string.signature_continue
-            ),
-            textAlign = TextAlign.Center,
-            color = AppTheme.colorScheme.onBackgroundPrimarySubdued
+                )
+                Spacer(modifier = Modifier.size(8.dp))
+                BodySmallText(
+                    text = stringResource(R.string.signature_assurance),
+                    textAlign = TextAlign.Center,
+                    color = AppTheme.colorScheme.onBackgroundNeutralSubdued
+                )
+            }
+        }
+        AnimatedVisibility(
+            visible = viewState.photoCaptured,
+        ) {
+            BodyMediumText(
+                text =  stringResource(
+                    R.string.signature_continue
+                ),
+                textAlign = TextAlign.Center,
+                color = AppTheme.colorScheme.onBackgroundPrimarySubdued
 
-        )
+            )
+        }
         Spacer(modifier = Modifier.size(44.dp))
         AnimatedVisibility(
             visible = !viewState.photoCaptured,

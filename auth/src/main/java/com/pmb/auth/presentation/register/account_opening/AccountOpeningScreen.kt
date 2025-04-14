@@ -72,7 +72,7 @@ fun AccountOpeningScreen(
         )
         Spacer(modifier = Modifier.size(32.dp))
         AppMobileTextField(value = phoneNumber,
-            label = stringResource(R.string.phone_number),
+            label = stringResource(R.string.mobile_number),
             onValidate = { isMobile = it },
             onValueChange = { phoneNumber = it })
         Spacer(modifier = Modifier.size(24.dp))
@@ -87,7 +87,9 @@ fun AccountOpeningScreen(
             trailingIcon = {
                 AppButtonIcon(
                     icon = IconType.Painter(painterResource(com.pmb.ballon.R.drawable.ic_calendar_month)),
-                    onClick = {}
+                    onClick = {
+                        showBirthdayPicker = true
+                    }
                 )
             },
             onClick = {

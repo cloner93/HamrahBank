@@ -92,9 +92,9 @@ fun IntroScreen(
 
                 AppOutlineButton(
                     modifier = Modifier.fillMaxWidth(),
-                    title = stringResource(R.string.register),
+                    title = stringResource(R.string.account_opening),
                     onClick = {
-                        navigationManager.navigate(AuthScreens.Register)
+                        navigationManager.navigate(AuthScreens.Preparation)
                     }
                 )
 
