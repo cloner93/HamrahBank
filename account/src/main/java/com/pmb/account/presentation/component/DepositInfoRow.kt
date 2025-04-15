@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.pmb.ballon.R
 import com.pmb.ballon.component.MenuItem
 import com.pmb.ballon.models.IconStyle
 import com.pmb.ballon.models.TextStyle
@@ -17,7 +18,7 @@ fun DepositInfoRow(title: String, startIcon: Int, onClick: () -> Unit) {
         title = title,
         horizontalPadding = 16.dp,
         startIcon = startIcon,
-        endIcon = com.pmb.ballon.R.drawable.ic_arrow_left,
+        endIcon = R.drawable.ic_arrow_left,
         titleStyle = TextStyle(
             color = Color(0xFF42474E),
             typography = AppTheme.typography.headline6

@@ -13,6 +13,8 @@ interface VideoViewActions : BaseViewAction {
 
     data class RequestFilePermission(val managedActivityResultLauncher: ManagedActivityResultLauncher<Array<String>, Map<String, Boolean>>) :
         VideoViewActions
+    data class RequestAudioPermission(val managedActivityResultLauncher: ManagedActivityResultLauncher<String, Boolean>) :
+        VideoViewActions
 
     data object CapturingVideo : VideoViewActions
     data object VideoCaptured : VideoViewActions

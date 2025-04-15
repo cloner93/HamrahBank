@@ -9,3 +9,12 @@ fun Double.toCurrency(): String {
     }
     return formatter.format(this)
 }
+
+fun String.toCurrency(): String {
+    // separate amount string 3 digits each with comma. like 100000000 to 100,000,000
+    return this
+        .reversed()
+        .chunked(3)
+        .joinToString(",")
+        .reversed()
+}

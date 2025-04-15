@@ -44,6 +44,7 @@ fun DynamicTabSelector(
     containerColor: Color = Color(0x66000000),
     tabColor: Color = Color.White,
     selectedOptionColor: Color = Color(0xFF7980FF),
+    unselectedTextColor: Color = AppTheme.colorScheme.strokeNeutral1Default,
     containerCornerRadius: Dp = 16.dp,
     tabCornerRadius: Dp = 12.dp,
     selectorHeight: Dp = 48.dp,
@@ -96,7 +97,7 @@ fun DynamicTabSelector(
         ) {
             tabs.forEachIndexed { index, text ->
                 ButtonSmallText(text = text,
-                    color = AppTheme.colorScheme.strokeNeutral1Default,
+                    color = unselectedTextColor,
                     textAlign = TextAlign.Center,
                     modifier = Modifier
                         .width(segmentWidth)

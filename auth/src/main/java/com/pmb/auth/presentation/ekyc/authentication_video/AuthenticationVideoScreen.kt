@@ -1,5 +1,6 @@
 package com.pmb.auth.presentation.ekyc.authentication_video
 
+import android.util.Log
 import android.view.Gravity
 import android.widget.FrameLayout
 import android.widget.VideoView
@@ -83,28 +84,20 @@ fun AuthenticationVideoScreen(
                 )
             }/00:20"
         } else ""
-    LaunchedEffect(viewState.hasCameraPermission) {
-        if (viewState.hasCameraPermission)
+    LaunchedEffect(viewState.hasAudioPermissions) {
+        if (viewState.hasAudioPermissions)
             viewModel.handle(VideoViewActions.PreviewCamera(previewView, lifecycleOwner))
     }
-
-    val permissionLauncher = rememberLauncherForActivityResult(
+    val permissionAudioLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         viewModel.onSinglePermissionResult(isGranted)
     }
 
-    val multiplePermissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestMultiplePermissions()
-    ) {
-        viewModel.onMultiplePermissionResult(it)
-    }
     LaunchedEffect(Unit) {
-        viewModel.handle(VideoViewActions.RequestCameraPermission(permissionLauncher))
+        viewModel.handle(VideoViewActions.RequestAudioPermission(permissionAudioLauncher))
     }
-    LaunchedEffect(viewState.hasCameraPermission) {
-        viewModel.handle(VideoViewActions.RequestFilePermission(multiplePermissionLauncher))
-    }
+
     LaunchedEffect(Unit) {
         viewModel.viewEvent.collect { event ->
             when (event) {
@@ -207,9 +200,10 @@ fun AuthenticationVideoScreen(
                         }
                     )
                     Spacer(modifier = Modifier.size(10.dp))
-                    AppButton(modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 16.dp, end = 16.dp, top = 16.dp),
+                    AppButton(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 16.dp, end = 16.dp, top = 16.dp),
                         enable = true,
                         title = stringResource(R.string._continue),
                         onClick = {

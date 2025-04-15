@@ -1,44 +1,51 @@
 package com.pmb.account.presentation.component
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.pmb.ballon.R
 
 @Composable
 fun DepositCarouselWidget(
-    depositModels: List<DepositModel>,
-    onSelected: (DepositModel) -> Unit,
-    onMoreClick: (DepositModel) -> Unit,
-    onCopyClick: (DepositModel) -> Unit
+    depositModel: DepositModel?,
+    onMoreClick: () -> Unit,
+    onAmountVisibilityClick: () -> Unit,
+    onDepositListChipsClick: () -> Unit,
+    isAmountVisible: Boolean
 ) {
-    val pagerState = rememberPagerState(pageCount = { depositModels.size })
-
-    // Call onSelected only when the page changes
-    LaunchedEffect(pagerState.currentPage) {
-        onSelected(depositModels[pagerState.currentPage])
-    }
-
     Box(
-        modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.BottomCenter
+        modifier = Modifier
+            .fillMaxWidth(),
+        contentAlignment = Alignment.BottomCenter
     ) {
-        HorizontalPager(
-            state = pagerState,
-            contentPadding = PaddingValues(horizontal = 16.dp),
-            pageSpacing = 8.dp,
-            verticalAlignment = Alignment.Top,
-        ) { page ->
+        if (depositModel != null)
             DepositWidget(
-                item = depositModels[page],
-                moreClick = { onMoreClick.invoke(depositModels[page]) },
-                copyDepositNumberClick = { onCopyClick.invoke(depositModels[page]) }
-            )
-        }
+                modifier = Modifier.padding(start = 32.dp, end = 32.dp),
+                item = depositModel,
+                isAmountVisible = isAmountVisible,
+                moreClick = { onMoreClick.invoke() },
+                onAmountVisibilityClick = { onAmountVisibilityClick.invoke() }
+            ) { onDepositListChipsClick.invoke() }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun DepositCardPrev() {
+    val dip = DepositModel(
+        title = "حساب قرض الحسنه آقای مشتاق مودت",
+        desc = "تنخواه",
+        depositNumber = "123456",
+        amount = 10000023400.0,
+        currency = stringResource(R.string.real_carrency),
+        ibanNumber = "IR1234567890098765432112",
+        cardNumber = "6219861920241234",
+    )
+    DepositCarouselWidget(dip, {}, {}, { }, true)
 }

@@ -92,7 +92,7 @@ fun RegisterNationalIdScreen(
         AppSingleTextField(
             modifier = Modifier.fillMaxWidth(),
             value = nationalSerialId,
-            label = stringResource(R.string.national_id_serial),
+            label = stringResource(R.string.national_id_serial_interception),
             onValueChange = {
                 nationalSerialId = it
             },

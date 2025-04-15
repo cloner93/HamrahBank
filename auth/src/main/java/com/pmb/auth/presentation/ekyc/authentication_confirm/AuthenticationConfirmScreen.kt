@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -27,8 +29,12 @@ import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppImage
 import com.pmb.ballon.component.base.AppLoading
+import com.pmb.ballon.component.base.AppTopBar
+import com.pmb.ballon.component.base.BodyLargeText
 import com.pmb.ballon.component.base.BodyMediumText
+import com.pmb.ballon.component.base.ClickableIcon
 import com.pmb.ballon.component.base.Headline3Text
+import com.pmb.ballon.component.base.IconType
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.core.presentation.NavigationManager
 import com.pmb.core.utils.CollectAsEffect
@@ -53,16 +59,16 @@ fun AuthenticationConfirmScreen(
     AppContent(
         modifier = Modifier.padding(horizontal = 16.dp),
         topBar = {
+            AppTopBar(
+                title = "",
+                requiredHeight = false,
+                startIcon = ClickableIcon(
+                    icon = IconType.ImageVector(Icons.Default.Close),
+                    onClick = { navigationManager.navigate(AuthScreens.Auth) })
+            )
         },
         footer = {
-            AppButton(modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp, top = 16.dp),
-                enable = viewState.data?.authenticationStepConfirmList?.isNotEmpty() == true,
-                title = stringResource(com.pmb.ballon.R.string.confirm),
-                onClick = {
-                    navigationManager.navigate(AuthScreens.Auth)
-                })
+
         }
     ) {
         viewState.data?.authenticationStepConfirmList?.takeIf { it.isNotEmpty() }
@@ -92,7 +98,11 @@ fun AuthenticationConfirmScreen(
                         color = AppTheme.colorScheme.onBackgroundPrimarySubdued,
                         textAlign = TextAlign.Center
                     )
-                    Spacer(modifier = Modifier.size(16.dp))
+                    Spacer(modifier = Modifier.size(32.dp))
+                    BodyLargeText(
+                        text = stringResource(R.string.interception_number,12345),
+                        color = AppTheme.colorScheme.onBackgroundNeutralDefault
+                    )
 
                 }
             }

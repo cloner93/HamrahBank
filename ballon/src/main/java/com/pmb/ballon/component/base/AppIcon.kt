@@ -67,18 +67,22 @@ fun AppIcon(icon: ImageVector, style: IconStyle? = null) {
 }
 
 @Composable
-fun AppIcon(icon: Painter, style: IconStyle? = null) {
-    val modifier = style?.let {
+fun AppIcon(
+    modifier: Modifier = Modifier,
+    icon: Painter,
+    style: IconStyle? = null
+) {
+    val iconModifier = style?.let {
         when (style.size) {
-            is Size.FIX -> Modifier.size(style.size.all)
-            is Size.Rectangle -> Modifier.size(width = style.size.width, height = style.size.height)
-            Size.DEFAULT -> Modifier.size(24.dp)
+            is Size.FIX -> modifier.size(style.size.all)
+            is Size.Rectangle -> modifier.size(width = style.size.width, height = style.size.height)
+            Size.DEFAULT -> modifier.size(24.dp)
         }
-    } ?: Modifier.size(24.dp)
+    } ?: modifier.size(24.dp)
     val tint = style?.tint ?: LocalContentColor.current
 
     Icon(
-        modifier = modifier,
+        modifier = iconModifier,
         painter = icon,
         contentDescription = null,
         tint = tint

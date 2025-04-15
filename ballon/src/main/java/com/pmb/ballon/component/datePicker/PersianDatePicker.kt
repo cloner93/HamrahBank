@@ -1,4 +1,4 @@
-package com.pmb.ballon.component
+package com.pmb.ballon.component.datePicker
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -103,21 +103,21 @@ fun PersianDatePicker(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Picker(
-                    state = dayPickerState,
+                    modifier = Modifier.weight(1f),
                     items = days,
-                    modifier = Modifier.weight(1f),
+                    state = dayPickerState,
                     textModifier = Modifier.padding(8.dp),
                 )
                 Picker(
-                    state = monthPickerState,
+                    modifier = Modifier.weight(1f),
                     items = months,
-                    modifier = Modifier.weight(1f),
+                    state = monthPickerState,
                     textModifier = Modifier.padding(8.dp),
                 )
                 Picker(
-                    state = yearPickerState,
-                    items = years,
                     modifier = Modifier.weight(1f),
+                    items = years,
+                    state = yearPickerState,
                     textModifier = Modifier.padding(8.dp),
                 )
             }

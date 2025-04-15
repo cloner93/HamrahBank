@@ -165,19 +165,20 @@ fun ActivationScreen(navigationManager: NavigationManager, viewModel: Activation
                         })
                 )
             }, footer = {
-                AppButton(
-                    modifier = Modifier.fillMaxWidth(),
-                    title = stringResource(R.string.accept),
-                    onClick = {
-                        showBottomSheet = false
-                        viewModel.handle(ActivationViewActions.SelectRules)
-                    })
+
             }) {
             BodyMediumText(
                 textAlign = TextAlign.Center,
                 text = stringResource(R.string.usage_role_desc),
                 color = AppTheme.colorScheme.onBackgroundNeutralDefault
             )
+            AppButton(
+                modifier = Modifier.padding(vertical = 16.dp).fillMaxWidth(),
+                title = stringResource(R.string.accept),
+                onClick = {
+                    showBottomSheet = false
+                    viewModel.handle(ActivationViewActions.SelectRules)
+                })
         }
     }
 }

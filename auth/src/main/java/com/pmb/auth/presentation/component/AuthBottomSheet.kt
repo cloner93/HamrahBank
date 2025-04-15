@@ -22,7 +22,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.pmb.auth.R
-import com.pmb.ballon.component.PersianDatePicker
 import com.pmb.ballon.component.TextImage
 import com.pmb.ballon.component.base.AppBottomSheet
 import com.pmb.ballon.component.base.AppButton
@@ -34,6 +33,7 @@ import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.component.base.ClickableIcon
 import com.pmb.ballon.component.base.Headline3Text
 import com.pmb.ballon.component.base.IconType
+import com.pmb.ballon.component.datePicker.PersianDatePicker
 import com.pmb.ballon.models.ImageStyle
 import com.pmb.ballon.models.Size
 import com.pmb.ballon.ui.theme.AppTheme

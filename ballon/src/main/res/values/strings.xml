@@ -6,7 +6,8 @@
     <string name="lowercase">حروف کوچک</string>
     <string name="digit">عدد09123456789</string>
     <string name="special_char"><![CDATA[علامت (مانند ٪>@)]]></string>
-    <string name="real_currency">ریال</string>
+    <string name="real_carrency">ریال</string>
+    <string name="daller">دلار</string>
     <string name="price_in_real_currency">%1$s ریال</string>
     <string name="toman">تومان</string>
     <string name="home">خانه</string>
