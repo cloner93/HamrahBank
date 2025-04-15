@@ -7,14 +7,14 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class GetTransactionsUseCase @Inject constructor(
+class TransactionSearchUseCase @Inject constructor(
     private val transactionsRepository: TransactionsRepository,
     @IoDispatcher private val coroutineDispatcher: CoroutineDispatcher
 ) {
-    suspend operator fun invoke(depositId: String): List<TransactionModel> =
+    suspend operator fun invoke(depositId: String, query: String): List<TransactionModel> =
         withContext(coroutineDispatcher) {
             try {
-                transactionsRepository.getTransactionsForDeposit(depositId)
+                transactionsRepository.searchTransactionsInDeposit(depositId, query)
             } catch (e: Exception) {
                 throw e
             }

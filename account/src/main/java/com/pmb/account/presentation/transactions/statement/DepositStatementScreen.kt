@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -23,6 +24,7 @@ import com.pmb.account.presentation.component.ShowPersianDatePickerBottomSheet
 import com.pmb.account.presentation.transactions.statement.viewmodel.DepositStatementViewActions
 import com.pmb.account.presentation.transactions.statement.viewmodel.DepositStatementViewEvents
 import com.pmb.account.presentation.transactions.statement.viewmodel.DepositStatementViewModel
+import com.pmb.account.utils.toPersianDate
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppButtonIcon
 import com.pmb.ballon.component.base.AppClickableReadOnlyTextField
@@ -56,7 +58,7 @@ fun DepositStatementScreen(navigationManager: NavigationManager) {
 
     AppContent(
         modifier = Modifier.padding(horizontal = 16.dp),
-        scrollState = null,
+        scrollState = rememberScrollState(),
         topBar = {
             AppTopBar(
                 title = "دریافت صورت\u200Cحساب",
@@ -232,7 +234,7 @@ fun DepositStatementScreen(navigationManager: NavigationManager) {
                 Column {
                     Spacer(modifier = Modifier.height(56.dp))
                     AppClickableReadOnlyTextField(
-                        value = viewState.fromDate ?: "",
+                        value = viewState.fromDate.toPersianDate(),
                         label = "از تاریخ",
                         trailingIcon = {
                             AppButtonIcon(
@@ -246,7 +248,7 @@ fun DepositStatementScreen(navigationManager: NavigationManager) {
 
                     Spacer(modifier = Modifier.height(24.dp))
                     AppClickableReadOnlyTextField(
-                        value = viewState.toDate ?: "",
+                        value = viewState.toDate.toPersianDate(),
                         label = "تا تاریخ",
                         trailingIcon = {
                             AppButtonIcon(

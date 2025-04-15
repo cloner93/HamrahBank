@@ -33,7 +33,7 @@ fun AccountScreen(navigationManager: NavigationManager) {
 
     when (selectedOption.intValue) {
         0 -> DepositsScreen(navigationManager)
-        1 -> CardsScreen(/*navigationManager*/)
+        1 -> CardsScreen(navigationManager)
     }
 
     Row(

@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -38,6 +39,7 @@ import com.pmb.account.presentation.transactions.filterScreen.viewmodel.Transact
 import com.pmb.account.presentation.transactions.filterScreen.viewmodel.TransactionsFilterViewEvents
 import com.pmb.account.presentation.transactions.filterScreen.viewmodel.TransactionsFilterViewModel
 import com.pmb.account.presentation.transactions.filterScreen.viewmodel.entity.TransactionFilter
+import com.pmb.account.utils.toPersianDate
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppButtonIcon
 import com.pmb.ballon.component.base.AppClickableReadOnlyTextField
@@ -88,7 +90,7 @@ fun TransactionFilterScreen(navigationManager: NavigationManager) {
 
     AppContent(
         modifier = Modifier.padding(horizontal = 16.dp),
-        scrollState = null,
+        scrollState = rememberScrollState(),
         topBar = {
             AppTopBar(
                 title = "فیلتر ها",
@@ -109,7 +111,8 @@ fun TransactionFilterScreen(navigationManager: NavigationManager) {
                     viewState.fromPrice != null ||
                     viewState.toPrice != null ||
                     viewState.dateType != null ||
-                    viewState.fromDate != null
+                    viewState.fromDate != null ||
+                    viewState.toDate != null
                 ) {
                     Row(
                         modifier = Modifier
@@ -389,7 +392,7 @@ fun TransactionFilterScreen(navigationManager: NavigationManager) {
                 Column {
                     Spacer(modifier = Modifier.height(32.dp))
                     AppClickableReadOnlyTextField(
-                        value = viewState.fromDate ?: "",
+                        value = viewState.fromDate.toPersianDate(),
                         label = "از تاریخ",
                         trailingIcon = {
                             AppButtonIcon(
@@ -403,7 +406,7 @@ fun TransactionFilterScreen(navigationManager: NavigationManager) {
 
                     Spacer(modifier = Modifier.height(24.dp))
                     AppClickableReadOnlyTextField(
-                        value = viewState.toDate ?: "",
+                        value = viewState.toDate.toPersianDate(),
                         label = "تا تاریخ",
                         trailingIcon = {
                             AppButtonIcon(

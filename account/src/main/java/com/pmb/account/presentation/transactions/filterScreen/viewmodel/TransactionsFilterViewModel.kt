@@ -93,6 +93,7 @@ class TransactionsFilterViewModel @Inject constructor(
                             fromPrice = it.fromPrice,
                             toPrice = it.toPrice,
                             fromDate = it.fromDate,
+                            toDate = it.toDate
                         )
                     )
                 }

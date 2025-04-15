@@ -54,7 +54,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.pmb.account.R
 import com.pmb.account.presentation.AccountScreens
 import com.pmb.account.presentation.component.ChipWithIcon
-import com.pmb.account.presentation.component.DepositModel
+import com.pmb.account.presentation.component.CustomAppTopBar
 import com.pmb.account.presentation.component.TransactionModel
 import com.pmb.account.presentation.component.TransactionType
 import com.pmb.account.presentation.transactions.filterScreen.DateType
@@ -64,9 +64,9 @@ import com.pmb.account.presentation.transactions.viewmodel.TransactionsViewEvent
 import com.pmb.account.presentation.transactions.viewmodel.TransactionsViewModel
 import com.pmb.account.utils.mapToDepositMenu
 import com.pmb.account.utils.mapToDepositModel
+import com.pmb.account.utils.toPersianDate
 import com.pmb.ballon.component.DepositBottomSheet
 import com.pmb.ballon.component.DynamicTabSelector
-import com.pmb.ballon.component.base.AppButtonIcon
 import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppIcon
 import com.pmb.ballon.component.base.AppImage
@@ -139,7 +139,11 @@ fun TransactionsScreen(navigationManager: NavigationManager) {
                 }
 
                 TransactionsViewEvents.NavigateToTransactionSearchScreen -> {
-
+                    navigationManager.navigateWithString(
+                        AccountScreens.TransactionSearch.createRoute(
+                            viewState.selectedDeposit?.depositNumber!!
+                        )
+                    )
                 }
             }
         }
@@ -158,8 +162,7 @@ fun TransactionsScreen(navigationManager: NavigationManager) {
         modifier = Modifier.padding(horizontal = 16.dp),
         scrollState = null,
         topBar = {
-            AppTopBar(
-                model = viewState.selectedDeposit,
+            CustomAppTopBar(
                 startIcon = ClickableIcon(
                     IconType.ImageVector(Icons.Filled.ArrowForward),
                     onClick = {
@@ -172,8 +175,24 @@ fun TransactionsScreen(navigationManager: NavigationManager) {
                         viewModel.handle(TransactionsViewActions.NavigateToTransactionSearchScreen)
                     }
                 ) else null,
-                onClick = {
-                    viewModel.handle(TransactionsViewActions.ShowDepositListBottomSheet)
+                middleContent = {
+                    ChipWithIcon(
+                        modifier = Modifier
+                            .border(
+                                width = 1.dp,
+                                color = AppTheme.colorScheme.strokeNeutral1Default,
+                                shape = RoundedCornerShape(12.dp)
+                            ),
+                        roundedShape = 12.dp,
+                        value = viewState.selectedDeposit?.desc
+                            ?: (viewState.selectedDeposit?.depositNumber).toString(),
+                        startIcon = Icons.Default.ArrowDropDown,
+                        clickable = {
+                            viewModel.handle(TransactionsViewActions.ShowDepositListBottomSheet)
+                        },
+                        color = Color.Transparent,
+                        assetColor = AppTheme.colorScheme.onBackgroundNeutralDefault
+                    )
                 }
             )
         }
@@ -407,59 +426,6 @@ private fun SingleRow(
 }
 
 @Composable
-fun AppTopBar(
-    model: DepositModel?,
-    modifier: Modifier = Modifier,
-    requiredHeight: Boolean = true,
-    startIcon: ClickableIcon? = null,
-    endIcon: ClickableIcon? = null,
-    onClick: () -> Unit
-) {
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .then(
-                if (requiredHeight)
-                    modifier.height(64.dp)
-                else
-                    Modifier
-            ),
-    ) {
-        if (startIcon != null) {
-            AppButtonIcon(
-                modifier = Modifier.align(Alignment.CenterStart),
-                icon = startIcon.icon,
-                onClick = startIcon.onClick
-            )
-        }
-        if (endIcon != null) {
-            AppButtonIcon(
-                modifier = Modifier.align(Alignment.CenterEnd),
-                icon = endIcon.icon,
-                onClick = endIcon.onClick
-            )
-        }
-
-        ChipWithIcon(
-            modifier = Modifier
-                .align(Alignment.Center)
-                .border(
-                    width = 1.dp,
-                    color = AppTheme.colorScheme.strokeNeutral1Default,
-                    shape = RoundedCornerShape(12.dp)
-                ),
-            roundedShape = 12.dp,
-            value = model?.desc ?: (model?.depositNumber).toString(),
-            startIcon = Icons.Default.ArrowDropDown,
-            clickable = onClick,
-            color = Color.Transparent,
-            assetColor = AppTheme.colorScheme.onBackgroundNeutralDefault
-        )
-
-    }
-}
-
-@Composable
 private fun StatementAndFilters(
     transactionFilter: TransactionFilter? = null,
     itemSpacing: Dp = 8.dp,
@@ -533,12 +499,12 @@ private fun StatementAndFilters(
                     })
                 } else {
                     transactionFilter.fromDate?.let {
-                        chips.add("از $it" to {
+                        chips.add("از ${it.toPersianDate()}" to {
                             onFilterItemClick.invoke(transactionFilter.copy(fromDate = null))
                         })
                     }
                     transactionFilter.toDate?.let {
-                        chips.add("تا $it" to {
+                        chips.add("تا ${it.toPersianDate()}" to {
 
                             onFilterItemClick.invoke(transactionFilter.copy(toDate = null))
                         })
