@@ -1,6 +1,7 @@
 package com.pmb.ballon.component
 
 import androidx.annotation.DrawableRes
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
@@ -36,7 +37,11 @@ fun TextImage(
         textAlign = TextAlign.Center
     )
 ) {
-    Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
         AppImage(image = image, style = imageStyle)
         Spacer(modifier = Modifier.size(spacer))
         BaseAppText(

@@ -54,7 +54,7 @@ fun DepositsScreen(navigationManager: NavigationManager) {
             title = "حساب قرض الحسنه آقای مشتاق مودت",
             depositNumber = "123456",
             amount = 10000023400.0,
-            currency = stringResource(com.pmb.ballon.R.string.real_carrency),
+            currency = stringResource(com.pmb.ballon.R.string.real_currency),
             ibanNumber = "IR1234567890098765432112",
             cardNumber = "6219861920241234",
         ),
@@ -62,7 +62,7 @@ fun DepositsScreen(navigationManager: NavigationManager) {
             title = "حساب قرض الحسنه آقای مشتاق مودت",
             depositNumber = "97974632",
             amount = 678326023400.0,
-            currency = stringResource(com.pmb.ballon.R.string.real_carrency),
+            currency = stringResource(com.pmb.ballon.R.string.real_currency),
             ibanNumber = "IR1234567890098765432112",
             cardNumber = "6219861920241234",
         ),
@@ -70,7 +70,7 @@ fun DepositsScreen(navigationManager: NavigationManager) {
             title = "حساب قرض الحسنه آقای مشتاق مودت",
             depositNumber = "82768947",
             amount = 68392.0,
-            currency = stringResource(com.pmb.ballon.R.string.real_carrency),
+            currency = stringResource(com.pmb.ballon.R.string.real_currency),
             ibanNumber = "IR1234567890098765432112",
             cardNumber = "6219861920241234",
         ),
@@ -78,7 +78,7 @@ fun DepositsScreen(navigationManager: NavigationManager) {
             title = "حساب قرض الحسنه آقای مشتاق مودت",
             depositNumber = "23879",
             amount = 0.0,
-            currency = stringResource(com.pmb.ballon.R.string.real_carrency),
+            currency = stringResource(com.pmb.ballon.R.string.real_currency),
             ibanNumber = "IR1234567890098765432112",
             cardNumber = "6219861920241234",
         ),
@@ -89,56 +89,56 @@ fun DepositsScreen(navigationManager: NavigationManager) {
             type = TransactionType.RECEIVE,
             title = "برداشت",
             amount = 1000000000.0,
-            currency = stringResource(com.pmb.ballon.R.string.real_carrency),
+            currency = stringResource(com.pmb.ballon.R.string.real_currency),
             date = "امروز ساعت ۱۳:۴۵"
         ),
         TransactionModel(
             type = TransactionType.WITHDRAWAL,
             title = "دریافت از سپرده",
             amount = 20000.0,
-            currency = stringResource(com.pmb.ballon.R.string.real_carrency),
+            currency = stringResource(com.pmb.ballon.R.string.real_currency),
             date = "امروز ساعت ۱۳:۴۵"
         ),
         TransactionModel(
             type = TransactionType.RECEIVE,
             title = "برداشت",
             amount = 1000000000.0,
-            currency = stringResource(com.pmb.ballon.R.string.real_carrency),
+            currency = stringResource(com.pmb.ballon.R.string.real_currency),
             date = "امروز ساعت ۱۳:۴۵"
         ),
         TransactionModel(
             type = TransactionType.WITHDRAWAL,
             title = "دریافت از سپرده",
             amount = 20000.0,
-            currency = stringResource(com.pmb.ballon.R.string.real_carrency),
+            currency = stringResource(com.pmb.ballon.R.string.real_currency),
             date = "امروز ساعت ۱۳:۴۵"
         ),
         TransactionModel(
             type = TransactionType.RECEIVE,
             title = "برداشت",
             amount = 1000000000.0,
-            currency = stringResource(com.pmb.ballon.R.string.real_carrency),
+            currency = stringResource(com.pmb.ballon.R.string.real_currency),
             date = "امروز ساعت ۱۳:۴۵"
         ),
         TransactionModel(
             type = TransactionType.RECEIVE,
             title = "برداشت",
             amount = 1000000000.0,
-            currency = stringResource(com.pmb.ballon.R.string.real_carrency),
+            currency = stringResource(com.pmb.ballon.R.string.real_currency),
             date = "امروز ساعت ۱۳:۴۵"
         ),
         TransactionModel(
             type = TransactionType.WITHDRAWAL,
             title = "دریافت از سپرده",
             amount = 20000.0,
-            currency = stringResource(com.pmb.ballon.R.string.real_carrency),
+            currency = stringResource(com.pmb.ballon.R.string.real_currency),
             date = "امروز ساعت ۱۳:۴۵"
         ),
         TransactionModel(
             type = TransactionType.RECEIVE,
             title = "برداشت",
             amount = 1000000000.0,
-            currency = stringResource(com.pmb.ballon.R.string.real_carrency),
+            currency = stringResource(com.pmb.ballon.R.string.real_currency),
             date = "امروز ساعت ۱۳:۴۵"
         ),
     )

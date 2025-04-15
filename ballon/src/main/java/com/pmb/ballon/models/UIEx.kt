@@ -7,6 +7,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import com.pmb.ballon.component.AppItemRow
 
 @Composable
 fun LazyListState.isScrollingUp(): Boolean {
@@ -25,3 +27,8 @@ fun LazyListState.isScrollingUp(): Boolean {
         }
     }.value
 }
+
+
+@Composable
+fun RowType.Render(modifier: Modifier = Modifier, bottomDivider: Boolean = false) =
+    AppItemRow(modifier = modifier, rowType = this, bottomDivider = bottomDivider)

@@ -16,35 +16,37 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.core.text.isDigitsOnly
 import com.pmb.ballon.component.MenuItem
-import com.pmb.ballon.component.base.AppNumberTextField
 import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.models.IconStyle
 import com.pmb.ballon.models.Size
 import com.pmb.ballon.models.TextStyle
 import com.pmb.ballon.ui.theme.AppTheme
+import com.pmb.core.utils.toCurrency
 import com.pmb.transfer.R
+import com.pmb.transfer.domain.entity.CardBankEntity
 
 @Composable
-fun ShowInputsCard(
-    depositId: String, onDepositIdChange: (String) -> Unit
+fun CartBanksComponent(
+    defaultCardBank: CardBankEntity,
+    sourceCardBanks: List<CardBankEntity>,
+    selectedCardBank: (CardBankEntity) -> Unit,
 ) {
-    var selectedItem by remember { mutableStateOf("") }
     var showCardsBottomSheet by remember { mutableStateOf(false) }
 
     BodyMediumText(text = stringResource(R.string.withdraw_from_card))
     Spacer(modifier = Modifier.size(8.dp))
-    MenuItem(modifier = Modifier
-        .clip(RoundedCornerShape(12.dp))
-        .background(color = Color.Transparent)
-        .border(
-            border = BorderStroke(1.dp, AppTheme.colorScheme.strokeNeutral1Default),
-            shape = RoundedCornerShape(12.dp)
-        ),
+    MenuItem(
+        modifier = Modifier
+            .clip(RoundedCornerShape(12.dp))
+            .background(color = Color.Transparent)
+            .border(
+                border = BorderStroke(1.dp, AppTheme.colorScheme.strokeNeutral1Default),
+                shape = RoundedCornerShape(12.dp)
+            ),
         horizontalPadding = 12.dp,
-        title = " کارت ۶۱۰۴۳۳۷۸۷۸۹۸۶۵۴۷",
-        subtitle = "قابل برداشت: ۷۲.۴۶۵.۰۰۰ ریال",
+        title = " کارت ${defaultCardBank.cardNumber}",
+        subtitle = "قابل برداشت: ${defaultCardBank.cardBalance.toCurrency()} ریال",
         endIcon = com.pmb.ballon.R.drawable.ic_drrow_down,
         titleStyle = TextStyle(
             color = AppTheme.colorScheme.foregroundNeutralDefault,
@@ -59,24 +61,11 @@ fun ShowInputsCard(
         ),
         onItemClick = { showCardsBottomSheet = true })
 
-    Spacer(modifier = Modifier.size(24.dp))
-    AppNumberTextField(
-        value = depositId,
-        label = stringResource(R.string.deposit_id_optional),
-        onValueChange = {
-            if (it.isDigitsOnly()) onDepositIdChange.invoke(it)
-        })
-
     if (showCardsBottomSheet)
-        CardListBottomSheet(
-            items = listOf(
-                "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-                "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-                "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-            ),
-            onItemSelected = {
-                selectedItem = it
-            },
+        CardBanksBottomSheet(
+            defaultCardBank = defaultCardBank,
+            items = sourceCardBanks,
+            onItemSelected = { selectedCardBank.invoke(it) },
             onDismiss = {
                 showCardsBottomSheet = false
             })

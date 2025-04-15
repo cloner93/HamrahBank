@@ -1,7 +1,6 @@
 package com.pmb.transfer.presentation
 
 import android.annotation.SuppressLint
-import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -14,6 +13,8 @@ import com.pmb.transfer.presentation.transfer_amount.TransferAmountScreen
 import com.pmb.transfer.presentation.transfer_amount.viewmodel.TransferAmountViewModel
 import com.pmb.transfer.presentation.transfer_confirm.TransferConfirmScreen
 import com.pmb.transfer.presentation.transfer_confirm.viewmodel.TransferConfirmViewModel
+import com.pmb.transfer.presentation.transfer_confirm_otp.TransferConfirmOtpScreen
+import com.pmb.transfer.presentation.transfer_confirm_otp.viewmodel.TransferConfirmOtpViewModel
 import com.pmb.transfer.presentation.transfer_destination_input.DestinationInputScreen
 import com.pmb.transfer.presentation.transfer_destination_input.viewmodel.TransferDestinationInputViewModel
 import com.pmb.transfer.presentation.transfer_edit_destination.TransferEditDestinationScreen
@@ -22,6 +23,7 @@ import com.pmb.transfer.presentation.transfer_edit_favorite.TransferEditFavorite
 import com.pmb.transfer.presentation.transfer_edit_favorite.viewmodel.TransferEditFavoriteViewModel
 import com.pmb.transfer.presentation.transfer_method.TransferMethodScreen
 import com.pmb.transfer.presentation.transfer_method.viewmodel.TransferMethodViewModel
+import com.pmb.transfer.presentation.transfer_reason.TransferReasonScreen
 import com.pmb.transfer.presentation.transfer_receipt.TransferReceiptScreen
 import com.pmb.transfer.presentation.transfer_search_history.TransferSearchHistoryScreen
 import com.pmb.transfer.presentation.transfer_search_history.viewmodel.TransferSearchHistoryViewModel
@@ -42,6 +44,8 @@ sealed class TransferScreens(route: String, arguments: Map<String, String> = emp
     data object TransferAmount : TransferScreens(route = "transfer_amount")
     data object TransferMethod : TransferScreens(route = "transfer_method")
     data object TransferConfirm : TransferScreens(route = "transfer_confirm")
+    data object TransferReason : TransferScreens(route = "transfer_reason")
+    data object TransferConfirmOtp : TransferScreens(route = "transfer_confirm_otp")
     data object TransferReceipt : TransferScreens(route = "transfer_receipt")
 
     companion object {
@@ -182,11 +186,58 @@ fun NavGraphBuilder.transferScreensHandle(navigationManager: NavigationManager) 
                 viewModel = hiltViewModel<TransferConfirmViewModel>(),
                 account = sharedViewModel.account.value,
                 amount = sharedViewModel.amount.value,
+                reason = sharedViewModel.transferReason.value,
                 transferMethod = sharedViewModel.transferMethod.value,
-            )
+                clear = { sharedViewModel.clearPaymentData() }
+            ) { sourceCardBank, sourceAccountBank, transferConfirm ->
+                sharedViewModel.apply {
+                    setSourceCardBank(sourceCardBank)
+                    setSourceAccountBank(sourceAccountBank)
+                    setTransferConfirm(transferConfirm)
+                }
+            }
+        }
+        composable(route = TransferScreens.TransferConfirmOtp.route) {
+            val sharedViewModel =
+                navigationManager.retrieveSharedViewModel<TransferSharedViewModel>(
+                    screen = TransferScreens.TransferGraph,
+                    navBackStackEntry = it
+                )
+            TransferConfirmOtpScreen(
+                navigationManager = navigationManager,
+                viewModel = hiltViewModel<TransferConfirmOtpViewModel>(),
+                transferConfirm = sharedViewModel.transferConfirm.value,
+                cardBank = sharedViewModel.sourceCardBank.value,
+            ) { receipt ->
+                sharedViewModel.setTransferReceipt(receipt)
+            }
         }
         composable(route = TransferScreens.TransferReceipt.route) {
-            TransferReceiptScreen(navigationManager = navigationManager)
+            val sharedViewModel =
+                navigationManager.retrieveSharedViewModel<TransferSharedViewModel>(
+                    screen = TransferScreens.TransferGraph,
+                    navBackStackEntry = it
+                )
+
+            TransferReceiptScreen(
+                navigationManager = navigationManager,
+                viewModel = hiltViewModel(),
+                transferReceipt = sharedViewModel.transferReceipt.value
+            )
+        }
+        composable(route = TransferScreens.TransferReason.route) {
+            val sharedViewModel =
+                navigationManager.retrieveSharedViewModel<TransferSharedViewModel>(
+                    screen = TransferScreens.TransferGraph,
+                    navBackStackEntry = it
+                )
+
+            TransferReasonScreen(
+                navigationManager = navigationManager,
+                viewModel = hiltViewModel(),
+                selectedReason = { reason ->
+                    sharedViewModel.setReason(reason)
+                })
         }
     }
 }

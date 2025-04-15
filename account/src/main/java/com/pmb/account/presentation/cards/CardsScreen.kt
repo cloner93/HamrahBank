@@ -152,7 +152,7 @@ fun generateRandomCards(): List<CardModel> {
             cardNumber = (1..16).map { Random.nextInt(0, 10) }
                 .joinToString(""), // Generates 16-digit card number
             amount = Random.nextDouble(1000.0, 1_000_000_000.0), // Generates random amount
-            currency = stringResource(com.pmb.ballon.R.string.real_carrency), // Uses string resource for currency
+            currency = stringResource(com.pmb.ballon.R.string.real_currency), // Uses string resource for currency
             placeholder = listOf(
                 "پوریا خلج",
                 "علی احمدی",

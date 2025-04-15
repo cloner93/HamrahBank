@@ -1,6 +1,9 @@
 package com.pmb.core.utils
 
 import java.math.BigInteger
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 object Convert {
     fun numberToWords(number: BigInteger): String {
@@ -79,5 +82,16 @@ object Convert {
         }
 
         return words.joinToString(" و ")
+    }
+
+
+    fun timestampToPersianDate(timestamp: Long): String {
+        val persianLocale = Locale("fa", "IR") // Persian locale
+        // Convert timestamp to Date object
+        val date = Date(timestamp)
+        // Create a SimpleDateFormat with Persian locale
+        val dateFormat = SimpleDateFormat("EEEE dd MMMM yyyy، ساعت HH:mm", persianLocale)
+        // Format the date and return it
+        return dateFormat.format(date)
     }
 }

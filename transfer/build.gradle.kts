@@ -55,6 +55,8 @@ dependencies {
     kapt(libs.android.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
 
+    api(libs.lifecycle.viewmodel.ktx)
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
