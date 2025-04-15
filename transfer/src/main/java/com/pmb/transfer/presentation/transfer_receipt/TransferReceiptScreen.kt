@@ -106,7 +106,7 @@ fun TransferReceiptScreen(
                             .clickable { },
                         spacer = 8.dp,
                         imageStyle = ImageStyle(size = Size.FIX(24.dp)),
-                        image = com.pmb.ballon.R.drawable.ic_share,
+                        image = com.pmb.ballon.R.drawable.ic_send,
                         text = stringResource(R.string.share),
                     )
                     Spacer(modifier = Modifier.size(16.dp))
