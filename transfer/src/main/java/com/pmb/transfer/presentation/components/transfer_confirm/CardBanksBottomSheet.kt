@@ -20,12 +20,18 @@ import com.pmb.ballon.component.base.AppBottomSheet
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.ClickableIcon
 import com.pmb.ballon.component.base.IconType
+import com.pmb.core.utils.toCurrency
 import com.pmb.transfer.R
+import com.pmb.transfer.domain.entity.AccountStatus
+import com.pmb.transfer.domain.entity.CardBankEntity
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CardListBottomSheet(
-    items: List<String>, onItemSelected: (String) -> Unit, onDismiss: () -> Unit
+fun CardBanksBottomSheet(
+    defaultCardBank: CardBankEntity,
+    items: List<CardBankEntity>,
+    onItemSelected: (CardBankEntity) -> Unit,
+    onDismiss: () -> Unit
 ) {
     var isVisible by remember { mutableStateOf(true) }
     AppBottomSheet(
@@ -45,13 +51,14 @@ fun CardListBottomSheet(
                 )
                 LazyColumn {
                     items(items.size) { index ->
-                        ItemCheckRow(title = /*items[index]*/ "کارت ۶۱۰۴۳۳۷۸۷۸۹۸۶۵۴۷",
-                            titleMore = "فعال",
-                            checked = index == 0,
-                            enabled = index > items.size - 2,
+                        val item = items[index]
+                        ItemCheckRow(title = item.cardNumber,
+                            titleMore = stringResource(com.pmb.ballon.R.string.price_in_real_currency, item.cardBalance.toCurrency()),
+                            checked = defaultCardBank.id == item.id,
+                            enabled = item.cardStatus == AccountStatus.ACTIVE,
                             onCheckedChange = {
                                 isVisible = false
-                                onItemSelected.invoke(items[index])
+                                onItemSelected.invoke(item)
                             })
                     }
                 }

@@ -120,7 +120,7 @@ fun ShowInvalidLoginBottomSheet(expired: String, onDismiss: () -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         TextImage(
-            image = com.pmb.ballon.R.drawable.img_info_circle,
+            image = com.pmb.ballon.R.drawable.img_error_circle,
             text = stringResource(R.string.msg_could_not_login),
             imageStyle = ImageStyle(size = Size.FIX(80.dp)),
         )

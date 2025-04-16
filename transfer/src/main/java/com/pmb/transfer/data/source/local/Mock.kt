@@ -1,13 +1,18 @@
 package com.pmb.transfer.data.source.local
 
+import com.pmb.transfer.domain.entity.AccountBankEntity
+import com.pmb.transfer.domain.entity.AccountStatus
 import com.pmb.transfer.domain.entity.BankIdentifierNumberType
+import com.pmb.transfer.domain.entity.CardBankEntity
 import com.pmb.transfer.domain.entity.ClientBankEntity
 import com.pmb.transfer.domain.entity.PaymentType
+import com.pmb.transfer.domain.entity.ReasonEntity
+import com.pmb.transfer.domain.entity.ReceiptStatus
 import com.pmb.transfer.domain.entity.TransactionClientBankEntity
 import com.pmb.transfer.domain.entity.TransferMethodEntity
+import com.pmb.transfer.domain.entity.TransferReceiptEntity
 
 object Mock {
-
     val clientBankEntities = listOf(
         ClientBankEntity(
             name = "محمد صادقی",
@@ -91,7 +96,7 @@ object Mock {
         )
     )
 
-    val transactionClientBanksEntityEntities = listOf(
+    val transactionClientBanksEntity = listOf(
         TransactionClientBankEntity(
             clientBankEntity = ClientBankEntity(
                 name = "محمد صادقی",
@@ -330,6 +335,243 @@ object Mock {
             paymentType = PaymentType.MELLAT_TO_MELLAT
         )
     )
+
+    val transferReceiptSussesEntity: TransferReceiptEntity =
+        TransferReceiptEntity(
+            account = transactionClientBanksEntity.first(),
+            status = ReceiptStatus.SUCCESS,
+            amount = 10000000.0,
+            date = 1744455441,
+            senderName = "پوریا خلج",
+            paymentType = PaymentType.CARD_TO_CARD,
+            message = "این رسید به معنای واریز قطعی و نهایی نیست.",
+            sourceAccount = null,
+            trackingNumber = 13710828,
+        )
+
+
+    val fakeCardBanks = listOf(
+        CardBankEntity(
+            id = 1L,
+            cardNumber = "۶۰۳۷۶۹۱۹۰۱۲۳۴۵۶۷",
+            cardHolderName = "علیرضا حسینی",
+            cardExpireYear = "04",
+            cardExpireMonth = "12",
+            cardCvv = "843",
+            cardType = "ملت",
+            cardBalance = 4_820_000.0,
+            cardStatus = AccountStatus.ACTIVE,
+            defaulted = true
+        ),
+        CardBankEntity(
+            id = 2L,
+            cardNumber = "۵۸۹۲۱۰۱۲۰۰۰۱۲۳۴۵",
+            cardHolderName = "محمدرضا قاسمی",
+            cardExpireYear = "05",
+            cardExpireMonth = "09",
+            cardCvv = "238",
+            cardType = "سپه",
+            cardBalance = 1_575_000.0,
+            cardStatus = AccountStatus.SUSPEND,
+            defaulted = false
+        ),
+        CardBankEntity(
+            id = 3L,
+            cardNumber = "۶۲۷۴۱۲۹۰۲۳۴۵۶۷۸۹",
+            cardHolderName = "زهرا محمدی",
+            cardExpireYear = "06",
+            cardExpireMonth = "03",
+            cardCvv = "771",
+            cardType = "اقتصاد نوین",
+            cardBalance = 620_000.0,
+            cardStatus = AccountStatus.ACTIVE,
+            defaulted = false
+        ),
+        CardBankEntity(
+            id = 4L,
+            cardNumber = "۵۰۲۲۲۹۱۰۲۳۴۵۶۷۸۰",
+            cardHolderName = "مهدی قربانی",
+            cardExpireYear = "07",
+            cardExpireMonth = "11",
+            cardCvv = "995",
+            cardType = "پاسارگاد",
+            cardBalance = 9_360_000.0,
+            cardStatus = AccountStatus.ACTIVE,
+            defaulted = false
+        ),
+        CardBankEntity(
+            id = 5L,
+            cardNumber = "۶۰۳۷۹۹۷۵۰۱۲۳۴۵۶۷",
+            cardHolderName = "سارا احمدی",
+            cardExpireYear = "03",
+            cardExpireMonth = "07",
+            cardCvv = "524",
+            cardType = "ملی",
+            cardBalance = 120_000.0,
+            cardStatus = AccountStatus.DE_ACTIVE,
+            defaulted = false
+        )
+    )
+
+
+    val fakeAccountBanks = listOf(
+        AccountBankEntity(
+            id = 1L,
+            accountNumber = "37380863",
+            accountHolderName = "رضا محمدی",
+            accountType = "سپرده جاری",
+            accountHint = "حساب تنخواه",
+            accountBalance = 7_543_200.0,
+            accountStatus = AccountStatus.ACTIVE,
+            defaulted = false
+        ),
+        AccountBankEntity(
+            id = 2L,
+            accountNumber = "14820973",
+            accountHolderName = "زهرا احمدی",
+            accountType = "سپرده قرض‌الحسنه",
+            accountHint = "پس‌انداز",
+            accountBalance = 120_000.0,
+            accountStatus = AccountStatus.ACTIVE,
+            defaulted = true
+        ),
+        AccountBankEntity(
+            id = 3L,
+            accountNumber = "88325467",
+            accountHolderName = "علی رستمی",
+            accountType = "سپرده کوتاه‌مدت",
+            accountHint = null,
+            accountBalance = 432_500.0,
+            accountStatus = AccountStatus.DE_ACTIVE,
+            defaulted = false
+        ),
+        AccountBankEntity(
+            id = 4L,
+            accountNumber = "54432211",
+            accountHolderName = "فاطمه نصیری",
+            accountType = "سپرده بلندمدت",
+            accountHint = "پس‌انداز",
+            accountBalance = 10_500_000.0,
+            accountStatus = AccountStatus.ACTIVE,
+            defaulted = false
+        ),
+        AccountBankEntity(
+            id = 5L,
+            accountNumber = "66789900",
+            accountHolderName = "مهدی فرجی",
+            accountType = "سپرده جاری",
+            accountHint = "خرجی",
+            accountBalance = 234_000.0,
+            accountStatus = AccountStatus.SUSPEND,
+            defaulted = false
+        ),
+        AccountBankEntity(
+            id = 6L,
+            accountNumber = "00111222",
+            accountHolderName = "سمیه موسوی",
+            accountType = "سپرده کوتاه‌مدت",
+            accountHint = null,
+            accountBalance = 847_000.0,
+            accountStatus = AccountStatus.ACTIVE,
+            defaulted = false
+        ),
+        AccountBankEntity(
+            id = 7L,
+            accountNumber = "44556677",
+            accountHolderName = "حسین کریمی",
+            accountType = "سپرده قرض‌الحسنه",
+            accountHint = "خرجی",
+            accountBalance = 34_000.0,
+            accountStatus = AccountStatus.ACTIVE,
+            defaulted = false
+        ),
+        AccountBankEntity(
+            id = 8L,
+            accountNumber = "34567890",
+            accountHolderName = "نگار یوسفی",
+            accountType = "سپرده بلندمدت",
+            accountHint = "پس‌انداز",
+            accountBalance = 17_500_000.0,
+            accountStatus = AccountStatus.DE_ACTIVE,
+            defaulted = false
+        ),
+        AccountBankEntity(
+            id = 9L,
+            accountNumber = "99887776",
+            accountHolderName = "مجید نادری",
+            accountType = "سپرده جاری",
+            accountHint = "حساب تنخواه",
+            accountBalance = 1_250_000.0,
+            accountStatus = AccountStatus.ACTIVE,
+            defaulted = false
+        ),
+        AccountBankEntity(
+            id = 10L,
+            accountNumber = "22334455",
+            accountHolderName = "مریم سلطانی",
+            accountType = "سپرده قرض‌الحسنه",
+            accountHint = null,
+            accountBalance = 93_000.0,
+            accountStatus = AccountStatus.SUSPEND,
+            defaulted = false
+        )
+    )
+
+
+    val fakeReason = listOf(
+        ReasonEntity(
+            id = 1,
+            title = "پرداخت حقوق و دستمزد",
+            description = "واریز ماهانه حقوق کارمندان و کارکنان به حساب بانکی آن‌ها"
+        ),
+        ReasonEntity(
+            id = 2,
+            title = "پرداخت اجاره",
+            description = "انتقال وجه بابت اجاره‌بهای ملک یا دفتر کار"
+        ),
+        ReasonEntity(
+            id = 3,
+            title = "پرداخت اقساط",
+            description = "پرداخت اقساط وام یا خریدهای اقساطی به افراد یا مؤسسات"
+        ),
+        ReasonEntity(
+            id = 4,
+            title = "هزینه‌های خدماتی",
+            description = "پرداخت وجه بابت خدمات مشاوره، فنی، آموزشی و سایر خدمات مشابه"
+        ),
+        ReasonEntity(
+            id = 5,
+            title = "تامین اعتبار شرکت‌ها",
+            description = "انتقال وجه بین حساب‌های شرکت یا به تأمین‌کنندگان برای خرید کالا و خدمات"
+        ),
+        ReasonEntity(
+            id = 6,
+            title = "پرداخت سود سرمایه‌گذاری",
+            description = "واریز سود به حساب سرمایه‌گذاران یا سهامداران"
+        ),
+        ReasonEntity(
+            id = 7,
+            title = "کمک مالی",
+            description = "کمک به خیریه‌ها، بستگان یا اهدای وجه برای امور خیریه"
+        ),
+        ReasonEntity(
+            id = 8,
+            title = "بازپرداخت بدهی",
+            description = "پرداخت وجه برای تسویه بدهی‌های شخصی یا تجاری"
+        ),
+        ReasonEntity(
+            id = 9,
+            title = "هزینه‌های درمانی",
+            description = "پرداخت به مراکز درمانی یا افراد بابت خدمات درمانی"
+        ),
+        ReasonEntity(
+            id = 10,
+            title = "سایر",
+            description = "سایر دلایل عمومی که در دسته‌بندی مشخصی قرار نمی‌گیرند"
+        )
+    )
+
+
 }
 
 

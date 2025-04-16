@@ -37,5 +37,24 @@ object BankUtil {
     fun getBankPainter(identifierNumber: String): Painter? =
         (getBankByCardNumber(identifierNumber) ?: getBankByAccountNumber(identifierNumber)
         ?: getBankBySheba(identifierNumber))?.let { bank -> painterResource(bank.icon) }
+
+    fun formatCardNumber(cardNumber: String): String {
+        return cardNumber.chunked(4).joinToString("  ")
+    }
+
+    fun formatMaskCardNumber(cardNumber: String): String {
+        if (cardNumber.trim().length != 16) return cardNumber // fallback for invalid length
+        val first4 = cardNumber.substring(0, 4)
+        val last4 = cardNumber.substring(12, 16)
+        return "$first4  ****  ****  $last4"
+    }
+
+    fun formatMaskAccountBankNumber(accountNumber: String): String {
+        val visibleLength = 4
+        if (accountNumber.length <= visibleLength) return accountNumber
+        val visiblePart = accountNumber.takeLast(visibleLength)
+        val maskedPart = "*".repeat(accountNumber.length - visibleLength)
+        return "$maskedPart$visiblePart"
+    }
 }
 

@@ -8,6 +8,7 @@
     <string name="special_char"><![CDATA[علامت (مانند ٪>@)]]></string>
     <string name="real_carrency">ریال</string>
     <string name="daller">دلار</string>
+    <string name="price_in_real_currency">%1$s ریال</string>
     <string name="toman">تومان</string>
     <string name="home">خانه</string>
     <string name="transfer_and_receive">انتقال و دریافت</string>

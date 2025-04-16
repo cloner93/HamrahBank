@@ -37,7 +37,7 @@ import com.pmb.transfer.presentation.transfer_method.viewmodel.TransferMethodVie
 @Composable
 fun TransferMethodScreen(
     navigationManager: NavigationManager,
-                         viewModel: TransferMethodViewModel,
+    viewModel: TransferMethodViewModel,
     selectedTransferMethod: (TransferMethodEntity) -> Unit
 ) {
     var isValid by remember { mutableStateOf(false) }
@@ -85,61 +85,6 @@ fun TransferMethodScreen(
                         Spacer(modifier = Modifier.size(16.dp))
                     }
                 }
-
-
-
-
-
-
-
-
-
-
-
-
-                ItemVerticalTextIcon(
-                    title = stringResource(R.string.card_to_card),
-                    subtitle = "انتقال در لحظه | کارمزد: ۵٬۰۰۰ ریال",
-                    startIcon = com.pmb.ballon.R.drawable.ic_bank_card_swap,
-                    onClick = {
-                        navigationManager.navigate(TransferScreens.TransferConfirm)
-                    })
-                Spacer(modifier = Modifier.size(16.dp))
-                ItemVerticalTextIcon(
-                    title = "بین بانکی (ساتنا)",
-                    subtitle = "حداقل مبلغ انتقال ۵۰۰.۰۰۰.۰۰۰ ریال است.",
-                    startIcon = com.pmb.ballon.R.drawable.ic_university,
-                    enable = false,
-                    onClick = {
-                        navigationManager.navigate(TransferScreens.TransferConfirm)
-                    })
-                Spacer(modifier = Modifier.size(16.dp))
-                ItemVerticalTextIcon(
-                    title = "بین بانکی (پایا)",
-                    subtitle = "انتقال در امروز ۷:۴۵ شب | کارمزد: ۲.۴۰۰ ریال",
-                    startIcon = com.pmb.ballon.R.drawable.ic_university,
-                    enable = false,
-                    onClick = {
-                        navigationManager.navigate(TransferScreens.TransferConfirm)
-                    })
-                Spacer(modifier = Modifier.size(16.dp))
-                ItemVerticalTextIcon(
-                    title = "بین بانکی (پل)",
-                    subtitle = "انتقال در لحظه | کارمزد: ۵.۰۰۰ ریال",
-                    startIcon = com.pmb.ballon.R.drawable.ic_university,
-                    enable = false,
-                    onClick = {
-                        navigationManager.navigate(TransferScreens.TransferConfirm)
-                    })
-                Spacer(modifier = Modifier.size(16.dp))
-                ItemVerticalTextIcon(
-                    title = "ملت به ملت",
-                    subtitle = "برای انتقال، کارت مقصد باید ملت باشد.",
-                    startIcon = com.pmb.ballon.R.drawable.ic_bank_mellat,
-                    enable = false,
-                    onClick = {
-                        navigationManager.navigate(TransferScreens.TransferConfirm)
-                    })
             }
         }
     }

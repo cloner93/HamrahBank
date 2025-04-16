@@ -21,6 +21,7 @@
     <string name="deposit_id_optional">شناسه واریز (اختیاری)</string>
     <string name="cause_of_transfer">علت انتقال</string>
     <string name="cards">کارت‌ها</string>
+    <string name="accounts">سپرده‌ها</string>
     <string name="confirm_and_transfer">تایید و انتقال</string>
     <string name="month">ماه</string>
     <string name="year">سال</string>
@@ -34,4 +35,10 @@
     <string name="msg_remove_favorite_destination">آیا از حذف «%1$s» از مقاصد برگزیده اطمینان دارید؟</string>
     <string name="select_from_favorites">انتخاب از برگزیده‌ها</string>
     <string name="transfer_amount_title">مبلغ انتقال وجه</string>
+    <string name="cart_info">اطلاعات کارت</string>
+    <string name="share">اشتراک‌گذاری</string>
+    <string name="save_to_gallery">ذخیره در گالری</string>
+    <string name="transfer_success">انتقال موفق</string>
+    <string name="payment_failed">پرداخت ناموفق</string>
+    <string name="transfer_unknown">تراکنش نامشخص</string>
 </resources>

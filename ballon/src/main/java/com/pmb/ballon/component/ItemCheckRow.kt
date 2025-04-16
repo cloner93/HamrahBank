@@ -29,7 +29,6 @@ fun ItemCheckRow(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp)
             .then(
                 if (enabled) Modifier.clickable { onCheckedChange.invoke(true) }
                 else Modifier
@@ -37,7 +36,8 @@ fun ItemCheckRow(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        RadioButton(selected = checked,
+        RadioButton(
+            selected = checked,
             colors = RadioButtonDefaults.colors()
                 .copy(selectedColor = AppTheme.colorScheme.onBackgroundNeutralCTA),
             enabled = enabled,

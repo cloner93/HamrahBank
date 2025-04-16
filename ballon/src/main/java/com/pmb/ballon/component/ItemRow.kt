@@ -11,13 +11,10 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.pmb.ballon.R
 import com.pmb.ballon.component.base.BaseAppText
-import com.pmb.ballon.models.TextStyle
-import com.pmb.ballon.ui.theme.AppTheme
+import com.pmb.ballon.models.RowType
 
 
 @Composable
@@ -27,9 +24,11 @@ fun BaseItemRow(
     subtitle: @Composable () -> Unit,
     bottomDivider: Boolean = true
 ) {
-    Column(modifier = modifier
-        .fillMaxWidth()
-        .padding(horizontal = 4.dp)) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 4.dp)
+    ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -45,37 +44,30 @@ fun BaseItemRow(
 }
 
 @Composable
-fun InvoiceItemRow(
+fun AppItemRow(
     modifier: Modifier = Modifier,
-    title: String,
-    amount: String,
-    titleStyle: TextStyle = TextStyle(
-        color = AppTheme.colorScheme.onBackgroundPrimarySubdued,
-        typography = AppTheme.typography.bodySmall
-    ),
-    amountStyle: TextStyle = TextStyle(
-        color = AppTheme.colorScheme.onBackgroundNeutralDefault,
-        typography = AppTheme.typography.bodyMedium
-    ),
-    preAmountStyle: TextStyle = TextStyle(
-        color = AppTheme.colorScheme.onBackgroundPrimarySubdued,
-        typography = AppTheme.typography.caption
-    ),
+    rowType: RowType,
     bottomDivider: Boolean = true
 ) {
+
     BaseItemRow(
         modifier = modifier,
-        title = {
-            BaseAppText(title = title, style = titleStyle)
-        },
+        title = { BaseAppText(title = rowType.title, style = rowType.textStyle) },
         subtitle = {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                BaseAppText(title = amount, style = amountStyle)
-                Spacer(modifier = Modifier.size(8.dp))
-                BaseAppText(
-                    title = stringResource(R.string.real_carrency),
-                    style = preAmountStyle
+            when (rowType) {
+                is RowType.SimpleTextRow -> Unit
+                is RowType.TwoTextRow -> BaseAppText(
+                    title = rowType.subtitle,
+                    style = rowType.subtitleStyle
                 )
+
+                is RowType.PaymentRow -> {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        BaseAppText(title = rowType.amount, style = rowType.amountStyle)
+                        Spacer(modifier = Modifier.size(8.dp))
+                        BaseAppText(title = rowType.currency, style = rowType.currencyStyle)
+                    }
+                }
             }
         },
         bottomDivider = bottomDivider
@@ -85,6 +77,6 @@ fun InvoiceItemRow(
 @Preview
 @Composable
 private fun InvoiceItemRowPreview() {
-    InvoiceItemRow(title = "کارمزد ۱", amount = "200,000")
+
 }
 
