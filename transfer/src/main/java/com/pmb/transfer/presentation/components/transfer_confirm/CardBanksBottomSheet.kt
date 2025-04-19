@@ -15,6 +15,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.LayoutDirection
 import com.pmb.ballon.component.ItemCheckRow
 import com.pmb.ballon.component.base.AppBottomSheet
 import com.pmb.ballon.component.base.AppTopBar
@@ -52,10 +53,11 @@ fun CardBanksBottomSheet(
                 LazyColumn {
                     items(items.size) { index ->
                         val item = items[index]
-                        ItemCheckRow(title = item.cardNumber,
+                        ItemCheckRow(title = item.cardNumberFormated,
                             titleMore = stringResource(com.pmb.ballon.R.string.price_in_real_currency, item.cardBalance.toCurrency()),
                             checked = defaultCardBank.id == item.id,
                             enabled = item.cardStatus == AccountStatus.ACTIVE,
+                            titleLayoutDirection = LayoutDirection.Ltr,
                             onCheckedChange = {
                                 isVisible = false
                                 onItemSelected.invoke(item)

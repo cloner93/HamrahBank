@@ -4,6 +4,8 @@ import com.pmb.core.platform.Result
 import com.pmb.transfer.data.source.local.Mock
 import com.pmb.transfer.domain.entity.AccountBankEntity
 import com.pmb.transfer.domain.entity.CardBankEntity
+import com.pmb.transfer.domain.entity.CardVerificationEntity
+import com.pmb.transfer.domain.entity.PaymentType
 import com.pmb.transfer.domain.entity.ReasonEntity
 import com.pmb.transfer.domain.entity.TransactionClientBankEntity
 import com.pmb.transfer.domain.entity.TransferConfirmEntity
@@ -14,8 +16,8 @@ import com.pmb.transfer.domain.param.AccountFavoriteToggleParam
 import com.pmb.transfer.domain.param.AccountRemoveFavoriteParam
 import com.pmb.transfer.domain.repository.TransferRepository
 import com.pmb.transfer.domain.use_case.TransferConfirmUseCase
-import com.pmb.transfer.domain.use_case.TransferResendOtpUseCase
-import com.pmb.transfer.domain.use_case.TransferSubmitOtpUseCase
+import com.pmb.transfer.domain.use_case.TransferResendVerifyCardInfoUseCase
+import com.pmb.transfer.domain.use_case.TransferVerifyCardInfoUseCase
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -87,17 +89,36 @@ class TransferRepositoryImpl @Inject constructor(
         flow {
             emit(Result.Loading)
             delay(2000)
-            emit(Result.Success(TransferConfirmEntity(id = "1234", duration = 30)))
+            when (params.transferMethod) {
+                PaymentType.CARD_TO_CARD -> emit(
+                    Result.Success(
+                        TransferConfirmEntity.CardVerificationRequired(
+                            Mock.cardVerificationEntity
+                        )
+                    )
+                )
+
+                PaymentType.INTERNAL_SATNA,
+                PaymentType.INTERNAL_PAYA,
+                PaymentType.INTERNAL_BRIDGE,
+                PaymentType.MELLAT_TO_MELLAT -> emit(
+                    Result.Success(
+                        TransferConfirmEntity.ReceiptConfirm(
+                            Mock.transferReceiptSussesEntity
+                        )
+                    )
+                )
+            }
         }
 
-    override suspend fun transferResendOtp(params: TransferResendOtpUseCase.Params): Flow<Result<TransferConfirmEntity>> =
+    override suspend fun transferResendVerifyCardInfo(params: TransferResendVerifyCardInfoUseCase.Params): Flow<Result<CardVerificationEntity>> =
         flow {
             emit(Result.Loading)
             delay(2000)
-            emit(Result.Success(TransferConfirmEntity(id = "1234", duration = 80)))
+            emit(Result.Success(Mock.cardVerificationEntity))
         }
 
-    override suspend fun transferSubmitOtp(params: TransferSubmitOtpUseCase.Params): Flow<Result<TransferReceiptEntity>> =
+    override suspend fun transferVerifyCardInfo(params: TransferVerifyCardInfoUseCase.Params): Flow<Result<TransferReceiptEntity>> =
         flow {
             emit(Result.Loading)
             delay(2000)
@@ -132,7 +153,7 @@ class TransferRepositoryImpl @Inject constructor(
     ): List<TransactionClientBankEntity> {
         return list.filter { entity ->
             entity.clientBankEntity.name.contains(query) ||
-                    entity.clientBankEntity.cardNumber.toString().contains(query) ||
+                    entity.clientBankEntity.cardNumber.contains(query) ||
                     entity.clientBankEntity.accountNumber.contains(query) ||
                     entity.clientBankEntity.iban.contains(query)
         }

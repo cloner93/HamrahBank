@@ -39,12 +39,40 @@ fun AppContent(
             modifier = modifier
                 .weight(1f)
                 .fillMaxWidth()
-                .then(
-                    if (scrollState != null)
-                        Modifier.verticalScroll(scrollState)
-                    else
-                        Modifier
-                ),
+                .then(if (scrollState != null) Modifier.verticalScroll(scrollState) else Modifier),
+            verticalArrangement = verticalArrangement,
+            horizontalAlignment = horizontalAlignment
+        ) {
+            content()
+        }
+
+        footer?.invoke(this)
+    }
+}
+
+@Composable
+fun AppContent2(
+    modifier: Modifier = Modifier,
+    backgroundColor: Color = AppTheme.colorScheme.background1Neutral,
+    topBar: (@Composable (ColumnScope.() -> Unit))? = null,
+    verticalArrangement: Arrangement.Vertical = Arrangement.Top,
+    horizontalAlignment: Alignment.Horizontal = Alignment.Start,
+    requiredVerticalScroll: Boolean = true,
+    footer: (@Composable (ColumnScope.() -> Unit))? = null,
+    content: @Composable (ColumnScope.() -> Unit)
+) {
+    val wrapperModifier = footer?.let { Modifier.imePadding() } ?: Modifier
+    Column(
+        modifier = wrapperModifier
+            .fillMaxSize()
+            .background(backgroundColor),
+    ) {
+        topBar?.invoke(this)
+        Column(
+            modifier = modifier
+                .weight(1f)
+                .fillMaxWidth()
+                .then(if (requiredVerticalScroll) Modifier.verticalScroll(rememberScrollState()) else Modifier),
             verticalArrangement = verticalArrangement,
             horizontalAlignment = horizontalAlignment
         ) {

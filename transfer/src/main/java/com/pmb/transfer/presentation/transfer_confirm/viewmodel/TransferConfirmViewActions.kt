@@ -14,7 +14,7 @@ sealed interface TransferConfirmViewActions : BaseViewAction {
     data class SelectCardBank(val item: CardBankEntity) : TransferConfirmViewActions
     data class UpdateData(
         val account: TransactionClientBankEntity?,
-        val amount: Long?,
+        val amount: Double?,
         val transferMethod: TransferMethodEntity?,
         val reason: ReasonEntity?
     ) : TransferConfirmViewActions

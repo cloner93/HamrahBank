@@ -1,12 +1,8 @@
 package com.pmb.transfer.domain.entity
 
-import android.os.Parcelable
-import androidx.annotation.Keep
 import com.pmb.core.platform.DomainModel
-import kotlinx.parcelize.Parcelize
+import com.pmb.transfer.utils.BankUtil.formatGropedWithSeparator
 
-@Parcelize
-@Keep
 data class ClientBankEntity(
     val name: String,
     val phoneNumber: String,
@@ -14,4 +10,9 @@ data class ClientBankEntity(
     val cardNumber: String,
     val accountNumber: String,
     val iban: String
-) : DomainModel, Parcelable
+) : DomainModel {
+    val cardNumberFormated: String
+        get() = cardNumber.formatGropedWithSeparator(separator = "  ")
+    val ibanFormated: String
+        get() = iban.formatGropedWithSeparator()
+}

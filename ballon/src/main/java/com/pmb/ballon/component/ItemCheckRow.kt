@@ -9,8 +9,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.component.base.CaptionText
@@ -22,6 +25,7 @@ fun ItemCheckRow(
     titleMore: String? = null,
     subtitle: String? = null,
     subtitleMore: String? = null,
+    titleLayoutDirection: LayoutDirection = LayoutDirection.Rtl,
     checked: Boolean,
     enabled: Boolean = true,
     onCheckedChange: (Boolean) -> Unit
@@ -52,10 +56,14 @@ fun ItemCheckRow(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                BodyMediumText(
-                    text = title, color = if (enabled) AppTheme.colorScheme.foregroundNeutralDefault
-                    else AppTheme.colorScheme.onBackgroundNeutralDisabled
-                )
+
+                CompositionLocalProvider(LocalLayoutDirection provides titleLayoutDirection) {
+                    BodyMediumText(
+                        text = title,
+                        color = if (enabled) AppTheme.colorScheme.foregroundNeutralDefault
+                        else AppTheme.colorScheme.onBackgroundNeutralDisabled
+                    )
+                }
                 titleMore?.let {
                     CaptionText(
                         text = it,

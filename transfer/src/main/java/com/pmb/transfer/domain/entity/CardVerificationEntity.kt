@@ -2,8 +2,7 @@ package com.pmb.transfer.domain.entity
 
 import com.pmb.core.platform.DomainModel
 
-data class ReasonEntity(
+data class CardVerificationEntity(
     val id: Long,
-    val title: String,
-    val description: String?
-) : DomainModel
+    val duration: Int,
+): DomainModel

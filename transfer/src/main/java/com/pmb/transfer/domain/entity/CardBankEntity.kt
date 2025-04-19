@@ -1,6 +1,7 @@
 package com.pmb.transfer.domain.entity
 
 import com.pmb.core.platform.DomainModel
+import com.pmb.transfer.utils.BankUtil.formatGropedWithSeparator
 
 data class CardBankEntity(
     val id: Long,
@@ -13,4 +14,7 @@ data class CardBankEntity(
     val cardBalance: Double,
     val cardStatus: AccountStatus,
     val defaulted: Boolean
-) : DomainModel
+) : DomainModel{
+    val cardNumberFormated: String
+        get() = cardNumber.formatGropedWithSeparator(separator = "  ")
+}

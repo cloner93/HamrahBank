@@ -1,5 +1,19 @@
 package com.pmb.transfer.presentation.transfer_receipt.viewmodel
 
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.PixelFormat
+import android.os.Build
+import android.view.View
+import android.view.ViewGroup
+import android.view.ViewTreeObserver
+import android.view.WindowManager
+import android.widget.FrameLayout
+import androidx.annotation.RequiresApi
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.unit.LayoutDirection
 import com.pmb.ballon.models.RowType
 import com.pmb.ballon.models.TextStyle
 import com.pmb.ballon.ui.theme.AppTypography
@@ -7,12 +21,13 @@ import com.pmb.ballon.ui.theme.lightColors
 import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.utils.Convert
 import com.pmb.core.utils.toCurrency
-import com.pmb.transfer.domain.entity.BankIdentifierNumberType
 import com.pmb.transfer.domain.entity.TransferReceiptEntity
+import com.pmb.transfer.domain.entity.TransferSourceEntity
 import com.pmb.transfer.utils.BankUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
+import androidx.core.graphics.createBitmap
 
 @HiltViewModel
 class TransferReceiptViewModel @Inject constructor() :
@@ -51,8 +66,11 @@ class TransferReceiptViewModel @Inject constructor() :
                         subtitleStyle = subtitleStyle(),
                     ),
                     RowType.TwoTextRow(
+                        subtitle = when (receipt.source) {
+                            is TransferSourceEntity.Account -> receipt.source.account.accountHolderName
+                            is TransferSourceEntity.Card -> receipt.source.card.cardHolderName
+                        },
                         title = "شخص انتقال دهنده",
-                        subtitle = receipt.senderName,
                         textStyle = titleStyle(),
                         subtitleStyle = subtitleStyle(),
                     ),
@@ -63,24 +81,21 @@ class TransferReceiptViewModel @Inject constructor() :
                         subtitleStyle = subtitleStyle(),
                     ),
                     RowType.TwoTextRow(
-                        title = when (receipt.account.type) {
-                            BankIdentifierNumberType.CARD -> "کارت مبدأ"
-                            BankIdentifierNumberType.ACCOUNT,
-                            BankIdentifierNumberType.IBAN -> "سپرده مبداء"
+                        title = when (receipt.source) {
+                            is TransferSourceEntity.Account -> "سپرده مبداء"
+                            is TransferSourceEntity.Card -> "کارت مبدأ"
                         },
                         subtitle =
-                            when (receipt.account.type) {
-                                BankIdentifierNumberType.CARD -> BankUtil.formatMaskCardNumber(
-                                    receipt.account.clientBankEntity.cardNumber
-                                )
+                            when (receipt.source) {
+                                is TransferSourceEntity.Account ->
+                                    BankUtil.formatMaskAccountBankNumber(receipt.source.account.accountNumber)
 
-                                BankIdentifierNumberType.ACCOUNT,
-                                BankIdentifierNumberType.IBAN -> BankUtil.formatMaskAccountBankNumber(
-                                    receipt.account.clientBankEntity.accountNumber
-                                )
+                                is TransferSourceEntity.Card ->
+                                    BankUtil.formatMaskCardNumber(receipt.source.card.cardNumber)
                             },
                         textStyle = titleStyle(),
                         subtitleStyle = subtitleStyle(),
+                        subtitleLayoutDirection = LayoutDirection.Ltr
                     ),
                     RowType.TwoTextRow(
                         title = "شماره پیگیری",

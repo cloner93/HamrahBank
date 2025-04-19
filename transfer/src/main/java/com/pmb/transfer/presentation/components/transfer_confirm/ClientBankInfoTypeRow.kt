@@ -9,14 +9,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import com.pmb.ballon.component.ItemColumn
+import com.pmb.ballon.component.BaseItemColumn
 import com.pmb.ballon.component.base.AppButtonIcon
+import com.pmb.ballon.component.base.BaseAppText
 import com.pmb.ballon.component.base.ClickableIcon
 import com.pmb.ballon.models.IconStyle
 import com.pmb.ballon.models.TextStyle
@@ -44,10 +48,10 @@ fun ClientBankInfoTypeRow(
     endIcon: ClickableIcon? = null,
     onClick: ((TransactionClientBankEntity) -> Unit)? = null
 ) {
-    val text = when (info.type) {
+    val formattedNumber = when (info.type) {
         BankIdentifierNumberType.ACCOUNT -> info.clientBankEntity.accountNumber
-        BankIdentifierNumberType.CARD -> info.clientBankEntity.cardNumber.toString()
-        BankIdentifierNumberType.IBAN -> info.clientBankEntity.iban
+        BankIdentifierNumberType.CARD -> info.clientBankEntity.cardNumberFormated
+        BankIdentifierNumberType.IBAN -> info.clientBankEntity.ibanFormated
     }
 
     // Chain the modifiers directly or reassign
@@ -73,13 +77,18 @@ fun ClientBankInfoTypeRow(
             imageSize = 44.dp,
         )
         Spacer(modifier = Modifier.width(12.dp))
-        ItemColumn(
+
+        BaseItemColumn(
             modifier = Modifier.weight(1f),
-            title = info.clientBankEntity.name,
-            subtitle = text,
-            titleStyle = titleStyle,
-            subtitleStyle = subtitleStyle
+            title = { BaseAppText(title = info.clientBankEntity.name, style = titleStyle) },
+            subtitle = {
+                CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+                    BaseAppText(title = formattedNumber, style = subtitleStyle)
+                }
+            },
+            bottomDivider = false
         )
+
         if (endIcon != null) {
             AppButtonIcon(
                 icon = endIcon.icon,

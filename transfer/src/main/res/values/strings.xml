@@ -41,4 +41,9 @@
     <string name="transfer_success">انتقال موفق</string>
     <string name="payment_failed">پرداخت ناموفق</string>
     <string name="transfer_unknown">تراکنش نامشخص</string>
+    <string name="cvv2">CVV2</string>
+    <string name="clipboard_title_message">این شماره %1$s را کپی کردید:</string>
+    <string name="card">کارت</string>
+    <string name="account">حساب</string>
+    <string name="iban">شبا</string>
 </resources>

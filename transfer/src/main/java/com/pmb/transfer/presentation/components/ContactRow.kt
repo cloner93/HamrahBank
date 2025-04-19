@@ -10,7 +10,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.pmb.ballon.component.base.CaptionText
-import com.pmb.transfer.domain.entity.ClientBankEntity
 import com.pmb.transfer.domain.entity.TransactionClientBankEntity
 import com.pmb.transfer.utils.BankUtil
 

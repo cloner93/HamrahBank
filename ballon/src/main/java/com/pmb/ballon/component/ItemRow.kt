@@ -9,9 +9,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.pmb.ballon.component.base.BaseAppText
 import com.pmb.ballon.models.RowType
@@ -49,17 +52,22 @@ fun AppItemRow(
     rowType: RowType,
     bottomDivider: Boolean = true
 ) {
-
     BaseItemRow(
         modifier = modifier,
-        title = { BaseAppText(title = rowType.title, style = rowType.textStyle) },
+        title = {
+            BaseAppText(title = rowType.title, style = rowType.textStyle)
+        },
         subtitle = {
             when (rowType) {
                 is RowType.SimpleTextRow -> Unit
-                is RowType.TwoTextRow -> BaseAppText(
-                    title = rowType.subtitle,
-                    style = rowType.subtitleStyle
-                )
+                is RowType.TwoTextRow -> {
+                    CompositionLocalProvider(LocalLayoutDirection provides rowType.subtitleLayoutDirection) {
+                        BaseAppText(
+                            title = rowType.subtitle,
+                            style = rowType.subtitleStyle
+                        )
+                    }
+                }
 
                 is RowType.PaymentRow -> {
                     Row(verticalAlignment = Alignment.CenterVertically) {
