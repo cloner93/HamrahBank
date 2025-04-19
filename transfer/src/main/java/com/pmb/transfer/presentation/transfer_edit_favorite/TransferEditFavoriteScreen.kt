@@ -99,11 +99,6 @@ fun TransferEditFavoriteScreen(
             )
         }
 
-    if (viewState.loading) {
-        AppLoading()
-    }
-
-    viewState.alertState?.let {
-        AlertComponent(it)
-    }
+    if (viewState.loading) AppLoading()
+    viewState.alertState?.let { AlertComponent(it) }
 }
