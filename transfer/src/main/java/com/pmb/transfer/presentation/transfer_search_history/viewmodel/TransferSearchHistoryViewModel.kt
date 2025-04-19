@@ -75,6 +75,7 @@ class TransferSearchHistoryViewModel @Inject constructor(
     }
 
     private fun handleSearchAccounts(value: String) {
+        setState { it.copy(query = value) }
         if (value.isEmpty()) {
             setState { it.copy(accounts = emptyList()) }
             fetchTransferHistories()

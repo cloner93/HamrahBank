@@ -36,8 +36,6 @@
     <string name="select_from_favorites">انتخاب از برگزیده‌ها</string>
     <string name="transfer_amount_title">مبلغ انتقال وجه</string>
     <string name="cart_info">اطلاعات کارت</string>
-    <string name="share">اشتراک‌گذاری</string>
-    <string name="save_to_gallery">ذخیره در گالری</string>
     <string name="transfer_success">انتقال موفق</string>
     <string name="payment_failed">پرداخت ناموفق</string>
     <string name="transfer_unknown">تراکنش نامشخص</string>

@@ -43,7 +43,6 @@ fun TransferSearchHistoryScreen(
     selectedAccount: (TransactionClientBankEntity) -> Unit
 ) {
     val viewState by viewModel.viewState.collectAsState()
-    var query by remember { mutableStateOf("") }
 
     // Handle one-time events such as navigation or showing toasts
     LaunchedEffect(Unit) {
@@ -74,9 +73,8 @@ fun TransferSearchHistoryScreen(
             AppSearchTextField(
                 modifier = Modifier.padding(end = 16.dp),
                 hint = stringResource(R.string.hint_transfer_account_search),
-                query = query,
+                query = viewState.query,
                 onValueChange = {
-                    query = it
                     viewModel.handle(TransferSearchHistoryViewActions.SearchAccounts(it))
                 }
             )

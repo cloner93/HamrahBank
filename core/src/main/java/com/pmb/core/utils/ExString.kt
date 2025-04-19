@@ -68,3 +68,12 @@ data class PasswordValidationResult(
         get() = minLen && lowercase && uppercase && digit && specialChar
 }
 
+fun String.convertPersianDigitsToEnglish(): String {
+    return map { char ->
+        when (char) {
+            in '۰'..'۹' -> (char.code - '۰'.code + '0'.code).toChar()
+            else -> char
+        }
+    }.joinToString("")
+}
+

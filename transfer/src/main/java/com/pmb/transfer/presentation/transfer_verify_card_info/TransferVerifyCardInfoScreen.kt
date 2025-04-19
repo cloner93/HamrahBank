@@ -33,7 +33,6 @@ import com.pmb.transfer.presentation.TransferScreens
 import com.pmb.transfer.presentation.transfer_verify_card_info.viewmodel.TransferVerifyCardInfoViewActions
 import com.pmb.transfer.presentation.transfer_verify_card_info.viewmodel.TransferVerifyCardInfoViewEvents
 import com.pmb.transfer.presentation.transfer_verify_card_info.viewmodel.TransferVerifyCardInfoViewModel
-import com.pmb.transfer.utils.BankUtil.formatGropedWithSeparator
 
 @Composable
 fun TransferVerifyCardInfoScreen(
@@ -44,7 +43,6 @@ fun TransferVerifyCardInfoScreen(
     receipt: (TransferReceiptEntity) -> Unit
 ) {
     val viewState by viewModel.viewState.collectAsState()
-    cardBank?.let { viewModel.handle(TransferVerifyCardInfoViewActions.UpdateCardInfo(cardBank)) }
 
     LaunchedEffect(Unit) {
         viewModel.viewEvent.collect { event ->
@@ -58,6 +56,7 @@ fun TransferVerifyCardInfoScreen(
     }
 
     LaunchedEffect(Unit) {
+        cardBank?.let { viewModel.handle(TransferVerifyCardInfoViewActions.UpdateCardInfo(cardBank)) }
         verificationInfo?.let {
             viewModel.handle(TransferVerifyCardInfoViewActions.TransferVerify(verificationInfo))
         }
