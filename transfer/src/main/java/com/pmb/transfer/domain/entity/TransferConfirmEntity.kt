@@ -2,4 +2,15 @@ package com.pmb.transfer.domain.entity
 
 import com.pmb.core.platform.DomainModel
 
-data class TransferConfirmEntity(val id: String, val duration: Int) : DomainModel
+sealed class TransferConfirmEntity : DomainModel {
+
+    data class ReceiptConfirm(
+        val receipt: TransferReceiptEntity
+    ) : TransferConfirmEntity()
+
+    data class CardVerificationRequired(
+        val verificationInfo: CardVerificationEntity
+    ) : TransferConfirmEntity()
+}
+
+

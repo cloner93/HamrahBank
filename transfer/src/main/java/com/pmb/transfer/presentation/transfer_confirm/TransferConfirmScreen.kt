@@ -28,12 +28,12 @@ import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.core.presentation.NavigationManager
 import com.pmb.core.utils.toCurrency
 import com.pmb.transfer.R
-import com.pmb.transfer.domain.entity.AccountBankEntity
-import com.pmb.transfer.domain.entity.CardBankEntity
+import com.pmb.transfer.domain.entity.CardVerificationEntity
 import com.pmb.transfer.domain.entity.ReasonEntity
 import com.pmb.transfer.domain.entity.TransactionClientBankEntity
-import com.pmb.transfer.domain.entity.TransferConfirmEntity
 import com.pmb.transfer.domain.entity.TransferMethodEntity
+import com.pmb.transfer.domain.entity.TransferReceiptEntity
+import com.pmb.transfer.domain.entity.TransferSourceEntity
 import com.pmb.transfer.presentation.TransferScreens
 import com.pmb.transfer.presentation.components.ClientBankProfileInfo
 import com.pmb.transfer.presentation.components.transfer_confirm.ShowInputsByTransferType
@@ -46,29 +46,41 @@ fun TransferConfirmScreen(
     navigationManager: NavigationManager,
     viewModel: TransferConfirmViewModel,
     account: TransactionClientBankEntity?,
-    amount: Long?,
+    amount: Double?,
     transferMethod: TransferMethodEntity?,
     reason: ReasonEntity?,
     clear: () -> Unit,
-    result: (sourceCardBank: CardBankEntity?, sourceAccountBank: AccountBankEntity?, transferConfirm: TransferConfirmEntity) -> Unit
+    result: (
+        source: TransferSourceEntity,
+        receipt: TransferReceiptEntity?,
+        verificationInfo: CardVerificationEntity?
+    ) -> Unit
 ) {
     val viewState by viewModel.viewState.collectAsState()
 
     LaunchedEffect(Unit) {
         viewModel.viewEvent.collect { event ->
             when (event) {
-                is TransferConfirmViewEvents.NavigateToOtp -> {
+                is TransferConfirmViewEvents.NavigateToCardVerification -> {
                     result.invoke(
-                        event.sourceCardBank,
-                        event.sourceAccountBank,
-                        event.transferConfirm
+                        event.source,
+                        null,
+                        event.verificationInfo
                     )
-                    navigationManager.navigate(TransferScreens.TransferConfirmOtp)
+                    navigationManager.navigate(TransferScreens.TransferCardVerification)
+                }
+
+                is TransferConfirmViewEvents.NavigateToReceipt -> {
+                    result.invoke(
+                        event.source,
+                        event.receipt,
+                        null
+                    )
+                    navigationManager.navigate(TransferScreens.TransferReceipt)
                 }
             }
         }
     }
-
 
     LaunchedEffect(Unit) {
         viewModel.handle(
@@ -96,7 +108,7 @@ fun TransferConfirmScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 16.dp, end = 16.dp, top = 16.dp),
-                enable = !viewState.loading,
+                enable = viewState.enableConfirmButton,
                 title = stringResource(R.string.confirm),
                 onClick = { viewModel.handle(TransferConfirmViewActions.SubmitTransferData) })
         },
@@ -110,7 +122,7 @@ fun TransferConfirmScreen(
         amount?.let {
             SentencesWithSuffix(
                 sentence = it.toDouble().toCurrency(),
-                suffix = stringResource(com.pmb.ballon.R.string.real_currency)
+                suffix = stringResource(com.pmb.ballon.R.string.real_carrency)
             )
         }
         Spacer(modifier = Modifier.size(32.dp))
@@ -136,8 +148,7 @@ fun TransferConfirmScreen(
             ShowInputsByTransferType(
                 transferMethod = it,
                 depositId = viewState.depositId,
-                defaultCardBank = viewState.defaultCardBank,
-                defaultAccountBank = viewState.defaultAccountBank,
+                defaultSource = viewState.defaultSource,
                 defaultReason = viewState.defaultReason,
                 sourceCardBanks = viewState.sourceCardBanks,
                 sourceAccountBanks = viewState.sourceAccountBanks,

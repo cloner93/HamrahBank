@@ -11,7 +11,7 @@ import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.ballon.ui.theme.AppTypography
 
 @Composable
-internal fun BaseAppText(modifier: Modifier = Modifier, title: String, style: TextStyle? = null) {
+fun BaseAppText(modifier: Modifier = Modifier, title: String, style: TextStyle? = null) {
     val textColor = style?.color ?: Color.Unspecified
     val typography = style?.typography ?: AppTypography.bodyLarge
     Text(
@@ -22,8 +22,13 @@ internal fun BaseAppText(modifier: Modifier = Modifier, title: String, style: Te
         textAlign = style?.textAlign
     )
 }
+
 @Composable
-internal fun BaseAppText(modifier: Modifier = Modifier, title: AnnotatedString, style: TextStyle? = null) {
+fun BaseAppText(
+    modifier: Modifier = Modifier,
+    title: AnnotatedString,
+    style: TextStyle? = null
+) {
     val textColor = style?.color ?: Color.Unspecified
     val typography = style?.typography ?: AppTypography.bodyLarge
     Text(
@@ -99,6 +104,7 @@ fun BodyMediumText(
         )
     )
 }
+
 @Composable
 fun BodyMediumText(
     modifier: Modifier = Modifier,

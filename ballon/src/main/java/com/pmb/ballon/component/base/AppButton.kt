@@ -10,9 +10,12 @@ import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.pmb.ballon.models.AppButton
 import com.pmb.ballon.models.IconStyle
@@ -27,6 +30,7 @@ fun AppButton(
     colors: ButtonColors = AppButton.buttonColors(),
     textStyle: TextStyle = TextStyle.defaultButton(),
     enable: Boolean = true,
+    layoutDirection: LayoutDirection = LocalLayoutDirection.current,
     onClick: () -> Unit
 ) {
     Button(
@@ -36,7 +40,9 @@ fun AppButton(
         enabled = enable,
         onClick = onClick
     ) {
-        BaseAppText(title = title, style = textStyle)
+        CompositionLocalProvider(LocalLayoutDirection provides layoutDirection) {
+            BaseAppText(title = title, style = textStyle)
+        }
     }
 }
 
@@ -101,7 +107,7 @@ fun AppOutlineButton(
     onClick: () -> Unit
 ) {
     OutlinedButton(
-        modifier = modifier.heightIn(min=46.dp),
+        modifier = modifier.heightIn(min = 46.dp),
         shape = RoundedCornerShape(12.dp),
         colors = colors,
         enabled = enable,

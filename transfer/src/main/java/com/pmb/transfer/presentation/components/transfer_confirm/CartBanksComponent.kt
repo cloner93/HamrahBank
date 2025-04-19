@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.pmb.ballon.component.MenuItem
 import com.pmb.ballon.component.base.BodyMediumText
@@ -45,7 +46,7 @@ fun CartBanksComponent(
                 shape = RoundedCornerShape(12.dp)
             ),
         horizontalPadding = 12.dp,
-        title = " کارت ${defaultCardBank.cardNumber}",
+        title = defaultCardBank.cardNumberFormated + " کارت",
         subtitle = "قابل برداشت: ${defaultCardBank.cardBalance.toCurrency()} ریال",
         endIcon = com.pmb.ballon.R.drawable.ic_drrow_down,
         titleStyle = TextStyle(
@@ -59,6 +60,7 @@ fun CartBanksComponent(
         endIconStyle = IconStyle(
             tint = AppTheme.colorScheme.onBackgroundNeutralDefault, size = Size.FIX(24.dp)
         ),
+        titleLayoutDirection = LayoutDirection.Ltr,
         onItemClick = { showCardsBottomSheet = true })
 
     if (showCardsBottomSheet)

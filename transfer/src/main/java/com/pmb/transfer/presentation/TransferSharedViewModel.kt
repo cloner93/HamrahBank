@@ -1,35 +1,31 @@
 package com.pmb.transfer.presentation
 
 import androidx.lifecycle.ViewModel
-import com.pmb.transfer.domain.entity.AccountBankEntity
-import com.pmb.transfer.domain.entity.CardBankEntity
+import com.pmb.transfer.domain.entity.CardVerificationEntity
 import com.pmb.transfer.domain.entity.ReasonEntity
 import com.pmb.transfer.domain.entity.TransactionClientBankEntity
-import com.pmb.transfer.domain.entity.TransferConfirmEntity
 import com.pmb.transfer.domain.entity.TransferMethodEntity
 import com.pmb.transfer.domain.entity.TransferReceiptEntity
+import com.pmb.transfer.domain.entity.TransferSourceEntity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
 class TransferSharedViewModel @Inject constructor() : ViewModel() {
-    private val _account = MutableStateFlow<TransactionClientBankEntity?>(null)
-    val account: StateFlow<TransactionClientBankEntity?> = _account
+    private val _destinationAccount = MutableStateFlow<TransactionClientBankEntity?>(null)
+    val destinationAccount: StateFlow<TransactionClientBankEntity?> = _destinationAccount
 
-    private val _amount = MutableStateFlow(0L)
-    val amount: StateFlow<Long> = _amount
+    private val _amount = MutableStateFlow(0.0)
+    val amount: StateFlow<Double> = _amount
 
     private val _transferMethod = MutableStateFlow<TransferMethodEntity?>(null)
     val transferMethod: StateFlow<TransferMethodEntity?> = _transferMethod
 
-    private val _sourceCardBank = MutableStateFlow<CardBankEntity?>(null)
-    val sourceCardBank: StateFlow<CardBankEntity?> = _sourceCardBank
+    private val _source = MutableStateFlow<TransferSourceEntity?>(null)
+    val source: StateFlow<TransferSourceEntity?> = _source
 
-    private val _sourceAccountBank = MutableStateFlow<AccountBankEntity?>(null)
-    val sourceAccountBank: StateFlow<AccountBankEntity?> = _sourceAccountBank
-
-    private val _transferConfirm = MutableStateFlow<TransferConfirmEntity?>(null)
-    val transferConfirm: StateFlow<TransferConfirmEntity?> = _transferConfirm
+    private val _cardVerification = MutableStateFlow<CardVerificationEntity?>(null)
+    val cardVerification: StateFlow<CardVerificationEntity?> = _cardVerification
 
     private val _transferReason = MutableStateFlow<ReasonEntity?>(null)
     val transferReason: StateFlow<ReasonEntity?> = _transferReason
@@ -39,11 +35,11 @@ class TransferSharedViewModel @Inject constructor() : ViewModel() {
     val transferReceipt: StateFlow<TransferReceiptEntity?> = _transferReceipt
 
 
-    fun setAccount(account: TransactionClientBankEntity) {
-        _account.value = account
+    fun setDestinationAccount(account: TransactionClientBankEntity) {
+        _destinationAccount.value = account
     }
 
-    fun setAmount(amount: Long) {
+    fun setAmount(amount: Double) {
         _amount.value = amount
     }
 
@@ -51,16 +47,12 @@ class TransferSharedViewModel @Inject constructor() : ViewModel() {
         _transferMethod.value = transferMethod
     }
 
-    fun setSourceCardBank(sourceCard: CardBankEntity?) {
-        _sourceCardBank.value = sourceCard
+    fun setSource(source: TransferSourceEntity?) {
+        _source.value = source
     }
 
-    fun setSourceAccountBank(sourceAccount: AccountBankEntity?) {
-        _sourceAccountBank.value = sourceAccount
-    }
-
-    fun setTransferConfirm(transferConfirm: TransferConfirmEntity) {
-        _transferConfirm.value = transferConfirm
+    fun setTransferVerificationCard(cardVerification: CardVerificationEntity) {
+        _cardVerification.value = cardVerification
     }
 
 
@@ -69,25 +61,34 @@ class TransferSharedViewModel @Inject constructor() : ViewModel() {
     }
 
     fun setTransferReceipt(receipt: TransferReceiptEntity) {
-        _transferReceipt.value = receipt
+        _transferReceipt.value = TransferReceiptEntity(
+            destination = _destinationAccount.value ?: receipt.destination,
+            status = receipt.status,
+            amount = _amount.value,
+            date = System.currentTimeMillis(),
+            paymentType = _transferMethod.value?.paymentType ?: receipt.paymentType,
+            source = _source.value ?: receipt.source,
+            trackingNumber = receipt.trackingNumber,
+            message = receipt.message
+        )
     }
 
 
     fun clear() {
-        _account.value = null
+        _destinationAccount.value = null
         _transferMethod.value = null
-        _amount.value = 0L
-        _sourceCardBank.value = null
-        _sourceAccountBank.value = null
-        _transferConfirm.value = null
+        _amount.value = 0.0
+        _source.value = null
+        _source.value = null
+        _cardVerification.value = null
         _transferReason.value = null
         _transferReceipt.value = null
     }
 
-    fun clearPaymentData(){
-        _sourceCardBank.value = null
-        _sourceAccountBank.value = null
-        _transferConfirm.value = null
+    fun clearPaymentData() {
+        _source.value = null
+        _source.value = null
+        _cardVerification.value = null
         _transferReason.value = null
     }
 }

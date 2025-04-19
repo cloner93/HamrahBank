@@ -1,26 +1,24 @@
 package com.pmb.transfer.presentation.transfer_amount.viewmodel
 
-import androidx.lifecycle.SavedStateHandle
 import com.pmb.core.platform.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class TransferAmountViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle
-) :
+class TransferAmountViewModel @Inject constructor() :
     BaseViewModel<TransferAmountViewActions, TransferAmountViewState, TransferAmountViewEvents>(
         TransferAmountViewState()
     ) {
 
     override fun handle(action: TransferAmountViewActions) {
         when (action) {
-            is TransferAmountViewActions.SubmitAmount -> handleSubmitAmount(action.amount)
+            is TransferAmountViewActions.UpdateAmount -> setState { it.copy(amount = action.amount) }
+            is TransferAmountViewActions.SubmitAmount -> handleSubmitAmount(viewState.value.amount)
             TransferAmountViewActions.ClearAlert -> setState { it.copy(alertState = null) }
         }
     }
 
-    private fun handleSubmitAmount(amount: Long) {
+    private fun handleSubmitAmount(amount: Double) {
         postEvent(TransferAmountViewEvents.NavigateToDestinationType(amount))
     }
 }

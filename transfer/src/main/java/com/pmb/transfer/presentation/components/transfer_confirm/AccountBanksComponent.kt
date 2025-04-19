@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.pmb.ballon.component.MenuItem
 import com.pmb.ballon.component.base.BodyMediumText
@@ -62,6 +63,7 @@ fun AccountBanksComponent(
         endIconStyle = IconStyle(
             tint = AppTheme.colorScheme.onBackgroundNeutralDefault, size = Size.FIX(24.dp)
         ),
+        titleLayoutDirection = LayoutDirection.Ltr,
         onItemClick = { showBottomSheet = true })
 
     Spacer(modifier = Modifier.size(24.dp))

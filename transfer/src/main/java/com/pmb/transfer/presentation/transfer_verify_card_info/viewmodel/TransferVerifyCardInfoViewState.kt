@@ -1,10 +1,10 @@
-package com.pmb.transfer.presentation.transfer_confirm_otp.viewmodel
+package com.pmb.transfer.presentation.transfer_verify_card_info.viewmodel
 
 import com.pmb.core.platform.AlertModelState
 import com.pmb.core.platform.BaseViewState
 import com.pmb.transfer.domain.entity.CardBankEntity
 
-data class TransferConfirmOtpViewState(
+data class TransferVerifyCardInfoViewState(
     val loading: Boolean = false,
     val alertState: AlertModelState? = null,
     val cardBank: CardBankEntity? = null,

@@ -5,7 +5,7 @@ import com.pmb.core.platform.DomainModel
 data class TransferMethodEntity(
     val title: String,
     val detail: String,
-    val fee: Long,
+    val fee: Double,
     val active: Boolean,
     val default: Boolean = false,
     val paymentType: PaymentType

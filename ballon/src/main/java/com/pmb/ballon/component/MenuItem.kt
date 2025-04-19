@@ -10,11 +10,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.pmb.ballon.R
 import com.pmb.ballon.component.base.AppIcon
@@ -38,6 +41,8 @@ fun MenuItem(
         typography = AppTheme.typography.bodyLarge,
     ),
     subtitleStyle: TextStyle? = null,
+    titleLayoutDirection: LayoutDirection = LayoutDirection.Rtl,
+    subTitleLayoutDirection: LayoutDirection = LayoutDirection.Rtl,
     startIconStyle: IconStyle? = null,
     endIconStyle: IconStyle = IconStyle(tint = AppTheme.colorScheme.onForegroundNeutralDisabled),
     clickable: Boolean = true,
@@ -63,13 +68,18 @@ fun MenuItem(
             }
 
             Column(horizontalAlignment = Alignment.Start) {
-                BaseAppText(title = title, style = titleStyle)
+                CompositionLocalProvider(LocalLayoutDirection provides titleLayoutDirection) {
+                    BaseAppText(title = title, style = titleStyle)
+                }
+
                 subtitle?.let {
-                    BodySmallText(
-                        text = it,
-                        color = subtitleStyle?.color
-                            ?: AppTheme.colorScheme.onForegroundNeutralDisabled
-                    )
+                    CompositionLocalProvider(LocalLayoutDirection provides subTitleLayoutDirection) {
+                        BodySmallText(
+                            text = it,
+                            color = subtitleStyle?.color
+                                ?: AppTheme.colorScheme.onForegroundNeutralDisabled
+                        )
+                    }
                 }
             }
 

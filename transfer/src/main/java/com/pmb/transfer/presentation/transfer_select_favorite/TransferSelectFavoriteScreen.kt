@@ -3,6 +3,8 @@ package com.pmb.transfer.presentation.transfer_select_favorite
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -13,6 +15,8 @@ import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.component.base.AppTopBar
+import com.pmb.ballon.component.base.ClickableIcon
+import com.pmb.ballon.component.base.IconType
 import com.pmb.core.presentation.NavigationManager
 import com.pmb.transfer.R
 import com.pmb.transfer.domain.entity.TransactionClientBankEntity
@@ -43,12 +47,17 @@ fun TransferSelectFavoriteScreen(
     }
 
     AppContent(
+        scrollState = null,
         topBar = {
             AppTopBar(
                 title = stringResource(R.string.favorites),
-                onBack = { navigationManager.navigateBack() })
-        }
-    ) {
+                startIcon = ClickableIcon(
+                    icon = IconType.ImageVector(Icons.Default.Close),
+                    onClick = {
+                        navigationManager.navigateBack()
+                    })
+            )
+        }) {
         Column(modifier = Modifier.fillMaxSize()) {
             LazyColumn(modifier = Modifier.fillMaxSize()) {
                 items(viewState.accounts.size) { index ->

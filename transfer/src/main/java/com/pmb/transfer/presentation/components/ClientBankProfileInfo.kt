@@ -5,9 +5,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.component.base.Headline6Text
@@ -40,13 +43,15 @@ fun ClientBankProfileInfo(
             color = AppTheme.colorScheme.onBackgroundNeutralDefault
         )
         Spacer(modifier = Modifier.size(4.dp))
-        BodyMediumText(
-            text = when(item.type){
-                BankIdentifierNumberType.ACCOUNT -> item.clientBankEntity.accountNumber
-                BankIdentifierNumberType.CARD -> item.clientBankEntity.cardNumber
-                BankIdentifierNumberType.IBAN -> item.clientBankEntity.iban
-            },
-            color = AppTheme.colorScheme.onBackgroundNeutralSubdued
-        )
+        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+            BodyMediumText(
+                text = when (item.type) {
+                    BankIdentifierNumberType.ACCOUNT -> item.clientBankEntity.accountNumber
+                    BankIdentifierNumberType.CARD -> item.clientBankEntity.cardNumberFormated
+                    BankIdentifierNumberType.IBAN -> item.clientBankEntity.ibanFormated
+                },
+                color = AppTheme.colorScheme.onBackgroundNeutralSubdued
+            )
+        }
     }
 }

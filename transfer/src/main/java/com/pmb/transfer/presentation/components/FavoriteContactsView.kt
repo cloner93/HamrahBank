@@ -16,7 +16,6 @@ import com.pmb.ballon.component.base.BodySmallText
 import com.pmb.ballon.component.base.IconType
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.transfer.R
-import com.pmb.transfer.domain.entity.ClientBankEntity
 import com.pmb.transfer.domain.entity.TransactionClientBankEntity
 
 @Composable
@@ -33,7 +32,8 @@ fun FavoriteContactsView(
             iconType = IconType.Painter(painterResource(com.pmb.ballon.R.drawable.ic_edit)),
             tint = if (items.isEmpty()) AppTheme.colorScheme.onBackgroundNeutralDisabled else AppTheme.colorScheme.onBackgroundNeutralDefault,
             clickable = items.isNotEmpty(),
-            onClick = onEditClick)
+            onClick = onEditClick
+        )
 
         if (items.isEmpty())
             Box(

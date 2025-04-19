@@ -1,14 +1,19 @@
 package com.pmb.transfer.presentation.transfer_confirm.viewmodel
 
 import com.pmb.core.platform.BaseViewEvent
-import com.pmb.transfer.domain.entity.AccountBankEntity
-import com.pmb.transfer.domain.entity.CardBankEntity
-import com.pmb.transfer.domain.entity.TransferConfirmEntity
+import com.pmb.transfer.domain.entity.CardVerificationEntity
+import com.pmb.transfer.domain.entity.TransferReceiptEntity
+import com.pmb.transfer.domain.entity.TransferSourceEntity
 
 sealed interface TransferConfirmViewEvents : BaseViewEvent {
-    data class NavigateToOtp(
-        val sourceCardBank: CardBankEntity?,
-        val sourceAccountBank: AccountBankEntity?,
-        val transferConfirm: TransferConfirmEntity,
+
+    data class NavigateToCardVerification(
+        val source: TransferSourceEntity,
+        val verificationInfo: CardVerificationEntity,
+    ) : TransferConfirmViewEvents
+
+    data class NavigateToReceipt(
+        val source: TransferSourceEntity,
+        val receipt: TransferReceiptEntity,
     ) : TransferConfirmViewEvents
 }

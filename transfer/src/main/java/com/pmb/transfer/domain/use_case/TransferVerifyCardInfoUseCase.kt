@@ -7,11 +7,11 @@ import com.pmb.transfer.domain.repository.TransferRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class TransferSubmitOtpUseCase @Inject constructor(
+class TransferVerifyCardInfoUseCase @Inject constructor(
     private val transferRepository: TransferRepository
-): BaseUseCase<TransferSubmitOtpUseCase.Params, TransferReceiptEntity>() {
+): BaseUseCase<TransferVerifyCardInfoUseCase.Params, TransferReceiptEntity>() {
     override suspend fun execute(params: Params): Flow<Result<TransferReceiptEntity>> {
-        return transferRepository.transferSubmitOtp(params)
+        return transferRepository.transferVerifyCardInfo(params)
     }
 
     data class Params(val id: String, val cvv2: String, val password: String)

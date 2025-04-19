@@ -32,12 +32,16 @@ fun ProfileAndThumbnail(
             modifier = Modifier
                 .size(imageSize)
                 .clip(CircleShape),
-            model = ImageRequest.Builder(LocalContext.current).data(profileUrl)
-                .crossfade(true).build(),
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(profileUrl)
+                .allowHardware(false)
+                .crossfade(true)
+                .build(),
             placeholder = painterResource(com.pmb.ballon.R.drawable.profile),
             contentDescription = "ProfileImageHeader",
             contentScale = ContentScale.Crop
         )
+
         // Small Icon
         Image(
             modifier = Modifier

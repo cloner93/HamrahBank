@@ -10,9 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -24,6 +21,8 @@ import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.component.base.AppNumberTextField
 import com.pmb.ballon.component.base.AppTopBar
+import com.pmb.ballon.component.base.CaptionText
+import com.pmb.ballon.component.base.CommaVisualTransformation
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.core.presentation.NavigationManager
 import com.pmb.core.utils.Convert
@@ -40,12 +39,10 @@ fun TransferAmountScreen(
     navigationManager: NavigationManager,
     viewModel: TransferAmountViewModel,
     account: TransactionClientBankEntity?,
-    amount: (Long) -> Unit
+    amount: (Double) -> Unit
 ) {
     val viewState by viewModel.viewState.collectAsState()
 
-    var isValid by remember { mutableStateOf(false) }
-    var identifierNumber by remember { mutableStateOf("") }
 
     LaunchedEffect(Unit) {
         viewModel.viewEvent.collect { event ->
@@ -58,6 +55,16 @@ fun TransferAmountScreen(
         }
     }
 
+    val trailingIcon: (@Composable () -> Unit)? = viewState.amount.takeIf { it > 0 }?.let {
+        {
+            CaptionText(
+                text = stringResource(com.pmb.ballon.R.string.rial),
+                color = AppTheme.colorScheme.onBackgroundNeutralSubdued
+            )
+        }
+    }
+
+
     Box(modifier = Modifier.background(color = AppTheme.colorScheme.background1Neutral)) {
         AppContent(topBar = {
             AppTopBar(
@@ -69,9 +76,9 @@ fun TransferAmountScreen(
                     .fillMaxWidth()
                     .padding(horizontal = 24.dp),
                 title = stringResource(R.string.next),
-                enable = isValid,
+                enable = viewState.enableButton,
                 onClick = {
-                    viewModel.handle(TransferAmountViewActions.SubmitAmount(identifierNumber.toLong()))
+                    viewModel.handle(TransferAmountViewActions.SubmitAmount)
                 })
         }) {
             Spacer(modifier = Modifier.size(24.dp))
@@ -81,21 +88,20 @@ fun TransferAmountScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
-                value = identifierNumber,
-                onValueChange = {
-                    identifierNumber = it
-                    isValid = if (it.isNotEmpty() && it.isDigitsOnly())
-                        it.toBigInteger() >= 10.toBigInteger() else false
+                value = if (viewState.amount > 0.0) viewState.amount.toLong().toString() else "",
+                showClearButton = false,
+                trailingIcon = trailingIcon,
+                visualTransformation = CommaVisualTransformation(),
+                onValueChange = { amount ->
+                    viewModel.handle(TransferAmountViewActions.UpdateAmount(amount.toDoubleOrNull()?.takeIf { it >= 0 } ?: 0.0))
                 },
                 label = stringResource(R.string.amount),
             )
 
             Spacer(modifier = Modifier.size(16.dp))
 
-            if (isValid)
-                SentencesWithSuffix(
-                    sentence = Convert.numberToWords(identifierNumber.toBigInteger()),
-                )
+            if (viewState.amount >= 10)
+                SentencesWithSuffix(sentence = Convert.numberToWords(viewState.amount))
         }
     }
 

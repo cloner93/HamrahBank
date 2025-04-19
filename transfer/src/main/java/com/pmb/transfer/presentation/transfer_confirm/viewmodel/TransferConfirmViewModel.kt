@@ -4,14 +4,15 @@ import androidx.lifecycle.viewModelScope
 import com.pmb.core.platform.AlertModelState
 import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.platform.Result
+import com.pmb.transfer.domain.entity.BankIdentifierNumberType
 import com.pmb.transfer.domain.entity.PaymentType
-import com.pmb.transfer.domain.entity.TransactionClientBankEntity
-import com.pmb.transfer.domain.entity.TransferMethodEntity
+import com.pmb.transfer.domain.entity.TransferConfirmEntity
+import com.pmb.transfer.domain.entity.TransferReceiptEntity
+import com.pmb.transfer.domain.entity.TransferSourceEntity
 import com.pmb.transfer.domain.use_case.SourceAccountBankUseCase
 import com.pmb.transfer.domain.use_case.SourceCardBankUseCase
 import com.pmb.transfer.domain.use_case.TransferConfirmUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,23 +20,25 @@ import javax.inject.Inject
 class TransferConfirmViewModel @Inject constructor(
     private val sourceCardBankUseCase: SourceCardBankUseCase,
     private val sourceAccountBankUseCase: SourceAccountBankUseCase,
-    private val transferConfirmUseCase: TransferConfirmUseCase
-) :
-    BaseViewModel<TransferConfirmViewActions, TransferConfirmViewState, TransferConfirmViewEvents>(
-        TransferConfirmViewState()
-    ) {
-    private val _destinationAccount = MutableStateFlow<TransactionClientBankEntity?>(null)
-    private val _destinationAmount = MutableStateFlow(0.0)
-    private val _transferMethod = MutableStateFlow<TransferMethodEntity?>(null)
+    private val transferConfirmCardUseCase: TransferConfirmUseCase
+) : BaseViewModel<TransferConfirmViewActions, TransferConfirmViewState, TransferConfirmViewEvents>(
+    TransferConfirmViewState()
+) {
 
 
     override fun handle(action: TransferConfirmViewActions) {
         when (action) {
             TransferConfirmViewActions.ClearAlert -> setState { it.copy(alertState = null) }
             TransferConfirmViewActions.SubmitTransferData -> handleSubmitTransferData()
-            is TransferConfirmViewActions.SelectCardBank -> setState { it.copy(defaultCardBank = action.item) }
+            is TransferConfirmViewActions.SelectCardBank -> setState {
+                it.copy(defaultSource = TransferSourceEntity.Card(action.item))
+            }
+
             is TransferConfirmViewActions.UpdateData -> handleUpdateData(action)
-            is TransferConfirmViewActions.SelectAccountBank -> setState { it.copy(defaultAccountBank = action.item) }
+            is TransferConfirmViewActions.SelectAccountBank -> setState {
+                it.copy(defaultSource = TransferSourceEntity.Account(action.item))
+            }
+
             is TransferConfirmViewActions.UpdateFavoriteDestination -> setState {
                 it.copy(
                     favoriteDestination = action.favorite
@@ -47,23 +50,24 @@ class TransferConfirmViewModel @Inject constructor(
     }
 
     private fun fetchData() {
-        when (_transferMethod.value?.paymentType) {
-            PaymentType.MELLAT_TO_MELLAT,
-            PaymentType.CARD_TO_CARD -> fetchSourceCardBanks()
+        when (viewState.value.transferMethod?.paymentType) {
+            PaymentType.MELLAT_TO_MELLAT, PaymentType.CARD_TO_CARD -> fetchSourceCardBanks()
 
-            PaymentType.INTERNAL_SATNA,
-            PaymentType.INTERNAL_PAYA,
-            PaymentType.INTERNAL_BRIDGE -> fetchSourceAccountBanks()
+            PaymentType.INTERNAL_SATNA, PaymentType.INTERNAL_PAYA, PaymentType.INTERNAL_BRIDGE -> fetchSourceAccountBanks()
 
             null -> Unit
         }
     }
 
     private fun handleUpdateData(action: TransferConfirmViewActions.UpdateData) {
-        _destinationAccount.value = action.account
-        _destinationAmount.value = action.amount?.toDouble() ?: 0.0
-        _transferMethod.value = action.transferMethod
-        setState { it.copy(defaultReason = action.reason) }
+        setState {
+            it.copy(
+                destinationAccount = action.account,
+                destinationAmount = action.amount ?: 0.0,
+                transferMethod = action.transferMethod,
+                defaultReason = action.reason
+            )
+        }
         fetchData()
     }
 
@@ -84,8 +88,7 @@ class TransferConfirmViewModel @Inject constructor(
                                         },
                                         onDismissed = {
                                             setState { it.copy(loading = false) }
-                                        }
-                                    )
+                                        })
                                 )
                             }
                         }
@@ -95,11 +98,12 @@ class TransferConfirmViewModel @Inject constructor(
                         }
 
                         is Result.Success -> {
+                            val defaultSource = (result.data.firstOrNull { card -> card.defaulted }
+                                ?: result.data.firstOrNull())?.let { TransferSourceEntity.Card(card = it) }
                             setState {
                                 it.copy(
                                     loading = false,
-                                    defaultCardBank = result.data.firstOrNull { card -> card.defaulted }
-                                        ?: result.data.firstOrNull(),
+                                    defaultSource = defaultSource,
                                     sourceCardBanks = result.data
                                 )
                             }
@@ -126,8 +130,7 @@ class TransferConfirmViewModel @Inject constructor(
                                         },
                                         onDismissed = {
                                             setState { it.copy(loading = false) }
-                                        }
-                                    )
+                                        })
                                 )
                             }
                         }
@@ -137,11 +140,15 @@ class TransferConfirmViewModel @Inject constructor(
                         }
 
                         is Result.Success -> {
+                            val defaultSource =
+                                (result.data.firstOrNull { account -> account.defaulted }
+                                    ?: result.data.firstOrNull())?.let {
+                                    TransferSourceEntity.Account(account = it)
+                                }
                             setState {
                                 it.copy(
                                     loading = false,
-                                    defaultAccountBank = result.data.firstOrNull { account -> account.defaulted }
-                                        ?: result.data.firstOrNull(),
+                                    defaultSource = defaultSource,
                                     sourceAccountBanks = result.data
                                 )
                             }
@@ -152,43 +159,97 @@ class TransferConfirmViewModel @Inject constructor(
     }
 
     private fun handleSubmitTransferData() {
+        val destinationNumber = when (viewState.value.destinationAccount?.type) {
+            BankIdentifierNumberType.ACCOUNT -> viewState.value.destinationAccount?.clientBankEntity?.accountNumber
+            BankIdentifierNumberType.CARD -> viewState.value.destinationAccount?.clientBankEntity?.cardNumber
+            BankIdentifierNumberType.IBAN -> viewState.value.destinationAccount?.clientBankEntity?.iban
+            null -> null
+        }
+
+        val params = viewState.value.run {
+            TransferConfirmUseCase.Params(
+                sourceId = when (defaultSource) {
+                    is TransferSourceEntity.Card -> defaultSource.card.id
+                    is TransferSourceEntity.Account -> defaultSource.account.id
+                    null -> return
+
+                },
+                destinationNumber = destinationNumber ?: return,
+                amount = destinationAmount,
+                reasonId = defaultReason?.id,
+                depositId = depositId,
+                transferMethod = transferMethod?.paymentType ?: return,
+                favoriteDestination = favoriteDestination
+            )
+        }
+
         viewModelScope.launch {
-            transferConfirmUseCase.invoke(TransferConfirmUseCase.Params(value = "value"))
-                .collect { result ->
-                    when (result) {
-                        is Result.Error -> {
-                            setState {
-                                it.copy(
-                                    loading = false,
-                                    alertState = AlertModelState.SnackBar(
-                                        message = result.message,
-                                        onActionPerformed = {
-                                            setState { it.copy(loading = false) }
-                                        },
-                                        onDismissed = {
-                                            setState { it.copy(loading = false) }
-                                        }
-                                    )
-                                )
-                            }
-                        }
-
-                        Result.Loading -> {
-                            setState { it.copy(loading = true) }
-                        }
-
-                        is Result.Success -> {
-                            setState { it.copy(loading = false) }
-                            postEvent(
-                                TransferConfirmViewEvents.NavigateToOtp(
-                                    sourceCardBank = viewState.value.defaultCardBank,
-                                    sourceAccountBank = viewState.value.defaultAccountBank,
-                                    transferConfirm = result.data
-                                )
+            transferConfirmCardUseCase.invoke(params).collect { result ->
+                when (result) {
+                    is Result.Error -> {
+                        setState {
+                            it.copy(
+                                loading = false,
+                                alertState = AlertModelState.SnackBar(
+                                    message = result.message,
+                                    onActionPerformed = {
+                                        setState { it.copy(loading = false) }
+                                    },
+                                    onDismissed = {
+                                        setState { it.copy(loading = false) }
+                                    })
                             )
                         }
                     }
+
+                    Result.Loading -> {
+                        setState { it.copy(loading = true) }
+                    }
+
+                    is Result.Success -> {
+                        setState { it.copy(loading = false) }
+
+                        when (val model = result.data) {
+                            is TransferConfirmEntity.ReceiptConfirm ->
+                                postEvent(
+                                    TransferConfirmViewEvents.NavigateToReceipt(
+                                        source = viewState.value.defaultSource
+                                            ?: throw IllegalStateException("No valid source"),
+                                        receipt = gerReceipt(model.receipt)
+                                    )
+                                )
+
+                            is TransferConfirmEntity.CardVerificationRequired ->
+                                postEvent(
+                                    TransferConfirmViewEvents.NavigateToCardVerification(
+                                        source = viewState.value.defaultSource
+                                            ?: throw IllegalStateException("No valid source"),
+                                        verificationInfo = model.verificationInfo
+                                    )
+                                )
+                        }
+                    }
                 }
+            }
         }
+    }
+
+
+    private fun gerReceipt(receipt: TransferReceiptEntity): TransferReceiptEntity {
+        val destination = viewState.value.destinationAccount
+            ?: throw IllegalStateException("No valid destination account")
+        val paymentType = viewState.value.transferMethod?.paymentType
+            ?: throw IllegalStateException("No valid payment type")
+        val source = viewState.value.defaultSource
+            ?: throw IllegalStateException("No valid source")
+
+        return receipt.copy(
+            source = source,
+            destination = destination,
+            amount = viewState.value.destinationAmount,
+            paymentType = paymentType,
+            trackingNumber = receipt.trackingNumber,
+            message = receipt.message
+        )
     }
 }

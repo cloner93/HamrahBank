@@ -1,3 +1,5 @@
+@file:Suppress("CAST_NEVER_SUCCEEDS")
+
 package com.pmb.transfer.presentation
 
 import android.annotation.SuppressLint
@@ -7,14 +9,16 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.pmb.core.presentation.NavigationManager
 import com.pmb.core.presentation.Screen
+import com.pmb.transfer.domain.entity.CardBankEntity
+import com.pmb.transfer.domain.entity.CardVerificationEntity
+import com.pmb.transfer.domain.entity.TransferReceiptEntity
+import com.pmb.transfer.domain.entity.TransferSourceEntity
 import com.pmb.transfer.presentation.transfer.TransferScreen
 import com.pmb.transfer.presentation.transfer.viewmodel.TransferViewModel
 import com.pmb.transfer.presentation.transfer_amount.TransferAmountScreen
 import com.pmb.transfer.presentation.transfer_amount.viewmodel.TransferAmountViewModel
 import com.pmb.transfer.presentation.transfer_confirm.TransferConfirmScreen
 import com.pmb.transfer.presentation.transfer_confirm.viewmodel.TransferConfirmViewModel
-import com.pmb.transfer.presentation.transfer_confirm_otp.TransferConfirmOtpScreen
-import com.pmb.transfer.presentation.transfer_confirm_otp.viewmodel.TransferConfirmOtpViewModel
 import com.pmb.transfer.presentation.transfer_destination_input.DestinationInputScreen
 import com.pmb.transfer.presentation.transfer_destination_input.viewmodel.TransferDestinationInputViewModel
 import com.pmb.transfer.presentation.transfer_edit_destination.TransferEditDestinationScreen
@@ -29,6 +33,8 @@ import com.pmb.transfer.presentation.transfer_search_history.TransferSearchHisto
 import com.pmb.transfer.presentation.transfer_search_history.viewmodel.TransferSearchHistoryViewModel
 import com.pmb.transfer.presentation.transfer_select_favorite.TransferSelectFavoriteScreen
 import com.pmb.transfer.presentation.transfer_select_favorite.viewmodel.TransferSelectFavoriteViewModel
+import com.pmb.transfer.presentation.transfer_verify_card_info.TransferVerifyCardInfoScreen
+import com.pmb.transfer.presentation.transfer_verify_card_info.viewmodel.TransferVerifyCardInfoViewModel
 
 sealed class TransferScreens(route: String, arguments: Map<String, String> = emptyMap()) :
     Screen(route = route, arguments = arguments) {
@@ -45,7 +51,7 @@ sealed class TransferScreens(route: String, arguments: Map<String, String> = emp
     data object TransferMethod : TransferScreens(route = "transfer_method")
     data object TransferConfirm : TransferScreens(route = "transfer_confirm")
     data object TransferReason : TransferScreens(route = "transfer_reason")
-    data object TransferConfirmOtp : TransferScreens(route = "transfer_confirm_otp")
+    data object TransferCardVerification : TransferScreens(route = "transfer_confirm_card_bank")
     data object TransferReceipt : TransferScreens(route = "transfer_receipt")
 
     companion object {
@@ -74,7 +80,7 @@ fun NavGraphBuilder.transferScreensHandle(navigationManager: NavigationManager) 
                 navigationManager = navigationManager,
                 viewModel = hiltViewModel<TransferViewModel>()
             ) { account ->
-                sharedViewModel.setAccount(account)
+                sharedViewModel.setDestinationAccount(account)
             }
         }
         composable(route = TransferScreens.TransferDestinationSearch.route) {
@@ -88,7 +94,7 @@ fun NavGraphBuilder.transferScreensHandle(navigationManager: NavigationManager) 
                 navigationManager = navigationManager,
                 viewModel = hiltViewModel<TransferSearchHistoryViewModel>()
             ) { account ->
-                sharedViewModel.setAccount(account)
+                sharedViewModel.setDestinationAccount(account)
             }
         }
         composable(route = TransferScreens.TransferDestinationInput.route) {
@@ -102,7 +108,7 @@ fun NavGraphBuilder.transferScreensHandle(navigationManager: NavigationManager) 
                 navigationManager = navigationManager,
                 viewModel = hiltViewModel<TransferDestinationInputViewModel>()
             ) { account ->
-                sharedViewModel.setAccount(account)
+                sharedViewModel.setDestinationAccount(account)
             }
         }
         composable(route = TransferScreens.TransferSelectFavorite.route) {
@@ -116,7 +122,7 @@ fun NavGraphBuilder.transferScreensHandle(navigationManager: NavigationManager) 
                 navigationManager = navigationManager,
                 viewModel = hiltViewModel<TransferSelectFavoriteViewModel>()
             ) { account ->
-                sharedViewModel.setAccount(account)
+                sharedViewModel.setDestinationAccount(account)
             }
         }
         composable(route = TransferScreens.TransferEditLatestDestination.route) {
@@ -130,7 +136,7 @@ fun NavGraphBuilder.transferScreensHandle(navigationManager: NavigationManager) 
                 navigationManager = navigationManager,
                 viewModel = hiltViewModel<TransferEditDestinationViewModel>()
             ) { account ->
-                sharedViewModel.setAccount(account)
+                sharedViewModel.setDestinationAccount(account)
             }
         }
         composable(route = TransferScreens.TransferEditFavorite.route) {
@@ -144,7 +150,7 @@ fun NavGraphBuilder.transferScreensHandle(navigationManager: NavigationManager) 
                 navigationManager = navigationManager,
                 viewModel = hiltViewModel<TransferEditFavoriteViewModel>(),
             ) { account ->
-                sharedViewModel.setAccount(account)
+                sharedViewModel.setDestinationAccount(account)
             }
         }
         composable(route = TransferScreens.TransferAmount.route) {
@@ -157,7 +163,7 @@ fun NavGraphBuilder.transferScreensHandle(navigationManager: NavigationManager) 
             TransferAmountScreen(
                 navigationManager = navigationManager,
                 viewModel = hiltViewModel<TransferAmountViewModel>(),
-                account = sharedViewModel.account.value
+                account = sharedViewModel.destinationAccount.value
             ) { amount ->
                 sharedViewModel.setAmount(amount)
             }
@@ -184,30 +190,38 @@ fun NavGraphBuilder.transferScreensHandle(navigationManager: NavigationManager) 
             TransferConfirmScreen(
                 navigationManager = navigationManager,
                 viewModel = hiltViewModel<TransferConfirmViewModel>(),
-                account = sharedViewModel.account.value,
+                account = sharedViewModel.destinationAccount.value,
                 amount = sharedViewModel.amount.value,
                 reason = sharedViewModel.transferReason.value,
                 transferMethod = sharedViewModel.transferMethod.value,
                 clear = { sharedViewModel.clearPaymentData() }
-            ) { sourceCardBank, sourceAccountBank, transferConfirm ->
+            ) { source: TransferSourceEntity,
+                receipt: TransferReceiptEntity?,
+                verificationInfo: CardVerificationEntity? ->
+
                 sharedViewModel.apply {
-                    setSourceCardBank(sourceCardBank)
-                    setSourceAccountBank(sourceAccountBank)
-                    setTransferConfirm(transferConfirm)
+                    setSource(source)
+                    if (receipt != null) setTransferReceipt(receipt)
+                    if (verificationInfo != null) setTransferVerificationCard(verificationInfo)
                 }
             }
         }
-        composable(route = TransferScreens.TransferConfirmOtp.route) {
+        composable(route = TransferScreens.TransferCardVerification.route) {
             val sharedViewModel =
                 navigationManager.retrieveSharedViewModel<TransferSharedViewModel>(
                     screen = TransferScreens.TransferGraph,
                     navBackStackEntry = it
                 )
-            TransferConfirmOtpScreen(
+
+            val cardBank: CardBankEntity? = when (val source = sharedViewModel.source.value) {
+                is TransferSourceEntity.Card -> source.card
+                else -> null
+            }
+            TransferVerifyCardInfoScreen(
                 navigationManager = navigationManager,
-                viewModel = hiltViewModel<TransferConfirmOtpViewModel>(),
-                transferConfirm = sharedViewModel.transferConfirm.value,
-                cardBank = sharedViewModel.sourceCardBank.value,
+                viewModel = hiltViewModel<TransferVerifyCardInfoViewModel>(),
+                verificationInfo = sharedViewModel.cardVerification.value,
+                cardBank = cardBank
             ) { receipt ->
                 sharedViewModel.setTransferReceipt(receipt)
             }
@@ -223,7 +237,9 @@ fun NavGraphBuilder.transferScreensHandle(navigationManager: NavigationManager) 
                 navigationManager = navigationManager,
                 viewModel = hiltViewModel(),
                 transferReceipt = sharedViewModel.transferReceipt.value
-            )
+            ) {
+                sharedViewModel.clear()
+            }
         }
         composable(route = TransferScreens.TransferReason.route) {
             val sharedViewModel =

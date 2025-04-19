@@ -40,10 +40,6 @@ fun TransferMethodScreen(
     viewModel: TransferMethodViewModel,
     selectedTransferMethod: (TransferMethodEntity) -> Unit
 ) {
-    var isValid by remember { mutableStateOf(false) }
-    var identifierNumber by remember { mutableStateOf("") }
-    var clientBank by remember { mutableStateOf<TransactionClientBankEntity?>(null) }
-
     val viewState by viewModel.viewState.collectAsState()
 
     // Handle one-time events such as navigation or showing toasts
@@ -60,6 +56,7 @@ fun TransferMethodScreen(
 
     Box(modifier = Modifier.background(color = AppTheme.colorScheme.background1Neutral)) {
         AppContent(
+            scrollState = null,
             topBar = {
                 AppTopBar(
                     title = stringResource(R.string.transfer_method),

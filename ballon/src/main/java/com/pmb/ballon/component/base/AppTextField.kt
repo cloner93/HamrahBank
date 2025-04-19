@@ -34,9 +34,13 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.OffsetMapping
+import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -45,6 +49,7 @@ import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.ballon.ui.theme.appFontFamily
 import com.pmb.core.utils.isIranianNationalId
 import com.pmb.core.utils.isMobile
+import java.text.DecimalFormat
 
 @Composable
 fun AppBaseTextField(
@@ -56,7 +61,7 @@ fun AppBaseTextField(
     readOnly: Boolean = false,
     label: String? = null,
     leadingIcon: @Composable (() -> Unit)? = null,
-    trailingIcon: @Composable (() -> Unit) = @Composable {},
+    trailingIcon: @Composable (() -> Unit)? = null,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
@@ -65,6 +70,10 @@ fun AppBaseTextField(
     singleLine: Boolean = false,
     maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
     minLines: Int = 1,
+    textStyle: TextStyle = TextStyle.Default.copy(
+        fontSize = 16.sp,
+        fontFamily = appFontFamily
+    ),
     interactionSource: MutableInteractionSource? = null,
     onClick: (() -> Unit)? = null
 ) {
@@ -99,14 +108,9 @@ fun AppBaseTextField(
         visualTransformation = visualTransformation,
         keyboardOptions = keyboardOptions,
         keyboardActions = keyboardActions,
-        textStyle = TextStyle(
-            fontSize = 16.sp,
-            fontFamily = appFontFamily
-        ),
+        textStyle = textStyle,
         leadingIcon = leadingIcon,
-        trailingIcon = {
-            trailingIcon()
-        },
+        trailingIcon = trailingIcon,
         colors = OutlinedTextFieldDefaults.colors(
             focusedBorderColor = if (bordered) AppTextField.defaultColors().focusedIndicatorColor else Color.Transparent,
             disabledBorderColor = if (bordered) AppTextField.defaultColors().disabledIndicatorColor else Color.Transparent,
@@ -250,10 +254,23 @@ fun AppNumberTextField(
     keyboardOptions: KeyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
     trailingIcon: @Composable (() -> Unit)? = null,
     enabled: Boolean = true,
+    showClearButton: Boolean = true,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
     focusRequester: FocusRequester = remember { FocusRequester() },
+    textStyle: TextStyle = AppTheme.typography.bodyMedium.copy(
+        textDirection = TextDirection.Ltr
+    ),
     onFocused: ((Boolean) -> Unit)? = null,
     onValueChange: (String) -> Unit,
 ) {
+    val _trallingIcon: @Composable (() -> Unit)? =
+        trailingIcon ?: if (showClearButton && value.isNotEmpty()) {
+            {
+                AppButtonIcon(
+                    icon = Icons.Default.Close,
+                    onClick = { onValueChange("") })
+            }
+        } else trailingIcon
     AppBaseTextField(
         modifier = modifier.fillMaxWidth(),
         value = value,
@@ -263,18 +280,15 @@ fun AppNumberTextField(
         bordered = bordered,
         keyboardActions = keyboardActions,
         focusRequester = focusRequester,
+        textStyle = textStyle,
         onValueChange = { newText ->
             // Ensure that the input consists of only digits
-            if (newText.all { it.isDigit() }) {
-                onValueChange(newText)
-            }
+            onValueChange(newText.filter { c -> c.isDigit() })
         },
         onFocused = onFocused,
-        trailingIcon = @Composable {
-            if (trailingIcon != null) trailingIcon()
-            else if (value.isNotEmpty()) AppButtonIcon(icon = Icons.Default.Close) { onValueChange("") }
-        },
-        keyboardOptions = keyboardOptions
+        trailingIcon = _trallingIcon,
+        keyboardOptions = keyboardOptions,
+        visualTransformation = visualTransformation
     )
 }
 
@@ -367,4 +381,43 @@ fun PreviewSearchTextField() {
         hint = "salam",
         onValueChange = { },
     )
+}
+
+
+// VisualTransformation for showing commas in TextField
+class CommaVisualTransformation : VisualTransformation {
+    override fun filter(text: AnnotatedString): TransformedText {
+        val originalText = text.text
+
+        val digitsOnly = originalText.filter { it.isDigit() }
+        val formattedText = digitsOnly.toLongOrNull()?.let {
+            DecimalFormat("#,###").format(it)
+        } ?: ""
+
+        val offsetMapping = object : OffsetMapping {
+            override fun originalToTransformed(offset: Int): Int {
+                // Map original to transformed (with commas)
+                var commas = 0
+                var i = 0
+                while (i < offset && i < digitsOnly.length) {
+                    if ((digitsOnly.length - i) % 3 == 0 && i != 0) commas++
+                    i++
+                }
+                return offset + commas
+            }
+
+            override fun transformedToOriginal(offset: Int): Int {
+                // Map transformed back to original (ignore commas)
+                var digitsSeen = 0
+                var i = 0
+                while (digitsSeen < offset && i < formattedText.length) {
+                    if (formattedText[i] != ',') digitsSeen++
+                    i++
+                }
+                return digitsSeen
+            }
+        }
+
+        return TransformedText(AnnotatedString(formattedText), offsetMapping)
+    }
 }

@@ -61,13 +61,19 @@ fun TextImage(
     text: String,
     spacer: Dp = 24.dp,
     imageStyle: ImageStyle = ImageStyle(size = Size.FIX(all = 128.dp)),
+    textStyle: TextStyle = TextStyle(
+        color = AppTheme.colorScheme.onBackgroundNeutralDefault,
+        typography = AppTheme.typography.headline4,
+        textAlign = TextAlign.Center
+    )
 ) {
     TextImage(
         modifier = modifier,
         image = IconType.Painter(painterResource(id = image)),
         text = text,
         spacer = spacer,
-        imageStyle = imageStyle
+        imageStyle = imageStyle,
+        textStyle = textStyle
     )
 }
 

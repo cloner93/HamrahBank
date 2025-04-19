@@ -23,7 +23,10 @@ class TransferReasonViewModel @Inject constructor(
     override fun handle(action: TransferReasonViewActions) {
         when (action) {
             TransferReasonViewActions.ClearAlert -> setState { it.copy(alertState = null) }
-            is TransferReasonViewActions.SelectReason -> setState { it.copy(selectedReason = action.reason) }
+            is TransferReasonViewActions.SelectReason -> {
+                setState { it.copy(selectedReason = action.reason) }
+                postEvent(TransferReasonViewEvents.NavigateUp(action.reason))
+            }
         }
     }
 

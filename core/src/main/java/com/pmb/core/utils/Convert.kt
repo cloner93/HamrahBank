@@ -6,8 +6,8 @@ import java.util.Date
 import java.util.Locale
 
 object Convert {
-    fun numberToWords(number: BigInteger): String {
-        if (number == BigInteger.ZERO) return "صفر"
+    fun numberToWords(number: Double): String {
+        if (number == 0.0) return "صفر"
 
         val units = arrayOf(
             "", "یک", "دو", "سه", "چهار", "پنج", "شش", "هفت", "هشت", "نه"
@@ -34,7 +34,7 @@ object Convert {
             "کوآدریلیارد"
         )
 
-        var num = number.divide(BigInteger.TEN) // تبدیل ریال به تومان
+        var num = number.toLong().toBigInteger().divide(BigInteger.TEN) // تبدیل ریال به تومان
         var words = ""
         var thousandCounter = 0
 

@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -18,6 +17,9 @@ import com.pmb.transfer.domain.entity.CardBankEntity
 import com.pmb.transfer.domain.entity.PaymentType
 import com.pmb.transfer.domain.entity.ReasonEntity
 import com.pmb.transfer.domain.entity.TransferMethodEntity
+import com.pmb.transfer.domain.entity.TransferSourceEntity
+import com.pmb.transfer.domain.entity.asAccount
+import com.pmb.transfer.domain.entity.asCard
 
 
 @Composable
@@ -26,8 +28,7 @@ fun ShowInputsByTransferType(
     depositId: String,
     sourceCardBanks: List<CardBankEntity>?,
     sourceAccountBanks: List<AccountBankEntity>?,
-    defaultCardBank: CardBankEntity?,
-    defaultAccountBank: AccountBankEntity?,
+    defaultSource: TransferSourceEntity?,
     defaultReason: ReasonEntity?,
     onDepositIdChange: (String) -> Unit,
     selectedCardBank: (CardBankEntity) -> Unit,
@@ -45,27 +46,29 @@ fun ShowInputsByTransferType(
             PaymentType.CARD_TO_CARD,
             PaymentType.MELLAT_TO_MELLAT ->
                 if (sourceCardBanks != null)
-                    defaultCardBank?.let {
+                    defaultSource.asCard()?.let { defaultCard ->
                         CartBanksComponent(
-                            defaultCardBank = it,
+                            defaultCardBank = defaultCard,
                             sourceCardBanks = sourceCardBanks,
                             selectedCardBank = selectedCardBank
                         )
                     }
 
+
             PaymentType.INTERNAL_SATNA,
             PaymentType.INTERNAL_PAYA,
             PaymentType.INTERNAL_BRIDGE ->
                 if (sourceAccountBanks != null)
-                    defaultAccountBank?.let {
+                    defaultSource.asAccount()?.let { defaultAccount ->
                         AccountBanksComponent(
-                            defaultAccountBank = it,
+                            defaultAccountBank = defaultAccount,
                             defaultReason = defaultReason,
                             sourceAccountBanks = sourceAccountBanks,
                             selectedAccountBank = selectedAccountBank,
                             selectedTransferReason = selectedTransferReason
                         )
                     }
+
         }
 
         Spacer(modifier = Modifier.size(24.dp))
