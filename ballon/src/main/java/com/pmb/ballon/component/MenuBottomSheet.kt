@@ -1,6 +1,7 @@
 package com.pmb.ballon.component
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.BottomSheetDefaults
@@ -14,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.pmb.ballon.R
 import com.pmb.ballon.component.base.AppBottomSheet
 import com.pmb.ballon.component.base.Headline6Text
 import com.pmb.ballon.models.IconStyle
@@ -27,11 +29,11 @@ import com.pmb.ballon.ui.theme.AppTheme
 fun MenuBottomSheet(
     title: String? = null,
     items: List<MenuSheetModel> = listOf(),
-    onDismiss: () -> Unit,
-    onSelect: (MenuSheetModel) -> Unit
+    onDismiss: () -> Unit
 ) {
     var isVisible by remember { mutableStateOf(true) }
-    AppBottomSheet(isVisible = isVisible,
+    AppBottomSheet(
+        isVisible = isVisible,
         cancelable = true,
         dragHandle = { BottomSheetDefaults.DragHandle() },
         onDismiss = { onDismiss() },
@@ -39,14 +41,18 @@ fun MenuBottomSheet(
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                title?.let { Headline6Text(text = it) }
+                title?.let {
+                    Headline6Text(text = it)
+                    Spacer(modifier = Modifier.height(32.dp))
+                }
                 LazyColumn {
                     items(items.size) { item ->
                         ItemRow(
                             item = items[item],
                             onClick = {
                                 isVisible = false
-                                onSelect(items[item])
+                                items[item].onClicked()
+                                onDismiss()
                             })
                     }
                 }
@@ -61,7 +67,7 @@ private fun ItemRow(item: MenuSheetModel, onClick: () -> Unit) {
         title = item.title,
         horizontalPadding = 16.dp,
         startIcon = item.icon,
-        endIcon = com.pmb.ballon.R.drawable.ic_arrow_left,
+        endIcon = if (item.showEndIcon) R.drawable.ic_arrow_left else null,
         titleStyle = TextStyle(
             color = item.textColor(),
             typography = AppTheme.typography.headline6

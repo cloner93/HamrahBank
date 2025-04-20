@@ -44,4 +44,7 @@
     <string name="card">کارت</string>
     <string name="account">حساب</string>
     <string name="iban">شبا</string>
+    <string name="select_share_type">" انتخاب نوع اشتراک‌گذاری"</string>
+    <string name="text">متنی</string>
+    <string name="image">تصویری</string>
 </resources>
