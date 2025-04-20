@@ -28,5 +28,7 @@
     <string name="card_number">شماره کارت</string>
     <string name="cvv2">CVV2</string>
     <string name="year_month">ماه/سال</string>
+    <string name="share">اشتراک‌گذاری</string>
+    <string name="save_to_gallery">ذخیره در گالری</string>
 
 </resources>

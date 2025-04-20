@@ -27,10 +27,10 @@ import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.component.base.AppSearchTextField
 import com.pmb.ballon.component.base.IconType
 import com.pmb.ballon.ui.theme.AppTheme
-import com.pmb.navigation.manager.LocalNavigationManager
-import com.pmb.navigation.moduleScreen.TransferScreens
+import com.pmb.core.presentation.NavigationManager
 import com.pmb.transfer.R
 import com.pmb.transfer.domain.entity.TransactionClientBankEntity
+import com.pmb.transfer.presentation.TransferScreens
 import com.pmb.transfer.presentation.components.TransactionClientBankList
 import com.pmb.transfer.presentation.transfer_search_history.viewmodel.TransferSearchHistoryViewActions
 import com.pmb.transfer.presentation.transfer_search_history.viewmodel.TransferSearchHistoryViewEvents
@@ -38,12 +38,12 @@ import com.pmb.transfer.presentation.transfer_search_history.viewmodel.TransferS
 
 @Composable
 fun TransferSearchHistoryScreen(
+    navigationManager: NavigationManager,
     viewModel: TransferSearchHistoryViewModel,
     selectedAccount: (TransactionClientBankEntity) -> Unit
 ) {
     val viewState by viewModel.viewState.collectAsState()
-    var query by remember { mutableStateOf("") }
-    val navigationManager = LocalNavigationManager.current
+
     // Handle one-time events such as navigation or showing toasts
     LaunchedEffect(Unit) {
         viewModel.viewEvent.collect { event ->
@@ -73,9 +73,8 @@ fun TransferSearchHistoryScreen(
             AppSearchTextField(
                 modifier = Modifier.padding(end = 16.dp),
                 hint = stringResource(R.string.hint_transfer_account_search),
-                query = query,
+                query = viewState.query,
                 onValueChange = {
-                    query = it
                     viewModel.handle(TransferSearchHistoryViewActions.SearchAccounts(it))
                 }
             )

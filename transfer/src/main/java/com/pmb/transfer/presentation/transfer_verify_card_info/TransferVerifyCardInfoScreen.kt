@@ -24,26 +24,26 @@ import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.component.base.AppNumberTextField
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.ButtonMediumText
-import com.pmb.navigation.manager.LocalNavigationManager
-import com.pmb.navigation.moduleScreen.TransferScreens
+import com.pmb.core.presentation.NavigationManager
 import com.pmb.transfer.R
 import com.pmb.transfer.domain.entity.CardBankEntity
 import com.pmb.transfer.domain.entity.CardVerificationEntity
 import com.pmb.transfer.domain.entity.TransferReceiptEntity
+import com.pmb.transfer.presentation.TransferScreens
 import com.pmb.transfer.presentation.transfer_verify_card_info.viewmodel.TransferVerifyCardInfoViewActions
 import com.pmb.transfer.presentation.transfer_verify_card_info.viewmodel.TransferVerifyCardInfoViewEvents
 import com.pmb.transfer.presentation.transfer_verify_card_info.viewmodel.TransferVerifyCardInfoViewModel
 
 @Composable
 fun TransferVerifyCardInfoScreen(
+    navigationManager: NavigationManager,
     viewModel: TransferVerifyCardInfoViewModel,
     verificationInfo: CardVerificationEntity?,
     cardBank: CardBankEntity?,
     receipt: (TransferReceiptEntity) -> Unit
 ) {
     val viewState by viewModel.viewState.collectAsState()
-    cardBank?.let { viewModel.handle(TransferVerifyCardInfoViewActions.UpdateCardInfo(cardBank)) }
-    val navigationManager = LocalNavigationManager.current
+
     LaunchedEffect(Unit) {
         viewModel.viewEvent.collect { event ->
             when (event) {
@@ -56,6 +56,7 @@ fun TransferVerifyCardInfoScreen(
     }
 
     LaunchedEffect(Unit) {
+        cardBank?.let { viewModel.handle(TransferVerifyCardInfoViewActions.UpdateCardInfo(cardBank)) }
         verificationInfo?.let {
             viewModel.handle(TransferVerifyCardInfoViewActions.TransferVerify(verificationInfo))
         }

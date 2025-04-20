@@ -8,4 +8,5 @@ data class TransferSearchHistoryViewState(
     val loading: Boolean = false,
     val alertState: AlertModelState? = null,
     val accounts: List<TransactionClientBankEntity> = emptyList(),
+    val query: String = ""
 ) : BaseViewState

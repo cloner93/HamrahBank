@@ -1,9 +1,13 @@
+@file:Suppress("UNREACHABLE_CODE")
+
 package com.pmb.transfer.utils
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
+import com.pmb.core.utils.convertPersianDigitsToEnglish
 import com.pmb.transfer.domain.entity.Bank
+import com.pmb.transfer.domain.entity.BankIdentifierNumberType
 
 object BankUtil {
 
@@ -76,14 +80,16 @@ object BankUtil {
                 value.length == 16
             }
 
-            getBankByAccountNumber(value) != null -> {
-                maxLength?.invoke(20)
-                value.length in 6..20
-            }
 
             getBankBySheba(value) != null -> {
                 maxLength?.invoke(24)
                 value.length == 24
+            }
+
+
+            value.length in 6..10 -> {
+                maxLength?.invoke(20)
+                return true
             }
 
             else -> {
@@ -93,12 +99,59 @@ object BankUtil {
         }
     }
 
-    /**
-     *  عددهایی بین 13 تا 26 رقم (مناسب برای کارت، شبا، حساب)
-     */
-    fun String.extractAllNumbers(minLength: Int = 6): List<String> {
-        val regex = Regex("\\d{$minLength,26}")
-        return regex.findAll(this).map { it.value }.toList()
+    fun String.extractOrderByIdentifier(
+        orderBy: List<BankIdentifierNumberType> = listOf(
+            BankIdentifierNumberType.CARD,
+            BankIdentifierNumberType.IBAN,
+            BankIdentifierNumberType.ACCOUNT
+        ),
+        result: (BankIdentifierNumberType, String) -> Unit
+    ) {
+        val ids = extractAllLongNumbers()
+
+        orderBy.forEach { type ->
+            ids.forEach { id ->
+                when (type) {
+                    BankIdentifierNumberType.CARD -> {
+                        // 1. کارت: 16 رقم
+                        val cardRegex = Regex("\\b\\d{16}\\b")
+                        cardRegex.find(id)?.value?.let {
+                            return result(
+                                BankIdentifierNumberType.CARD,
+                                it
+                            )
+                        }
+                    }
+
+                    BankIdentifierNumberType.IBAN -> {
+                        // 2. شبا: با IR شروع می‌شه و بعدش 24 رقم
+                        val shebaRegex = Regex("\\bIR\\d{24}\\b", RegexOption.IGNORE_CASE)
+                        shebaRegex.find(id)?.value?.let {
+                            return result(BankIdentifierNumberType.IBAN, it.uppercase())
+                        }
+                    }
+
+                    BankIdentifierNumberType.ACCOUNT -> {
+                        // 3. حساب: مثلاً 6 تا 10 رقم (بسته به سیستم بانک‌ها)
+                        if (id.length in 6..10)
+                            return result(BankIdentifierNumberType.ACCOUNT, id)
+                    }
+                }
+            }
+        }
     }
 }
+
+fun String.extractAllLongNumbers(minLength: Int = 6): List<String> {
+    val cleanText = convertPersianDigitsToEnglish()
+        .replace("""[\s\-_,.]""".toRegex(), "")
+
+    return Regex("""\d{$minLength,}""")
+        .findAll(cleanText)
+        .map { match ->
+            val number = match.value
+            if (number.length == 24) "IR$number" else number
+        }.toList()
+}
+
 
