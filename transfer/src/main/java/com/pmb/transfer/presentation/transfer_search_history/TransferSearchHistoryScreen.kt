@@ -12,9 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -27,10 +24,10 @@ import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.component.base.AppSearchTextField
 import com.pmb.ballon.component.base.IconType
 import com.pmb.ballon.ui.theme.AppTheme
-import com.pmb.core.presentation.NavigationManager
+import com.pmb.navigation.manager.LocalNavigationManager
+import com.pmb.navigation.moduleScreen.TransferScreens
 import com.pmb.transfer.R
 import com.pmb.transfer.domain.entity.TransactionClientBankEntity
-import com.pmb.transfer.presentation.TransferScreens
 import com.pmb.transfer.presentation.components.TransactionClientBankList
 import com.pmb.transfer.presentation.transfer_search_history.viewmodel.TransferSearchHistoryViewActions
 import com.pmb.transfer.presentation.transfer_search_history.viewmodel.TransferSearchHistoryViewEvents
@@ -38,12 +35,11 @@ import com.pmb.transfer.presentation.transfer_search_history.viewmodel.TransferS
 
 @Composable
 fun TransferSearchHistoryScreen(
-    navigationManager: NavigationManager,
     viewModel: TransferSearchHistoryViewModel,
     selectedAccount: (TransactionClientBankEntity) -> Unit
 ) {
     val viewState by viewModel.viewState.collectAsState()
-
+    val navigationManager = LocalNavigationManager.current
     // Handle one-time events such as navigation or showing toasts
     LaunchedEffect(Unit) {
         viewModel.viewEvent.collect { event ->

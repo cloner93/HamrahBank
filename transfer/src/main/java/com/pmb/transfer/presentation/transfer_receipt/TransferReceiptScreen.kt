@@ -20,26 +20,25 @@ import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.component.base.AppTopBar
+import com.pmb.ballon.component.receipt.ReceiptComponent
+import com.pmb.ballon.component.receipt.ReceiptSaveOrShareComponent
 import com.pmb.ballon.component.utils.ComposeToBitmap
 import com.pmb.ballon.ui.theme.AppTheme
-import com.pmb.core.presentation.NavigationManager
 import com.pmb.core.utils.getImageUri
 import com.pmb.core.utils.saveBitmapToCache
 import com.pmb.core.utils.saveBitmapToGallery
 import com.pmb.core.utils.shareImage
+import com.pmb.navigation.manager.LocalNavigationManager
+import com.pmb.navigation.moduleScreen.TransferScreens
 import com.pmb.transfer.R
 import com.pmb.transfer.domain.entity.TransferReceiptEntity
-import com.pmb.transfer.presentation.TransferScreens
-import com.pmb.ballon.component.receipt.ReceiptComponent
 import com.pmb.transfer.presentation.components.ReceiptHeaderComponent
-import com.pmb.ballon.component.receipt.ReceiptSaveOrShareComponent
 import com.pmb.transfer.presentation.transfer_receipt.viewmodel.TransferReceiptViewActions
 import com.pmb.transfer.presentation.transfer_receipt.viewmodel.TransferReceiptViewEvents
 import com.pmb.transfer.presentation.transfer_receipt.viewmodel.TransferReceiptViewModel
 
 @Composable
 fun TransferReceiptScreen(
-    navigationManager: NavigationManager,
     viewModel: TransferReceiptViewModel,
     transferReceipt: TransferReceiptEntity?,
     clearData: () -> Unit
@@ -48,7 +47,7 @@ fun TransferReceiptScreen(
     val context = LocalContext.current
     var shareReceipt by remember { mutableStateOf(false) }
     var downloadReceipt by remember { mutableStateOf(false) }
-
+    val navigationManager = LocalNavigationManager.current
     LaunchedEffect(Unit) {
         viewModel.viewEvent.collect { event ->
             when (event) {
