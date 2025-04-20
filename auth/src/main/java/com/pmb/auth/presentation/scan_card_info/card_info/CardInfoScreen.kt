@@ -19,7 +19,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.pmb.auth.R
-import com.pmb.auth.presentation.AuthScreens
 import com.pmb.auth.presentation.scan_card_info.card_info.viewModel.CardInfoViewEvents
 import com.pmb.auth.presentation.scan_card_info.card_info.viewModel.CardInfoViewModel
 import com.pmb.auth.utils.ComingType
@@ -31,15 +30,17 @@ import com.pmb.ballon.component.base.AppNumberTextField
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.ui.theme.AppTheme
-import com.pmb.core.presentation.NavigationManager
-import com.pmb.home.presentation.HomeScreens
+import com.pmb.navigation.manager.LocalNavigationManager
+import com.pmb.navigation.manager.NavigationManager
+import com.pmb.navigation.moduleScreen.AuthScreens
+import com.pmb.navigation.moduleScreen.HomeScreens
 
 @Composable
 fun CardInfoScreen(
-    navigationManager: NavigationManager,
     viewModel: CardInfoViewModel,
     comingType: ComingType
 ) {
+    val navigationManager: NavigationManager = LocalNavigationManager.current
     val viewState by viewModel.viewState.collectAsState()
     var cardNumber by remember {
         mutableStateOf("")
@@ -72,9 +73,10 @@ fun CardInfoScreen(
             )
         },
         footer = {
-            AppButton(modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp, top = 16.dp),
+            AppButton(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp, end = 16.dp, top = 16.dp),
                 enable = !viewState.isLoading && isCard && isPass2 && isCvv2,
                 title = stringResource(R.string._continue),
                 onClick = {

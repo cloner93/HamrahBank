@@ -17,7 +17,7 @@ import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.ui.theme.AppTheme
-import com.pmb.core.presentation.NavigationManager
+import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.transfer.R
 import com.pmb.transfer.domain.entity.ReasonEntity
 import com.pmb.transfer.presentation.transfer_reason.viewmodel.TransferReasonViewActions
@@ -26,12 +26,11 @@ import com.pmb.transfer.presentation.transfer_reason.viewmodel.TransferReasonVie
 
 @Composable
 fun TransferReasonScreen(
-    navigationManager: NavigationManager,
     viewModel: TransferReasonViewModel,
     selectedReason: (ReasonEntity?) -> Unit
 ) {
     val viewState by viewModel.viewState.collectAsState()
-
+    val navigationManager = LocalNavigationManager.current
     // Handle one-time events such as navigation or showing toasts
     LaunchedEffect(Unit) {
         viewModel.viewEvent.collect { event ->

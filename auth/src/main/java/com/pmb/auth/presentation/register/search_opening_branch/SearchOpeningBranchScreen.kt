@@ -31,7 +31,8 @@ import com.pmb.ballon.component.base.AppSearchTextField
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.ClickableIcon
 import com.pmb.ballon.component.base.IconType
-import com.pmb.core.presentation.NavigationManager
+import com.pmb.navigation.manager.LocalNavigationManager
+import com.pmb.navigation.manager.NavigationManager
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
@@ -39,9 +40,9 @@ import kotlinx.coroutines.flow.debounce
 @OptIn(FlowPreview::class)
 @Composable
 fun SearchOpeningBranchScreen(
-    navigationManager: NavigationManager,
     viewModel: SearchOpeningBranchViewModel,
 ) {
+    val navigationManager: NavigationManager = LocalNavigationManager.current
     val viewState by viewModel.viewState.collectAsState()
     var searchQuery by remember { mutableStateOf("") }
     var searchVisible by remember { mutableStateOf(false) }
@@ -54,7 +55,8 @@ fun SearchOpeningBranchScreen(
             }
         }
     }
-    AppContent(modifier = Modifier.padding(horizontal = 16.dp),
+    AppContent(
+        modifier = Modifier.padding(horizontal = 16.dp),
         topBar = {
             AppTopBar(
                 title = stringResource(R.string.opening_branches_list),
@@ -69,9 +71,10 @@ fun SearchOpeningBranchScreen(
             )
         },
         footer = {
-            AppButton(modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp, top = 16.dp),
+            AppButton(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp, end = 16.dp, top = 16.dp),
                 enable = viewState.selectedOpeningBranch != null,
                 title = stringResource(com.pmb.ballon.R.string.confirm),
                 onClick = {

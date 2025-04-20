@@ -25,7 +25,8 @@ import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.component.base.AppSearchTextField
 import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.ui.theme.AppTheme
-import com.pmb.core.presentation.NavigationManager
+import com.pmb.navigation.manager.LocalNavigationManager
+import com.pmb.navigation.manager.NavigationManager
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
@@ -33,9 +34,9 @@ import kotlinx.coroutines.flow.debounce
 @OptIn(FlowPreview::class)
 @Composable
 fun SelectJobInformationScreen(
-    navigationManager: NavigationManager,
     viewModel: SelectJobInformationViewModel
 ) {
+    val navigationManager: NavigationManager = LocalNavigationManager.current
     val viewState by viewModel.viewState.collectAsState()
     var searchQuery by remember { mutableStateOf("") }
     LaunchedEffect(searchQuery) {
@@ -47,7 +48,8 @@ fun SelectJobInformationScreen(
             }
         }
     }
-    AppContent(modifier = Modifier.padding(horizontal = 16.dp),
+    AppContent(
+        modifier = Modifier.padding(horizontal = 16.dp),
         topBar = {
 
             Spacer(modifier = Modifier.size(14.dp))

@@ -16,7 +16,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.pmb.auth.R
-import com.pmb.auth.presentation.AuthScreens
 import com.pmb.auth.presentation.register.check_postal_code.viewModel.CheckPostalCodeViewActions
 import com.pmb.auth.presentation.register.check_postal_code.viewModel.CheckPostalCodeViewEvents
 import com.pmb.auth.presentation.register.check_postal_code.viewModel.CheckPostalCodeViewModel
@@ -28,13 +27,15 @@ import com.pmb.ballon.component.base.AppNumberTextField
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.ui.theme.AppTheme
-import com.pmb.core.presentation.NavigationManager
+import com.pmb.navigation.manager.LocalNavigationManager
+import com.pmb.navigation.manager.NavigationManager
+import com.pmb.navigation.moduleScreen.AuthScreens
 
 @Composable
 fun CheckPostalCodeScreen(
-    navigationManager: NavigationManager,
     viewModel: CheckPostalCodeViewModel
 ) {
+    val navigationManager: NavigationManager = LocalNavigationManager.current
     val viewState by viewModel.viewState.collectAsState()
     var postalCode by remember {
         mutableStateOf("")
@@ -66,9 +67,10 @@ fun CheckPostalCodeScreen(
             )
         },
         footer = {
-            AppButton(modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp, top = 16.dp),
+            AppButton(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp, end = 16.dp, top = 16.dp),
                 enable = !viewState.isLoading && address.isNotEmpty() && postalCode.isNotEmpty(),
                 title = stringResource(R.string._continue),
                 onClick = {

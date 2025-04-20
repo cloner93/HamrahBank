@@ -11,45 +11,24 @@ import com.pmb.account.presentation.transactions.TransactionsScreen
 import com.pmb.account.presentation.transactions.filterScreen.TransactionFilterScreen
 import com.pmb.account.presentation.transactions.search.TransactionSearchScreen
 import com.pmb.account.presentation.transactions.statement.DepositStatementScreen
-import com.pmb.core.presentation.NavigationManager
-import com.pmb.core.presentation.Screen
+import com.pmb.navigation.moduleScreen.AccountScreens
 
 
-sealed class AccountScreens(route: String, arguments: Map<String, String> = emptyMap()) :
-    Screen(route = route, arguments = arguments) {
-    data object Account : AccountScreens(route = "account")
-    data object Balance : AccountScreens(route = "balance")
-    data object Transactions : AccountScreens(route = "transactions")
-    data object TransactionsFilter : AccountScreens(route = "transactionsFilter")
-    data object DepositStatement : AccountScreens(route = "depositStatement")
-    data object TransactionSearch : AccountScreens(route = "transactionSearch/{depositId}") {
-        fun createRoute(depositId: String) = "transactionSearch/$depositId"
-    }
-
-    companion object {
-        fun fromRoute(route: String?): AccountScreens? =
-            when (route) {
-                Account.route -> Account
-                else -> null
-            }
-    }
-}
-
-fun NavGraphBuilder.accountScreensHandle(navigationManager: NavigationManager) {
+fun NavGraphBuilder.accountScreensHandle() {
     composable(route = AccountScreens.Account.route) {
-        AccountScreen(navigationManager = navigationManager)
+        AccountScreen()
     }
     composable(route = AccountScreens.Balance.route) {
-        BalanceScreen(navigationManager = navigationManager)
+        BalanceScreen()
     }
     composable(route = AccountScreens.Transactions.route) {
-        TransactionsScreen(navigationManager = navigationManager)
+        TransactionsScreen()
     }
     composable(route = AccountScreens.TransactionsFilter.route) {
-        TransactionFilterScreen(navigationManager = navigationManager)
+        TransactionFilterScreen()
     }
     composable(route = AccountScreens.DepositStatement.route) {
-        DepositStatementScreen(navigationManager = navigationManager)
+        DepositStatementScreen()
     }
     composable(
         route = AccountScreens.TransactionSearch.route,
@@ -58,6 +37,6 @@ fun NavGraphBuilder.accountScreensHandle(navigationManager: NavigationManager) {
         }),
         arguments = listOf(navArgument("depositId") { type = NavType.StringType })
     ) {
-        TransactionSearchScreen(navigationManager = navigationManager)
+        TransactionSearchScreen()
     }
 }

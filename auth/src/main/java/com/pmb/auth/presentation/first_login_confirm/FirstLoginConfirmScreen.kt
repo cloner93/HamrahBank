@@ -1,6 +1,5 @@
 package com.pmb.auth.presentation.first_login_confirm
 
-import android.util.Log
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -21,7 +20,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.pmb.auth.R
-import com.pmb.auth.presentation.AuthScreens
 import com.pmb.auth.presentation.component.ChipWithIcon
 import com.pmb.auth.presentation.component.ShowInvalidLoginBottomSheet
 import com.pmb.auth.presentation.first_login_confirm.viewModel.FirstLoginConfirmViewActions
@@ -38,17 +36,19 @@ import com.pmb.ballon.component.base.AppNumberTextField
 import com.pmb.ballon.component.base.AppTextButton
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.BodyMediumText
-import com.pmb.core.presentation.NavigationManager
-import com.pmb.home.presentation.HomeScreens
+import com.pmb.navigation.manager.LocalNavigationManager
+import com.pmb.navigation.manager.NavigationManager
+import com.pmb.navigation.moduleScreen.AuthScreens
+import com.pmb.navigation.moduleScreen.HomeScreens
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FirstLoginConfirmScreen(
-    navigationManager: NavigationManager,
     viewModel: FirstLoginConfirmViewModel,
     comingType: ComingType = ComingType.COMING_LOGIN
 ) {
+    val navigationManager: NavigationManager = LocalNavigationManager.current
     val viewState by viewModel.viewState.collectAsState()
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var showBottomSheet by remember { mutableStateOf(viewState.isShowBottomSheet) }

@@ -17,10 +17,10 @@ import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.ClickableIcon
 import com.pmb.ballon.component.base.IconType
-import com.pmb.core.presentation.NavigationManager
+import com.pmb.navigation.manager.LocalNavigationManager
+import com.pmb.navigation.moduleScreen.TransferScreens
 import com.pmb.transfer.R
 import com.pmb.transfer.domain.entity.TransactionClientBankEntity
-import com.pmb.transfer.presentation.TransferScreens
 import com.pmb.transfer.presentation.components.transfer_confirm.ClientBankInfoTypeRow
 import com.pmb.transfer.presentation.transfer_select_favorite.viewmodel.TransferSelectFavoriteViewActions
 import com.pmb.transfer.presentation.transfer_select_favorite.viewmodel.TransferSelectFavoriteViewEvents
@@ -28,12 +28,11 @@ import com.pmb.transfer.presentation.transfer_select_favorite.viewmodel.Transfer
 
 @Composable
 fun TransferSelectFavoriteScreen(
-    navigationManager: NavigationManager,
     viewModel: TransferSelectFavoriteViewModel,
     selectedAccount: (TransactionClientBankEntity) -> Unit
 ) {
     val viewState by viewModel.viewState.collectAsState()
-
+    val navigationManager = LocalNavigationManager.current
     // Handle one-time events such as navigation or showing toasts
     LaunchedEffect(Unit) {
         viewModel.viewEvent.collect { event ->

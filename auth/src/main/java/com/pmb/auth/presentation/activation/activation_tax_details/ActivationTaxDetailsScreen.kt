@@ -36,14 +36,15 @@ import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.component.base.CaptionText
 import com.pmb.ballon.ui.theme.AppTheme
-import com.pmb.core.presentation.NavigationManager
+import com.pmb.navigation.manager.LocalNavigationManager
+import com.pmb.navigation.manager.NavigationManager
 
 @Composable
 fun ActivationTaxDetailsScreen(
-    navigationManager: NavigationManager,
     viewModel: ActivationTaxDetailsViewModel,
     onAuthenticationCallback: (ComingType) -> Unit
 ) {
+    val navigationManager: NavigationManager = LocalNavigationManager.current
     val viewState by viewModel.viewState.collectAsState()
     var accountNumber by remember {
         mutableStateOf("")
@@ -70,9 +71,10 @@ fun ActivationTaxDetailsScreen(
             )
         },
         footer = {
-            AppButton(modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp, top = 16.dp),
+            AppButton(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp, end = 16.dp, top = 16.dp),
                 enable = viewState.data?.entityList?.isNotEmpty() == true && accountNumber.isNotEmpty(),
                 title = stringResource(com.pmb.ballon.R.string.confirm),
                 onClick = {

@@ -33,15 +33,15 @@ import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.component.base.IconType
 import com.pmb.ballon.ui.theme.AppTheme
-import com.pmb.core.presentation.NavigationManager
+import com.pmb.navigation.manager.LocalNavigationManager
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun DepositStatementScreen(navigationManager: NavigationManager) {
+fun DepositStatementScreen() {
 
     val viewModel = hiltViewModel<DepositStatementViewModel>()
     val viewState by viewModel.viewState.collectAsState()
-
+    val navigationManager = LocalNavigationManager.current
     LaunchedEffect(Unit) {
         viewModel.viewEvent.collect { event ->
             when (event) {

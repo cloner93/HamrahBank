@@ -26,13 +26,14 @@ import com.pmb.ballon.component.base.AppMobileTextField
 import com.pmb.ballon.component.base.AppNationalIdTextField
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.IconType
-import com.pmb.core.presentation.NavigationManager
+import com.pmb.navigation.manager.LocalNavigationManager
+import com.pmb.navigation.manager.NavigationManager
 
 @Composable
 fun AccountOpeningScreen(
-    navigationManager: NavigationManager,
     onNavigationCallBack: (ComingType) -> Unit
 ) {
+    val navigationManager: NavigationManager = LocalNavigationManager.current
     var phoneNumber by remember { mutableStateOf("09128353268") }
     var nationalId by remember { mutableStateOf("0012345678") }
     var birthday by remember { mutableStateOf("1371/08/28") }
@@ -52,9 +53,10 @@ fun AccountOpeningScreen(
             )
         },
         footer = {
-            AppButton(modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp, top = 16.dp),
+            AppButton(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp, end = 16.dp, top = 16.dp),
                 enable = true,
                 title = stringResource(R.string._continue),
                 onClick = {
@@ -71,12 +73,14 @@ fun AccountOpeningScreen(
             contentDescription = "mellat logo"
         )
         Spacer(modifier = Modifier.size(32.dp))
-        AppMobileTextField(value = phoneNumber,
+        AppMobileTextField(
+            value = phoneNumber,
             label = stringResource(R.string.mobile_number),
             onValidate = { isMobile = it },
             onValueChange = { phoneNumber = it })
         Spacer(modifier = Modifier.size(24.dp))
-        AppNationalIdTextField(value = nationalId,
+        AppNationalIdTextField(
+            value = nationalId,
             label = stringResource(R.string.national_id),
             onValidate = { isNationalId = it },
             onValueChange = { nationalId = it })

@@ -65,165 +65,110 @@ import com.pmb.auth.presentation.scan_card_info.card_info.viewModel.CardInfoView
 import com.pmb.auth.presentation.scan_card_info.scan_card.ScanCardScreen
 import com.pmb.auth.presentation.scan_card_info.scan_card.viewModel.ScanCardViewModel
 import com.pmb.auth.utils.ComingType
-import com.pmb.core.presentation.NavigationManager
-import com.pmb.core.presentation.Screen
-
-
-sealed class AuthScreens(route: String, arguments: Map<String, String> = emptyMap()) :
-    Screen(route = route, arguments = arguments) {
-    data object Auth : AuthScreens(route = "auth")
-    data object FirstLogin : AuthScreens(route = "first_login")
-    data object FirstLoginConfirm : AuthScreens(route = "first_login_confirm")
-    data object Login : AuthScreens(route = "login")
-    data object Register : AuthScreens(route = "register")
-    data object ForgetPassword : AuthScreens(route = "forget_password")
-    data object ForgetPasswordAuth : AuthScreens(route = "forget_password_auth")
-    data object RegisterNationalId : AuthScreens(route = "register_national_id")
-    data object SelectJobInformation :
-        AuthScreens(route = "select_job_information")
-
-    data object JobInformation : AuthScreens(route = "job_information")
-    data object CheckPostalCode : AuthScreens(route = "check_postal_code")
-    data object DepositInformation : AuthScreens(route = "deposit_information")
-    data object SearchOpeningBranch :
-        AuthScreens(route = "search_opening_branch/{provinceName}/{cityName}/{cityId}") {
-        fun createRoute(cityId: Int, cityName: String, provinceName: String) =
-            "search_opening_branch/$provinceName/$cityName/$cityId"
-    }
-
-    data object Signature : AuthScreens(route = "signature")
-    data object Authentication : AuthScreens(route = "authentication")
-    data object FacePhotoCapture : AuthScreens(route = "face_photo_capture")
-    data object AuthenticationVideo : AuthScreens(route = "authentication_video")
-    data object AuthenticationConfirmStep : AuthScreens(route = "authentication_confirm_step")
-    data object AuthenticationSelectServices : AuthScreens(route = "authentication_select_services")
-    data object FeeDetails : AuthScreens(route = "fee_details")
-    data object OpenAccount : AuthScreens(route = "open_account")
-    data object ReentryPassword : AuthScreens(route = "reentry_password")
-    data object ReentryFaceDetection : AuthScreens(route = "reentry_face_detection")
-    data object ChooseAuthenticationType : AuthScreens(route = "choose_authentication_type")
-    data object Activation : AuthScreens(route = "activation")
-    data object ActivationTaxDetailsScreen : AuthScreens(route = "activation_tax_details")
-    data object CardInformation : AuthScreens(route = "card_information")
-    data object ScanCard : AuthScreens(route = "scan_card")
-    data object CardInformationConfirmation : AuthScreens("card_information_confirmation")
-    data object AuthenticationInformation : AuthScreens("authentication_information")
-    data object Preparation : AuthScreens("preparation")
-}
+import com.pmb.navigation.manager.LocalNavigationManager
+import com.pmb.navigation.moduleScreen.AuthScreens
 
 
 fun NavGraphBuilder.authScreensHandle(
-    navigationManager: NavigationManager,
 ) {
     var comingType = mutableStateOf<ComingType?>(null)
     composable(route = AuthScreens.Auth.route) {
-        IntroScreen(navigationManager = navigationManager)
+        IntroScreen()
     }
     composable(route = AuthScreens.FirstLogin.route) {
         FirstLoginScreen(
-            navigationManager = navigationManager,
             viewModel = hiltViewModel<FirstLoginViewModel>()
         )
     }
     composable(route = AuthScreens.FirstLoginConfirm.route) {
         FirstLoginConfirmScreen(
-            navigationManager = navigationManager,
             viewModel = hiltViewModel<FirstLoginConfirmViewModel>(),
             comingType = comingType.value ?: ComingType.COMING_LOGIN
         )
     }
     composable(route = AuthScreens.Login.route) {
         LoginScreen(
-            navigationManager = navigationManager,
             viewModel = hiltViewModel<LoginViewModel>()
         )
     }
     composable(route = AuthScreens.Register.route) {
-        AccountOpeningScreen(navigationManager = navigationManager) {
+//        val navigationManager = LocalNavigationManager.current
+        AccountOpeningScreen() {
             comingType = mutableStateOf(it)
-            navigationManager.navigate(AuthScreens.RegisterNationalId)
+//            navigationManager.navigate(AuthScreens.RegisterNationalId)
         }
     }
     composable(route = AuthScreens.ForgetPassword.route) {
+//        val navigationManager = LocalNavigationManager.current
         ForgetPasswordScreen(
-            navigationManager = navigationManager,
             viewModel = hiltViewModel<ForgetPasswordViewModel>()
         ) {
             comingType = mutableStateOf(it)
-            navigationManager.navigate(AuthScreens.ChooseAuthenticationType)
+//            navigationManager.navigate(AuthScreens.ChooseAuthenticationType)
         }
     }
     composable(route = AuthScreens.ForgetPasswordAuth.route) {
-        ForgetPasswordAuthScreen(navigationManager = navigationManager)
+        ForgetPasswordAuthScreen()
     }
     composable(route = AuthScreens.RegisterNationalId.route) {
         RegisterNationalIdScreen(
-            navigationManager = navigationManager,
             viewModel = hiltViewModel<RegisterNationalIdViewModel>(),
             comingType = comingType.value ?: ComingType.COMING_REGISTER
         )
     }
     composable(route = AuthScreens.Signature.route) {
         SignatureScreen(
-            navigationManager = navigationManager,
             viewModel = hiltViewModel<SignatureViewModel>()
         )
     }
     composable(route = AuthScreens.Authentication.route) {
-        AuthenticationScreen(navigationManager = navigationManager)
+        AuthenticationScreen()
     }
     composable(route = AuthScreens.FacePhotoCapture.route) {
         FacePhotoCaptureScreen(
-            navigationManager = navigationManager,
             viewModel = hiltViewModel<FacePhotoCapturedViewModel>()
         )
     }
     composable(route = AuthScreens.AuthenticationVideo.route) {
+//        val navigationManager = LocalNavigationManager.current
         AuthenticationVideoScreen(
-            navigationManager = navigationManager,
             viewModel = hiltViewModel<AuthenticationCapturingVideoViewModel>()
         ) {
-            navigationManager.navigateAndClearStack(AuthScreens.AuthenticationConfirmStep)
-            navigationManager.setCurrentScreenData<ComingType>(
-                "authentication",
-                comingType.value ?: ComingType.COMING_REGISTER
-            )
+//            navigationManager.navigateAndClearStack(AuthScreens.AuthenticationConfirmStep)
+//            navigationManager.setCurrentScreenData<ComingType>(
+//                "authentication",
+//                comingType.value ?: ComingType.COMING_REGISTER
+//            )
             Log.d("comingType", comingType.value.toString())
         }
     }
     composable(route = AuthScreens.AuthenticationConfirmStep.route) {
         AuthenticationConfirmScreen(
-            navigationManager = navigationManager,
             viewModel = hiltViewModel<AuthenticationConfirmStepViewModel>(),
         )
     }
     composable(route = AuthScreens.AuthenticationSelectServices.route) {
         AuthenticationSelectServicesScreen(
-            navigationManager = navigationManager,
             viewModel = hiltViewModel<AuthenticationSelectServicesViewModel>()
         )
     }
     composable(route = AuthScreens.FeeDetails.route) {
         FeeDetailsScreen(
-            navigationManager = navigationManager,
             viewModel = hiltViewModel<FeeDetailsViewModel>()
         )
     }
     composable(route = AuthScreens.OpenAccount.route) {
         OpenAccountScreen(
-            navigationManager = navigationManager,
             viewModel = hiltViewModel<OpenAccountViewModel>()
         )
     }
     composable(route = AuthScreens.CheckPostalCode.route) {
         CheckPostalCodeScreen(
-            navigationManager = navigationManager,
             viewModel = hiltViewModel<CheckPostalCodeViewModel>()
         )
     }
     composable(route = AuthScreens.DepositInformation.route) {
         DepositInformationScreen(
-            navigationManager = navigationManager,
             viewModel = hiltViewModel<DepositInformationViewModel>()
         )
     }
@@ -239,82 +184,71 @@ fun NavGraphBuilder.authScreensHandle(
             navArgument("provinceName") { type = NavType.StringType })
     ) {
         SearchOpeningBranchScreen(
-            navigationManager,
             viewModel = hiltViewModel<SearchOpeningBranchViewModel>()
         )
     }
     composable(route = AuthScreens.SelectJobInformation.route) {
         SelectJobInformationScreen(
-            navigationManager,
             viewModel = hiltViewModel<SelectJobInformationViewModel>()
         )
     }
     composable(route = AuthScreens.ReentryPassword.route) {
         ReentryPasswordScreen(
-            navigationManager = navigationManager,
             viewModel = hiltViewModel<ReentryPasswordViewModel>()
         )
     }
     composable(route = AuthScreens.ReentryFaceDetection.route) {
         ReentryFaceDetectionScreen(
-            navigationManager = navigationManager,
             viewModel = hiltViewModel<ReentryFaceDetectionViewModel>()
         )
     }
     composable(route = AuthScreens.ChooseAuthenticationType.route) {
         ChooseAuthenticationTypeScreen(
-            navigationManager,
             comingType = comingType.value ?: ComingType.COMING_ACTIVATION
         )
     }
     composable(route = AuthScreens.Activation.route) {
-        ActivationScreen(navigationManager, viewModel = hiltViewModel<ActivationViewModel>())
+        ActivationScreen(viewModel = hiltViewModel<ActivationViewModel>())
     }
     composable(route = AuthScreens.ActivationTaxDetailsScreen.route) {
+//        val navigationManager = LocalNavigationManager.current
         ActivationTaxDetailsScreen(
-            navigationManager,
             viewModel = hiltViewModel<ActivationTaxDetailsViewModel>()
         ) {
+
             comingType = mutableStateOf(it)
-            navigationManager.navigate(AuthScreens.ChooseAuthenticationType)
+//            navigationManager.navigate(AuthScreens.ChooseAuthenticationType)
         }
     }
     composable(
         route = AuthScreens.CardInformation.route
     ) {
         CardInfoScreen(
-            navigationManager,
             viewModel = hiltViewModel<CardInfoViewModel>(),
             comingType = comingType.value ?: ComingType.COMING_ACTIVATION
         )
     }
     composable(route = AuthScreens.ScanCard.route) {
         ScanCardScreen(
-            navigationManager,
             viewModel = hiltViewModel<ScanCardViewModel>()
         )
     }
     composable(route = AuthScreens.CardInformationConfirmation.route) {
         CardInformationConfirmScreen(
-            navigationManager,
             viewModel = hiltViewModel<CardInformationConfirmViewModel>()
         )
     }
     composable(route = AuthScreens.JobInformation.route) {
         JobInformationScreen(
-            navigationManager,
             viewModel = hiltViewModel<JobInformationViewModel>()
         )
     }
     composable(route = AuthScreens.AuthenticationInformation.route) {
         AuthenticationInformationScreen(
-            navigationManager,
             viewModel = hiltViewModel<AuthenticationInformationViewModel>()
         )
     }
     composable(route = AuthScreens.Preparation.route) {
-        PreparationScreen(
-            navigationManager
-        )
+        PreparationScreen()
     }
 }

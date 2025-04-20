@@ -28,12 +28,13 @@ import com.pmb.ballon.component.base.AppButtonIcon
 import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppSearchTextField
 import com.pmb.ballon.component.base.IconType
-import com.pmb.core.presentation.NavigationManager
+import com.pmb.navigation.manager.LocalNavigationManager
 
 @Composable
-fun TransactionSearchScreen(navigationManager: NavigationManager) {
+fun TransactionSearchScreen() {
     val viewModel = hiltViewModel<TransactionSearchViewModel>()
     val viewState by viewModel.viewState.collectAsState()
+    val navigationManager = LocalNavigationManager.current
     LaunchedEffect(Unit) {
         viewModel.viewEvent.collect { event ->
             when (event) {

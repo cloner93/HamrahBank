@@ -30,14 +30,14 @@ import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.component.base.Headline5Text
 import com.pmb.ballon.models.ImageStyle
 import com.pmb.ballon.models.Size
-import com.pmb.core.presentation.NavigationManager
 import com.pmb.home.presentation.home.viewModel.HomeViewModel
+import com.pmb.navigation.manager.LocalNavigationManager
 
 @Composable
 fun HomeScreen(
-    navigationManager: NavigationManager,
     viewModel: HomeViewModel
 ) {
+    val navigationManager = LocalNavigationManager.current
     val viewState by viewModel.viewState.collectAsState()
     AppContent(
         modifier = Modifier.padding(horizontal = 16.dp),

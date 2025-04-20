@@ -18,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.pmb.auth.presentation.AuthScreens
 import com.pmb.auth.presentation.login.viewmodel.LoginViewActions
 import com.pmb.auth.presentation.login.viewmodel.LoginViewEvents
 import com.pmb.auth.presentation.login.viewmodel.LoginViewModel
@@ -29,11 +28,14 @@ import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.component.base.AppSingleTextField
 import com.pmb.ballon.component.base.AppTextButton
 import com.pmb.ballon.component.text_field.AppPasswordTextField
-import com.pmb.core.presentation.NavigationManager
-import com.pmb.home.presentation.HomeScreens
+import com.pmb.navigation.manager.LocalNavigationManager
+import com.pmb.navigation.manager.NavigationManager
+import com.pmb.navigation.moduleScreen.AuthScreens
+import com.pmb.navigation.moduleScreen.HomeScreens
 
 @Composable
-fun LoginScreen(navigationManager: NavigationManager, viewModel: LoginViewModel) {
+fun LoginScreen(viewModel: LoginViewModel) {
+    val navigationManager: NavigationManager = LocalNavigationManager.current
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
@@ -75,14 +77,16 @@ fun LoginScreen(navigationManager: NavigationManager, viewModel: LoginViewModel)
 
         Spacer(modifier = Modifier.size(32.dp))
 
-        AppPasswordTextField(modifier = Modifier.fillMaxWidth(),
+        AppPasswordTextField(
+            modifier = Modifier.fillMaxWidth(),
             value = password,
             label = stringResource(com.pmb.auth.R.string.password),
             onValueChange = { password = it })
 
         Spacer(modifier = Modifier.size(32.dp))
 
-        AppButton(modifier = Modifier.fillMaxWidth(),
+        AppButton(
+            modifier = Modifier.fillMaxWidth(),
             title = stringResource(com.pmb.auth.R.string.login),
             enable = !viewState.loading,
             onClick = {
@@ -95,7 +99,8 @@ fun LoginScreen(navigationManager: NavigationManager, viewModel: LoginViewModel)
 
         Spacer(modifier = Modifier.size(8.dp))
 
-        AppTextButton(modifier = Modifier.fillMaxWidth(),
+        AppTextButton(
+            modifier = Modifier.fillMaxWidth(),
             title = stringResource(com.pmb.auth.R.string.forget_password),
             onClick = {
                 navigationManager.navigate(AuthScreens.ForgetPassword)

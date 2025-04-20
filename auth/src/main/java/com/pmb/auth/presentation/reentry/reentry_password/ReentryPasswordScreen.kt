@@ -19,7 +19,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.pmb.auth.R
-import com.pmb.auth.presentation.AuthScreens
 import com.pmb.auth.presentation.reentry.reentry_password.viewModel.ReentryPasswordViewActions
 import com.pmb.auth.presentation.reentry.reentry_password.viewModel.ReentryPasswordViewEvents
 import com.pmb.auth.presentation.reentry.reentry_password.viewModel.ReentryPasswordViewModel
@@ -37,14 +36,16 @@ import com.pmb.ballon.models.ImageStyle
 import com.pmb.ballon.models.Size
 import com.pmb.ballon.models.TextStyle
 import com.pmb.ballon.ui.theme.AppTheme
-import com.pmb.core.presentation.NavigationManager
-import com.pmb.home.presentation.HomeScreens
+import com.pmb.navigation.manager.LocalNavigationManager
+import com.pmb.navigation.manager.NavigationManager
+import com.pmb.navigation.moduleScreen.AuthScreens
+import com.pmb.navigation.moduleScreen.HomeScreens
 
 @Composable
 fun ReentryPasswordScreen(
-    navigationManager: NavigationManager,
     viewModel: ReentryPasswordViewModel
 ) {
+    val navigationManager: NavigationManager = LocalNavigationManager.current
     val viewState by viewModel.viewState.collectAsState()
     LaunchedEffect(Unit) {
         viewModel.viewEvent.collect { event ->
@@ -96,7 +97,8 @@ fun ReentryPasswordScreen(
             color = AppTheme.colorScheme.onBackgroundPrimarySubdued
         )
         Spacer(modifier = Modifier.size(32.dp))
-        AppPasswordTextField(value = password,
+        AppPasswordTextField(
+            value = password,
             label = stringResource(R.string.password),
             conditionMessage = false,
             onValidate = {
@@ -120,7 +122,8 @@ fun ReentryPasswordScreen(
 
         Spacer(modifier = Modifier.size(8.dp))
 
-        AppTextButton(modifier = Modifier.fillMaxWidth(),
+        AppTextButton(
+            modifier = Modifier.fillMaxWidth(),
             title = stringResource(R.string.forget_password),
             onClick = {
                 navigationManager.navigate(AuthScreens.ForgetPassword)

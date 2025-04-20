@@ -94,6 +94,7 @@ android {
 
 dependencies {
     implementation(project(":core"))
+    implementation(project(":navigation"))
     implementation(project(":ballon"))
     implementation(project(":auth"))
     implementation(project(":home"))

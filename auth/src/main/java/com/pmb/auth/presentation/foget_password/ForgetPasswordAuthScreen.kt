@@ -12,14 +12,17 @@ import com.pmb.ballon.component.MenuItem
 import com.pmb.ballon.component.TextImage
 import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppTopBar
-import com.pmb.core.presentation.NavigationManager
+import com.pmb.navigation.manager.LocalNavigationManager
+import com.pmb.navigation.manager.NavigationManager
 
 @Composable
-fun ForgetPasswordAuthScreen(navigationManager: NavigationManager) {
+fun ForgetPasswordAuthScreen() {
+    val navigationManager: NavigationManager = LocalNavigationManager.current
     AppContent(
         modifier = Modifier.padding(24.dp),
         topBar = {
-            AppTopBar(title = stringResource(R.string.authentication),
+            AppTopBar(
+                title = stringResource(R.string.authentication),
                 onBack = { navigationManager.navigateBack() })
         }
     ) {
@@ -30,21 +33,24 @@ fun ForgetPasswordAuthScreen(navigationManager: NavigationManager) {
         )
         Spacer(modifier = Modifier.weight(1f))
 
-        MenuItem(title = stringResource(R.string.mellat_signiture_app),
+        MenuItem(
+            title = stringResource(R.string.mellat_signiture_app),
             endIcon = com.pmb.ballon.R.drawable.ic_arrow_left,
             bottomDivider = true,
             clickable = false,
             onItemClick = {
 
             })
-        MenuItem(title = stringResource(R.string.video_authentication_process),
+        MenuItem(
+            title = stringResource(R.string.video_authentication_process),
             endIcon = com.pmb.ballon.R.drawable.ic_arrow_left,
             bottomDivider = true,
             clickable = false,
             onItemClick = {
 
             })
-        MenuItem(title = stringResource(R.string.bank_card_information),
+        MenuItem(
+            title = stringResource(R.string.bank_card_information),
             endIcon = com.pmb.ballon.R.drawable.ic_arrow_left,
             clickable = false,
             onItemClick = {})

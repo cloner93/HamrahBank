@@ -52,7 +52,6 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.pmb.account.R
-import com.pmb.account.presentation.AccountScreens
 import com.pmb.account.presentation.component.ChipWithIcon
 import com.pmb.account.presentation.component.CustomAppTopBar
 import com.pmb.account.presentation.component.TransactionModel
@@ -83,9 +82,10 @@ import com.pmb.ballon.models.TextStyle
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.ballon.ui.theme.AppTypography
 import com.pmb.ballon.ui.theme.HamrahBankTheme
-import com.pmb.core.presentation.NavigationManager
 import com.pmb.core.utils.CollectAsEffect
 import com.pmb.core.utils.toCurrency
+import com.pmb.navigation.manager.LocalNavigationManager
+import com.pmb.navigation.moduleScreen.AccountScreens
 
 /**
 TODO checkList TransactionsScreen.kt
@@ -100,10 +100,10 @@ TODO checkList TransactionsScreen.kt
 
 
 @Composable
-fun TransactionsScreen(navigationManager: NavigationManager) {
+fun TransactionsScreen() {
     val viewModel = hiltViewModel<TransactionsViewModel>()
     val viewState by viewModel.viewState.collectAsState()
-
+    val navigationManager = LocalNavigationManager.current
     val selectedOption = remember { mutableIntStateOf(0) }
     val optionTexts = listOf("همه", "برداشت", "واریز")
 

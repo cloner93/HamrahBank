@@ -12,9 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -24,24 +21,22 @@ import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.ui.theme.AppTheme
-import com.pmb.core.presentation.NavigationManager
+import com.pmb.navigation.manager.LocalNavigationManager
+import com.pmb.navigation.moduleScreen.TransferScreens
 import com.pmb.transfer.R
 import com.pmb.transfer.domain.entity.PaymentType
-import com.pmb.transfer.domain.entity.TransactionClientBankEntity
 import com.pmb.transfer.domain.entity.TransferMethodEntity
-import com.pmb.transfer.presentation.TransferScreens
 import com.pmb.transfer.presentation.transfer_method.viewmodel.TransferMethodViewActions
 import com.pmb.transfer.presentation.transfer_method.viewmodel.TransferMethodViewEvents
 import com.pmb.transfer.presentation.transfer_method.viewmodel.TransferMethodViewModel
 
 @Composable
 fun TransferMethodScreen(
-    navigationManager: NavigationManager,
     viewModel: TransferMethodViewModel,
     selectedTransferMethod: (TransferMethodEntity) -> Unit
 ) {
     val viewState by viewModel.viewState.collectAsState()
-
+    val navigationManager = LocalNavigationManager.current
     // Handle one-time events such as navigation or showing toasts
     LaunchedEffect(Unit) {
         viewModel.viewEvent.collect { event ->

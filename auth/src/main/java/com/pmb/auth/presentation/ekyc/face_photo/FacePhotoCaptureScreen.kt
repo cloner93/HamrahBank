@@ -37,7 +37,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.pmb.auth.R
-import com.pmb.auth.presentation.AuthScreens
 import com.pmb.auth.presentation.component.PreviewRoundedImageComponent
 import com.pmb.auth.presentation.ekyc.face_photo.viewModel.FacePhotoCapturedViewActions
 import com.pmb.auth.presentation.ekyc.face_photo.viewModel.FacePhotoCapturedViewEvents
@@ -51,13 +50,15 @@ import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.camera.platform.PhotoViewActions
-import com.pmb.core.presentation.NavigationManager
+import com.pmb.navigation.manager.LocalNavigationManager
+import com.pmb.navigation.manager.NavigationManager
+import com.pmb.navigation.moduleScreen.AuthScreens
 
 @Composable
 fun FacePhotoCaptureScreen(
-    navigationManager: NavigationManager,
     viewModel: FacePhotoCapturedViewModel
 ) {
+    val navigationManager: NavigationManager = LocalNavigationManager.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val viewState by viewModel.viewState.collectAsState()
     val context = LocalContext.current
@@ -131,9 +132,10 @@ fun FacePhotoCaptureScreen(
             AnimatedVisibility(
                 visible = viewState.photoCaptured,
             ) {
-                AppButton(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp, top = 16.dp),
+                AppButton(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 16.dp, end = 16.dp, top = 16.dp),
                     enable = true,
                     title = stringResource(R.string._continue),
                     onClick = {
@@ -185,7 +187,7 @@ fun FacePhotoCaptureScreen(
         AnimatedVisibility(
             visible = !viewState.isCapturingPhoto && viewState.photoCaptured,
         ) {
-            Log.d("cameraState","image is showing")
+            Log.d("cameraState", "image is showing")
             PreviewRoundedImageComponent(
                 modifier = Modifier
                     .fillMaxWidth()

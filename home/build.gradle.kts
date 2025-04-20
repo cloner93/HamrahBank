@@ -47,6 +47,7 @@ android {
 dependencies {
     implementation(project(":core"))
     implementation(project(":ballon"))
+    implementation(project(":navigation"))
     implementation(libs.android.hilt)
     kapt(libs.android.hilt.compiler)
     implementation(libs.hilt.navigation.compose)

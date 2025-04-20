@@ -34,15 +34,15 @@ import com.pmb.ballon.component.base.BodySmallText
 import com.pmb.ballon.component.base.CaptionText
 import com.pmb.ballon.component.base.Headline6Text
 import com.pmb.ballon.ui.theme.AppTheme
-import com.pmb.core.presentation.NavigationManager
 import com.pmb.core.utils.toCurrency
+import com.pmb.navigation.manager.LocalNavigationManager
 
 
 @Composable
-fun BalanceScreen(navigationManager: NavigationManager) {
+fun BalanceScreen() {
     val viewModel = hiltViewModel<BalanceViewModel>()
     val viewState by viewModel.viewState.collectAsState()
-
+    val navigationManager = LocalNavigationManager.current
     LaunchedEffect(Unit) {
         viewModel.viewEvent.collect { event ->
             when (event) {

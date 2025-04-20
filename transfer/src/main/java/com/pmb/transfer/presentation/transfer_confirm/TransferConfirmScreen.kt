@@ -25,8 +25,9 @@ import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.component.base.BodySmallText
 import com.pmb.ballon.ui.theme.AppTheme
-import com.pmb.core.presentation.NavigationManager
 import com.pmb.core.utils.toCurrency
+import com.pmb.navigation.manager.LocalNavigationManager
+import com.pmb.navigation.moduleScreen.TransferScreens
 import com.pmb.transfer.R
 import com.pmb.transfer.domain.entity.CardVerificationEntity
 import com.pmb.transfer.domain.entity.ReasonEntity
@@ -34,7 +35,6 @@ import com.pmb.transfer.domain.entity.TransactionClientBankEntity
 import com.pmb.transfer.domain.entity.TransferMethodEntity
 import com.pmb.transfer.domain.entity.TransferReceiptEntity
 import com.pmb.transfer.domain.entity.TransferSourceEntity
-import com.pmb.transfer.presentation.TransferScreens
 import com.pmb.transfer.presentation.components.ClientBankProfileInfo
 import com.pmb.transfer.presentation.components.transfer_confirm.ShowInputsByTransferType
 import com.pmb.transfer.presentation.transfer_confirm.viewmodel.TransferConfirmViewActions
@@ -43,7 +43,6 @@ import com.pmb.transfer.presentation.transfer_confirm.viewmodel.TransferConfirmV
 
 @Composable
 fun TransferConfirmScreen(
-    navigationManager: NavigationManager,
     viewModel: TransferConfirmViewModel,
     account: TransactionClientBankEntity?,
     amount: Double?,
@@ -57,7 +56,7 @@ fun TransferConfirmScreen(
     ) -> Unit
 ) {
     val viewState by viewModel.viewState.collectAsState()
-
+    val navigationManager = LocalNavigationManager.current
     LaunchedEffect(Unit) {
         viewModel.viewEvent.collect { event ->
             when (event) {

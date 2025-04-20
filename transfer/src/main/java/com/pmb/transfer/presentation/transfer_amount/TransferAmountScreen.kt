@@ -13,7 +13,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.core.text.isDigitsOnly
 import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.SentencesWithSuffix
 import com.pmb.ballon.component.base.AppButton
@@ -24,11 +23,11 @@ import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.CaptionText
 import com.pmb.ballon.component.base.CommaVisualTransformation
 import com.pmb.ballon.ui.theme.AppTheme
-import com.pmb.core.presentation.NavigationManager
 import com.pmb.core.utils.Convert
+import com.pmb.navigation.manager.LocalNavigationManager
+import com.pmb.navigation.moduleScreen.TransferScreens
 import com.pmb.transfer.R
 import com.pmb.transfer.domain.entity.TransactionClientBankEntity
-import com.pmb.transfer.presentation.TransferScreens
 import com.pmb.transfer.presentation.components.ClientBankProfileInfo
 import com.pmb.transfer.presentation.transfer_amount.viewmodel.TransferAmountViewActions
 import com.pmb.transfer.presentation.transfer_amount.viewmodel.TransferAmountViewEvents
@@ -36,13 +35,12 @@ import com.pmb.transfer.presentation.transfer_amount.viewmodel.TransferAmountVie
 
 @Composable
 fun TransferAmountScreen(
-    navigationManager: NavigationManager,
     viewModel: TransferAmountViewModel,
     account: TransactionClientBankEntity?,
     amount: (Double) -> Unit
 ) {
     val viewState by viewModel.viewState.collectAsState()
-
+    val navigationManager = LocalNavigationManager.current
 
     LaunchedEffect(Unit) {
         viewModel.viewEvent.collect { event ->
@@ -93,7 +91,9 @@ fun TransferAmountScreen(
                 trailingIcon = trailingIcon,
                 visualTransformation = CommaVisualTransformation(),
                 onValueChange = { amount ->
-                    viewModel.handle(TransferAmountViewActions.UpdateAmount(amount.toDoubleOrNull()?.takeIf { it >= 0 } ?: 0.0))
+                    viewModel.handle(
+                        TransferAmountViewActions.UpdateAmount(
+                            amount.toDoubleOrNull()?.takeIf { it >= 0 } ?: 0.0))
                 },
                 label = stringResource(R.string.amount),
             )

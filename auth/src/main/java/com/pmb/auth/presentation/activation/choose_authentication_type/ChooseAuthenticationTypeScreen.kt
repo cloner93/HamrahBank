@@ -17,7 +17,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.pmb.auth.R
-import com.pmb.auth.presentation.AuthScreens
 import com.pmb.auth.presentation.component.ShowMellatSignatureBottomSheet
 import com.pmb.auth.utils.ComingType
 import com.pmb.ballon.component.base.AppButtonWithWeightIcon
@@ -30,10 +29,13 @@ import com.pmb.ballon.models.ImageStyle
 import com.pmb.ballon.models.Size
 import com.pmb.ballon.models.TextStyle
 import com.pmb.ballon.ui.theme.AppTheme
-import com.pmb.core.presentation.NavigationManager
+import com.pmb.navigation.manager.LocalNavigationManager
+import com.pmb.navigation.manager.NavigationManager
+import com.pmb.navigation.moduleScreen.AuthScreens
 
 @Composable
-fun ChooseAuthenticationTypeScreen(navigationManager: NavigationManager, comingType: ComingType) {
+fun ChooseAuthenticationTypeScreen(comingType: ComingType) {
+    val navigationManager: NavigationManager = LocalNavigationManager.current
     var showMellatSignatureAppBottomSheet by remember { mutableStateOf(false) }
     AppContent(
         modifier = Modifier.padding(horizontal = 16.dp),
@@ -116,8 +118,8 @@ fun ChooseAuthenticationTypeScreen(navigationManager: NavigationManager, comingT
             showMellatSignatureAppBottomSheet = true
         }
     }
-    if (showMellatSignatureAppBottomSheet){
-        ShowMellatSignatureBottomSheet(){
+    if (showMellatSignatureAppBottomSheet) {
+        ShowMellatSignatureBottomSheet() {
             showMellatSignatureAppBottomSheet = false
         }
     }

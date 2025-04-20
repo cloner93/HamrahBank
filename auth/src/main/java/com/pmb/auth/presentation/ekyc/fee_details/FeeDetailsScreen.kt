@@ -28,15 +28,15 @@ import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.component.base.CaptionText
 import com.pmb.ballon.ui.theme.AppTheme
-import com.pmb.core.presentation.NavigationManager
+import com.pmb.navigation.manager.LocalNavigationManager
+import com.pmb.navigation.manager.NavigationManager
 
 @Composable
 fun FeeDetailsScreen(
-    navigationManager: NavigationManager,
     viewModel: FeeDetailsViewModel
 ) {
     val viewState by viewModel.viewState.collectAsState()
-
+    val navigationManager: NavigationManager = LocalNavigationManager.current
     AppContent(
         modifier = Modifier.padding(horizontal = 16.dp),
         backgroundColor = AppTheme.colorScheme.background2Neutral,

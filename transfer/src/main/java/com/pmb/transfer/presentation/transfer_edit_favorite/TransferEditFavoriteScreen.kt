@@ -21,10 +21,10 @@ import com.pmb.ballon.component.base.ClickableIcon
 import com.pmb.ballon.component.base.IconType
 import com.pmb.ballon.component.bottom_sheet.SimpleConfirmBottomSheet
 import com.pmb.ballon.ui.theme.AppTheme
-import com.pmb.core.presentation.NavigationManager
+import com.pmb.navigation.manager.LocalNavigationManager
+import com.pmb.navigation.moduleScreen.TransferScreens
 import com.pmb.transfer.R
 import com.pmb.transfer.domain.entity.TransactionClientBankEntity
-import com.pmb.transfer.presentation.TransferScreens
 import com.pmb.transfer.presentation.components.transfer_confirm.ClientBankInfoTypeRow
 import com.pmb.transfer.presentation.transfer_edit_favorite.viewmodel.TransferEditFavoriteViewActions
 import com.pmb.transfer.presentation.transfer_edit_favorite.viewmodel.TransferEditFavoriteViewEvents
@@ -33,14 +33,13 @@ import com.pmb.transfer.presentation.transfer_edit_favorite.viewmodel.TransferEd
 
 @Composable
 fun TransferEditFavoriteScreen(
-    navigationManager: NavigationManager,
     viewModel: TransferEditFavoriteViewModel,
     selectedAccount: (TransactionClientBankEntity) -> Unit
 ) {
     val viewState by viewModel.viewState.collectAsState()
     var selectedItem by remember { mutableStateOf<TransactionClientBankEntity?>(null) }
     var showConfirmDeleteBottomSheet by remember { mutableStateOf(false) }
-
+    val navigationManager = LocalNavigationManager.current
     // Handle one-time events such as navigation or showing toasts
     LaunchedEffect(Unit) {
         viewModel.viewEvent.collect { event ->

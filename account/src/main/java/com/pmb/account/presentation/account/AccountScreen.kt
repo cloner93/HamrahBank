@@ -22,18 +22,17 @@ import com.pmb.account.presentation.cards.CardsScreen
 import com.pmb.account.presentation.deposits.DepositsScreen
 import com.pmb.ballon.component.DynamicTabSelector
 import com.pmb.ballon.ui.theme.HamrahBankTheme
-import com.pmb.core.presentation.NavigationManager
+import com.pmb.navigation.manager.LocalNavigationManager
 
 @Composable
-fun AccountScreen(navigationManager: NavigationManager) {
+fun AccountScreen() {
     val cards = stringResource(R.string.cards)
     val accounts = stringResource(R.string.accounts)
     val selectedOption = remember { mutableIntStateOf(0) }
     val optionTexts = listOf(accounts, cards)
-
     when (selectedOption.intValue) {
-        0 -> DepositsScreen(navigationManager)
-        1 -> CardsScreen(navigationManager)
+        0 -> DepositsScreen()
+        1 -> CardsScreen()
     }
 
     Row(

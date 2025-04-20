@@ -50,7 +50,7 @@ import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.component.base.ButtonMediumText
 import com.pmb.ballon.component.base.IconType
 import com.pmb.ballon.ui.theme.AppTheme
-import com.pmb.core.presentation.NavigationManager
+import com.pmb.navigation.manager.LocalNavigationManager
 
 /**
 TODO checkList TransactionFilterScreen.kt
@@ -61,11 +61,11 @@ TODO checkList TransactionFilterScreen.kt
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun TransactionFilterScreen(navigationManager: NavigationManager) {
+fun TransactionFilterScreen() {
 
     val viewModel = hiltViewModel<TransactionsFilterViewModel>()
     val viewState by viewModel.viewState.collectAsState()
-
+    val navigationManager = LocalNavigationManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusRequesterTo = remember { FocusRequester() }
 

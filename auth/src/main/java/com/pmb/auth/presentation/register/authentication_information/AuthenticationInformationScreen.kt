@@ -16,7 +16,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.pmb.auth.R
-import com.pmb.auth.presentation.AuthScreens
 import com.pmb.auth.presentation.component.ShowPersianDatePickerBottomSheet
 import com.pmb.auth.presentation.register.authentication_information.viewModel.AuthenticationInformationViewActions
 import com.pmb.auth.presentation.register.authentication_information.viewModel.AuthenticationInformationViewEvents
@@ -32,13 +31,15 @@ import com.pmb.ballon.component.base.AppMobileTextField
 import com.pmb.ballon.component.base.AppSingleTextField
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.IconType
-import com.pmb.core.presentation.NavigationManager
+import com.pmb.navigation.manager.LocalNavigationManager
+import com.pmb.navigation.manager.NavigationManager
+import com.pmb.navigation.moduleScreen.AuthScreens
 
 @Composable
 fun AuthenticationInformationScreen(
-    navigationManager: NavigationManager,
     viewModel: AuthenticationInformationViewModel
 ) {
+    val navigationManager: NavigationManager = LocalNavigationManager.current
     val viewState by viewModel.viewState.collectAsState()
     var city by remember { mutableStateOf<String>("") }
     var identifyPlace by remember { mutableStateOf<String>("") }
@@ -55,7 +56,8 @@ fun AuthenticationInformationScreen(
             }
         }
     }
-    AppContent(modifier = Modifier.padding(horizontal = 16.dp),
+    AppContent(
+        modifier = Modifier.padding(horizontal = 16.dp),
         topBar = {
             AppTopBar(
                 title = stringResource(R.string.authentication_information),
@@ -65,9 +67,10 @@ fun AuthenticationInformationScreen(
             )
         }, footer = {
 
-            AppButton(modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp, top = 16.dp),
+            AppButton(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp, end = 16.dp, top = 16.dp),
                 enable = true,
                 title = stringResource(R.string._continue),
                 onClick = {

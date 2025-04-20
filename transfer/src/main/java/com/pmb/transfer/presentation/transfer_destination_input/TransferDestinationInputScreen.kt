@@ -31,11 +31,11 @@ import com.pmb.ballon.models.AppButton
 import com.pmb.ballon.models.ImageStyle
 import com.pmb.ballon.models.Size
 import com.pmb.ballon.ui.theme.AppTheme
-import com.pmb.core.presentation.NavigationManager
+import com.pmb.navigation.manager.LocalNavigationManager
+import com.pmb.navigation.moduleScreen.TransferScreens
 import com.pmb.transfer.R
 import com.pmb.transfer.domain.entity.BankIdentifierNumberType
 import com.pmb.transfer.domain.entity.TransactionClientBankEntity
-import com.pmb.transfer.presentation.TransferScreens
 import com.pmb.transfer.presentation.components.transfer_confirm.ClientBankInfoTypeRow
 import com.pmb.transfer.presentation.transfer_destination_input.viewmodel.TransferDestinationInputViewActions
 import com.pmb.transfer.presentation.transfer_destination_input.viewmodel.TransferDestinationInputViewEvents
@@ -44,11 +44,11 @@ import com.pmb.transfer.utils.BankUtil
 
 @Composable
 fun DestinationInputScreen(
-    navigationManager: NavigationManager,
     viewModel: TransferDestinationInputViewModel,
     selectedAccount: (TransactionClientBankEntity) -> Unit
 ) {
     val viewState by viewModel.viewState.collectAsState()
+    val navigationManager = LocalNavigationManager.current
     LaunchedEffect(Unit) {
         viewModel.viewEvent.collect { event ->
             when (event) {

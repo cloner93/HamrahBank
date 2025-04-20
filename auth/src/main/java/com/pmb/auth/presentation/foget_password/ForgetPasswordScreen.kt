@@ -15,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.pmb.auth.R
-import com.pmb.auth.presentation.AuthScreens
 import com.pmb.auth.presentation.component.ShowChangedNewPasswordBottomSheet
 import com.pmb.auth.presentation.foget_password.viewmodel.ForgetPasswordViewActions
 import com.pmb.auth.presentation.foget_password.viewmodel.ForgetPasswordViewEvents
@@ -29,14 +28,17 @@ import com.pmb.ballon.component.base.AppMobileTextField
 import com.pmb.ballon.component.base.AppNationalIdTextField
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.text_field.AppPasswordTextField
-import com.pmb.core.presentation.NavigationManager
 import com.pmb.core.utils.CollectAsEffect
+import com.pmb.navigation.manager.LocalNavigationManager
+import com.pmb.navigation.manager.NavigationManager
+import com.pmb.navigation.moduleScreen.AuthScreens
 
 @Composable
 fun ForgetPasswordScreen(
-    navigationManager: NavigationManager, viewModel: ForgetPasswordViewModel,
+    viewModel: ForgetPasswordViewModel,
     onAuthenticationCallback: (ComingType) -> Unit
 ) {
+    val navigationManager: NavigationManager = LocalNavigationManager.current
     var showBottomSheet by remember { mutableStateOf(false) }
     var mobile by remember { mutableStateOf("") }
     var nationalId by remember { mutableStateOf("") }
@@ -69,17 +71,20 @@ fun ForgetPasswordScreen(
             showBottomSheet = true
         }
     }
-    AppContent(modifier = Modifier.padding(24.dp),
+    AppContent(
+        modifier = Modifier.padding(24.dp),
         topBar = {
-            AppTopBar(title = stringResource(R.string.forget_password),
+            AppTopBar(
+                title = stringResource(R.string.forget_password),
                 onBack = { navigationManager.navigateBack() })
         },
         footer = {
-            AppButton(modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 24.dp),
+            AppButton(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 24.dp),
                 title = stringResource(R.string._continue),
-                enable = !viewState.loading && isMobile && isNationalId && isPassword && isRePassword && password == rePassword ,
+                enable = !viewState.loading && isMobile && isNationalId && isPassword && isRePassword && password == rePassword,
                 onClick = {
                     viewModel.handle(
                         ForgetPasswordViewActions.ResetPassword(
@@ -90,21 +95,24 @@ fun ForgetPasswordScreen(
         },
         content = {
 
-            AppMobileTextField(value = mobile,
+            AppMobileTextField(
+                value = mobile,
                 label = stringResource(R.string.phone_number),
                 onValidate = { isMobile = it },
                 onValueChange = { mobile = it })
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            AppNationalIdTextField(value = nationalId,
+            AppNationalIdTextField(
+                value = nationalId,
                 label = stringResource(R.string.national_id),
                 onValidate = { isNationalId = it },
                 onValueChange = { nationalId = it })
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            AppPasswordTextField(value = password,
+            AppPasswordTextField(
+                value = password,
                 label = stringResource(R.string.new_password),
                 conditionMessage = true,
                 onValidate = {
@@ -114,7 +122,8 @@ fun ForgetPasswordScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            AppPasswordTextField(value = rePassword,
+            AppPasswordTextField(
+                value = rePassword,
                 label = stringResource(R.string.re_new_password),
                 conditionMessage = true,
                 onValidate = {

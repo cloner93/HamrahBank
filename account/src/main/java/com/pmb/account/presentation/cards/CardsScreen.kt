@@ -26,7 +26,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.pmb.account.R
-import com.pmb.account.presentation.AccountScreens
 import com.pmb.account.presentation.cards.viewmodel.CardsViewActions
 import com.pmb.account.presentation.cards.viewmodel.CardsViewEvents
 import com.pmb.account.presentation.cards.viewmodel.CardsViewModel
@@ -37,14 +36,15 @@ import com.pmb.ballon.component.base.AppFAB
 import com.pmb.ballon.models.IconStyle
 import com.pmb.ballon.models.MenuSheetModel
 import com.pmb.ballon.ui.theme.AppTheme
-import com.pmb.core.presentation.NavigationManager
+import com.pmb.navigation.manager.LocalNavigationManager
+import com.pmb.navigation.moduleScreen.AccountScreens
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun CardsScreen(navigationManager: NavigationManager) {
+fun CardsScreen() {
     val viewModel = hiltViewModel<CardsViewModel>()
     val viewState by viewModel.viewState.collectAsState()
-
+    val navigationManager = LocalNavigationManager.current
     val context = LocalContext.current
 
     LaunchedEffect(Unit) {

@@ -27,7 +27,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.pmb.auth.R
-import com.pmb.auth.presentation.AuthScreens
 import com.pmb.auth.presentation.activation.activate.viewModel.ActivationViewActions
 import com.pmb.auth.presentation.activation.activate.viewModel.ActivationViewEvents
 import com.pmb.auth.presentation.activation.activate.viewModel.ActivationViewModel
@@ -44,10 +43,13 @@ import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.component.base.ClickableIcon
 import com.pmb.ballon.component.base.IconType
 import com.pmb.ballon.ui.theme.AppTheme
-import com.pmb.core.presentation.NavigationManager
+import com.pmb.navigation.manager.LocalNavigationManager
+import com.pmb.navigation.manager.NavigationManager
+import com.pmb.navigation.moduleScreen.AuthScreens
 
 @Composable
-fun ActivationScreen(navigationManager: NavigationManager, viewModel: ActivationViewModel) {
+fun ActivationScreen(viewModel: ActivationViewModel) {
+    val navigationManager: NavigationManager = LocalNavigationManager.current
     var mobile by remember { mutableStateOf("") }
     var nationalId by remember { mutableStateOf("") }
     val viewState by viewModel.viewState.collectAsState()
@@ -173,7 +175,9 @@ fun ActivationScreen(navigationManager: NavigationManager, viewModel: Activation
                 color = AppTheme.colorScheme.onBackgroundNeutralDefault
             )
             AppButton(
-                modifier = Modifier.padding(vertical = 16.dp).fillMaxWidth(),
+                modifier = Modifier
+                    .padding(vertical = 16.dp)
+                    .fillMaxWidth(),
                 title = stringResource(R.string.accept),
                 onClick = {
                     showBottomSheet = false

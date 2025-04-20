@@ -1,6 +1,5 @@
 package com.pmb.auth.presentation.ekyc.authentication_video
 
-import android.util.Log
 import android.view.Gravity
 import android.widget.FrameLayout
 import android.widget.VideoView
@@ -64,14 +63,15 @@ import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.component.base.Headline4Text
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.camera.platform.VideoViewActions
-import com.pmb.core.presentation.NavigationManager
+import com.pmb.navigation.manager.LocalNavigationManager
+import com.pmb.navigation.manager.NavigationManager
 
 @Composable
 fun AuthenticationVideoScreen(
-    navigationManager: NavigationManager,
     viewModel: AuthenticationCapturingVideoViewModel,
     onNavigationCallBack: () -> Unit
 ) {
+    val navigationManager: NavigationManager = LocalNavigationManager.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val viewState by viewModel.viewState.collectAsState()
     val context = LocalContext.current

@@ -20,7 +20,6 @@ import androidx.compose.ui.unit.dp
 import com.pmb.auth.R
 import com.pmb.auth.domain.register.job_information.entity.AnnualIncomingPrediction
 import com.pmb.auth.domain.register.select_job_information.entity.JobInformation
-import com.pmb.auth.presentation.AuthScreens
 import com.pmb.auth.presentation.register.job_information.viewModel.JobInformationViewActions
 import com.pmb.auth.presentation.register.job_information.viewModel.JobInformationViewEvents
 import com.pmb.auth.presentation.register.job_information.viewModel.JobInformationViewModel
@@ -31,14 +30,16 @@ import com.pmb.ballon.component.base.AppClickableReadOnlyTextField
 import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.component.base.AppTopBar
-import com.pmb.core.presentation.NavigationManager
 import com.pmb.core.utils.CollectAsEffect
+import com.pmb.navigation.manager.LocalNavigationManager
+import com.pmb.navigation.manager.NavigationManager
+import com.pmb.navigation.moduleScreen.AuthScreens
 
 @Composable
 fun JobInformationScreen(
-    navigationManager: NavigationManager,
     viewModel: JobInformationViewModel
 ) {
+    val navigationManager: NavigationManager = LocalNavigationManager.current
     val viewState by viewModel.viewState.collectAsState()
     var annualIncome by remember {
         mutableStateOf<AnnualIncomingPrediction?>(null)

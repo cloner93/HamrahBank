@@ -44,11 +44,13 @@ import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.camera.platform.PhotoViewActions
-import com.pmb.core.presentation.NavigationManager
-import com.pmb.home.presentation.HomeScreens
+import com.pmb.navigation.manager.LocalNavigationManager
+import com.pmb.navigation.manager.NavigationManager
+import com.pmb.navigation.moduleScreen.HomeScreens
 
 @Composable
-fun ScanCardScreen(navigationManager: NavigationManager, viewModel: ScanCardViewModel) {
+fun ScanCardScreen(viewModel: ScanCardViewModel) {
+    val navigationManager: NavigationManager = LocalNavigationManager.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val viewState by viewModel.viewState.collectAsState()
     val context = LocalContext.current
@@ -95,9 +97,10 @@ fun ScanCardScreen(navigationManager: NavigationManager, viewModel: ScanCardView
         },
         footer = {
 
-            AppButton(modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp, top = 16.dp),
+            AppButton(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp, end = 16.dp, top = 16.dp),
                 enable = true,
                 title = stringResource(R.string._continue),
                 onClick = {

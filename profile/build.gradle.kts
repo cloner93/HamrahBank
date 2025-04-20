@@ -47,7 +47,7 @@ android {
 dependencies {
     implementation(project(":core"))
     implementation(project(":ballon"))
-
+    implementation(project(":navigation"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

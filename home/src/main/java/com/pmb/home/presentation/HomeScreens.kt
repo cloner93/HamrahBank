@@ -3,27 +3,15 @@ package com.pmb.home.presentation
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.pmb.core.presentation.NavigationManager
-import com.pmb.core.presentation.Screen
 import com.pmb.home.presentation.home.HomeScreen
 import com.pmb.home.presentation.home.viewModel.HomeViewModel
+import com.pmb.navigation.manager.NavigationManager
+import com.pmb.navigation.moduleScreen.HomeScreens
 
-sealed class HomeScreens(route: String, arguments: Map<String, String> = emptyMap()) :
-    Screen(route = route, arguments = arguments) {
-    data object Home : HomeScreens(route = "home")
 
-    companion object {
-        fun fromRoute(route: String?): HomeScreens? = when (route) {
-            Home.route -> Home
-            else -> null
-        }
-    }
-}
-
-fun NavGraphBuilder.homeScreensHandle(navigationManager: NavigationManager) {
+fun NavGraphBuilder.homeScreensHandle() {
     composable(route = HomeScreens.Home.route) {
         HomeScreen(
-            navigationManager = navigationManager,
             viewModel = hiltViewModel<HomeViewModel>()
         )
     }

@@ -23,7 +23,7 @@ import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.models.IconStyle
 import com.pmb.ballon.models.TextStyle
 import com.pmb.ballon.ui.theme.AppTheme
-import com.pmb.core.presentation.NavigationManager
+import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.profile.R
 import com.pmb.profile.presentaion.profile.viewModel.ProfileViewActions
 import com.pmb.profile.presentaion.profile.viewModel.ProfileViewEvents
@@ -31,7 +31,8 @@ import com.pmb.profile.presentaion.profile.viewModel.ProfileViewModel
 
 
 @Composable
-fun ProfileScreen(navigationManager: NavigationManager, viewModel: ProfileViewModel) {
+fun ProfileScreen(viewModel: ProfileViewModel) {
+    val navigationManager = LocalNavigationManager.current
     val viewState by viewModel.viewState.collectAsState()
     LaunchedEffect(Unit) {
         viewModel.viewEvent.collect { event ->

@@ -16,7 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.pmb.auth.presentation.AuthScreens
 import com.pmb.auth.presentation.first_login.viewModel.FirsLoginViewEvents
 import com.pmb.auth.presentation.first_login.viewModel.FirstLoginViewActions
 import com.pmb.auth.presentation.first_login.viewModel.FirstLoginViewModel
@@ -31,10 +30,13 @@ import com.pmb.ballon.component.base.AppSingleTextField
 import com.pmb.ballon.component.base.AppTextButton
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.text_field.AppPasswordTextField
-import com.pmb.core.presentation.NavigationManager
+import com.pmb.navigation.manager.LocalNavigationManager
+import com.pmb.navigation.manager.NavigationManager
+import com.pmb.navigation.moduleScreen.AuthScreens
 
 @Composable
-fun FirstLoginScreen(navigationManager: NavigationManager, viewModel: FirstLoginViewModel) {
+fun FirstLoginScreen(viewModel: FirstLoginViewModel) {
+    val navigationManager: NavigationManager = LocalNavigationManager.current
     var phoneNumber by remember { mutableStateOf("") }
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -64,9 +66,10 @@ fun FirstLoginScreen(navigationManager: NavigationManager, viewModel: FirstLogin
         },
         horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally,
         footer = {
-            AppOutlineButton(modifier = Modifier
-                .padding(horizontal = 24.dp)
-                .fillMaxWidth(),
+            AppOutlineButton(
+                modifier = Modifier
+                    .padding(horizontal = 24.dp)
+                    .fillMaxWidth(),
                 title = stringResource(com.pmb.auth.R.string.hamrah_bank_activate),
                 onClick = {
                     navigationManager.navigate(AuthScreens.Activation)
@@ -83,7 +86,8 @@ fun FirstLoginScreen(navigationManager: NavigationManager, viewModel: FirstLogin
 
         Spacer(modifier = Modifier.size(32.dp))
 
-        AppMobileTextField(value = phoneNumber,
+        AppMobileTextField(
+            value = phoneNumber,
             label = stringResource(com.pmb.auth.R.string.phone_number),
             onValidate = { isMobile = it },
             onValueChange = { phoneNumber = it })
@@ -103,7 +107,8 @@ fun FirstLoginScreen(navigationManager: NavigationManager, viewModel: FirstLogin
 
         Spacer(modifier = Modifier.size(24.dp))
 
-        AppPasswordTextField(modifier = Modifier.fillMaxWidth(),
+        AppPasswordTextField(
+            modifier = Modifier.fillMaxWidth(),
             value = password,
             label = stringResource(com.pmb.auth.R.string.password),
             onValueChange = {
@@ -113,7 +118,8 @@ fun FirstLoginScreen(navigationManager: NavigationManager, viewModel: FirstLogin
 
         Spacer(modifier = Modifier.size(32.dp))
 
-        AppButton(modifier = Modifier.fillMaxWidth(),
+        AppButton(
+            modifier = Modifier.fillMaxWidth(),
             title = stringResource(com.pmb.auth.R.string._continue),
             enable = isMobile && isPassword && isUsername,
             onClick = {
@@ -126,7 +132,8 @@ fun FirstLoginScreen(navigationManager: NavigationManager, viewModel: FirstLogin
 
         Spacer(modifier = Modifier.size(8.dp))
 
-        AppTextButton(modifier = Modifier.fillMaxWidth(),
+        AppTextButton(
+            modifier = Modifier.fillMaxWidth(),
             title = stringResource(com.pmb.auth.R.string.forget_password),
             onClick = {
                 navigationManager.navigate(AuthScreens.ForgetPassword)

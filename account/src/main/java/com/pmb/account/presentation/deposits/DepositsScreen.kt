@@ -33,7 +33,6 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.pmb.account.R
-import com.pmb.account.presentation.AccountScreens
 import com.pmb.account.presentation.component.DepositCarouselWidget
 import com.pmb.account.presentation.component.ShareDepositBottomSheet
 import com.pmb.account.presentation.component.ShareDepositBottomSheetContent
@@ -53,13 +52,15 @@ import com.pmb.ballon.models.MenuSheetModel
 import com.pmb.ballon.models.TextStyle
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.ballon.ui.theme.HamrahBankTheme
-import com.pmb.core.presentation.NavigationManager
+import com.pmb.navigation.manager.LocalNavigationManager
+import com.pmb.navigation.moduleScreen.AccountScreens
 
 
 @Composable
-fun DepositsScreen(navigationManager: NavigationManager) {
+fun DepositsScreen() {
     val viewModel = hiltViewModel<DepositsViewModel>()
     val viewState by viewModel.viewState.collectAsState()
+    val navigationManager = LocalNavigationManager.current
     val menuItems = listOf(
         MenuSheetModel(
             title = stringResource(R.string.select_for_main_deposit),

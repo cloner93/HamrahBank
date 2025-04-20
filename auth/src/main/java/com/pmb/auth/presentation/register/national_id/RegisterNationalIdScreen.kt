@@ -19,7 +19,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.pmb.auth.R
-import com.pmb.auth.presentation.AuthScreens
 import com.pmb.auth.presentation.register.national_id.viewModel.RegisterNationalIdViewActions
 import com.pmb.auth.presentation.register.national_id.viewModel.RegisterNationalIdViewEvents
 import com.pmb.auth.presentation.register.national_id.viewModel.RegisterNationalIdViewModel
@@ -33,15 +32,17 @@ import com.pmb.ballon.component.base.AppSingleTextField
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.ui.theme.AppTheme
-import com.pmb.core.presentation.NavigationManager
+import com.pmb.navigation.manager.LocalNavigationManager
+import com.pmb.navigation.manager.NavigationManager
+import com.pmb.navigation.moduleScreen.AuthScreens
 
 
 @Composable
 fun RegisterNationalIdScreen(
-    navigationManager: NavigationManager,
     viewModel: RegisterNationalIdViewModel,
     comingType: ComingType = ComingType.COMING_REGISTER
 ) {
+    val navigationManager: NavigationManager = LocalNavigationManager.current
     val viewState by viewModel.viewState.collectAsState()
     var nationalSerialId by remember {
         mutableStateOf("")

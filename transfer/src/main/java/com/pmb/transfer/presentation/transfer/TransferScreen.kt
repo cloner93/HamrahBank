@@ -24,10 +24,10 @@ import com.pmb.ballon.component.base.ClickableIcon
 import com.pmb.ballon.component.base.IconType
 import com.pmb.ballon.models.isScrollingUp
 import com.pmb.ballon.ui.theme.AppTheme
-import com.pmb.core.presentation.NavigationManager
+import com.pmb.navigation.manager.LocalNavigationManager
+import com.pmb.navigation.moduleScreen.TransferScreens
 import com.pmb.transfer.R
 import com.pmb.transfer.domain.entity.TransactionClientBankEntity
-import com.pmb.transfer.presentation.TransferScreens
 import com.pmb.transfer.presentation.components.FavoriteContactsView
 import com.pmb.transfer.presentation.components.TransactionClientBankList
 import com.pmb.transfer.presentation.transfer.viewmodel.TransferViewActions
@@ -36,10 +36,10 @@ import com.pmb.transfer.presentation.transfer.viewmodel.TransferViewModel
 
 @Composable
 fun TransferScreen(
-    navigationManager: NavigationManager,
     viewModel: TransferViewModel,
     selectedItem: (TransactionClientBankEntity) -> Unit
 ) {
+    val navigationManager = LocalNavigationManager.current
     val lazyListState = rememberLazyListState()
     val viewState by viewModel.viewState.collectAsState()
 

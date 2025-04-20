@@ -21,11 +21,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.pmb.auth.R
-import com.pmb.auth.presentation.AuthScreens
 import com.pmb.auth.presentation.ekyc.authentication_confirm.viewModel.AuthenticationConfirmStepViewModel
 import com.pmb.auth.utils.ComingType
 import com.pmb.ballon.component.AlertComponent
-import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppImage
 import com.pmb.ballon.component.base.AppLoading
@@ -36,14 +34,16 @@ import com.pmb.ballon.component.base.ClickableIcon
 import com.pmb.ballon.component.base.Headline3Text
 import com.pmb.ballon.component.base.IconType
 import com.pmb.ballon.ui.theme.AppTheme
-import com.pmb.core.presentation.NavigationManager
 import com.pmb.core.utils.CollectAsEffect
+import com.pmb.navigation.manager.LocalNavigationManager
+import com.pmb.navigation.manager.NavigationManager
+import com.pmb.navigation.moduleScreen.AuthScreens
 
 @Composable
 fun AuthenticationConfirmScreen(
-    navigationManager: NavigationManager,
     viewModel: AuthenticationConfirmStepViewModel,
 ) {
+    val navigationManager: NavigationManager = LocalNavigationManager.current
     var comingType by remember { mutableStateOf<ComingType>(ComingType.COMING_PASSWORD) }
     val viewState by viewModel.viewState.collectAsState()
     navigationManager.getCurrentScreenFlowData<ComingType?>(
@@ -100,7 +100,7 @@ fun AuthenticationConfirmScreen(
                     )
                     Spacer(modifier = Modifier.size(32.dp))
                     BodyLargeText(
-                        text = stringResource(R.string.interception_number,12345),
+                        text = stringResource(R.string.interception_number, 12345),
                         color = AppTheme.colorScheme.onBackgroundNeutralDefault
                     )
 

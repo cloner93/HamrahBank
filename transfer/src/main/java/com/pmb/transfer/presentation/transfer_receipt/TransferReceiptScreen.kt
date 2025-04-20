@@ -30,13 +30,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.node.Ref
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalConfiguration
@@ -65,11 +63,11 @@ import com.pmb.ballon.models.RowType
 import com.pmb.ballon.models.Size
 import com.pmb.ballon.models.TextStyle
 import com.pmb.ballon.ui.theme.AppTheme
-import com.pmb.core.presentation.NavigationManager
+import com.pmb.navigation.manager.LocalNavigationManager
+import com.pmb.navigation.moduleScreen.TransferScreens
 import com.pmb.transfer.R
 import com.pmb.transfer.domain.entity.ReceiptStatus
 import com.pmb.transfer.domain.entity.TransferReceiptEntity
-import com.pmb.transfer.presentation.TransferScreens
 import com.pmb.transfer.presentation.components.ClientBankProfileInfo
 import com.pmb.transfer.presentation.components.ReceiptStatusBadge
 import com.pmb.transfer.presentation.transfer_receipt.viewmodel.TransferReceiptViewActions
@@ -83,7 +81,6 @@ import java.io.OutputStream
 @OptIn(ExperimentalComposeApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun TransferReceiptScreen(
-    navigationManager: NavigationManager,
     viewModel: TransferReceiptViewModel,
     transferReceipt: TransferReceiptEntity?,
     clearData: () -> Unit
@@ -92,7 +89,7 @@ fun TransferReceiptScreen(
     val context = LocalContext.current
     var shareReceipt by remember { mutableStateOf(false) }
     var downloadReceipt by remember { mutableStateOf(false) }
-
+    val navigationManager = LocalNavigationManager.current
     LaunchedEffect(Unit) {
         viewModel.viewEvent.collect { event ->
             when (event) {

@@ -28,7 +28,6 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.pmb.auth.R
 import com.pmb.auth.domain.register.search_opening_branch.entity.OpeningBranch
-import com.pmb.auth.presentation.AuthScreens
 import com.pmb.auth.presentation.component.RoundedCornerCheckboxComponent
 import com.pmb.auth.presentation.register.deposit_information.viewModel.DepositInformationViewActions
 import com.pmb.auth.presentation.register.deposit_information.viewModel.DepositInformationViewEvents
@@ -44,14 +43,16 @@ import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.component.base.ClickableIcon
 import com.pmb.ballon.component.base.IconType
 import com.pmb.ballon.ui.theme.AppTheme
-import com.pmb.core.presentation.NavigationManager
 import com.pmb.core.utils.CollectAsEffect
+import com.pmb.navigation.manager.LocalNavigationManager
+import com.pmb.navigation.manager.NavigationManager
+import com.pmb.navigation.moduleScreen.AuthScreens
 
 @Composable
 fun DepositInformationScreen(
-    navigationManager: NavigationManager,
     viewModel: DepositInformationViewModel,
 ) {
+    val navigationManager: NavigationManager = LocalNavigationManager.current
     val viewState by viewModel.viewState.collectAsState()
     var showBottomSheet by remember { mutableStateOf(false) }
     BackHandler() {
@@ -243,14 +244,17 @@ fun DepositInformationScreen(
                             showBottomSheet = false
                         })
                 )
-            }, ) {
+            },
+        ) {
             BodyMediumText(
                 textAlign = TextAlign.Center,
                 text = stringResource(R.string.usage_role_desc),
                 color = AppTheme.colorScheme.onBackgroundNeutralDefault
             )
             AppButton(
-                modifier = Modifier.padding(vertical = 16.dp).fillMaxWidth(),
+                modifier = Modifier
+                    .padding(vertical = 16.dp)
+                    .fillMaxWidth(),
                 title = stringResource(R.string.accept),
                 onClick = {
                     showBottomSheet = false

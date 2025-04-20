@@ -16,7 +16,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.pmb.auth.R
-import com.pmb.auth.presentation.AuthScreens
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppImage
@@ -25,10 +24,13 @@ import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.models.ImageStyle
 import com.pmb.ballon.models.Size
 import com.pmb.ballon.ui.theme.AppTheme
-import com.pmb.core.presentation.NavigationManager
+import com.pmb.navigation.manager.LocalNavigationManager
+import com.pmb.navigation.manager.NavigationManager
+import com.pmb.navigation.moduleScreen.AuthScreens
 
 @Composable
-fun AuthenticationScreen(navigationManager: NavigationManager) {
+fun AuthenticationScreen() {
+    val navigationManager: NavigationManager = LocalNavigationManager.current
     AppContent(
         modifier = Modifier.padding(horizontal = 16.dp),
         topBar = {
@@ -41,9 +43,10 @@ fun AuthenticationScreen(navigationManager: NavigationManager) {
 
         },
         footer = {
-            AppButton(modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp, top = 16.dp),
+            AppButton(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp, end = 16.dp, top = 16.dp),
                 enable = true,
                 title = stringResource(R.string.account_authentication),
                 onClick = {
@@ -54,7 +57,7 @@ fun AuthenticationScreen(navigationManager: NavigationManager) {
     ) {
         Spacer(modifier = Modifier.size(24.dp))
         AppImage(
-            style =ImageStyle(size = Size.FIX(128.dp)),
+            style = ImageStyle(size = Size.FIX(128.dp)),
             image = painterResource(com.pmb.ballon.R.drawable.ic_authentication),
         )
 

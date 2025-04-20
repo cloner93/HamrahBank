@@ -1,4 +1,4 @@
-package com.pmb.core.presentation
+package com.pmb.navigation.manager
 
 import android.net.Uri
 import androidx.compose.runtime.Composable
@@ -7,12 +7,26 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
+import androidx.navigation.NavOptionsBuilder
+import com.pmb.navigation.provider.DefaultStartDestinationProvider
+import com.pmb.navigation.provider.NavigationStartDestinationProvider
+import com.pmb.navigation.screen.Screen
 import kotlinx.coroutines.flow.StateFlow
 
+class NavigationManager(
+    val navController: NavHostController,
+) {
+    private val startDestinationProvider: NavigationStartDestinationProvider =
+        DefaultStartDestinationProvider
 
-abstract class Screen(val route: String, val arguments: Map<String, String> = emptyMap())
+    fun getStartDestination(): Screen = startDestinationProvider.getStartDestination()
 
-class NavigationManager(val navController: NavHostController, val startDestination: Screen) {
+    fun navigate(screen: Screen, builder: NavOptionsBuilder.() -> Unit = {}) {
+        val targetRoute = screen.route
+        if (navController.currentDestination?.route != targetRoute) {
+            navController.navigate(targetRoute, builder)
+        }
+    }
 
     fun navigate(screen: Screen) {
         navController.navigate(screen.route)
@@ -35,9 +49,7 @@ class NavigationManager(val navController: NavHostController, val startDestinati
     }
 
     fun <T> getCurrentScreenFlowData(key: String, value: T): StateFlow<T>? =
-        navController.currentBackStackEntry?.savedStateHandle?.getStateFlow(
-            key, value
-        )
+        navController.currentBackStackEntry?.savedStateHandle?.getStateFlow(key, value)
 
     fun <T> getPreviousScreenData(key: String): T? =
         navController.previousBackStackEntry?.savedStateHandle?.get<T>(key)
@@ -45,7 +57,6 @@ class NavigationManager(val navController: NavHostController, val startDestinati
     fun <T> setDestinationScreenData(screen: Screen, key: String, value: T) {
         navController.getBackStackEntry(screen.route).savedStateHandle.set(key, value)
     }
-
 
     @Composable
     inline fun <reified T : ViewModel> retrieveSharedViewModel(

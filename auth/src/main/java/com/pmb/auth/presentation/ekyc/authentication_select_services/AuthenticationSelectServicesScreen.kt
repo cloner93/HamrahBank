@@ -16,7 +16,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.pmb.auth.R
-import com.pmb.auth.presentation.AuthScreens
 import com.pmb.auth.presentation.component.RoundedCornerCheckboxComponent
 import com.pmb.auth.presentation.ekyc.authentication_select_services.viewModel.AuthenticationSelectServicesViewActions
 import com.pmb.auth.presentation.ekyc.authentication_select_services.viewModel.AuthenticationSelectServicesViewEvent
@@ -30,13 +29,15 @@ import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.BodySmallText
 import com.pmb.ballon.component.base.Headline6Text
 import com.pmb.ballon.ui.theme.AppTheme
-import com.pmb.core.presentation.NavigationManager
+import com.pmb.navigation.manager.LocalNavigationManager
+import com.pmb.navigation.manager.NavigationManager
+import com.pmb.navigation.moduleScreen.AuthScreens
 
 @Composable
 fun AuthenticationSelectServicesScreen(
-    navigationManager: NavigationManager,
     viewModel: AuthenticationSelectServicesViewModel
 ) {
+    val navigationManager: NavigationManager = LocalNavigationManager.current
     val viewState by viewModel.viewState.collectAsState()
     LaunchedEffect(Unit) {
         viewModel.viewEvent.collect { event ->
@@ -71,16 +72,18 @@ fun AuthenticationSelectServicesScreen(
                         color = AppTheme.colorScheme.onBackgroundPrimarySubdued
                     )
                     Spacer(modifier = Modifier.size(5.dp))
-                    AppTextButton(modifier = Modifier.weight(1f),
+                    AppTextButton(
+                        modifier = Modifier.weight(1f),
                         title = stringResource(R.string.show_details),
                         onClick = {
                             navigationManager.navigate(AuthScreens.FeeDetails)
                         })
                 }
                 Spacer(modifier = Modifier.size(10.dp))
-                AppButton(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp, top = 16.dp),
+                AppButton(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 16.dp, end = 16.dp, top = 16.dp),
                     enable = !viewModel.hasIsCheckedFlag().isNullOrEmpty(),
                     title = stringResource(R.string._continue),
                     onClick = {
