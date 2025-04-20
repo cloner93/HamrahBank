@@ -9,5 +9,6 @@ data class TransferReceiptViewState(
     val loading: Boolean = false,
     val alertState: AlertModelState? = null,
     val receipt: TransferReceiptEntity? = null,
-    val rowTypes: List<RowType> = emptyList()
+    val rowTypes: List<RowType> = emptyList(),
+    val showShareBottomSheet: Boolean = false
 ) : BaseViewState
