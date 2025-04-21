@@ -28,6 +28,8 @@ mp4 = "1.9.56"
 testCore= "1.6.1"
 dataStore = "1.0.0"
 
+persiancalendar-calendar = "9619b0e1a4aa8d72f2d084370e7b5b5647111b6d"
+
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -70,6 +72,7 @@ androidx-camera-extensions = { group = "androidx.camera", name = "camera-extensi
 androidx-exifinterface = { group = "androidx.exifinterface", name = "exifinterface", version.ref = "exifinterface" }
 mp4-parser = { group = "org.mp4parser", name = "isoparser", version.ref = "mp4" }
 dataStore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "dataStore" }
+persiancalendar-calendar = { group = "com.github.persian-calendar", name = "calendar", version.ref = "persiancalendar-calendar" }
 
 [bundles]
 androix-camera-bundle = ["androidx-camera-core", "androidx-camera", "androidx-camera-view", "androidx-camera-lifecycle", "androidx-camera-video", "androidx-camera-extensions"]
