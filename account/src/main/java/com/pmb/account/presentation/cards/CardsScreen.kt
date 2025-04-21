@@ -127,29 +127,47 @@ fun CardsScreen() {
     val menuItems = listOf(
         MenuSheetModel(
             title = stringResource(R.string.card_reissue),
-            icon = com.pmb.ballon.R.drawable.ic_credit_card_refresh_reload
+            icon = com.pmb.ballon.R.drawable.ic_credit_card_refresh_reload,
+            onClicked = {
+
+            }
         ),
         MenuSheetModel(
             title = stringResource(R.string.card_connection_disconnection),
-            icon = com.pmb.ballon.R.drawable.ic_credit_card_cross_delete_circle
+            icon = com.pmb.ballon.R.drawable.ic_credit_card_cross_delete_circle,
+            onClicked = {
+
+            }
         ),
         MenuSheetModel(
             title = stringResource(R.string.deactivating_the_card),
-            icon = com.pmb.ballon.R.drawable.ic_credit_card_lock_circe
+            icon = com.pmb.ballon.R.drawable.ic_credit_card_lock_circe,
+            onClicked = {
+
+            }
         ),
         MenuSheetModel(
             title = stringResource(R.string.password_management),
-            icon = com.pmb.ballon.R.drawable.ic_credit_card_lock_circe
+            icon = com.pmb.ballon.R.drawable.ic_credit_card_lock_circe,
+            onClicked = {
+
+            }
         ),
         MenuSheetModel(
             title = stringResource(R.string.cardless_withdrawal),
-            icon = com.pmb.ballon.R.drawable.ic_key_password
+            icon = com.pmb.ballon.R.drawable.ic_key_password,
+            onClicked = {
+
+            }
         ),
         MenuSheetModel(
             title = stringResource(R.string.card_cancellation),
             icon = com.pmb.ballon.R.drawable.ic_money_banknote_hand,
             textColor = { Color(0xFFBA1A1A) },
-            iconTint = { Color(0xFFBA1A1A) }
+            iconTint = { Color(0xFFBA1A1A) },
+            onClicked = {
+
+            }
         )
     )
 
@@ -158,18 +176,23 @@ fun CardsScreen() {
         items = menuItems,
         onDismiss = {
             viewModel.handle(CardsViewActions.ShowDetailCardBottomSheetBottomSheet(null))
-        },
-        onSelect = { })
+        })
 
     val fabItems = listOf(
         MenuSheetModel(
             title = stringResource(R.string.add_a_new_bank_card),
-            icon = com.pmb.ballon.R.drawable.ic_credit_card
+            icon = com.pmb.ballon.R.drawable.ic_credit_card,
+            onClicked = {
+
+            }
         ),
         MenuSheetModel(
             title = stringResource(R.string.adding_and_activating_a_bank_card),
             icon = com.pmb.ballon.R.drawable.ic_add,
-            iconTint = { AppTheme.colorScheme.iconColor }
+            iconTint = { AppTheme.colorScheme.iconColor },
+            onClicked = {
+
+            }
         )
     )
 
@@ -177,8 +200,5 @@ fun CardsScreen() {
         items = fabItems,
         onDismiss = {
             viewModel.handle(CardsViewActions.ShowFabBottomSheet)
-        },
-        onSelect = {
-
         })
 }

@@ -1,5 +1,6 @@
 package com.pmb.transfer.presentation.transfer_receipt
 
+import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -17,12 +18,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.pmb.ballon.component.AlertComponent
+import com.pmb.ballon.component.MenuBottomSheet
 import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.receipt.ReceiptComponent
 import com.pmb.ballon.component.receipt.ReceiptSaveOrShareComponent
 import com.pmb.ballon.component.utils.ComposeToBitmap
+import com.pmb.ballon.models.MenuSheetModel
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.core.utils.getImageUri
 import com.pmb.core.utils.saveBitmapToCache
@@ -75,7 +78,9 @@ fun TransferReceiptScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         footer = {
             ReceiptSaveOrShareComponent(
-                shareReceipt = { shareReceipt = true },
+                shareReceipt = {
+                    viewModel.handle(TransferReceiptViewActions.ShareReceiptClicked)
+                },
                 downloadReceipt = { downloadReceipt = true }
             )
         },
@@ -118,6 +123,43 @@ fun TransferReceiptScreen(
                     headerContent = {
                         ReceiptHeaderComponent(viewState)
                     })
+            }
+        )
+    }
+
+    if (viewState.showShareBottomSheet) {
+        MenuBottomSheet(
+            title = stringResource(R.string.select_share_type),
+            items = listOf(
+                MenuSheetModel(
+                    title = stringResource(R.string.text),
+                    icon = com.pmb.ballon.R.drawable.ic_text,
+                    iconTint = { AppTheme.colorScheme.onBackgroundNeutralCTA },
+                    showEndIcon = false,
+                    onClicked = {
+
+                        val sendIntent = Intent().apply {
+                            action = Intent.ACTION_SEND
+                            putExtra(Intent.EXTRA_TEXT, "textToShare") // TODO:: get receipt text
+                            type = "text/plain"
+                        }
+                        val shareIntent = Intent.createChooser(sendIntent, null)
+                        context.startActivity(shareIntent)
+                    }
+                ),
+                MenuSheetModel(
+                    title = stringResource(R.string.image),
+                    icon = com.pmb.ballon.R.drawable.ic_image,
+                    iconTint = { AppTheme.colorScheme.onBackgroundNeutralCTA },
+                    showEndIcon = false,
+                    onClicked = {
+                        shareReceipt = true
+                    }
+                )
+
+            ),
+            onDismiss = {
+                viewModel.handle(TransferReceiptViewActions.OnDismissShareReceiptBottomSheet)
             }
         )
     }

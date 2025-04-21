@@ -1,18 +1,5 @@
 package com.pmb.transfer.presentation.transfer_receipt.viewmodel
 
-import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.PixelFormat
-import android.os.Build
-import android.view.View
-import android.view.ViewGroup
-import android.view.ViewTreeObserver
-import android.view.WindowManager
-import android.widget.FrameLayout
-import androidx.annotation.RequiresApi
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.unit.LayoutDirection
 import com.pmb.ballon.models.RowType
 import com.pmb.ballon.models.TextStyle
@@ -27,7 +14,6 @@ import com.pmb.transfer.utils.BankUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
-import androidx.core.graphics.createBitmap
 
 @HiltViewModel
 class TransferReceiptViewModel @Inject constructor() :
@@ -42,6 +28,12 @@ class TransferReceiptViewModel @Inject constructor() :
             is TransferReceiptViewActions.UpdateTransferReceipt -> handleUpdateTransferReceipt(
                 action.transferReceipt
             )
+
+            TransferReceiptViewActions.ShareReceiptClicked ->
+                setState { it.copy(showShareBottomSheet = true) }
+
+            TransferReceiptViewActions.OnDismissShareReceiptBottomSheet ->
+                setState { it.copy(showShareBottomSheet = false) }
         }
     }
 

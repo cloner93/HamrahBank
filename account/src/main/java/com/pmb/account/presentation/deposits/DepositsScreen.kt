@@ -64,16 +64,28 @@ fun DepositsScreen() {
     val menuItems = listOf(
         MenuSheetModel(
             title = stringResource(R.string.select_for_main_deposit),
-            icon = com.pmb.ballon.R.drawable.ic_pin
+            icon = com.pmb.ballon.R.drawable.ic_pin,
+            onClicked = {
+
+            }
         ), MenuSheetModel(
             title = stringResource(R.string.cards_connected_to_the_deposit),
-            icon = com.pmb.ballon.R.drawable.ic_credit_cards
+            icon = com.pmb.ballon.R.drawable.ic_credit_cards,
+            onClicked = {
+
+            }
         ), MenuSheetModel(
             title = stringResource(R.string.request_to_issue_a_card_for_deposit),
-            icon = com.pmb.ballon.R.drawable.ic_credit_card
+            icon = com.pmb.ballon.R.drawable.ic_credit_card,
+            onClicked = {
+
+            }
         ), MenuSheetModel(
             title = stringResource(R.string.edit_deposit_title),
-            icon = com.pmb.ballon.R.drawable.ic_edit
+            icon = com.pmb.ballon.R.drawable.ic_edit,
+            onClicked = {
+
+            }
         )
     )
     val context = LocalContext.current
@@ -257,8 +269,7 @@ fun DepositsScreen() {
         MenuBottomSheet(
             title = viewState.selectedDeposit?.title,
             items = menuItems,
-            onDismiss = { viewModel.handle(DepositsViewActions.CloseDepositMoreActionBottomSheet) },
-            onSelect = { viewModel.handle(DepositsViewActions.CloseDepositMoreActionBottomSheet) } // TODO
+            onDismiss = { viewModel.handle(DepositsViewActions.CloseDepositMoreActionBottomSheet) }
         )
 
     if (viewState.showDepositListBottomSheet)
