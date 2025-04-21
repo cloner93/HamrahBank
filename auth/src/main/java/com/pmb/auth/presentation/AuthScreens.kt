@@ -92,19 +92,19 @@ fun NavGraphBuilder.authScreensHandle(
         )
     }
     composable(route = AuthScreens.Register.route) {
-//        val navigationManager = LocalNavigationManager.current
+        val navigationManager = LocalNavigationManager.current
         AccountOpeningScreen() {
             comingType = mutableStateOf(it)
-//            navigationManager.navigate(AuthScreens.RegisterNationalId)
+            navigationManager.navigate(AuthScreens.RegisterNationalId)
         }
     }
     composable(route = AuthScreens.ForgetPassword.route) {
-//        val navigationManager = LocalNavigationManager.current
+        val navigationManager = LocalNavigationManager.current
         ForgetPasswordScreen(
             viewModel = hiltViewModel<ForgetPasswordViewModel>()
         ) {
             comingType = mutableStateOf(it)
-//            navigationManager.navigate(AuthScreens.ChooseAuthenticationType)
+            navigationManager.navigate(AuthScreens.ChooseAuthenticationType)
         }
     }
     composable(route = AuthScreens.ForgetPasswordAuth.route) {
@@ -130,15 +130,15 @@ fun NavGraphBuilder.authScreensHandle(
         )
     }
     composable(route = AuthScreens.AuthenticationVideo.route) {
-//        val navigationManager = LocalNavigationManager.current
+        val navigationManager = LocalNavigationManager.current
         AuthenticationVideoScreen(
             viewModel = hiltViewModel<AuthenticationCapturingVideoViewModel>()
         ) {
-//            navigationManager.navigateAndClearStack(AuthScreens.AuthenticationConfirmStep)
-//            navigationManager.setCurrentScreenData<ComingType>(
-//                "authentication",
-//                comingType.value ?: ComingType.COMING_REGISTER
-//            )
+            navigationManager.navigateAndClearStack(AuthScreens.AuthenticationConfirmStep)
+            navigationManager.setCurrentScreenData<ComingType>(
+                "authentication",
+                comingType.value ?: ComingType.COMING_REGISTER
+            )
             Log.d("comingType", comingType.value.toString())
         }
     }
@@ -211,13 +211,13 @@ fun NavGraphBuilder.authScreensHandle(
         ActivationScreen(viewModel = hiltViewModel<ActivationViewModel>())
     }
     composable(route = AuthScreens.ActivationTaxDetailsScreen.route) {
-//        val navigationManager = LocalNavigationManager.current
+        val navigationManager = LocalNavigationManager.current
         ActivationTaxDetailsScreen(
             viewModel = hiltViewModel<ActivationTaxDetailsViewModel>()
         ) {
 
             comingType = mutableStateOf(it)
-//            navigationManager.navigate(AuthScreens.ChooseAuthenticationType)
+            navigationManager.navigate(AuthScreens.ChooseAuthenticationType)
         }
     }
     composable(

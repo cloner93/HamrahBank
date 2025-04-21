@@ -31,6 +31,7 @@ import com.pmb.core.utils.getImageUri
 import com.pmb.core.utils.saveBitmapToCache
 import com.pmb.core.utils.saveBitmapToGallery
 import com.pmb.core.utils.shareImage
+import com.pmb.core.utils.shareText
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.moduleScreen.TransferScreens
 import com.pmb.transfer.R
@@ -137,14 +138,7 @@ fun TransferReceiptScreen(
                     iconTint = { AppTheme.colorScheme.onBackgroundNeutralCTA },
                     showEndIcon = false,
                     onClicked = {
-
-                        val sendIntent = Intent().apply {
-                            action = Intent.ACTION_SEND
-                            putExtra(Intent.EXTRA_TEXT, "textToShare") // TODO:: get receipt text
-                            type = "text/plain"
-                        }
-                        val shareIntent = Intent.createChooser(sendIntent, null)
-                        context.startActivity(shareIntent)
+                        context.shareText( "textToShare")// TODO:: get receipt text
                     }
                 ),
                 MenuSheetModel(
