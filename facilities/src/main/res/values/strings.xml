@@ -5,4 +5,5 @@
     <string name="buying_history">سوابق خرید</string>
     <string name="latest_number">شماره های اخیر</string>
     <string name="mobile">شماره همراه</string>
+    <string name="choose_transaction_operator">در صورت ترابرد اپراتور خود را انتخاب نمایید.</string>
 </resources>
