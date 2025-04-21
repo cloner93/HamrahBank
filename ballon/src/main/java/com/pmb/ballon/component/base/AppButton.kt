@@ -34,7 +34,7 @@ fun AppButton(
     onClick: () -> Unit
 ) {
     Button(
-        modifier = modifier.heightIn(min = 46.dp),
+        modifier = modifier.heightIn(min = 48.dp),
         shape = RoundedCornerShape(12.dp),
         colors = colors,
         enabled = enable,
@@ -54,21 +54,29 @@ fun AppButtonWithIcon(
     textStyle: TextStyle = TextStyle.defaultButton(),
     enable: Boolean = true,
     @DrawableRes icon: Int? = null,
+    isLeftIcon: Boolean = false,
     spacer: Dp = 10.dp,
     onClick: () -> Unit
 ) {
     Button(
-        modifier = modifier.heightIn(46.dp),
+        modifier = modifier.heightIn(48.dp),
         shape = RoundedCornerShape(12.dp),
         colors = colors,
         enabled = enable,
         onClick = onClick
     ) {
-        icon?.let {
-            AppIcon(icon = icon)
-            Spacer(modifier = Modifier.size(spacer))
-        }
+        if (!isLeftIcon)
+            icon?.let {
+                AppIcon(icon = icon)
+                Spacer(modifier = Modifier.size(spacer))
+            }
         BaseAppText(title = title, style = textStyle)
+        if (isLeftIcon)
+            icon?.let {
+
+                Spacer(modifier = Modifier.size(spacer))
+                AppIcon(icon = icon)
+            }
     }
 }
 
