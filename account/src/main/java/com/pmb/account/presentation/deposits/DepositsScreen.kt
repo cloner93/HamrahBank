@@ -158,6 +158,7 @@ fun DepositsScreen() {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(top = 25.dp)
                 .height(92.dp)
                 .padding(horizontal = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween,

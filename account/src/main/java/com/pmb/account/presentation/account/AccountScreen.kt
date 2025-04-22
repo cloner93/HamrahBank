@@ -38,6 +38,7 @@ fun AccountScreen() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .padding(top = 25.dp)
             .height(92.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center

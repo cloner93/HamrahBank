@@ -6,7 +6,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -14,8 +13,6 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -40,18 +37,17 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContent {
-            CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
-                HamrahBankTheme {
-                    val navController = rememberNavController()
 
-                    Scaffold(
-                        modifier = Modifier.fillMaxSize(),
-                        bottomBar = { CheckBottomBar(navController) }) { innerPadding ->
-                        AppNavHost(navController = navController, innerPadding = innerPadding)
-                    }
+        super.onCreate(savedInstanceState)
+        setContent {
+            HamrahBankTheme {
+                val navController = rememberNavController()
+
+                Scaffold(
+                    modifier = Modifier.fillMaxSize(),
+                    bottomBar = { CheckBottomBar(navController) }) { innerPadding ->
+                    AppNavHost(navController = navController, innerPadding = innerPadding)
                 }
             }
         }
@@ -70,7 +66,6 @@ fun AppNavHost(navController: NavHostController, innerPadding: PaddingValues) {
         NavHost(
             navController = navigationManager.navController,
             startDestination = navigationManager.getStartDestination().route,
-            modifier = Modifier.padding(innerPadding)
         ) {
             authScreensHandle()
             homeScreensHandle()
