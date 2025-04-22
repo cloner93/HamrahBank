@@ -7,12 +7,12 @@ import com.pmb.profile.domain.repository.ProfileRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class PersonalInfoUseCase @Inject constructor(
+class SubmitOtpCodeUseCase @Inject constructor(
     private val profileRepository: ProfileRepository
-) : BaseUseCase<PersonalInfoUseCase.Param, PersonalInfoEntity>() {
-
+) : BaseUseCase<SubmitOtpCodeUseCase.Param, PersonalInfoEntity>() {
     override suspend fun execute(params: Param): Flow<Result<PersonalInfoEntity>> =
-        profileRepository.fetchPersonalInfo(params)
+        profileRepository.submitOtpCode(params.otpId, params.phoneNumber, params.otpCode)
 
-    data class Param(val userId: Long)
+
+    data class Param(val otpId: Long, val phoneNumber: String, val otpCode: String)
 }

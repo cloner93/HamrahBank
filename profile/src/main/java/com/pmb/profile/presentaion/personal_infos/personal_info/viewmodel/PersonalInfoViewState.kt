@@ -1,4 +1,4 @@
-package com.pmb.profile.presentaion.personal_info.viewmodel
+package com.pmb.profile.presentaion.personal_infos.personal_info.viewmodel
 
 import com.pmb.core.platform.AlertModelState
 import com.pmb.core.platform.BaseViewState

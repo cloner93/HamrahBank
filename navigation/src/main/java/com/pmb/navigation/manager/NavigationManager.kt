@@ -69,11 +69,19 @@ class NavigationManager(
         return hiltViewModel(parentEntry)
     }
 
-    fun navigateAndClearStack(screen: Screen) {
+    fun navigateAndClearStack(
+        screen: Screen,
+        popUpTo: Screen = screen,
+        launchSingleTop: Boolean = false
+    ) {
         navController.navigate(screen.route) {
-            popUpTo(0) { inclusive = true }
+            popUpTo(popUpTo.route) {
+                inclusive = true
+            }
+            this.launchSingleTop = launchSingleTop
         }
     }
+
 
     fun navigateWithDeepLink(deepLink: Uri) {
         navController.navigate(deepLink.toString())

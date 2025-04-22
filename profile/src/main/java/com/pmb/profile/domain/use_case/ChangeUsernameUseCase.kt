@@ -7,12 +7,12 @@ import com.pmb.profile.domain.repository.ProfileRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class PersonalInfoUseCase @Inject constructor(
+class ChangeUsernameUseCase @Inject constructor(
     private val profileRepository: ProfileRepository
-) : BaseUseCase<PersonalInfoUseCase.Param, PersonalInfoEntity>() {
-
+) : BaseUseCase<ChangeUsernameUseCase.Param, PersonalInfoEntity>() {
     override suspend fun execute(params: Param): Flow<Result<PersonalInfoEntity>> =
-        profileRepository.fetchPersonalInfo(params)
+        profileRepository.changeUsername(params.userId, params.username)
 
-    data class Param(val userId: Long)
+
+    data class Param(val userId: Long, val username: String)
 }

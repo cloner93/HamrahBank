@@ -99,7 +99,7 @@ fun ProfileScreen(viewModel: ProfileViewModel) {
                     bottomDivider = true,
                     startIconStyle = IconStyle(tint = AppTheme.colorScheme.iconColor),
                     onItemClick = {
-                        navigationManager.navigate(ProfileScreens.PersonalInfo)
+                        navigationManager.navigate(ProfileScreens.PersonalInfo.Graph)
                     })
 
                 MenuItem(

@@ -1,4 +1,4 @@
-package com.pmb.profile.presentaion.personal_info
+package com.pmb.profile.presentaion.personal_infos.personal_info
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -24,31 +24,53 @@ import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.moduleScreen.ProfileScreens
 import com.pmb.profile.R
-import com.pmb.profile.presentaion.personal_info.viewmodel.PersonalInfoViewActions
-import com.pmb.profile.presentaion.personal_info.viewmodel.PersonalInfoViewEvents
-import com.pmb.profile.presentaion.personal_info.viewmodel.PersonalInfoViewModel
+import com.pmb.profile.domain.entity.PersonalInfoEntity
+import com.pmb.profile.presentaion.personal_infos.PersonalInfoSharedState
+import com.pmb.profile.presentaion.personal_infos.personal_info.viewmodel.PersonalInfoViewActions
+import com.pmb.profile.presentaion.personal_infos.personal_info.viewmodel.PersonalInfoViewEvents
+import com.pmb.profile.presentaion.personal_infos.personal_info.viewmodel.PersonalInfoViewModel
 
 @Composable
-fun PersonalInfoScreen(viewModel: PersonalInfoViewModel) {
+fun PersonalInfoScreen(
+    viewModel: PersonalInfoViewModel,
+    sharedState: PersonalInfoSharedState,
+    result: (PersonalInfoEntity) -> Unit
+) {
     val navigationManager = LocalNavigationManager.current
     val viewState by viewModel.viewState.collectAsState()
+    LaunchedEffect(Unit) {
+        viewModel.handle(PersonalInfoViewActions.UpdateShareState(sharedState))
+    }
 
     LaunchedEffect(Unit) {
-        when (viewModel.viewEvent) {
-            PersonalInfoViewEvents.NavigateToChangeUsername ->
-                navigationManager.navigate(ProfileScreens.ChangeUsername)
+        viewModel.viewEvent.collect { event ->
+            when (event) {
+                PersonalInfoViewEvents.NavigateToChangeUsername -> {
+                    result.invoke(viewState.personalInfo)
+                    navigationManager.navigate(ProfileScreens.PersonalInfo.ChangeUsername)
+                }
 
-            PersonalInfoViewEvents.NavigateToChangePhoneNumber ->
-                navigationManager.navigate(ProfileScreens.ChangePhoneNumber)
+                PersonalInfoViewEvents.NavigateToChangePhoneNumber -> {
+                    result.invoke(viewState.personalInfo)
+                    navigationManager.navigate(ProfileScreens.PersonalInfo.ChangePhoneNumber)
+                }
 
-            PersonalInfoViewEvents.NavigateToChangeAddress ->
-                navigationManager.navigate(ProfileScreens.ChangeAddress)
+                PersonalInfoViewEvents.NavigateToChangeAddress -> {
+                    result.invoke(viewState.personalInfo)
+                    navigationManager.navigate(ProfileScreens.PersonalInfo.ChangeAddress)
+                }
 
-            PersonalInfoViewEvents.NavigateToChangeEducation ->
-                navigationManager.navigate(ProfileScreens.ChangeEducation)
+                PersonalInfoViewEvents.NavigateToChangeEducation -> {
+                    result.invoke(viewState.personalInfo)
+                    navigationManager.navigate(ProfileScreens.PersonalInfo.ChangeEducation)
+                }
 
-            PersonalInfoViewEvents.NavigateToChangeJob ->
-                navigationManager.navigate(ProfileScreens.ChangeJob)
+
+                PersonalInfoViewEvents.NavigateToChangeJob -> {
+                    result.invoke(viewState.personalInfo)
+                    navigationManager.navigate(ProfileScreens.PersonalInfo.ChangeJob)
+                }
+            }
         }
     }
 

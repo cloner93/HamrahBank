@@ -1,10 +1,12 @@
-package com.pmb.profile.presentaion.personal_info.viewmodel
+package com.pmb.profile.presentaion.personal_infos.personal_info.viewmodel
 
 import androidx.lifecycle.viewModelScope
 import com.pmb.core.platform.AlertModelState
 import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.platform.Result
+import com.pmb.profile.domain.entity.PersonalInfoEntity
 import com.pmb.profile.domain.use_case.PersonalInfoUseCase
+import com.pmb.profile.presentaion.personal_infos.PersonalInfoSharedState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -12,10 +14,9 @@ import javax.inject.Inject
 @HiltViewModel
 class PersonalInfoViewModel @Inject constructor(
     private val personalInfoUseCase: PersonalInfoUseCase
-) :
-    BaseViewModel<PersonalInfoViewActions, PersonalInfoViewState, PersonalInfoViewEvents>(
-        PersonalInfoViewState()
-    ) {
+) : BaseViewModel<PersonalInfoViewActions, PersonalInfoViewState, PersonalInfoViewEvents>(
+    PersonalInfoViewState()
+) {
 
     init {
         fetchPersonalInfo()
@@ -23,12 +24,27 @@ class PersonalInfoViewModel @Inject constructor(
 
     override fun handle(action: PersonalInfoViewActions) {
         when (action) {
+            is PersonalInfoViewActions.UpdateShareState -> handleUpdateShareState(action.sharedState)
+            PersonalInfoViewActions.ChangeUsername -> postEvent(PersonalInfoViewEvents.NavigateToChangeUsername)
+            PersonalInfoViewActions.ChangePhoneNumber -> postEvent(PersonalInfoViewEvents.NavigateToChangePhoneNumber)
             PersonalInfoViewActions.ChangeAddress -> postEvent(PersonalInfoViewEvents.NavigateToChangeAddress)
             PersonalInfoViewActions.ChangeEducation -> postEvent(PersonalInfoViewEvents.NavigateToChangeEducation)
             PersonalInfoViewActions.ChangeJob -> postEvent(PersonalInfoViewEvents.NavigateToChangeJob)
-            PersonalInfoViewActions.ChangePhoneNumber -> postEvent(PersonalInfoViewEvents.NavigateToChangePhoneNumber)
-            PersonalInfoViewActions.ChangeUsername -> postEvent(PersonalInfoViewEvents.NavigateToChangeUsername)
             PersonalInfoViewActions.ClearAlert -> setState { it.copy(alertState = null) }
+        }
+    }
+
+    private fun handleUpdateShareState(shareState: PersonalInfoSharedState) {
+        setState {
+            it.copy(
+                personalInfo = PersonalInfoEntity(
+                    username = shareState.username,
+                    phoneNumber = shareState.phoneNumber,
+                    address = shareState.address,
+                    education = shareState.education,
+                    job = shareState.job
+                )
+            )
         }
     }
 
@@ -48,9 +64,7 @@ class PersonalInfoViewModel @Inject constructor(
                                     },
                                     onDismissed = {
                                         setState { it.copy(loading = false) }
-                                    }
-                                )
-                            )
+                                    }))
                         }
                     }
 
@@ -61,8 +75,7 @@ class PersonalInfoViewModel @Inject constructor(
                     is Result.Success -> {
                         setState {
                             it.copy(
-                                loading = false,
-                                personalInfo = result.data
+                                loading = false, personalInfo = result.data
                             )
                         }
                     }
