@@ -2,6 +2,8 @@
     <string name="charge_screen_title">شارژ</string>
     <string name="buy_new_charge">خرید شارژ جدید</string>
     <string name="buy_charge">خرید شارژ</string>
+    <string name="choose_charge_price">انتخاب مبلغ شارژ</string>
+    <string name="choose_your_charge">مبلغ شارژ را انتخاب کنید.</string>
     <string name="buying_history">سوابق خرید</string>
     <string name="latest_number">شماره های اخیر</string>
     <string name="mobile">شماره همراه</string>

@@ -1,4 +1,4 @@
-package com.pmb.account.presentation.component
+package com.pmb.ballon.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -129,6 +129,14 @@ fun PreviewChipDefault() {
                     clickable = { },
                     color = Color.Blue.copy(alpha = 0.1f),
                     assetColor = Color.Blue
+                )
+                ChipWithIcon(
+                    value = "Without Icon",
+                    startIcon = Icons.Default.ArrowDropDown,
+                    clickable = { },
+                    color = Color.White,
+                    assetColor = Color.Black,
+                    borderColor = Color.Gray
                 )
             }
         }

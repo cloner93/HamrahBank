@@ -52,7 +52,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.pmb.account.R
-import com.pmb.account.presentation.component.ChipWithIcon
+import com.pmb.ballon.component.ChipWithIcon
 import com.pmb.account.presentation.component.CustomAppTopBar
 import com.pmb.account.presentation.component.TransactionModel
 import com.pmb.account.presentation.component.TransactionType
