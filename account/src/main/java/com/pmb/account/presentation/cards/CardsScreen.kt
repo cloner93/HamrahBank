@@ -93,14 +93,14 @@ fun CardsScreen() {
             ) {
                 AppButtonIcon(
                     icon = com.pmb.ballon.R.drawable.ic_help,
-                    style = IconStyle(tint = Color.Black),
+                    style = IconStyle(tint = AppTheme.colorScheme.foregroundNeutralDefault),
                     onClick = {
                         viewModel.handle(CardsViewActions.ShowHelp)
                     })
 
                 AppButtonIcon(
                     icon = com.pmb.ballon.R.drawable.ic_coins,
-                    style = IconStyle(tint = Color.Black),
+                    style = IconStyle(tint = AppTheme.colorScheme.foregroundNeutralDefault),
                     onClick = {
                         viewModel.handle(CardsViewActions.NavigateToBalanceScreen)
                     })

@@ -18,6 +18,7 @@ import androidx.compose.ui.res.stringResource
 import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.EmptyList
 import com.pmb.ballon.component.ExtendFAB
+import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.ClickableIcon
@@ -58,64 +59,71 @@ fun TransferScreen(
             }
         }
     }
-    Box(contentAlignment = Alignment.BottomCenter) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(color = AppTheme.colorScheme.onForegroundNeutralDefault)
+
+    AppContent(
+        scrollState = null,
+    ) {
+        Box(
+            contentAlignment = Alignment.BottomCenter
         ) {
-            AppTopBar(
-                title = stringResource(R.string.fund_transfer),
-                startIcon = ClickableIcon(
-                    icon = IconType.Painter(painterResource(com.pmb.ballon.R.drawable.ic_question_circle)),
-                    onClick = {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(color = AppTheme.colorScheme.onForegroundNeutralDefault)
+            ) {
+                AppTopBar(
+                    title = stringResource(R.string.fund_transfer),
+                    startIcon = ClickableIcon(
+                        icon = IconType.Painter(painterResource(com.pmb.ballon.R.drawable.ic_question_circle)),
+                        onClick = {
 
-                    }),
-                endIcon = ClickableIcon(
-                    icon = IconType.Painter(painterResource(com.pmb.ballon.R.drawable.ic_search)),
-                    onClick = {
-                        navigationManager.navigate(TransferScreens.TransferDestinationSearch)
-                    })
-            )
-
-            if (!viewState.loading)
-                if (viewState.accounts.isEmpty() && viewState.favoriteAccounts.isEmpty()) {
-                    EmptyList(
-                        iconType = IconType.Painter(painterResource(R.drawable.img_bank_card_shrare_money)),
-                        message = stringResource(R.string.msg_dont_have_transfer_yet)
-                    )
-                } else {
-                    FavoriteContactsView(
-                        items = viewState.favoriteAccounts,
-                        onEditClick = {
-                            navigationManager.navigate(TransferScreens.TransferEditFavorite)
-                        }, onClick = {
-                            viewModel.handle(TransferViewActions.SelectAccount(it))
+                        }),
+                    endIcon = ClickableIcon(
+                        icon = IconType.Painter(painterResource(com.pmb.ballon.R.drawable.ic_search)),
+                        onClick = {
+                            navigationManager.navigate(TransferScreens.TransferDestinationSearch)
                         })
+                )
 
-                    if (viewState.accounts.isNotEmpty())
-                        TransactionClientBankList(
-                            items = viewState.accounts,
-                            state = lazyListState,
-                            onEditClick = {
-                                navigationManager.navigate(TransferScreens.TransferEditLatestDestination)
-                            },
-                            onClick = {
-                                viewModel.handle(TransferViewActions.SelectAccount(it))
-                            }
+                if (!viewState.loading) {
+                    if (viewState.accounts.isEmpty() && viewState.favoriteAccounts.isEmpty()) {
+                        EmptyList(
+                            iconType = IconType.Painter(painterResource(R.drawable.img_bank_card_shrare_money)),
+                            message = stringResource(R.string.msg_dont_have_transfer_yet)
                         )
+                    } else {
+                        FavoriteContactsView(
+                            items = viewState.favoriteAccounts,
+                            onEditClick = {
+                                navigationManager.navigate(TransferScreens.TransferEditFavorite)
+                            }, onClick = {
+                                viewModel.handle(TransferViewActions.SelectAccount(it))
+                            })
+
+                        if (viewState.accounts.isNotEmpty())
+                            TransactionClientBankList(
+                                items = viewState.accounts,
+                                state = lazyListState,
+                                onEditClick = {
+                                    navigationManager.navigate(TransferScreens.TransferEditLatestDestination)
+                                },
+                                onClick = {
+                                    viewModel.handle(TransferViewActions.SelectAccount(it))
+                                }
+                            )
+                    }
                 }
-
-        }
-
-        ExtendFAB(
-            extended = lazyListState.isScrollingUp(),
-            text = stringResource(R.string.new_transfer),
-            icon = IconType.ImageVector(imageVector = Icons.Default.Add),
-            onClick = {
-                viewModel.handle(TransferViewActions.NavigateToDestinationInput)
             }
-        )
+
+            ExtendFAB(
+                extended = lazyListState.isScrollingUp(),
+                text = stringResource(R.string.new_transfer),
+                icon = IconType.ImageVector(imageVector = Icons.Default.Add),
+                onClick = {
+                    viewModel.handle(TransferViewActions.NavigateToDestinationInput)
+                }
+            )
+        }
     }
 
     if (viewState.loading) AppLoading()

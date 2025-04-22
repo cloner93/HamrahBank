@@ -1,6 +1,6 @@
 package com.pmb.navigation.provider
 
-import com.pmb.navigation.moduleScreen.AuthScreens
+import com.pmb.navigation.moduleScreen.ProfileScreens
 import com.pmb.navigation.screen.Screen
 
 interface NavigationStartDestinationProvider {
@@ -8,6 +8,6 @@ interface NavigationStartDestinationProvider {
 }
 object DefaultStartDestinationProvider : NavigationStartDestinationProvider {
     override fun getStartDestination(): Screen {
-        return AuthScreens.Auth
+        return ProfileScreens.Profile
     }
 }

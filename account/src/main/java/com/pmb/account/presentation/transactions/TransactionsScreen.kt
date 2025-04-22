@@ -46,13 +46,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.pmb.account.R
-import com.pmb.account.presentation.component.ChipWithIcon
 import com.pmb.account.presentation.component.CustomAppTopBar
 import com.pmb.account.presentation.component.TransactionModel
 import com.pmb.account.presentation.component.TransactionType
@@ -66,12 +64,14 @@ import com.pmb.account.utils.mapToDepositModel
 import com.pmb.account.utils.toPersianDate
 import com.pmb.ballon.component.DepositBottomSheet
 import com.pmb.ballon.component.DynamicTabSelector
+import com.pmb.ballon.component.annotation.AppPreview
 import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppIcon
 import com.pmb.ballon.component.base.AppImage
 import com.pmb.ballon.component.base.BodySmallText
 import com.pmb.ballon.component.base.ButtonMediumText
 import com.pmb.ballon.component.base.CaptionText
+import com.pmb.ballon.component.base.ChipWithIcon
 import com.pmb.ballon.component.base.ClickableIcon
 import com.pmb.ballon.component.base.Headline6Text
 import com.pmb.ballon.component.base.IconType
@@ -706,7 +706,7 @@ fun TransactionRow(item: TransactionModel, onClick: () -> Unit = {}) {
     }
 }
 
-@Preview(showBackground = true)
+@AppPreview
 @Composable
 private fun AllTransactionsSectionFiledPreview() {
     val transactionList = listOf<TransactionModel>(
@@ -748,7 +748,7 @@ private fun AllTransactionsSectionFiledPreview() {
     }
 }
 
-@Preview(showBackground = true)
+@AppPreview
 @Composable
 private fun AllTransactionsSectionEmptyPreview() {
 
@@ -765,7 +765,7 @@ private fun AllTransactionsSectionEmptyPreview() {
 }
 
 
-@Preview(showBackground = true)
+@AppPreview
 @Composable
 private fun SendTransactionsSectionPreview() {
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
@@ -777,7 +777,7 @@ private fun SendTransactionsSectionPreview() {
     }
 }
 
-@Preview(showBackground = true)
+@AppPreview
 @Composable
 private fun ReceiveTransactionsSectionPreview() {
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
