@@ -1,4 +1,4 @@
-package com.pmb.mobile
+package com.pmb.mobile.di
 
 import com.pmb.mobile.presentation.viewmodel.MainActivityViewState
 import dagger.Module
@@ -11,5 +11,5 @@ import dagger.hilt.components.SingletonComponent
 object AppModule {
 
     @Provides
-    fun provideMainViewState():MainActivityViewState = MainActivityViewState("mas mas")
+    fun provideMainViewState(): MainActivityViewState = MainActivityViewState()
 }

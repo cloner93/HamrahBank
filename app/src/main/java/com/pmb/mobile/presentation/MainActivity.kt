@@ -4,11 +4,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -24,6 +26,7 @@ import com.pmb.ballon.component.base.BottomNavItem
 import com.pmb.ballon.component.base.bottomNavItems
 import com.pmb.ballon.ui.theme.HamrahBankTheme
 import com.pmb.home.presentation.homeScreensHandle
+import com.pmb.mobile.presentation.viewmodel.MainActivityViewModel
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.manager.NavigationManager
 import com.pmb.navigation.moduleScreen.AccountScreens
@@ -36,12 +39,18 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    private val viewModel: MainActivityViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
 
         super.onCreate(savedInstanceState)
         setContent {
-            HamrahBankTheme {
+
+            val viewState by viewModel.viewState.collectAsState()
+
+            HamrahBankTheme(themeMode = viewState.themeMode) {
                 val navController = rememberNavController()
 
                 Scaffold(

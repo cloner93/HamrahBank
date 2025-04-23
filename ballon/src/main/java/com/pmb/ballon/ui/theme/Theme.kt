@@ -11,6 +11,7 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import com.pmb.core.platform.ThemeMode
 
 object AppTheme {
 
@@ -48,9 +49,15 @@ val LocalTypography = staticCompositionLocalOf { CustomTypography() }
 fun HamrahBankTheme(
     spaces: CustomSpaces = AppTheme.spaces,
     typography: CustomTypography = AppTheme.typography,
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    themeMode: ThemeMode = ThemeMode.LIGHT,
     content: @Composable () -> Unit,
 ) {
+    val darkTheme = when (themeMode) {
+        ThemeMode.LIGHT -> false
+        ThemeMode.DARK -> true
+        ThemeMode.SYSTEM -> isSystemInDarkTheme()
+    }
+
     val currentColor = if (darkTheme) darkColors() else lightColors()
     val rememberedColors = remember(currentColor) { currentColor.copy() }.apply {
         updateColorsFrom(currentColor)
