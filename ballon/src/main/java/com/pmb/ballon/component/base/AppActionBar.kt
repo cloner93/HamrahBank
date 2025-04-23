@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.pmb.ballon.models.IconStyle
 import com.pmb.ballon.models.TextStyle
 
 data class ClickableIcon(val icon: IconType, val tint: androidx.compose.ui.graphics.Color? = null, val onClick: () -> Unit)
@@ -40,7 +41,8 @@ fun AppTopBar(
             AppButtonIcon(
                 modifier = Modifier.align(Alignment.CenterStart),
                 icon = startIcon.icon,
-                onClick = startIcon.onClick
+                onClick = startIcon.onClick,
+                style = IconStyle(tint = startIcon.tint)
             )
         }
 
