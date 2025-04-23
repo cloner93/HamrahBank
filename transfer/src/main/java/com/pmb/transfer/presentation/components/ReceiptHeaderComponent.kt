@@ -7,15 +7,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.pmb.ballon.component.base.ButtonSmallText
 import com.pmb.transfer.domain.entity.ReceiptStatus
-import com.pmb.transfer.presentation.transfer_receipt.viewmodel.TransferReceiptViewState
+import com.pmb.transfer.domain.entity.TransferReceiptEntity
 
 @Composable
-fun ReceiptHeaderComponent(viewState: TransferReceiptViewState) {
+fun ReceiptHeaderComponent(receipt: TransferReceiptEntity?) {
     Spacer(modifier = Modifier.size(8.dp))
-    viewState.receipt?.let { ClientBankProfileInfo(it.destination) }
+    receipt?.let { ClientBankProfileInfo(it.destination) }
     Spacer(modifier = Modifier.size(12.dp))
-    ReceiptStatusBadge(viewState.receipt?.status ?: ReceiptStatus.UNKNOWN)
-    viewState.receipt?.message?.let {
+    ReceiptStatusBadge(receipt?.status ?: ReceiptStatus.UNKNOWN)
+    receipt?.message?.let {
         Spacer(modifier = Modifier.size(12.dp))
         ButtonSmallText(text = it)
     }

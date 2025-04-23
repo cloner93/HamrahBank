@@ -24,6 +24,7 @@ import com.pmb.ballon.models.IconStyle
 import com.pmb.ballon.models.TextStyle
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.navigation.manager.LocalNavigationManager
+import com.pmb.navigation.moduleScreen.ProfileScreens
 import com.pmb.profile.R
 import com.pmb.profile.presentaion.profile.viewModel.ProfileViewActions
 import com.pmb.profile.presentaion.profile.viewModel.ProfileViewEvents
@@ -97,9 +98,8 @@ fun ProfileScreen(viewModel: ProfileViewModel) {
                     endIcon = com.pmb.ballon.R.drawable.ic_arrow_left,
                     bottomDivider = true,
                     startIconStyle = IconStyle(tint = AppTheme.colorScheme.iconColor),
-                    clickable = false,
                     onItemClick = {
-
+                        navigationManager.navigate(ProfileScreens.PersonalInfo.Graph)
                     })
 
                 MenuItem(

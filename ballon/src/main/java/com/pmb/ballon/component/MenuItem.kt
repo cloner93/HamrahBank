@@ -27,6 +27,7 @@ import com.pmb.ballon.models.IconStyle
 import com.pmb.ballon.models.TextStyle
 import com.pmb.ballon.ui.theme.AppTheme
 
+
 @Composable
 fun MenuItem(
     modifier: Modifier = Modifier,
@@ -45,6 +46,7 @@ fun MenuItem(
     subTitleLayoutDirection: LayoutDirection = LayoutDirection.Rtl,
     startIconStyle: IconStyle? = null,
     endIconStyle: IconStyle = IconStyle(tint = AppTheme.colorScheme.onForegroundNeutralDisabled),
+    endContent: @Composable (() -> Unit)? = null,
     clickable: Boolean = true,
     onItemClick: (() -> Unit)? = null
 ) {
@@ -85,12 +87,14 @@ fun MenuItem(
 
             Spacer(modifier = Modifier.weight(1f))
 
+            endContent?.invoke()
+
             endIcon?.let {
                 AppIcon(icon = endIcon, style = endIconStyle)
             }
 
         }
-        if (bottomDivider) HorizontalDivider()
+        if (bottomDivider) HorizontalDivider(color = AppTheme.colorScheme.background3Neutral)
     }
 }
 
@@ -98,7 +102,8 @@ fun MenuItem(
 @Composable
 private fun MenuItemTitlePreview() {
     Column {
-        MenuItem(title = "my Services",
+        MenuItem(
+            title = "my Services",
             startIcon = R.drawable.ic_shopping_bag_star,
             endIcon = R.drawable.ic_arrow_left,
             bottomDivider = true,
@@ -107,7 +112,8 @@ private fun MenuItemTitlePreview() {
 
             })
 
-        MenuItem(title = "my Services",
+        MenuItem(
+            title = "my Services",
             subtitle = "my service subtitle...new view genarate",
             startIcon = R.drawable.ic_shopping_bag_star,
             endIcon = R.drawable.ic_arrow_left,

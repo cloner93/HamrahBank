@@ -1,0 +1,28 @@
+package com.pmb.profile.domain.repository
+
+import com.pmb.core.platform.Result
+import com.pmb.profile.domain.entity.OtpEntity
+import com.pmb.profile.domain.entity.PersonalInfoEntity
+import com.pmb.profile.domain.use_case.PersonalInfoUseCase
+import kotlinx.coroutines.flow.Flow
+
+interface ProfileRepository {
+    suspend fun logOut(): Flow<Result<String>>
+    suspend fun fetchPersonalInfo(params: PersonalInfoUseCase.Param): Flow<Result<PersonalInfoEntity>>
+    suspend fun changeUsername(userId: Long, username: String): Flow<Result<PersonalInfoEntity>>
+    suspend fun changePhoneNumber(
+        userId: Long,
+        phoneNumber: String
+    ): Flow<Result<OtpEntity>>
+
+    suspend fun resendOtpCode(
+        id: Long,
+        phoneNumber: String
+    ): Flow<Result<OtpEntity>>
+
+    suspend fun submitOtpCode(
+        otpId: Long,
+        phoneNumber: String,
+        otpCode: String
+    ): Flow<Result<PersonalInfoEntity>>
+}
