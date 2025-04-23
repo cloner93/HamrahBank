@@ -1,14 +1,31 @@
 package com.pmb.core.utils
 
 fun String.isMobile(): MobileValidationResult {
-    val mobileRegex = Regex("^(0098|\\+98|09)\\d{9}$")
+    var validFormat = false
     val length = when {
-        startsWith("0098") -> 14
-        startsWith("+98") -> 13
-        startsWith("09") -> 11
+        startsWith("0098") -> {
+            validFormat = true
+            14
+        }
+
+        startsWith("+98") -> {
+            validFormat = true
+            13
+        }
+
+        startsWith("09") -> {
+            validFormat = true
+            11
+        }
+
+        startsWith("98") -> {
+            validFormat = true
+            11
+        }
+
         else -> 14
     }
-    return MobileValidationResult(length = length, isValid = mobileRegex.matches(this))
+    return MobileValidationResult(length = length, isValid = validFormat && this.length == length)
 }
 
 fun String.isIranianNationalId(): Boolean {
@@ -53,8 +70,7 @@ fun String.isPassword(): PasswordValidationResult {
 }
 
 data class MobileValidationResult(
-    val length: Int,
-    val isValid: Boolean
+    val length: Int, val isValid: Boolean
 )
 
 data class PasswordValidationResult(
@@ -68,6 +84,42 @@ data class PasswordValidationResult(
         get() = minLen && lowercase && uppercase && digit && specialChar
 }
 
+data class UsernameValidationResult(
+    val minLen: Boolean = false,
+    val maxLen: Boolean = false,
+    val startWithLetter: Boolean = false,
+    val specialChar: Boolean = false
+) {
+    val isValid: Boolean
+        get() = minLen && maxLen && startWithLetter && specialChar
+
+    companion object {
+        fun validate(value: String): UsernameValidationResult {
+            val minLen = value.length >= 5
+            val maxLen = value.length <= 30
+            val startWithLetter = value.startWithEnglishLetter()
+            val specialChar = value.isValidChars()
+
+            return UsernameValidationResult(
+                minLen = minLen,
+                maxLen = maxLen,
+                startWithLetter = startWithLetter,
+                specialChar = specialChar
+            )
+        }
+    }
+}
+
+fun String.isValidChars(): Boolean {
+    val regex = Regex("^[a-zA-Z0-9_.-]+$")
+    return regex.matches(this)
+}
+
+fun String.startWithEnglishLetter(): Boolean {
+    val regex = Regex("^[a-zA-Z]+$")
+    return regex.matches(this)
+}
+
 fun String.convertPersianDigitsToEnglish(): String {
     return map { char ->
         when (char) {
@@ -77,3 +129,11 @@ fun String.convertPersianDigitsToEnglish(): String {
     }.joinToString("")
 }
 
+fun String.toCurrency(): String {
+    // separate amount string 3 digits each with comma. like 100000000 to 100,000,000
+    return this
+        .reversed()
+        .chunked(3)
+        .joinToString(",")
+        .reversed()
+}

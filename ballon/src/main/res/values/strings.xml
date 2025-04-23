@@ -30,5 +30,8 @@
     <string name="year_month">ماه/سال</string>
     <string name="share">اشتراک‌گذاری</string>
     <string name="save_to_gallery">ذخیره در گالری</string>
+    <string name="username_condition_word">متشکل از حروف انگلیسی٬ اعداد و «_»، «-»، «.» باشد</string>
+    <string name="username_condition_start_with_letter">با حرف انگلیسی آغاز شود</string>
+    <string name="username_condition_limit_length">بین ۵ تا ۳۰ کاراکتر باشد</string>
 
 </resources>

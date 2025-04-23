@@ -10,11 +10,10 @@ fun Double.toCurrency(): String {
     return formatter.format(this)
 }
 
-fun String.toCurrency(): String {
-    // separate amount string 3 digits each with comma. like 100000000 to 100,000,000
-    return this
-        .reversed()
-        .chunked(3)
-        .joinToString(",")
-        .reversed()
+fun Int.toTimeFormat(): String {
+    val num = this
+    return when {
+        num >= 3600 -> "%02d:%02d:%02d".format(this / 3600, (this % 3600) / 60, this % 60)
+        else -> "%02d:%02d".format(this / 60, this % 60)
+    }
 }
