@@ -16,43 +16,61 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.MenuItem
 import com.pmb.ballon.component.TextImage
 import com.pmb.ballon.component.annotation.AppPreview
 import com.pmb.ballon.component.base.AppButtonIcon
 import com.pmb.ballon.component.base.AppContent
+import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.models.IconStyle
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.ballon.ui.theme.HamrahBankTheme
+import com.pmb.navigation.manager.LocalNavigationManager
+import com.pmb.navigation.moduleScreen.ProfileScreens
 import com.pmb.profile.R
+import com.pmb.profile.presentaion.profile.viewModel.ProfileViewActions
+import com.pmb.profile.presentaion.profile.viewModel.ProfileViewEvents
+import com.pmb.profile.presentaion.profile.viewModel.ProfileViewModel
 
 
 @Composable
-fun ProfileScreen(/*viewModel: ProfileViewModel*/) {
-//    val navigationManager = LocalNavigationManager.current
-//    val viewState by viewModel.viewState.collectAsState()
+fun ProfileScreen() {
+    val viewModel = hiltViewModel<ProfileViewModel>()
+    val viewState by viewModel.viewState.collectAsState()
+
+    val navigationManager = LocalNavigationManager.current
+
     LaunchedEffect(Unit) {
-        /*viewModel.viewEvent.collect { event ->
+        viewModel.viewEvent.collect { event ->
             when (event) {
                 ProfileViewEvents.LogoutAccountSucceed -> {
-                    // in the future based on our logic and business can we call it and change some thing else  or navigate other screen
-                    Unit
+
+                }
+
+                ProfileViewEvents.NavigateToThemeScreen -> {
+                    navigationManager.navigate(ProfileScreens.ThemeScreen)
                 }
             }
-        }*/
+        }
     }
+
     AppContent(
         modifier = Modifier
             .padding(horizontal = 16.dp),
         backgroundColor = AppTheme.colorScheme.background3Neutral,
         scrollState = rememberScrollState(),
         topBar = {
+
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -63,7 +81,9 @@ fun ProfileScreen(/*viewModel: ProfileViewModel*/) {
                         .align(Alignment.Companion.TopStart),
                     icon = Icons.Outlined.HelpOutline,
                     style = IconStyle(tint = AppTheme.colorScheme.onBackgroundNeutralDefault),
-                    onClick = { })
+                    onClick = {
+
+                    })
                 Row(
                     modifier = Modifier
                         .align(Alignment.Companion.Center)
@@ -121,7 +141,7 @@ fun ProfileScreen(/*viewModel: ProfileViewModel*/) {
                     endIconStyle = IconStyle(tint = AppTheme.colorScheme.foregroundNeutralRest),
                     clickable = true,
                     onItemClick = {
-
+                        viewModel.handle(ProfileViewActions.NavigateToThemeScreen)
                     })
 
                 MenuItem(
@@ -222,12 +242,12 @@ fun ProfileScreen(/*viewModel: ProfileViewModel*/) {
 
 
     }
-    /*if (viewState.loading) {
+    if (viewState.loading) {
         AppLoading()
     }
     if (viewState.alertModelState != null) {
         AlertComponent(viewState.alertModelState!!)
-    }*/
+    }
 }
 
 @AppPreview
