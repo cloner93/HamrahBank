@@ -26,6 +26,8 @@ turbine = "1.2.0"
 mockk = "1.14.0"
 mp4 = "1.9.56"
 testCore= "1.6.1"
+dataStore = "1.0.0"
+
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -67,6 +69,8 @@ androidx-camera-video = { group = "androidx.camera", name = "camera-video", vers
 androidx-camera-extensions = { group = "androidx.camera", name = "camera-extensions", version.ref = "cameraX" }
 androidx-exifinterface = { group = "androidx.exifinterface", name = "exifinterface", version.ref = "exifinterface" }
 mp4-parser = { group = "org.mp4parser", name = "isoparser", version.ref = "mp4" }
+dataStore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "dataStore" }
+
 [bundles]
 androix-camera-bundle = ["androidx-camera-core", "androidx-camera", "androidx-camera-view", "androidx-camera-lifecycle", "androidx-camera-video", "androidx-camera-extensions"]
 

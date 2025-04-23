@@ -107,6 +107,9 @@ dependencies {
     kapt(libs.android.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
 
+    // temporary store them in datastore - move it to data layer
+    implementation(libs.dataStore)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
