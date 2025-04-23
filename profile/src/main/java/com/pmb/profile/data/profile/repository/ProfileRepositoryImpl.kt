@@ -1,6 +1,7 @@
 package com.pmb.profile.data.profile.repository
 
 import com.pmb.core.platform.Result
+import com.pmb.profile.domain.entity.AddressEntity
 import com.pmb.profile.domain.entity.OtpEntity
 import com.pmb.profile.domain.entity.PersonalInfoEntity
 import com.pmb.profile.domain.repository.ProfileRepository
@@ -68,6 +69,17 @@ class ProfileRepositoryImpl @Inject constructor() : ProfileRepository {
             )
         )
     }
+
+    override suspend fun changeAddress(
+        id: Long,
+        postalCode: String
+    ): Flow<Result<AddressEntity>> = flow {
+        emit(Result.Loading)
+        delay(2000)
+        emit(
+            Result.Success(mockAddressEntity.copy(postalCode = postalCode))
+        )
+    }
 }
 
 
@@ -75,7 +87,11 @@ private val mockPersonalInfoEntity
     get() = PersonalInfoEntity(
         username = "pooriak",
         phoneNumber = "09123456789",
-        address = "تهران، کوی نصر، خیابانکوی نصر",
+        addressEntity = AddressEntity(
+            id = 12345L,
+            address = "تهران، کوی نصر، خیابان ۲۷، پلاکfif، واحد ۳",
+            postalCode = "1234567890"
+        ),
         education = "دانشجو",
         job = "کارشناسی",
     )
@@ -85,5 +101,12 @@ private val mockOtpEntity
         id = 12873942,
         duration = 30,
         phoneNumber = "09123456789",
+    )
+
+private val mockAddressEntity
+    get() = AddressEntity(
+        id = 12345L,
+        address = "آدرس فعلی: تهران، کوی نصر، خیابان ۲۷، پلاک ۱۵، واحد ۳",
+        postalCode = "1234567890"
     )
 

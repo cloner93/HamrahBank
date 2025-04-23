@@ -86,12 +86,8 @@ fun MenuItem(
             }
 
             Spacer(modifier = Modifier.weight(1f))
-
             endContent?.invoke()
-
-            endIcon?.let {
-                AppIcon(icon = endIcon, style = endIconStyle)
-            }
+            endIcon?.let { AppIcon(icon = endIcon, style = endIconStyle) }
 
         }
         if (bottomDivider) HorizontalDivider(color = AppTheme.colorScheme.background3Neutral)

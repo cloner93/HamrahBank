@@ -25,4 +25,8 @@
     <string name="_continue">ادامه</string>
     <string name="resend_code_hint">امکان درخواست مجدد تا %1$s</string>
     <string name="re_send">ارسال مجدد</string>
+    <string name="inquiry">استعلام</string>
+    <string name="postal_code">کد پستی</string>
+    <string name="new_address_dot">آدرس جدید:</string>
+    <string name="current_address_dot">آدرس فعلی:</string>
 </resources>

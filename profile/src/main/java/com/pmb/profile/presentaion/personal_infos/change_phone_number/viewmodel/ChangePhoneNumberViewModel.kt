@@ -30,7 +30,7 @@ class ChangePhoneNumberViewModel @Inject constructor(
     }
 
     private fun handleUpdateShareState(sharedState: PersonalInfoSharedState) {
-        setState { it.copy(phoneNumber = sharedState.phoneNumberOrEmpty) }
+        setState { it.copy(phoneNumber = sharedState.phoneNumber.orEmpty()) }
     }
 
     private fun updatePhoneNumber() {

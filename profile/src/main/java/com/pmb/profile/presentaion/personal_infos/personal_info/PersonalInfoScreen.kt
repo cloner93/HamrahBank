@@ -11,12 +11,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.MenuItem
 import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.component.base.AppTopBar
+import com.pmb.ballon.component.base.BaseAppText
 import com.pmb.ballon.component.base.CaptionText
 import com.pmb.ballon.models.IconStyle
 import com.pmb.ballon.models.TextStyle
@@ -146,9 +148,15 @@ private fun ProfileInfoItemsComponent(viewModel: PersonalInfoViewModel) {
                 titleStyle = TextStyle(color = AppTheme.colorScheme.foregroundNeutralDefault),
                 startIconStyle = IconStyle(tint = AppTheme.colorScheme.onBackgroundPrimaryCTA),
                 endContent = {
-                    CaptionText(
-                        text = viewState.personalInfo.safeAddress,
-                        color = AppTheme.colorScheme.onBackgroundNeutralSubdued
+                    BaseAppText(
+                        modifier = Modifier.weight(4f).padding(start = 16.dp),
+                        title = viewState.personalInfo.safeAddressEntity.safeAddress,
+                        maxLines = 1,
+                        style = TextStyle(
+                            color = AppTheme.colorScheme.onBackgroundNeutralSubdued,
+                            typography = AppTheme.typography.caption,
+                            overflow = TextOverflow.Ellipsis
+                        ),
                     )
                 },
                 onItemClick = {

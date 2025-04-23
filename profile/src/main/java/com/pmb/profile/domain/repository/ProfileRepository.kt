@@ -1,6 +1,7 @@
 package com.pmb.profile.domain.repository
 
 import com.pmb.core.platform.Result
+import com.pmb.profile.domain.entity.AddressEntity
 import com.pmb.profile.domain.entity.OtpEntity
 import com.pmb.profile.domain.entity.PersonalInfoEntity
 import com.pmb.profile.domain.use_case.PersonalInfoUseCase
@@ -25,4 +26,6 @@ interface ProfileRepository {
         phoneNumber: String,
         otpCode: String
     ): Flow<Result<PersonalInfoEntity>>
+
+    suspend fun changeAddress(id: Long, postalCode: String): Flow<Result<AddressEntity>>
 }

@@ -40,7 +40,7 @@ class PersonalInfoViewModel @Inject constructor(
                 personalInfo = PersonalInfoEntity(
                     username = shareState.username,
                     phoneNumber = shareState.phoneNumber,
-                    address = shareState.address,
+                    addressEntity = shareState.addressEntity,
                     education = shareState.education,
                     job = shareState.job
                 )
