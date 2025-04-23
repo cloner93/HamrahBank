@@ -1,4 +1,4 @@
-package com.pmb.auth.presentation.component
+package com.pmb.ballon.component
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
@@ -26,9 +26,11 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
+import com.pmb.ballon.component.annotation.AppPreview
 import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.component.base.CaptionText
 import com.pmb.ballon.ui.theme.AppTheme
+import com.pmb.ballon.ui.theme.HamrahBankTheme
 @Composable
 fun RoundedCornerCheckboxComponent(
     modifier: Modifier = Modifier,
@@ -37,8 +39,8 @@ fun RoundedCornerCheckboxComponent(
     isChecked: Boolean,
     size: Float = 18f,
     checkedColor: Color = AppTheme.colorScheme.foregroundPrimaryDefault,
-    uncheckedBorderColor: Color = AppTheme.colorScheme.onBackgroundPrimarySubdued,
-    uncheckedColor: Color = Color.White,
+    uncheckedBorderColor: Color = AppTheme.colorScheme.onBackgroundNeutralSubdued,
+    uncheckedColor: Color = AppTheme.colorScheme.background1Neutral,
     onValueChange: (Boolean) -> Unit
 ) {
     val checkboxColor: Color by animateColorAsState(if (isChecked) checkedColor else uncheckedColor)
@@ -86,7 +88,7 @@ fun RoundedCornerCheckboxComponent(
             BodyMediumText(
                 modifier = Modifier,
                 text = title,
-                color = AppTheme.colorScheme.onBackgroundNeutralDefault
+                color = AppTheme.colorScheme.foregroundNeutralDefault
 
             )
             caption?.takeIf { it.isNotEmpty() }?.let {
@@ -109,8 +111,8 @@ fun RoundedCornerCheckboxComponent(
     isChecked: Boolean,
     size: Float = 18f,
     checkedColor: Color = AppTheme.colorScheme.foregroundPrimaryDefault,
-    uncheckedBorderColor: Color = AppTheme.colorScheme.onBackgroundPrimarySubdued,
-    uncheckedColor: Color = Color.White,
+    uncheckedBorderColor: Color = AppTheme.colorScheme.onBackgroundNeutralSubdued,
+    uncheckedColor: Color = AppTheme.colorScheme.background1Neutral,
     onValueChange: (Boolean) -> Unit
 ) {
     val checkboxColor: Color by animateColorAsState(if (isChecked) checkedColor else uncheckedColor)
@@ -155,11 +157,10 @@ fun RoundedCornerCheckboxComponent(
         }
         Spacer(modifier = Modifier.size(20.dp))
         Column {
-
             BodyMediumText(
                 modifier = Modifier,
                 text = title,
-                color = AppTheme.colorScheme.onBackgroundNeutralDefault
+                color = AppTheme.colorScheme.foregroundNeutralDefault
 
             )
             caption?.takeIf { it.isNotEmpty() }?.let {
@@ -170,5 +171,16 @@ fun RoundedCornerCheckboxComponent(
                 )
             }
         }
+    }
+}
+
+@AppPreview
+@Composable
+private fun RoundedCornerCheckboxComponentPreview() {
+    HamrahBankTheme {
+        RoundedCornerCheckboxComponent(
+            title = "test",
+            isChecked = false
+        ) { }
     }
 }
