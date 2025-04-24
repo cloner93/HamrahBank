@@ -328,7 +328,7 @@ fun AppSearchTextField(
                     shape = RoundedCornerShape(12.dp)
                 ),
             singleLine = true,
-            textStyle = AppTheme.typography.bodyMedium.copy(color = Color.Black),
+            textStyle = AppTheme.typography.bodyMedium.copy(color = AppTheme.colorScheme.onBackgroundNeutralSubdued),
             decorationBox = { innerTextField ->
                 Row(
                     verticalAlignment = Alignment.CenterVertically,

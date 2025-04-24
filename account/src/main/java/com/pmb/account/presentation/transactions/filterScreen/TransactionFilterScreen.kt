@@ -171,8 +171,8 @@ fun TransactionFilterScreen() {
                                 TransactionsFilterViewActions.SelectTransactionType(TransactionType.ALL)
                             )
                     },
-                    color = if (viewState.transactionType == TransactionType.ALL) AppTheme.colorScheme.stateLayerNeutralPressed else Color.White,
-                    assetColor = Color.Black,
+                    color = if (viewState.transactionType == TransactionType.ALL) AppTheme.colorScheme.stateLayerNeutralPressed else Color.Transparent,
+                    assetColor = AppTheme.colorScheme.onBackgroundNeutralDefault,
                     borderColor = AppTheme.colorScheme.strokeNeutral1Default,
                     fillMaxWidth = true
                 )
@@ -194,8 +194,8 @@ fun TransactionFilterScreen() {
                                 )
                             )
                     },
-                    color = if (viewState.transactionType == TransactionType.SEND) AppTheme.colorScheme.stateLayerNeutralPressed else Color.White,
-                    assetColor = Color.Black,
+                    color = if (viewState.transactionType == TransactionType.SEND) AppTheme.colorScheme.stateLayerNeutralPressed else Color.Transparent,
+                    assetColor = AppTheme.colorScheme.onBackgroundNeutralDefault,
                     borderColor = AppTheme.colorScheme.strokeNeutral1Default,
                     fillMaxWidth = true
                 )
@@ -217,8 +217,8 @@ fun TransactionFilterScreen() {
                                 )
                             )
                     },
-                    color = if (viewState.transactionType == TransactionType.RECEIVE) AppTheme.colorScheme.stateLayerNeutralPressed else Color.White,
-                    assetColor = Color.Black,
+                    color = if (viewState.transactionType == TransactionType.RECEIVE) AppTheme.colorScheme.stateLayerNeutralPressed else Color.Transparent,
+                    assetColor = AppTheme.colorScheme.onBackgroundNeutralDefault,
                     borderColor = AppTheme.colorScheme.strokeNeutral1Default,
                     fillMaxWidth = true
                 )
@@ -309,8 +309,8 @@ fun TransactionFilterScreen() {
                                 )
                             )
                     },
-                    color = if (viewState.dateType == DateType.TODAY) AppTheme.colorScheme.stateLayerNeutralPressed else Color.White,
-                    assetColor = Color.Black,
+                    color = if (viewState.dateType == DateType.TODAY) AppTheme.colorScheme.stateLayerNeutralPressed else Color.Transparent,
+                    assetColor = AppTheme.colorScheme.onBackgroundNeutralDefault,
                     borderColor = AppTheme.colorScheme.strokeNeutral1Default,
                 )
                 ChipWithIcon(
@@ -327,8 +327,8 @@ fun TransactionFilterScreen() {
                                 )
                             )
                     },
-                    color = if (viewState.dateType == DateType.LAST_WEEK) AppTheme.colorScheme.stateLayerNeutralPressed else Color.White,
-                    assetColor = Color.Black,
+                    color = if (viewState.dateType == DateType.LAST_WEEK) AppTheme.colorScheme.stateLayerNeutralPressed else Color.Transparent,
+                    assetColor = AppTheme.colorScheme.onBackgroundNeutralDefault,
                     borderColor = AppTheme.colorScheme.strokeNeutral1Default,
                 )
 
@@ -346,8 +346,8 @@ fun TransactionFilterScreen() {
                                 )
                             )
                     },
-                    color = if (viewState.dateType == DateType.LAST_MONTH) AppTheme.colorScheme.stateLayerNeutralPressed else Color.White,
-                    assetColor = Color.Black,
+                    color = if (viewState.dateType == DateType.LAST_MONTH) AppTheme.colorScheme.stateLayerNeutralPressed else Color.Transparent,
+                    assetColor = AppTheme.colorScheme.onBackgroundNeutralDefault,
                     borderColor = AppTheme.colorScheme.strokeNeutral1Default,
                 )
                 ChipWithIcon(
@@ -364,8 +364,8 @@ fun TransactionFilterScreen() {
                                 )
                             )
                     },
-                    color = if (viewState.dateType == DateType.CURRENT_MONTH) AppTheme.colorScheme.stateLayerNeutralPressed else Color.White,
-                    assetColor = Color.Black,
+                    color = if (viewState.dateType == DateType.CURRENT_MONTH) AppTheme.colorScheme.stateLayerNeutralPressed else Color.Transparent,
+                    assetColor = AppTheme.colorScheme.onBackgroundNeutralDefault,
                     borderColor = AppTheme.colorScheme.strokeNeutral1Default,
                 )
                 ChipWithIcon(
@@ -382,8 +382,8 @@ fun TransactionFilterScreen() {
                                 )
                             )
                     },
-                    color = if (viewState.dateType == DateType.CUSTOM) AppTheme.colorScheme.stateLayerNeutralPressed else Color.White,
-                    assetColor = Color.Black,
+                    color = if (viewState.dateType == DateType.CUSTOM) AppTheme.colorScheme.stateLayerNeutralPressed else Color.Transparent,
+                    assetColor = AppTheme.colorScheme.onBackgroundNeutralDefault,
                     borderColor = AppTheme.colorScheme.strokeNeutral1Default,
                 )
             }

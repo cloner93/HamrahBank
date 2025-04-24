@@ -14,6 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.pmb.ballon.models.IconStyle
 import com.pmb.ballon.models.TextStyle
+import com.pmb.ballon.ui.theme.AppTheme
 
 data class ClickableIcon(val icon: IconType, val tint: androidx.compose.ui.graphics.Color? = null, val onClick: () -> Unit)
 sealed class IconType {
@@ -65,6 +66,7 @@ fun AppTopBar(title: String, onBack: (() -> Unit)? = null, endIcon: ClickableIco
         startIcon = onBack?.let {
             ClickableIcon(
                 IconType.ImageVector(Icons.AutoMirrored.Filled.ArrowBack),
+                tint = AppTheme.colorScheme.onBackgroundNeutralDefault,
                 onClick = onBack
             )
         },
