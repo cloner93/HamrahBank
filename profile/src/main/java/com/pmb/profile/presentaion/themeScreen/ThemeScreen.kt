@@ -1,56 +1,61 @@
 package com.pmb.profile.presentaion.themeScreen
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ArrowForward
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.pmb.ballon.component.RoundedCornerCheckboxComponent
 import com.pmb.ballon.component.annotation.AppPreview
-import com.pmb.ballon.component.base.AppButtonIcon
 import com.pmb.ballon.component.base.AppContent
+import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.BodyMediumText
-import com.pmb.ballon.models.IconStyle
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.ballon.ui.theme.HamrahBankTheme
+import com.pmb.core.platform.ThemeMode
+import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.profile.R
 
 @Composable
 fun ThemeScreen() {
+    /**
+    TODO checkList ThemeScreen.kt
+     *
+     * - use viewmodel to handle state, event and actions.
+     * - store theme in dataStore.
+     */
+
+    var theme by remember { mutableStateOf(ThemeMode.SYSTEM) }
+
+    val navigationManager = LocalNavigationManager.current
+
+
 
     AppContent(
         modifier = Modifier
             .padding(horizontal = 16.dp),
         backgroundColor = AppTheme.colorScheme.background3Neutral,
         topBar = {
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-            ) {
-                AppButtonIcon(
-                    modifier = Modifier
-                        .align(Alignment.Companion.TopStart),
-                    icon = Icons.Outlined.ArrowForward,
-                    style = IconStyle(tint = AppTheme.colorScheme.onBackgroundNeutralDefault),
-                    onClick = {
-
-                    })
-            }
+            AppTopBar(
+                title = "ظاهر برنامه",
+                onBack = {
+                    navigationManager.navigateBack()
+                })
         },
     ) {
         Card(
@@ -75,7 +80,11 @@ fun ThemeScreen() {
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Column {
+                    Column(
+                        modifier = Modifier.clickable {
+                            theme = ThemeMode.LIGHT
+                        }
+                    ) {
                         Image(
                             painter = painterResource(id = R.drawable.ic_light_theme),
                             contentDescription = ""
@@ -84,10 +93,12 @@ fun ThemeScreen() {
                             modifier = Modifier
                                 .padding(vertical = 12.dp, horizontal = 8.dp),
                             title = "روشن",
-                            isChecked = true
+                            isChecked = theme == ThemeMode.LIGHT
                         ) { }
                     }
-                    Column {
+                    Column(modifier = Modifier.clickable {
+                        theme = ThemeMode.DARK
+                    }) {
                         Image(
                             painter = painterResource(id = R.drawable.ic_dark_theme),
                             contentDescription = ""
@@ -97,7 +108,7 @@ fun ThemeScreen() {
                             modifier = Modifier
                                 .padding(vertical = 12.dp, horizontal = 8.dp),
                             title = "تیره",
-                            isChecked = false
+                            isChecked = theme == ThemeMode.DARK
                         ) { }
                     }
                 }
@@ -110,8 +121,11 @@ fun ThemeScreen() {
                 RoundedCornerCheckboxComponent(
                     modifier = Modifier.padding(vertical = 12.dp, horizontal = 8.dp),
                     title = "مطابق دستگاه",
-                    isChecked = false
-                ) { }
+                    isChecked = theme == ThemeMode.SYSTEM
+                ) {
+                    theme = ThemeMode.SYSTEM
+
+                }
             }
         }
 
