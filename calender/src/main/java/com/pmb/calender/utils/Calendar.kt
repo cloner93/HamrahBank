@@ -1,7 +1,8 @@
-package com.pmb.ballon.calender
+package com.pmb.calender.utils
 
 import androidx.annotation.StringRes
-import com.pmb.ballon.R
+import com.pmb.calender.Jdn
+import com.pmb.calender.R
 import io.github.persiancalendar.calendar.AbstractDate
 import io.github.persiancalendar.calendar.CivilDate
 import io.github.persiancalendar.calendar.IslamicDate
@@ -12,13 +13,13 @@ enum class Calendar(
 ) {
     // So vital, don't ever change names of these
     SHAMSI(
-        R.string.shamsi_calendar, R.string.shamsi_calendar_short, Language.PERSIAN_DIGITS
+        R.string.shamsi_calendar, R.string.shamsi_calendar_short, PERSIAN_DIGITS
     ),
     ISLAMIC(
-        R.string.islamic_calendar, R.string.islamic_calendar_short, Language.ARABIC_INDIC_DIGITS
+        R.string.islamic_calendar, R.string.islamic_calendar_short, ARABIC_INDIC_DIGITS
     ),
     GREGORIAN(
-        R.string.gregorian_calendar, R.string.gregorian_calendar_short, Language.ARABIC_DIGITS
+        R.string.gregorian_calendar, R.string.gregorian_calendar_short, ARABIC_DIGITS
     );
 
     fun createDate(year: Int, month: Int, day: Int): AbstractDate = when (this) {
@@ -66,3 +67,7 @@ enum class Calendar(
         return getMonthStartFromMonthsDistance(date.year, date.month, monthsDistance)
     }
 }
+
+val PERSIAN_DIGITS = charArrayOf('۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹')
+val ARABIC_DIGITS = charArrayOf('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')
+val ARABIC_INDIC_DIGITS = charArrayOf('٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩')

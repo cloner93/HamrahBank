@@ -46,9 +46,7 @@ android {
 
 dependencies {
     implementation(project(":core"))
-
-    // use real persian calender
-    implementation(libs.persiancalendar.calendar)
+    implementation(project(":calender"))
 
     api(libs.androidx.core.ktx)
     api(libs.androidx.lifecycle.runtime.ktx)

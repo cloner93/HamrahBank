@@ -38,4 +38,5 @@
     <string name="shamsi_calendar_short">Persian</string>
     <string name="islamic_calendar_short">Islamic</string>
     <string name="gregorian_calendar_short">Gregorian</string>
+    <string name="_continue">ادامه</string>
 </resources>

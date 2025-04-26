@@ -1,4 +1,4 @@
-package com.pmb.account.presentation.component
+package com.pmb.ballon.component.datePicker
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -18,25 +18,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.pmb.account.R
+import com.pmb.ballon.R
 import com.pmb.ballon.component.base.AppBottomSheet
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.ClickableIcon
 import com.pmb.ballon.component.base.IconType
-import com.pmb.ballon.component.datePicker.PersianDatePicker
 import com.pmb.ballon.ui.theme.AppTheme
+import com.pmb.calender.Jdn
+import com.pmb.calender.utils.Calendar
 
 @Composable
 fun ShowPersianDatePickerBottomSheet(
+    defaultDate: Jdn = Jdn.today(),
     onChangeValue: (year: String, month: String, day: String) -> Unit,
     onDismiss: () -> Unit,
     title: String
 ) {
     var isVisible by remember { mutableStateOf(true) }
-    var _year by remember { mutableStateOf("") }
-    var _month by remember { mutableStateOf("") }
-    var _day by remember { mutableStateOf("") }
+
+    var selectedDate by remember { mutableStateOf(defaultDate) }
 
     AppBottomSheet(
         isVisible = isVisible,
@@ -60,10 +61,10 @@ fun ShowPersianDatePickerBottomSheet(
                 )
                 Spacer(modifier = Modifier.size(24.dp))
                 PersianDatePicker(
-                    onChangeValue = { year, month, day ->
-                        _year = year
-                        _month = month
-                        _day = day
+                    calendar = Calendar.SHAMSI,
+                    jdn = selectedDate,
+                    setJdn = {
+                        selectedDate = it
                     }
                 )
                 Spacer(modifier = Modifier.size(8.dp))
@@ -73,9 +74,9 @@ fun ShowPersianDatePickerBottomSheet(
                     onClick = {
                         isVisible = false
                         onChangeValue(
-                            _year,
-                            _month.toString().padStart(2, '0'),
-                            _day.toString().padStart(2, '0')
+                            selectedDate.toPersianDate().year.toString(),
+                            selectedDate.toPersianDate().month.toString().padStart(2, '0'),
+                            selectedDate.toPersianDate().dayOfMonth.toString().padStart(2, '0')
                         )
                     })
             }
