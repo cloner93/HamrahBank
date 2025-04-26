@@ -16,7 +16,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.pmb.auth.R
-import com.pmb.auth.presentation.AuthScreens
 import com.pmb.auth.presentation.register.authentication_information.viewModel.AuthenticationInformationViewActions
 import com.pmb.auth.presentation.register.authentication_information.viewModel.AuthenticationInformationViewEvents
 import com.pmb.auth.presentation.register.authentication_information.viewModel.AuthenticationInformationViewModel
@@ -32,7 +31,6 @@ import com.pmb.ballon.component.base.AppSingleTextField
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.IconType
 import com.pmb.ballon.component.datePicker.ShowPersianDatePickerBottomSheet
-import com.pmb.core.presentation.NavigationManager
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.manager.NavigationManager
 import com.pmb.navigation.moduleScreen.AuthScreens
