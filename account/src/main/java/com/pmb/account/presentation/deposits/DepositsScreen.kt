@@ -41,6 +41,7 @@ import com.pmb.account.utils.mapToDepositModel
 import com.pmb.ballon.component.DepositBottomSheet
 import com.pmb.ballon.component.MenuBottomSheet
 import com.pmb.ballon.component.MenuItem
+import com.pmb.ballon.component.MenuItemDefaults
 import com.pmb.ballon.component.base.AppButtonIcon
 import com.pmb.ballon.component.base.RoundedTopColumn
 import com.pmb.ballon.models.IconStyle
@@ -193,7 +194,7 @@ fun DepositsScreen() {
                     .clip(RoundedCornerShape(16.dp))
                     .background(color = AppTheme.colorScheme.backgroundTintNeutralDefault),
                 title = stringResource(R.string.deposit_card_sheba),
-                horizontalPadding = 16.dp,
+                horizontalDividerPadding = MenuItemDefaults.horizontalDividerPadding.copy(vertical = 0.dp),
                 startIcon = com.pmb.ballon.R.drawable.ic_racket,
                 titleStyle = TextStyle(
                     color = AppTheme.colorScheme.foregroundNeutralDefault,
@@ -213,7 +214,6 @@ fun DepositsScreen() {
                         shape = RoundedCornerShape(16.dp)
                     ),
                 title = stringResource(R.string.transactions),
-                horizontalPadding = 16.dp,
                 startIcon = com.pmb.ballon.R.drawable.ic_bar_chart_vertical,
                 endIcon = com.pmb.ballon.R.drawable.ic_arrow_left,
                 titleStyle = TextStyle(

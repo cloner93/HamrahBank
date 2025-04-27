@@ -20,27 +20,32 @@ import com.pmb.ballon.models.IconStyle
 import com.pmb.ballon.models.Size
 
 @Composable
-fun AppIcon(icon: IconType, style: IconStyle? = null) {
+fun AppIcon(modifier: Modifier = Modifier, icon: IconType, style: IconStyle? = null) {
     when (icon) {
-        is IconType.Bitmap -> AppIcon(icon = icon.imageBitmap, style = style)
-        is IconType.ImageVector -> AppIcon(icon = icon.imageVector, style = style)
-        is IconType.Painter -> AppIcon(icon = icon.painter, style = style)
+        is IconType.Bitmap -> AppIcon(modifier = modifier, icon = icon.imageBitmap, style = style)
+        is IconType.ImageVector -> AppIcon(
+            modifier = modifier,
+            icon = icon.imageVector,
+            style = style
+        )
+
+        is IconType.Painter -> AppIcon(modifier = modifier, icon = icon.painter, style = style)
     }
 }
 
 @Composable
-fun AppIcon(@DrawableRes icon: Int, style: IconStyle? = null) {
-    val modifier = style?.let {
+fun AppIcon(modifier: Modifier = Modifier, @DrawableRes icon: Int, style: IconStyle? = null) {
+    val _modifier = style?.let {
         when (style.size) {
-            is Size.FIX -> Modifier.size(style.size.all)
-            is Size.Rectangle -> Modifier.size(width = style.size.width, height = style.size.height)
-            Size.DEFAULT -> Modifier.size(24.dp)
+            is Size.FIX -> modifier.size(style.size.all)
+            is Size.Rectangle -> modifier.size(width = style.size.width, height = style.size.height)
+            Size.DEFAULT -> modifier.size(24.dp)
         }
-    } ?: Modifier.size(24.dp)
+    } ?: modifier.size(24.dp)
     val tint = style?.tint ?: LocalContentColor.current
 
     Icon(
-        modifier = modifier,
+        modifier = _modifier,
         painter = painterResource(id = icon),
         contentDescription = null,
         tint = tint
@@ -48,18 +53,18 @@ fun AppIcon(@DrawableRes icon: Int, style: IconStyle? = null) {
 }
 
 @Composable
-fun AppIcon(icon: ImageVector, style: IconStyle? = null) {
-    val modifier = style?.let {
+fun AppIcon(modifier: Modifier = Modifier, icon: ImageVector, style: IconStyle? = null) {
+    val _modifier = style?.let {
         when (style.size) {
-            is Size.FIX -> Modifier.size(style.size.all)
-            is Size.Rectangle -> Modifier.size(width = style.size.width, height = style.size.height)
-            Size.DEFAULT -> Modifier.size(24.dp)
+            is Size.FIX -> modifier.size(style.size.all)
+            is Size.Rectangle -> modifier.size(width = style.size.width, height = style.size.height)
+            Size.DEFAULT -> modifier.size(24.dp)
         }
-    } ?: Modifier.size(24.dp)
+    } ?: modifier.size(24.dp)
     val tint = style?.tint ?: LocalContentColor.current
 
     Icon(
-        modifier = modifier,
+        modifier = _modifier,
         imageVector = icon,
         contentDescription = null,
         tint = tint
@@ -90,18 +95,18 @@ fun AppIcon(
 }
 
 @Composable
-fun AppIcon(icon: ImageBitmap, style: IconStyle? = null) {
-    val modifier = style?.let {
+fun AppIcon(modifier: Modifier = Modifier, icon: ImageBitmap, style: IconStyle? = null) {
+    val _modifier = style?.let {
         when (style.size) {
-            is Size.FIX -> Modifier.size(style.size.all)
+            is Size.FIX -> modifier.size(style.size.all)
             is Size.Rectangle -> Modifier.size(width = style.size.width, height = style.size.height)
-            Size.DEFAULT -> Modifier.size(24.dp)
+            Size.DEFAULT -> modifier.size(24.dp)
         }
-    } ?: Modifier.size(24.dp)
+    } ?: modifier.size(24.dp)
     val tint = style?.tint ?: LocalContentColor.current
 
     Icon(
-        modifier = modifier,
+        modifier = _modifier,
         bitmap = icon,
         contentDescription = null,
         tint = tint

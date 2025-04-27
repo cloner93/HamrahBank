@@ -20,6 +20,6 @@ data class AddressEntity(
             address = safeAddress,
             postalCode = safePostalCode
         )
-    val isNotEmpty: Boolean
-        get() = !address.isNullOrEmpty() && !postalCode.isNullOrEmpty()
+
+    fun isNotEmpty(): Boolean = !address.isNullOrEmpty() && !postalCode.isNullOrEmpty()
 }

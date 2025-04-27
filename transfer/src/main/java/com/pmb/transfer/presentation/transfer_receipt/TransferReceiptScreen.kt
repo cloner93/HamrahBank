@@ -1,6 +1,5 @@
 package com.pmb.transfer.presentation.transfer_receipt
 
-import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -92,7 +91,7 @@ fun TransferReceiptScreen(
                     .padding(16.dp),
                 rowTypes = viewState.rowTypes,
                 headerContent = {
-                    ReceiptHeaderComponent(viewState)
+                    ReceiptHeaderComponent(viewState.receipt)
                 })
         })
 
@@ -122,7 +121,7 @@ fun TransferReceiptScreen(
                     rowTypes = viewState.rowTypes,
                     captureMode = true,
                     headerContent = {
-                        ReceiptHeaderComponent(viewState)
+                        ReceiptHeaderComponent(viewState.receipt)
                     })
             }
         )

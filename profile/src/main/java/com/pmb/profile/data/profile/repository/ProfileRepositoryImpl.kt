@@ -2,6 +2,7 @@ package com.pmb.profile.data.profile.repository
 
 import com.pmb.core.platform.Result
 import com.pmb.profile.domain.entity.AddressEntity
+import com.pmb.profile.domain.entity.JobEntity
 import com.pmb.profile.domain.entity.OtpEntity
 import com.pmb.profile.domain.entity.PersonalInfoEntity
 import com.pmb.profile.domain.repository.ProfileRepository
@@ -80,7 +81,55 @@ class ProfileRepositoryImpl @Inject constructor() : ProfileRepository {
             Result.Success(mockAddressEntity.copy(postalCode = postalCode))
         )
     }
+
+    override suspend fun fetchJobs(): Flow<Result<List<JobEntity>>> = flow {
+        emit(Result.Loading)
+        delay(2000)
+        emit(Result.Success(mockJobEntities))
+    }
+
+    override suspend fun updateJob(
+        id: Long,
+        title: String
+    ): Flow<Result<JobEntity>> = flow {
+        emit(Result.Loading)
+        delay(2000)
+        emit(Result.Success(JobEntity(id, title)))
+    }
 }
+
+private val mockJobEntities = listOf(
+    JobEntity(1, "برنامه‌نویس"),
+    JobEntity(2, "پزشک"),
+    JobEntity(3, "پرستار"),
+    JobEntity(4, "مهندس عمران"),
+    JobEntity(5, "معلم"),
+    JobEntity(6, "راننده تاکسی"),
+    JobEntity(7, "کارگر ساختمانی"),
+    JobEntity(8, "مدیر فروش"),
+    JobEntity(9, "طراح گرافیک"),
+    JobEntity(10, "آشپز"),
+    JobEntity(11, "نقاش ساختمان"),
+    JobEntity(12, "مکانیک خودرو"),
+    JobEntity(13, "آرایشگر"),
+    JobEntity(14, "خیاط"),
+    JobEntity(15, "وکیل"),
+    JobEntity(16, "حسابدار"),
+    JobEntity(17, "مشاور املاک"),
+    JobEntity(18, "فروشنده"),
+    JobEntity(19, "کشاورز"),
+    JobEntity(20, "نصاب کولر و گاز"),
+    JobEntity(21, "لوله‌کش"),
+    JobEntity(22, "تعمیرکار لوازم خانگی"),
+    JobEntity(23, "برق‌کار"),
+    JobEntity(24, "مربی ورزشی"),
+    JobEntity(25, "عکاس"),
+    JobEntity(26, "کارشناس بیمه"),
+    JobEntity(27, "کارشناس سئو"),
+    JobEntity(28, "دیجیتال مارکتر"),
+    JobEntity(29, "نویسنده محتوا"),
+    JobEntity(30, "پیک موتوری")
+)
 
 
 private val mockPersonalInfoEntity
@@ -93,7 +142,10 @@ private val mockPersonalInfoEntity
             postalCode = "1234567890"
         ),
         education = "دانشجو",
-        job = "کارشناسی",
+        jobEntity = JobEntity(
+            id = 10,
+            title =  "کارشناسی"
+        ),
     )
 
 private val mockOtpEntity

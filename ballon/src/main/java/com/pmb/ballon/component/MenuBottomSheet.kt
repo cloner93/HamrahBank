@@ -64,7 +64,7 @@ private fun ItemRow(item: MenuSheetModel, onClick: () -> Unit) {
     MenuItem(
         modifier = Modifier.height(52.dp),
         title = item.title,
-        horizontalPadding = 16.dp,
+        horizontalDividerPadding = MenuItemDefaults.horizontalDividerPadding.copy(end = 16.dp),
         startIconStyle = IconStyle(tint = AppTheme.colorScheme.onBackgroundNeutralCTA),
         endIconStyle = IconStyle(tint = AppTheme.colorScheme.foregroundNeutralRest),
         startIcon = item.icon,

@@ -44,8 +44,7 @@ import com.pmb.profile.presentaion.profile.viewModel.ProfileViewModel
 
 
 @Composable
-fun ProfileScreen() {
-    val viewModel = hiltViewModel<ProfileViewModel>()
+fun ProfileScreen(viewModel : ProfileViewModel) {
     val viewState by viewModel.viewState.collectAsState()
 
     val navigationManager = LocalNavigationManager.current
@@ -117,7 +116,7 @@ fun ProfileScreen() {
                     endIconStyle = IconStyle(tint = AppTheme.colorScheme.foregroundNeutralRest),
                     clickable = true,
                     onItemClick = {
-
+                        navigationManager.navigate(ProfileScreens.PersonalInfo.Graph)
                     })
 
                 MenuItem(
@@ -255,7 +254,7 @@ fun ProfileScreen() {
 private fun ProfileScreenPreview() {
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
         HamrahBankTheme {
-            ProfileScreen()
+//            ProfileScreen()
         }
     }
 }
