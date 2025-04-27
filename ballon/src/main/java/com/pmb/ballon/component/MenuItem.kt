@@ -21,9 +21,11 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.pmb.ballon.R
 import com.pmb.ballon.component.base.AppIcon
+import com.pmb.ballon.component.base.AppImage
 import com.pmb.ballon.component.base.BaseAppText
 import com.pmb.ballon.component.base.BodySmallText
 import com.pmb.ballon.models.IconStyle
+import com.pmb.ballon.models.ImageStyle
 import com.pmb.ballon.models.TextStyle
 import com.pmb.ballon.ui.theme.AppTheme
 
@@ -95,6 +97,74 @@ fun MenuItem(
 
         }
         if (bottomDivider) HorizontalDivider(color = AppTheme.colorScheme.background3Neutral)
+    }
+}
+
+@Composable
+fun ImageItemRow(
+    modifier: Modifier = Modifier,
+    title: String,
+    subtitle: String? = null,
+    horizontalPadding: Dp = 4.dp,
+    @DrawableRes startImage: Int? = null,
+    bottomDivider: Boolean = false,
+    titleStyle: TextStyle? = TextStyle(
+        color = AppTheme.colorScheme.onBackgroundNeutralDefault,
+        typography = AppTheme.typography.bodyMedium,
+    ),
+    subtitleStyle: TextStyle? = TextStyle(
+        typography = AppTheme.typography.caption,
+        color = AppTheme.colorScheme.onBackgroundNeutralSubdued
+    ),
+    titleLayoutDirection: LayoutDirection = LayoutDirection.Rtl,
+    textWeight : Float =1f,
+    subTitleLayoutDirection: LayoutDirection = LayoutDirection.Rtl,
+    startImageStyle: ImageStyle = ImageStyle(),
+    endContent: @Composable () -> Unit = {},
+    clickable: Boolean = true,
+    onItemClick: (() -> Unit)? = null
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Row(
+            modifier = Modifier
+                .clickable(enabled = onItemClick != null) {
+                    onItemClick?.invoke()
+                }
+                .padding(horizontal = horizontalPadding, vertical = 14.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+
+            startImage?.let {
+                AppImage(image = it, style = startImageStyle)
+                Spacer(modifier = Modifier.size(16.dp))
+            }
+
+            Column(modifier = Modifier.weight(textWeight),horizontalAlignment = Alignment.Start) {
+                CompositionLocalProvider(LocalLayoutDirection provides titleLayoutDirection) {
+                    BaseAppText(title = title, style = titleStyle)
+                }
+                Spacer(modifier = Modifier.size(4.dp))
+                subtitle?.let {
+                    CompositionLocalProvider(LocalLayoutDirection provides subTitleLayoutDirection) {
+                        BodySmallText(
+                            text = it,
+                            color = subtitleStyle?.color
+                                ?: AppTheme.colorScheme.onForegroundNeutralDisabled
+                        )
+                    }
+                }
+            }
+
+
+            endContent?.let {
+                endContent.invoke()
+            }
+
+        }
+        if (bottomDivider) HorizontalDivider()
     }
 }
 

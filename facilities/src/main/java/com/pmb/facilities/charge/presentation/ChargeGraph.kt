@@ -5,10 +5,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.pmb.facilities.charge.presentation.buying_charge.BuyingChargeScreen
-import com.pmb.facilities.charge.presentation.buying_charge.BuyingChargeViewModel
 import com.pmb.facilities.charge.presentation.charge.ChargeScreen
 import com.pmb.facilities.charge.presentation.charge.ChargeViewModel
+import com.pmb.facilities.charge.presentation.charge_history.ChargeHistoryScreen
+import com.pmb.facilities.charge.presentation.purchase_charge.PurchaseChargeScreen
+import com.pmb.facilities.charge.presentation.purchase_charge.PurchaseChargeViewModel
 import com.pmb.navigation.manager.navigationManager
 import com.pmb.navigation.moduleScreen.ChargeScreens
 
@@ -30,17 +31,25 @@ fun NavGraphBuilder.chargeGraphHandler() {
                 sharedViewModel.updateState { sharedState.value.copy(simNumber = childState.selectedSim) }
             }
         }
-        composable(route = ChargeScreens.BuyingCharge.route) {
+        composable(route = ChargeScreens.PurchaseCharge.route) {
             val sharedViewModel =
                 it.navigationManager.retrieveSharedViewModel<ChargeSharedViewModel>(
                     screen = ChargeScreens.ChargeGraph, navBackStackEntry = it
                 )
             val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
-            BuyingChargeScreen(
-                viewModel = hiltViewModel<BuyingChargeViewModel>(),
+            PurchaseChargeScreen(
+                viewModel = hiltViewModel<PurchaseChargeViewModel>(),
                 sharedState = sharedState
             ) { childState ->
             }
+        }
+        composable(route = ChargeScreens.ChargeHistory.route) {
+            val sharedViewModel =
+                it.navigationManager.retrieveSharedViewModel<ChargeSharedViewModel>(
+                    screen = ChargeScreens.ChargeGraph, navBackStackEntry = it
+                )
+            val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
+            ChargeHistoryScreen()
         }
     }
 }

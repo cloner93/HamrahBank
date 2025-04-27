@@ -1,29 +1,12 @@
 package com.pmb.facilities.charge.presentation.charge
 
+import com.pmb.core.platform.AlertModelState
 import com.pmb.core.platform.BaseViewState
-import com.pmb.facilities.R
+import com.pmb.facilities.charge.domain.charge.entity.ChargeData
 
 data class ChargeViewState(
     val isLoading: Boolean = false,
-    val selectedSim:String = "",
-    val simCartList:List<ChargeData> = listOf(
-        ChargeData(
-            id = 0,
-            imageString = R.drawable.ic_irancell,
-            operator = "ایرانسل",
-            phoneNumber = "۰۹۹۱۱۰۵۱۷۲۵"
-        ),
-        ChargeData(
-            id = 1,
-            imageString = R.drawable.ic_irancell,
-            operator = "ایرانسل",
-            phoneNumber = "۰۹۹۲۴۹۲۰۷۹۰"
-        ),
-        ChargeData(
-            id = 2,
-            imageString = R.drawable.ic_irancell,
-            operator = "ایرانسل",
-            phoneNumber = "09308160417"
-        ),
-    )
+    val alertModelState: AlertModelState?=null,
+    val selectedSim: String = "",
+    val simCartList: List<ChargeData>? = null,
 ) : BaseViewState

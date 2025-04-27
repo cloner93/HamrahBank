@@ -10,6 +10,6 @@ interface NavigationStartDestinationProvider {
 
 object DefaultStartDestinationProvider : NavigationStartDestinationProvider {
     override fun getStartDestination(): Screen {
-        return HomeScreens.Home
+        return HomeScreens.HomeGraph
     }
 }

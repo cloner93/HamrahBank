@@ -64,6 +64,7 @@ class CustomColors(
     onBackgroundNeutralDisabled: Color,
     foregroundErrorDefault: Color,
     foregroundWarningDefault: Color,
+    strokeNeutral3Divider: Color,
     iconColor: Color,
     iconBackgroundColor: Color,
     isLight: Boolean,
@@ -189,6 +190,8 @@ class CustomColors(
         private set
     var iconBackgroundColor by mutableStateOf(iconBackgroundColor)
         private set
+    var strokeNeutral3Divider by mutableStateOf(strokeNeutral3Divider)
+        private set
 
     var isLight by mutableStateOf(isLight)
         private set
@@ -254,6 +257,7 @@ class CustomColors(
         foregroundWarningDefault: Color = this.foregroundWarningDefault,
         iconColor: Color = this.iconColor,
         iconBackgroundColor: Color = this.iconBackgroundColor,
+        strokeNeutral3Divider : Color = this.strokeNeutral3Divider,
         isLight: Boolean = this.isLight,
     ) = CustomColors(
         onForegroundNeutralDefault = onForegroundNeutralDefault,
@@ -316,6 +320,7 @@ class CustomColors(
         foregroundWarningDefault = foregroundWarningDefault,
         iconColor = iconColor,
         iconBackgroundColor = iconBackgroundColor,
+        strokeNeutral3Divider = strokeNeutral3Divider,
         isLight = isLight,
     )
 
@@ -368,7 +373,6 @@ class CustomColors(
         background1Neutral = other.background1Neutral
         background2Neutral = other.background2Neutral
         background2Primary = other.background2Primary
-        background3Neutral = other.background3Neutral
         onBackgroundSuccessSubdued = other.onBackgroundSuccessSubdued
         onBackgroundSuccessDisabled = other.onBackgroundSuccessDisabled
         onBackgroundSuccessDefault = other.onBackgroundSuccessDefault
@@ -379,6 +383,8 @@ class CustomColors(
         onBackgroundNeutralDisabled = other.onBackgroundNeutralDisabled
         foregroundErrorDefault = other.foregroundErrorDefault
         foregroundWarningDefault = other.foregroundWarningDefault
+        strokeNeutral3Divider = other.strokeNeutral3Divider
+        background3Neutral = other.background3Neutral
         iconColor = other.iconColor
         isLight = other.isLight
     }
@@ -433,7 +439,6 @@ fun lightColors() = CustomColors(
     background1Neutral = Color(0xFFFFFFFF),
     background2Neutral = Color(0xFFF7F7F8),
     background2Primary = Color(0xFFFBE7EB),
-    background3Neutral = Color(0xFFF0F0F1),
     onBackgroundSuccessSubdued = Color(0xFF388E3C),
     onBackgroundSuccessDisabled = Color(0xFFA5D6A7),
     onBackgroundSuccessDefault = Color(0xFF164D1A),
@@ -444,9 +449,10 @@ fun lightColors() = CustomColors(
     onBackgroundNeutralDisabled = Color(0xFFC6C6C9),
     foregroundErrorDefault = Color(0xFFD32F2F),
     foregroundWarningDefault = Color(0xFFAA8004),
-
+   strokeNeutral3Divider= Color(0xFFF0F0F1),
     iconColor = Color(0xFF00629D),
     iconBackgroundColor = Color(0x4D00629D),
+    background3Neutral =Color(0xFFF7F7F8),
     isLight = true,
 )
 
@@ -498,7 +504,6 @@ fun darkColors() = CustomColors(
     background1Neutral = Color(0xFFFFFFFF),
     background2Neutral = Color(0xFFFFFFFF),
     background2Primary = Color(0xFFFFFFFF),
-    background3Neutral = Color(0xFFFFFFFF),
     onBackgroundSuccessSubdued = Color(0xFFFFFFFF),
     onBackgroundSuccessDisabled = Color(0xFFFFFFFF),
     onBackgroundSuccessDefault = Color(0xFFFFFFFF),
@@ -509,8 +514,9 @@ fun darkColors() = CustomColors(
     onBackgroundNeutralDisabled = Color(0xFF2D2D30),
     foregroundErrorDefault = Color(0xFF550816),
     foregroundWarningDefault = Color(0xFF550816),
-
+    strokeNeutral3Divider = Color(0xFF38383D),
     iconColor = Color(0xFF00629D),
     iconBackgroundColor = Color(0x4D00629D),
+    background3Neutral =Color(0xFF101012),
     isLight = false,
 )

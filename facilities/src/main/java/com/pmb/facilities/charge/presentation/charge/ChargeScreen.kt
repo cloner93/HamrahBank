@@ -11,18 +11,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.base.AppButtonWithIcon
 import com.pmb.ballon.component.base.AppContent
+import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.facilities.R.drawable
 import com.pmb.facilities.R.string
 import com.pmb.facilities.charge.presentation.ChargeSharedState
 import com.pmb.facilities.complex_component.HistoryListComponent
 import com.pmb.navigation.manager.LocalNavigationManager
+import com.pmb.navigation.moduleScreen.ChargeScreens
 
 @Composable
 fun ChargeScreen(
-    viewModel: ChargeViewModel, sharedState: State<ChargeSharedState>,
+    viewModel: ChargeViewModel,
+    sharedState: State<ChargeSharedState>,
     updateState: (ChargeViewState) -> Unit
 ) {
     val navigationManager = LocalNavigationManager.current
@@ -31,8 +35,10 @@ fun ChargeScreen(
 
         viewModel.viewEvent.collect { event ->
             when (event) {
-
-                else -> {}
+                ChargeViewEvents.UseTheLatestNumber -> {
+                    updateState.invoke(viewState.value.copy())
+                    navigationManager.navigate(ChargeScreens.PurchaseCharge)
+                }
             }
         }
     }
@@ -42,7 +48,9 @@ fun ChargeScreen(
         topBar = {
             AppTopBar(
                 title = stringResource(string.charge_screen_title),
-                onBack = { })
+                onBack = {
+                    navigationManager.navigateBack()
+                })
         },
         footer = {
             AppButtonWithIcon(
@@ -55,24 +63,31 @@ fun ChargeScreen(
                 enable = true,
                 spacer = 5.dp
             ) {
-                updateState.invoke(viewState.value.copy())
+                navigationManager.navigate(ChargeScreens.PurchaseCharge)
             }
         },
         scrollState = null
     ) {
-        HistoryListComponent(
-            modifier = Modifier.fillMaxWidth(),
-            pageImage = drawable.ic_charge,
-            historyTitle = stringResource(string.buying_history),
-            historyButtonTitle = stringResource(string.latest_number),
-            items = viewState.value.simCartList
-        )
+        viewState.value.simCartList?.takeIf { !it.isNullOrEmpty() }?.let {
+            HistoryListComponent(
+                modifier = Modifier.fillMaxWidth(),
+                pageImage = drawable.ic_charge,
+                historyTitle = stringResource(string.buying_history),
+                historyButtonTitle = stringResource(string.latest_number),
+                items = it,
+                onHistoryClickListener = {
+                    navigationManager.navigate(ChargeScreens.ChargeHistory)
+                }
+            ) {
+                viewModel.handle(ChargeViewActions.SetSelectedSimNumber(it))
+            }
+        }
+    }
+    if (viewState.value.isLoading) {
+        AppLoading()
+    }
+    if (viewState.value.alertModelState != null) {
+        AlertComponent(viewState.value.alertModelState!!)
     }
 }
 
-data class ChargeData(
-    val id: Int,
-    val imageString: Int,
-    val operator: String,
-    val phoneNumber: String
-)

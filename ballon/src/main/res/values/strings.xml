@@ -35,4 +35,7 @@
     <string name="username_condition_start_with_letter">با حرف انگلیسی آغاز شود</string>
     <string name="username_condition_limit_length">بین ۵ تا ۳۰ کاراکتر باشد</string>
 
+    <string name="select_share_type">" انتخاب نوع اشتراک‌گذاری"</string>
+    <string name="text">متنی</string>
+    <string name="image">تصویری</string>
 </resources>
