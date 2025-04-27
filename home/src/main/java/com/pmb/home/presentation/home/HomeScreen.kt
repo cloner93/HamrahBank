@@ -32,6 +32,8 @@ import com.pmb.ballon.models.ImageStyle
 import com.pmb.ballon.models.Size
 import com.pmb.home.presentation.home.viewModel.HomeViewModel
 import com.pmb.navigation.manager.LocalNavigationManager
+import com.pmb.navigation.moduleScreen.ChargeScreens
+import com.pmb.navigation.moduleScreen.HomeScreens
 
 @Composable
 fun HomeScreen(
@@ -53,7 +55,7 @@ fun HomeScreen(
                     modifier = Modifier.align(Alignment.CenterStart),
                     icon = painterResource(com.pmb.ballon.R.drawable.ic_help),
                     onClick = {
-
+                        navigationManager.navigate(ChargeScreens.Charge)
                     }
                 )
                 Row(modifier = Modifier.align(Alignment.CenterEnd)) {

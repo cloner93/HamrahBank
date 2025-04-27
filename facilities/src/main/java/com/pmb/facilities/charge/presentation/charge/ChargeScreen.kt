@@ -4,48 +4,44 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.pmb.ballon.component.base.AppButtonWithIcon
 import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppTopBar
-import com.pmb.facilities.R
+import com.pmb.facilities.R.drawable
+import com.pmb.facilities.R.string
+import com.pmb.facilities.charge.presentation.ChargeSharedState
 import com.pmb.facilities.complex_component.HistoryListComponent
+import com.pmb.navigation.manager.LocalNavigationManager
 
 @Composable
-fun ChargeScreen() {
-    val items = listOf<ChargeData>(
-        ChargeData(
-            id = 0,
-            imageString = com.pmb.facilities.R.drawable.ic_irancell,
-            operator = "ایرانسل",
-            phoneNumber = "۰۹۹۱۱۰۵۱۷۲۵"
-        ),
-        ChargeData(
-            id = 1,
-            imageString = com.pmb.facilities.R.drawable.ic_irancell,
-            operator = "ایرانسل",
-            phoneNumber = "۰۹۹۲۴۹۲۰۷۹۰"
-        ),
-        ChargeData(
-            id = 2,
-            imageString = com.pmb.facilities.R.drawable.ic_irancell,
-            operator = "ایرانسل",
-            phoneNumber = "09308160417"
-        ),
-    )
+fun ChargeScreen(
+    viewModel: ChargeViewModel, sharedState: State<ChargeSharedState>,
+    updateState: (ChargeViewState) -> Unit
+) {
+    val navigationManager = LocalNavigationManager.current
+    val viewState = viewModel.viewState.collectAsStateWithLifecycle()
+    LaunchedEffect(Unit) {
+
+        viewModel.viewEvent.collect { event ->
+            when (event) {
+
+                else -> {}
+            }
+        }
+    }
     AppContent(
         modifier = Modifier.padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         topBar = {
             AppTopBar(
-                title = stringResource(R.string.charge_screen_title),
+                title = stringResource(string.charge_screen_title),
                 onBack = { })
         },
         footer = {
@@ -54,31 +50,23 @@ fun ChargeScreen() {
                     .padding(bottom = 32.dp)
                     .wrapContentWidth()
                     .align(Alignment.CenterHorizontally),
-                title = stringResource(R.string.buy_new_charge),
+                title = stringResource(string.buy_new_charge),
                 icon = com.pmb.ballon.R.drawable.ic_add,
                 enable = true,
                 spacer = 5.dp
             ) {
-
+                updateState.invoke(viewState.value.copy())
             }
         },
         scrollState = null
     ) {
         HistoryListComponent(
             modifier = Modifier.fillMaxWidth(),
-            pageImage = R.drawable.ic_charge,
-            historyTitle = stringResource(R.string.buying_history),
-            historyButtonTitle = stringResource(R.string.latest_number),
-            items = items
+            pageImage = drawable.ic_charge,
+            historyTitle = stringResource(string.buying_history),
+            historyButtonTitle = stringResource(string.latest_number),
+            items = viewState.value.simCartList
         )
-    }
-}
-
-@Preview
-@Composable
-fun ChargeScreenPreview() {
-    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
-        ChargeScreen()
     }
 }
 
