@@ -46,6 +46,7 @@ android {
 
 dependencies {
     implementation(project(":core"))
+    implementation(project(":calender"))
 
     api(libs.androidx.core.ktx)
     api(libs.androidx.lifecycle.runtime.ktx)

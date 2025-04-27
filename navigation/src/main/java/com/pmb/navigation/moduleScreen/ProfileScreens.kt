@@ -5,6 +5,7 @@ import com.pmb.navigation.screen.Screen
 sealed class ProfileScreens(route: String, arguments: Map<String, String> = emptyMap()) :
     Screen(baseRoute = route, arguments = arguments) {
     data object Profile : ProfileScreens(route = "profile")
+    data object ThemeScreen : ProfileScreens(route = "themeScreen")
 
     sealed class PersonalInfo(route: String) : ProfileScreens(route) {
         data object Graph : PersonalInfo(route = "profile_personal_info_graph")

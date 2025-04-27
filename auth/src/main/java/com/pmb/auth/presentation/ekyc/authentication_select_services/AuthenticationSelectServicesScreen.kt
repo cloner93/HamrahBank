@@ -16,11 +16,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.pmb.auth.R
-import com.pmb.auth.presentation.component.RoundedCornerCheckboxComponent
 import com.pmb.auth.presentation.ekyc.authentication_select_services.viewModel.AuthenticationSelectServicesViewActions
 import com.pmb.auth.presentation.ekyc.authentication_select_services.viewModel.AuthenticationSelectServicesViewEvent
 import com.pmb.auth.presentation.ekyc.authentication_select_services.viewModel.AuthenticationSelectServicesViewModel
 import com.pmb.ballon.component.AlertComponent
+import com.pmb.ballon.component.RoundedCornerCheckboxComponent
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppLoading

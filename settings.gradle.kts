@@ -16,6 +16,7 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven("https://jitpack.io")
     }
 }
 
@@ -31,3 +32,4 @@ include(":transfer")
 include(":camera")
 include(":compressor")
 include(":navigation")
+include(":calender")

@@ -20,11 +20,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.pmb.auth.R
-import com.pmb.auth.presentation.component.RoundedCornerCheckboxComponent
 import com.pmb.auth.presentation.ekyc.open_account.viewModel.OpenAccountViewActions
 import com.pmb.auth.presentation.ekyc.open_account.viewModel.OpenAccountViewEvents
 import com.pmb.auth.presentation.ekyc.open_account.viewModel.OpenAccountViewModel
 import com.pmb.ballon.component.AlertComponent
+import com.pmb.ballon.component.RoundedCornerCheckboxComponent
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppImage

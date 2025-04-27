@@ -13,20 +13,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.pmb.ballon.R
+import com.pmb.ballon.component.annotation.AppPreview
 import com.pmb.ballon.component.base.AppIcon
 import com.pmb.ballon.component.base.BaseAppText
 import com.pmb.ballon.component.base.BodySmallText
 import com.pmb.ballon.models.IconStyle
 import com.pmb.ballon.models.TextStyle
 import com.pmb.ballon.ui.theme.AppTheme
-
+import com.pmb.ballon.ui.theme.HamrahBankTheme
 
 @Composable
 fun MenuItem(
@@ -65,6 +64,7 @@ fun MenuItem(
         ) {
 
             startIcon?.let {
+                Spacer(modifier = Modifier.size(16.dp))
                 AppIcon(icon = it, style = startIconStyle)
                 Spacer(modifier = Modifier.size(16.dp))
             }
@@ -87,38 +87,34 @@ fun MenuItem(
 
             Spacer(modifier = Modifier.weight(1f))
             endContent?.invoke()
-            endIcon?.let { AppIcon(icon = endIcon, style = endIconStyle) }
+            endIcon?.let {
+                AppIcon(icon = endIcon, style = endIconStyle)
+                Spacer(modifier = Modifier.size(8.dp))
+            }
 
         }
-        if (bottomDivider) HorizontalDivider(color = AppTheme.colorScheme.background3Neutral)
+        if (bottomDivider) {
+            HorizontalDivider(
+                modifier = Modifier.padding(horizontal = 8.dp),
+                color = AppTheme.colorScheme.strokeNeutral3Devider
+            )
+        }
     }
 }
 
-@Preview
+@AppPreview
 @Composable
 private fun MenuItemTitlePreview() {
-    Column {
+    HamrahBankTheme {
         MenuItem(
-            title = "my Services",
-            startIcon = R.drawable.ic_shopping_bag_star,
+            title = "تست منو",
+            startIcon = R.drawable.ic_pin,
             endIcon = R.drawable.ic_arrow_left,
-            bottomDivider = true,
-            clickable = false,
-            onItemClick = {
-
-            })
-
-        MenuItem(
-            title = "my Services",
-            subtitle = "my service subtitle...new view genarate",
-            startIcon = R.drawable.ic_shopping_bag_star,
-            endIcon = R.drawable.ic_arrow_left,
-            bottomDivider = true,
-            subtitleStyle = TextStyle(color = Color.Blue),
-            clickable = false,
-            onItemClick = {
-
-            })
+            startIconStyle = IconStyle(tint = AppTheme.colorScheme.onBackgroundNeutralCTA),
+            endIconStyle = IconStyle(tint = AppTheme.colorScheme.foregroundNeutralRest),
+            clickable = true,
+            onItemClick = { }
+        )
     }
 
 }

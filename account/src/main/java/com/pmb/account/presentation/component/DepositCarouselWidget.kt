@@ -7,9 +7,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.pmb.ballon.R
+import com.pmb.ballon.component.annotation.AppPreview
+import com.pmb.ballon.ui.theme.HamrahBankTheme
 
 @Composable
 fun DepositCarouselWidget(
@@ -35,7 +36,7 @@ fun DepositCarouselWidget(
     }
 }
 
-@Preview(showBackground = true)
+@AppPreview
 @Composable
 private fun DepositCardPrev() {
     val dip = DepositModel(
@@ -47,5 +48,7 @@ private fun DepositCardPrev() {
         ibanNumber = "IR1234567890098765432112",
         cardNumber = "6219861920241234",
     )
-    DepositCarouselWidget(dip, {}, {}, { }, true)
+    HamrahBankTheme {
+        DepositCarouselWidget(dip, {}, {}, { }, true)
+    }
 }

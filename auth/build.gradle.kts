@@ -58,6 +58,8 @@ dependencies {
     kapt(libs.android.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
 
+    implementation(project(":calender"))
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.ui.test.junit4)
