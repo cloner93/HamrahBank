@@ -101,6 +101,7 @@ dependencies {
     implementation(project(":transfer"))
     implementation(project(":account"))
     implementation(project(":profile"))
+    implementation(project(":facilities"))
 
     // DI > Hilt
     implementation(libs.android.hilt)

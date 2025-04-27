@@ -26,6 +26,7 @@ import com.pmb.ballon.component.base.AppBottomBar
 import com.pmb.ballon.component.base.BottomNavItem
 import com.pmb.ballon.component.base.bottomNavItems
 import com.pmb.ballon.ui.theme.HamrahBankTheme
+import com.pmb.facilities.charge.presentation.chargeGraphHandler
 import com.pmb.home.presentation.homeScreensHandle
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.manager.NavigationManager
@@ -77,6 +78,8 @@ fun AppNavHost(navController: NavHostController, innerPadding: PaddingValues) {
             transferScreensHandle()
             accountScreensHandle()
             profileScreensHandle()
+            chargeGraphHandler()
+
         }
     }
 }

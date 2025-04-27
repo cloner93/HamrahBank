@@ -92,7 +92,7 @@ fun TransferReceiptScreen(
                     .padding(16.dp),
                 rowTypes = viewState.rowTypes,
                 headerContent = {
-                    ReceiptHeaderComponent(viewState)
+                    ReceiptHeaderComponent(viewState.receipt)
                 })
         })
 
@@ -122,7 +122,7 @@ fun TransferReceiptScreen(
                     rowTypes = viewState.rowTypes,
                     captureMode = true,
                     headerContent = {
-                        ReceiptHeaderComponent(viewState)
+                        ReceiptHeaderComponent(viewState.receipt)
                     })
             }
         )

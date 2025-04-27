@@ -1,0 +1,46 @@
+package com.pmb.facilities.charge.presentation
+
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.compose.composable
+import androidx.navigation.navigation
+import com.pmb.facilities.charge.presentation.buying_charge.BuyingChargeScreen
+import com.pmb.facilities.charge.presentation.buying_charge.BuyingChargeViewModel
+import com.pmb.facilities.charge.presentation.charge.ChargeScreen
+import com.pmb.facilities.charge.presentation.charge.ChargeViewModel
+import com.pmb.navigation.manager.navigationManager
+import com.pmb.navigation.moduleScreen.ChargeScreens
+
+fun NavGraphBuilder.chargeGraphHandler() {
+    navigation(
+        route = ChargeScreens.ChargeGraph.route,
+        startDestination = ChargeScreens.Charge.route
+    ) {
+        composable(route = ChargeScreens.Charge.route) {
+            val sharedViewModel =
+                it.navigationManager.retrieveSharedViewModel<ChargeSharedViewModel>(
+                    screen = ChargeScreens.ChargeGraph, navBackStackEntry = it
+                )
+            val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
+            ChargeScreen(
+                viewModel = hiltViewModel<ChargeViewModel>(),
+                sharedState = sharedState
+            ) { childState ->
+                sharedViewModel.updateState { sharedState.value.copy(simNumber = childState.selectedSim) }
+            }
+        }
+        composable(route = ChargeScreens.BuyingCharge.route) {
+            val sharedViewModel =
+                it.navigationManager.retrieveSharedViewModel<ChargeSharedViewModel>(
+                    screen = ChargeScreens.ChargeGraph, navBackStackEntry = it
+                )
+            val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
+            BuyingChargeScreen(
+                viewModel = hiltViewModel<BuyingChargeViewModel>(),
+                sharedState = sharedState
+            ) { childState ->
+            }
+        }
+    }
+}

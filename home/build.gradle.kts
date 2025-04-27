@@ -49,6 +49,7 @@ dependencies {
     implementation(project(":ballon"))
     implementation(project(":navigation"))
     implementation(libs.android.hilt)
+    implementation(project(":facilities"))
     kapt(libs.android.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
 
