@@ -21,6 +21,8 @@ import com.pmb.profile.presentaion.personal_infos.change_username.ChangeUsername
 import com.pmb.profile.presentaion.personal_infos.change_username.viewmodel.ChangeUsernameViewModel
 import com.pmb.profile.presentaion.personal_infos.personal_info.PersonalInfoScreen
 import com.pmb.profile.presentaion.personal_infos.personal_info.viewmodel.PersonalInfoViewModel
+import com.pmb.profile.presentaion.personal_infos.select_job.SelectJobScreen
+import com.pmb.profile.presentaion.personal_infos.select_job.viewmodel.SelectJobViewModel
 import com.pmb.profile.presentaion.profile.ProfileScreen
 import com.pmb.profile.presentaion.profile.viewModel.ProfileViewModel
 import com.pmb.profile.presentaion.themeScreen.ThemeScreen
@@ -57,7 +59,8 @@ fun NavGraphBuilder.profileScreensHandle() {
                         phoneNumber = it.phoneNumber,
                         addressEntity = it.addressEntity,
                         jobEntity = it.jobEntity,
-                        education = it.education
+                        education = it.education,
+                        queueJob = null
                     )
                 }
             }
@@ -133,9 +136,24 @@ fun NavGraphBuilder.profileScreensHandle() {
                 viewModel = hiltViewModel<ChangeJobViewModel>(),
                 sharedState = sharedState.value,
                 result = {
-                    sharedViewModel.updateState { copy(jobEntity = it) }
+                    sharedViewModel.setState(it)
                 }
             )
+        }
+        composable(route = ProfileScreens.PersonalInfo.SelectJob.route) {
+            val sharedViewModel =
+                it.navigationManager.retrieveSharedViewModel<PersonalInfoSharedViewModel>(
+                    screen = ProfileScreens.PersonalInfo.Graph, navBackStackEntry = it
+                )
+            val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
+            SelectJobScreen(
+                viewModel = hiltViewModel<SelectJobViewModel>(),
+                sharedState = sharedState.value,
+                result = {
+                    sharedViewModel.updateState { copy(queueJob = it) }
+                }
+            )
+
         }
         composable(route = ProfileScreens.PersonalInfo.ChangeEducation.route) {
 

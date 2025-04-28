@@ -18,5 +18,7 @@ data class PersonalInfoSharedState(
     val addressEntity: AddressEntity? = AddressEntity(),
     val jobEntity: JobEntity? = null,
     val education: String? = null,
-    val otpEntity: OtpEntity? = null
+    val otpEntity: OtpEntity? = null,
+    val jobEntities: List<JobEntity> = emptyList(),
+    val queueJob: JobEntity? = null,
 ) : BaseSharedState

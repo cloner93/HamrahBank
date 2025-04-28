@@ -16,6 +16,7 @@ sealed class ProfileScreens(route: String, arguments: Map<String, String> = empt
         data object VerifyPhoneNumberOtp : PersonalInfo(route = "profile_verify_phone_number")
         data object ChangeAddress : PersonalInfo(route = "profile_change_address")
         data object ChangeJob : PersonalInfo(route = "profile_change_job")
+        data object SelectJob : PersonalInfo(route = "profile_select_job")
         data object ChangeEducation : PersonalInfo(route = "profile_change_education")
     }
 

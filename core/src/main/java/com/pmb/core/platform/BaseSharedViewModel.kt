@@ -13,4 +13,8 @@ open class BaseSharedViewModel<T : BaseSharedState>(initialState: T) : ViewModel
     fun updateState(update: T.() -> T) {
         _state.value = _state.value.update()
     }
+
+    fun setState(set: T) {
+        _state.value = set
+    }
 }

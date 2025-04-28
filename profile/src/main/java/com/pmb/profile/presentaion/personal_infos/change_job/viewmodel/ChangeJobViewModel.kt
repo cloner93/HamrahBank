@@ -27,23 +27,36 @@ class ChangeJobViewModel @Inject constructor(
     override fun handle(action: ChangeJobViewActions) {
         when (action) {
             ChangeJobViewActions.ClearAlert -> setState { it.copy(alertState = null) }
-            ChangeJobViewActions.ClickJob -> fetchJobs()
+            ChangeJobViewActions.ClickJob -> checkExistJobs()
             ChangeJobViewActions.SubmitJob -> updateJob()
             is ChangeJobViewActions.UpdateShareState -> updateShareState(action.sharedState)
         }
     }
 
+    private fun checkExistJobs() {
+        if (_shareState.value.jobEntities.isNotEmpty())
+            postEvent(ChangeJobViewEvents.NavigateToListJob(_shareState.value.jobEntities))
+        else fetchJobs()
+    }
+
     private fun updateShareState(sharedState: PersonalInfoSharedState) {
         _shareState.value = sharedState
-        setState { it.copy(jobEntity = sharedState.jobEntity ?: JobEntity.createEmpty()) }
+        val selectedJob = viewState.value.jobEntity.id != -1L && (sharedState.queueJob
+            ?: JobEntity.createEmpty()) != viewState.value.jobEntity
+        setState {
+            it.copy(
+                selectedJob = selectedJob,
+                jobEntity = sharedState.queueJob ?: sharedState.jobEntity ?: JobEntity.createEmpty()
+            )
+        }
     }
 
     private fun updateJob() {
         viewModelScope.launch {
             updateJobUseCase.invoke(
                 UpdateJobUseCase.Param(
-                    id = shareState.value.jobEntity?.id ?: -1,
-                    job = viewState.value.jobEntity.title
+                    id = shareState.value.queueJob?.id ?: -1,
+                    job = shareState.value.queueJob?.title ?: ""
                 )
             ).collect { result ->
                 when (result) {
@@ -78,7 +91,7 @@ class ChangeJobViewModel @Inject constructor(
 
     private fun fetchJobs() {
         viewModelScope.launch {
-            jobsUseCase.invoke().collect { result ->
+            jobsUseCase.invoke(Unit).collect { result ->
                 when (result) {
                     is Result.Error -> {
                         setState {
@@ -102,6 +115,7 @@ class ChangeJobViewModel @Inject constructor(
 
                     is Result.Success -> {
                         setState { it.copy(loading = false) }
+                        _shareState.value = _shareState.value.copy(jobEntities = result.data)
                         postEvent(ChangeJobViewEvents.NavigateToListJob(result.data))
                     }
                 }

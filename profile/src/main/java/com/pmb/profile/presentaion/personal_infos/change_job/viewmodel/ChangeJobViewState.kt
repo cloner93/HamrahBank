@@ -9,5 +9,7 @@ data class ChangeJobViewState(
     val alertState: AlertModelState? = null,
     val jobEntity: JobEntity = JobEntity.createEmpty(),
     val selectedJob: Boolean = false,
-    val enableButton: Boolean = false
-) : BaseViewState
+) : BaseViewState {
+    val enableButton: Boolean
+        get() = !loading && selectedJob
+}

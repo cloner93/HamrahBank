@@ -18,9 +18,8 @@ import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.models.Icons
 import com.pmb.navigation.manager.LocalNavigationManager
-import com.pmb.navigation.moduleScreen.AuthScreens
+import com.pmb.navigation.moduleScreen.ProfileScreens
 import com.pmb.profile.R
-import com.pmb.profile.domain.entity.JobEntity
 import com.pmb.profile.presentaion.personal_infos.PersonalInfoSharedState
 import com.pmb.profile.presentaion.personal_infos.change_job.viewmodel.ChangeJobViewActions
 import com.pmb.profile.presentaion.personal_infos.change_job.viewmodel.ChangeJobViewEvents
@@ -31,7 +30,7 @@ import com.pmb.profile.presentaion.personal_infos.change_job.viewmodel.ChangeJob
 fun ChangeJobScreen(
     viewModel: ChangeJobViewModel,
     sharedState: PersonalInfoSharedState,
-    result: (JobEntity) -> Unit
+    result: (PersonalInfoSharedState) -> Unit
 ) {
     val navigationManager = LocalNavigationManager.current
     val viewState by viewModel.viewState.collectAsStateWithLifecycle()
@@ -40,12 +39,13 @@ fun ChangeJobScreen(
         viewModel.viewEvent.collect { event ->
             when (event) {
                 is ChangeJobViewEvents.NavigateBackToPersonalInfo -> {
-                    result.invoke(event.jobEntity)
+                    result.invoke(sharedState.copy(jobEntity = event.jobEntity, queueJob = null))
                     navigationManager.navigateBack()
                 }
 
                 is ChangeJobViewEvents.NavigateToListJob -> {
-
+                    result.invoke(sharedState.copy(jobEntities = event.jobs))
+                    navigationManager.navigate(ProfileScreens.PersonalInfo.SelectJob)
                 }
             }
         }
@@ -62,6 +62,7 @@ fun ChangeJobScreen(
             AppTopBar(
                 title = stringResource(R.string.change_address),
                 onBack = {
+                    result.invoke(sharedState.copy(queueJob = null))
                     navigationManager.navigateBack()
                 })
         },
@@ -80,7 +81,7 @@ fun ChangeJobScreen(
     ) {
         AppClickableReadOnlyTextField(
             onClick = {
-                navigationManager.navigate(AuthScreens.SelectJobInformation)
+                viewModel.handle(ChangeJobViewActions.ClickJob)
             },
             value = viewState.jobEntity.title,
             label = stringResource(R.string.job),
