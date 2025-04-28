@@ -46,13 +46,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.pmb.account.R
-import com.pmb.account.presentation.component.ChipWithIcon
 import com.pmb.account.presentation.component.CustomAppTopBar
 import com.pmb.account.presentation.component.TransactionModel
 import com.pmb.account.presentation.component.TransactionType
@@ -66,12 +64,14 @@ import com.pmb.account.utils.mapToDepositModel
 import com.pmb.account.utils.toPersianDate
 import com.pmb.ballon.component.DepositBottomSheet
 import com.pmb.ballon.component.DynamicTabSelector
+import com.pmb.ballon.component.annotation.AppPreview
 import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppIcon
 import com.pmb.ballon.component.base.AppImage
 import com.pmb.ballon.component.base.BodySmallText
 import com.pmb.ballon.component.base.ButtonMediumText
 import com.pmb.ballon.component.base.CaptionText
+import com.pmb.ballon.component.base.ChipWithIcon
 import com.pmb.ballon.component.base.ClickableIcon
 import com.pmb.ballon.component.base.Headline6Text
 import com.pmb.ballon.component.base.IconType
@@ -165,38 +165,38 @@ fun TransactionsScreen() {
             CustomAppTopBar(
                 startIcon = ClickableIcon(
                     IconType.ImageVector(Icons.Filled.ArrowForward),
+                    tint = AppTheme.colorScheme.onBackgroundNeutralDefault,
                     onClick = {
                         viewModel.handle(TransactionsViewActions.NavigateBack)
-                    }
-                ),
+                    }),
                 endIcon = if (selectedOption.intValue == 0) ClickableIcon(
                     IconType.ImageVector(Icons.Filled.Search),
+                    tint = AppTheme.colorScheme.onBackgroundNeutralDefault,
                     onClick = {
                         viewModel.handle(TransactionsViewActions.NavigateToTransactionSearchScreen)
                     }
-                ) else null,
-                middleContent = {
+                ) else null, middleContent = {
                     ChipWithIcon(
-                        modifier = Modifier
-                            .border(
-                                width = 1.dp,
-                                color = AppTheme.colorScheme.strokeNeutral1Default,
-                                shape = RoundedCornerShape(12.dp)
-                            ),
+                        modifier = Modifier.border(
+                            width = 1.dp,
+                            color = AppTheme.colorScheme.strokeNeutral1Default,
+                            shape = RoundedCornerShape(12.dp)
+                        ),
                         roundedShape = 12.dp,
                         value = viewState.selectedDeposit?.desc
                             ?: (viewState.selectedDeposit?.depositNumber).toString(),
                         startIcon = Icons.Default.ArrowDropDown,
+                        startIconStyle = IconStyle(
+                            tint = AppTheme.colorScheme.onBackgroundNeutralDefault
+                        ),
                         clickable = {
                             viewModel.handle(TransactionsViewActions.ShowDepositListBottomSheet)
                         },
                         color = Color.Transparent,
                         assetColor = AppTheme.colorScheme.onBackgroundNeutralDefault
                     )
-                }
-            )
-        }
-    ) {
+                })
+        }) {
         DynamicTabSelector(
             modifier = Modifier
                 .fillMaxWidth()
@@ -220,8 +220,7 @@ fun TransactionsScreen() {
                         viewModel.handle(TransactionsViewActions.RemoveFilterFromList(it))
                     }, onStatementClick = {
                         viewModel.handle(TransactionsViewActions.NavigateToDepositStatementScreen)
-                    }
-                ) {
+                    }) {
                     viewModel.handle(TransactionsViewActions.NavigateToTransactionInfoScreen)
                 }
             }
@@ -237,33 +236,27 @@ fun TransactionsScreen() {
             }
         }
 
-        if (viewState.showDepositListBottomSheet)
-            DepositBottomSheet(
-                title = "سپرده ها",
-                items = viewState.deposits.mapToDepositMenu(),
-                onDismiss = {
-                    viewModel.handle(TransactionsViewActions.CloseDepositListBottomSheet(null))
-                }
-            ) {
-                viewModel.handle(
-                    TransactionsViewActions.CloseDepositListBottomSheet(
-                        it.mapToDepositModel()
-                    )
+        if (viewState.showDepositListBottomSheet) DepositBottomSheet(
+            title = "سپرده ها",
+            items = viewState.deposits.mapToDepositMenu(),
+            onDismiss = {
+                viewModel.handle(TransactionsViewActions.CloseDepositListBottomSheet(null))
+            }) {
+            viewModel.handle(
+                TransactionsViewActions.CloseDepositListBottomSheet(
+                    it.mapToDepositModel()
                 )
-            }
+            )
+        }
     }
 }
 
 @Composable
 fun ReceiveTransactionsSection(
-    totalReceiveTransaction: Double,
-    onTransactionClick: () -> Unit = {}
+    totalReceiveTransaction: Double, onTransactionClick: () -> Unit = {}
 ) {
     val tempList = listOf<String>(
-        "واریز به کارت",
-        "واریر به سپرده",
-        "حواله",
-        "سود ماهیانه"
+        "واریز به کارت", "واریر به سپرده", "حواله", "سود ماهیانه"
     )
 
     RowOfMonth(modifier = Modifier.padding(bottom = 32.dp), 0)
@@ -278,19 +271,24 @@ fun ReceiveTransactionsSection(
     ) {
 
         Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally
         ) {
             BodySmallText(
                 modifier = Modifier.padding(vertical = 8.dp),
-                text = "مجموع دریافت ها"
+                text = "مجموع دریافت ها",
+                color = AppTheme.colorScheme.onBackgroundNeutralSubdued
             )
             Row(
                 modifier = Modifier.padding(bottom = 16.dp)
             ) {
-                Headline6Text(text = totalReceiveTransaction.toCurrency())
+                Headline6Text(
+                    text = totalReceiveTransaction.toCurrency(),
+                    color = AppTheme.colorScheme.onBackgroundNeutralDefault
+                )
 
-                BodySmallText(text = "ریال")
+                BodySmallText(
+                    text = "ریال", color = AppTheme.colorScheme.onBackgroundNeutralSubdued
+                )
             }
 
             LazyColumn(
@@ -299,9 +297,7 @@ fun ReceiveTransactionsSection(
             ) {
                 items(tempList.size) { item ->
                     SingleRow(
-                        title = tempList[item],
-                        amount = 12300.0,
-                        onClick = onTransactionClick
+                        title = tempList[item], amount = 12300.0, onClick = onTransactionClick
                     )
                 }
             }
@@ -319,20 +315,15 @@ private fun AllTransactionsSection(
     onStatementClick: () -> Unit = {},
     onTransactionItemClick: () -> Unit = {},
 ) {
-    StatementAndFilters(
-        transactionFilter = transactionFilter,
-        onFilterClick = {
-            onFilterClick()
-        },
-        onFilterItemClick = {
-            onFilterItemClick(it)
-        },
-        onStatementClick = {
-            onStatementClick()
-        })
+    StatementAndFilters(transactionFilter = transactionFilter, onFilterClick = {
+        onFilterClick()
+    }, onFilterItemClick = {
+        onFilterItemClick(it)
+    }, onStatementClick = {
+        onStatementClick()
+    })
     LazyColumn(
-        contentPadding = PaddingValues(12.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        contentPadding = PaddingValues(12.dp), verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         items(transactionList.size) { item ->
             TransactionRow(transactionList[item]) {
@@ -344,8 +335,7 @@ private fun AllTransactionsSection(
 
 @Composable
 private fun SendTransactionsSection(
-    totalSentTransaction: Double,
-    onTransactionClick: () -> Unit = {}
+    totalSentTransaction: Double, onTransactionClick: () -> Unit = {}
 ) {
     val tempList = listOf<String>(
         "خرید اینترنتی",
@@ -371,14 +361,20 @@ private fun SendTransactionsSection(
         ) {
             BodySmallText(
                 modifier = Modifier.padding(vertical = 8.dp),
-                text = "مجموع برداشت ها"
+                text = "مجموع برداشت ها",
+                color = AppTheme.colorScheme.onBackgroundNeutralSubdued
             )
             Row(
                 modifier = Modifier.padding(bottom = 16.dp)
             ) {
-                Headline6Text(text = totalSentTransaction.toCurrency())
+                Headline6Text(
+                    text = totalSentTransaction.toCurrency(),
+                    color = AppTheme.colorScheme.onBackgroundNeutralDefault
+                )
 
-                BodySmallText(text = "ریال")
+                BodySmallText(
+                    text = "ریال", color = AppTheme.colorScheme.onBackgroundNeutralSubdued
+                )
             }
 
             LazyColumn(
@@ -387,9 +383,7 @@ private fun SendTransactionsSection(
             ) {
                 items(tempList.size) { item ->
                     SingleRow(
-                        title = tempList[item],
-                        amount = 12300.0,
-                        onClick = onTransactionClick
+                        title = tempList[item], amount = 12300.0, onClick = onTransactionClick
                     )
                 }
             }
@@ -408,7 +402,10 @@ private fun SingleRow(
         modifier = Modifier.clickable { onClick },
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Headline6Text(text = title)
+        Headline6Text(
+            text = title,
+            color = AppTheme.colorScheme.foregroundNeutralDefault
+        )
         Spacer(modifier = Modifier.weight(1f))
         CaptionText(
             text = amount.toCurrency(),
@@ -435,8 +432,7 @@ private fun StatementAndFilters(
 ) {
     Column {
         Row(
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Row(
@@ -467,7 +463,8 @@ private fun StatementAndFilters(
                 )
                 ButtonMediumText(
                     modifier = Modifier.padding(horizontal = 8.dp),
-                    text = "صورتحساب", color = AppTheme.colorScheme.onBackgroundNeutralCTA
+                    text = "صورتحساب",
+                    color = AppTheme.colorScheme.onBackgroundNeutralCTA
                 )
             }
         }
@@ -512,31 +509,30 @@ private fun StatementAndFilters(
                 }
             }
 
-            if (chips.isNotEmpty())
-                LazyRow(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 16.dp),
-                    contentPadding = PaddingValues(horizontal = itemSpacing),
-                    horizontalArrangement = Arrangement.spacedBy(itemSpacing)
-                ) {
-                    items(chips) { chip ->
-                        ChipWithIcon(
-                            modifier = Modifier
-                                .border(
-                                    width = 1.dp,
-                                    color = AppTheme.colorScheme.strokeNeutral1Default,
-                                    shape = RoundedCornerShape(16.dp)
-                                ),
-                            roundedShape = 16.dp,
-                            value = chip.first,
-                            endIcon = Icons.Default.Close,
-                            clickable = chip.second,
-                            color = AppTheme.colorScheme.background1Neutral,
-                            assetColor = AppTheme.colorScheme.onBackgroundNeutralDefault
-                        )
-                    }
+            if (chips.isNotEmpty()) LazyRow(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp),
+                contentPadding = PaddingValues(horizontal = itemSpacing),
+                horizontalArrangement = Arrangement.spacedBy(itemSpacing)
+            ) {
+                items(chips) { chip ->
+                    ChipWithIcon(
+                        modifier = Modifier.border(
+                            width = 1.dp,
+                            color = AppTheme.colorScheme.strokeNeutral1Default,
+                            shape = RoundedCornerShape(16.dp)
+                        ),
+                        roundedShape = 16.dp,
+                        value = chip.first,
+                        endIcon = Icons.Default.Close,
+                        endIconStyle = IconStyle(tint = AppTheme.colorScheme.onBackgroundNeutralDefault),
+                        clickable = chip.second,
+                        color = AppTheme.colorScheme.background1Neutral,
+                        assetColor = AppTheme.colorScheme.onBackgroundNeutralDefault
+                    )
                 }
+            }
         }
     }
 }
@@ -605,24 +601,23 @@ fun MonthItem(
         modifier = modifier
             .clip(RoundedCornerShape(8.dp))
             .background(
-                if (isSelected)
-                    AppTheme.colorScheme.foregroundPrimaryDefault
-                else
-                    AppTheme.colorScheme.backgroundTintNeutralDefault
+                if (isSelected) AppTheme.colorScheme.foregroundPrimaryDefault
+                else AppTheme.colorScheme.backgroundTintNeutralDefault
             )
             .clickable { if (isEnabled) onClick() }
-            .padding(horizontal = 16.dp, vertical = 8.dp)
-    ) {
+            .padding(
+                horizontal = 16.dp,
+                vertical = 8.dp
+            )) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             AppText(
                 title = year,
                 style = TextStyle(
-                    color =
-                        if (isSelected) AppTheme.colorScheme.onForegroundNeutralDefault
-                        else if (!isEnabled) Color(0xFFB8B8BC)
-                        else AppTheme.colorScheme.onBackgroundTintNeutralDefault,
+                    color = if (isSelected) AppTheme.colorScheme.onForegroundNeutralDefault
+                    else if (!isEnabled) AppTheme.colorScheme.foregroundNeutralRest
+                    else AppTheme.colorScheme.onBackgroundNeutralSubdued,
                     typography = AppTheme.typography.caption,
                 ),
             )
@@ -630,13 +625,11 @@ fun MonthItem(
             AppText(
                 title = month,
                 style = TextStyle(
-                    color =
-                        if (isSelected) AppTheme.colorScheme.onForegroundNeutralDefault
-                        else if (!isEnabled) Color(0xFFB8B8BC)
-                        else AppTheme.colorScheme.onBackgroundTintNeutralDefault,
-                    typography =
-                        if (isSelected) AppTheme.typography.buttonLarge
-                        else AppTheme.typography.buttonSmall,
+                    color = if (isSelected) AppTheme.colorScheme.onForegroundNeutralDefault
+                    else if (!isEnabled) AppTheme.colorScheme.foregroundNeutralRest
+                    else AppTheme.colorScheme.onBackgroundNeutralDefault,
+                    typography = if (isSelected) AppTheme.typography.buttonLarge
+                    else AppTheme.typography.buttonSmall,
                 ),
             )
 
@@ -664,8 +657,7 @@ fun TransactionRow(item: TransactionModel, onClick: () -> Unit = {}) {
             .height(48.dp)
             .clickable {
                 onClick()
-            },
-        verticalAlignment = Alignment.CenterVertically
+            }, verticalAlignment = Alignment.CenterVertically
     ) {
         AppImage(
             image = when (item.type) {
@@ -674,67 +666,54 @@ fun TransactionRow(item: TransactionModel, onClick: () -> Unit = {}) {
                 TransactionType.TRANSFER -> R.drawable.ic_transfer
                 TransactionType.RECEIVE -> R.drawable.ic_receive
                 TransactionType.FEE -> R.drawable.ic_transfer
-            },
-            style = ImageStyle(size = Size.FIX(42.dp))
+            }, style = ImageStyle(size = Size.FIX(42.dp))
         )
         Spacer(modifier = Modifier.width(13.dp))
         Column(
-            modifier = Modifier.fillMaxHeight(),
-            verticalArrangement = Arrangement.SpaceBetween
+            modifier = Modifier.fillMaxHeight(), verticalArrangement = Arrangement.SpaceBetween
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Headline6Text(text = item.title)
+                Headline6Text(
+                    text = item.title, color = AppTheme.colorScheme.foregroundNeutralDefault
+                )
                 Spacer(modifier = Modifier.weight(1f))//Color/On Background/Neutral/Subdued
                 CaptionText(
                     text = item.amount.toCurrency(),
                     color = AppTheme.colorScheme.onBackgroundNeutralSubdued
                 )
                 CaptionText(
-                    text = item.currency,
-                    color = AppTheme.colorScheme.onBackgroundNeutralSubdued
+                    text = item.currency, color = AppTheme.colorScheme.onBackgroundNeutralSubdued
                 )
                 AppIcon(
-//                    modifier = Modifier
-//                        .padding(8.dp)
-//                        .clickable {  },
                     icon = Icons.Default.ChevronLeft,
-                    style = IconStyle(tint = AppTheme.colorScheme.onBackgroundNeutralSubdued)
+                    style = IconStyle(tint = AppTheme.colorScheme.foregroundNeutralRest)
                 )
             }
-            CaptionText(text = item.date)
+            CaptionText(text = item.date, color = AppTheme.colorScheme.onBackgroundNeutralSubdued)
         }
     }
 }
 
-@Preview(showBackground = true)
+@AppPreview
 @Composable
 private fun AllTransactionsSectionFiledPreview() {
     val transactionList = listOf<TransactionModel>(
         TransactionModel(
-            TransactionType.RECEIVE,
-            "واریز حقوق",
-            1_000_000.0,
-            "ریال",
-            "امروز ساعت ۱۰:۳۰"
+            TransactionType.RECEIVE, "واریز حقوق", 1_000_000.0, "ریال", "امروز ساعت ۱۰:۳۰"
         ),
         TransactionModel(
-            TransactionType.TRANSFER,
-            "انتقال",
-            1_000_000.0,
-            "ریال",
-            "امروز ساعت ۱۰:۳۰"
+            TransactionType.TRANSFER, "انتقال", 1_000_000.0, "ریال", "امروز ساعت ۱۰:۳۰"
         ),
 
         )
-    val transactionFilter =
-        TransactionFilter(
-            transactionType = com.pmb.account.presentation.transactions.filterScreen.TransactionType.RECEIVE,
-            fromPrice = "1654",
-            toPrice = "3214",
-            dateType = null,
-            fromDate = null,
-            toDate = null
-        )
+    val transactionFilter = TransactionFilter(
+        transactionType = com.pmb.account.presentation.transactions.filterScreen.TransactionType.RECEIVE,
+        fromPrice = "1654",
+        toPrice = "3214",
+        dateType = null,
+        fromDate = null,
+        toDate = null
+    )
 
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
         HamrahBankTheme {
@@ -748,7 +727,7 @@ private fun AllTransactionsSectionFiledPreview() {
     }
 }
 
-@Preview(showBackground = true)
+@AppPreview
 @Composable
 private fun AllTransactionsSectionEmptyPreview() {
 
@@ -765,7 +744,7 @@ private fun AllTransactionsSectionEmptyPreview() {
 }
 
 
-@Preview(showBackground = true)
+@AppPreview
 @Composable
 private fun SendTransactionsSectionPreview() {
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
@@ -777,7 +756,7 @@ private fun SendTransactionsSectionPreview() {
     }
 }
 
-@Preview(showBackground = true)
+@AppPreview
 @Composable
 private fun ReceiveTransactionsSectionPreview() {
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {

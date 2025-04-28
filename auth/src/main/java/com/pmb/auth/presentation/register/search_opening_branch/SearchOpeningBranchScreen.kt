@@ -19,11 +19,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.pmb.auth.R
 import com.pmb.auth.domain.register.search_opening_branch.entity.OpeningBranch
-import com.pmb.auth.presentation.component.RoundedCornerCheckboxComponent
 import com.pmb.auth.presentation.register.search_opening_branch.viewModel.SearchOpeningBranchViewActions
 import com.pmb.auth.presentation.register.search_opening_branch.viewModel.SearchOpeningBranchViewModel
 import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.HeadlineTextIcon
+import com.pmb.ballon.component.RoundedCornerCheckboxComponent
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppLoading

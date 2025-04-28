@@ -30,5 +30,16 @@
     <string name="year_month">ماه/سال</string>
     <string name="share">اشتراک‌گذاری</string>
     <string name="save_to_gallery">ذخیره در گالری</string>
+    <string name="username_condition_word">متشکل از حروف انگلیسی٬ اعداد و «_»، «-»، «.» باشد</string>
+    <string name="username_condition_start_with_letter">با حرف انگلیسی آغاز شود</string>
+    <string name="username_condition_limit_length">بین ۵ تا ۳۰ کاراکتر باشد</string>
 
+    <!--Calendars-->
+    <string name="shamsi_calendar">Persian Calendar</string>
+    <string name="islamic_calendar">Islamic Calendar</string>
+    <string name="gregorian_calendar">Gregorian Calendar</string>
+    <string name="shamsi_calendar_short">Persian</string>
+    <string name="islamic_calendar_short">Islamic</string>
+    <string name="gregorian_calendar_short">Gregorian</string>
+    <string name="_continue">ادامه</string>
 </resources>

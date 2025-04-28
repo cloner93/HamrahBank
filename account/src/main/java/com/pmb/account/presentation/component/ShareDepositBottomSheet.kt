@@ -1,5 +1,6 @@
 package com.pmb.account.presentation.component
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,7 +18,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,14 +26,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.pmb.account.R
 import com.pmb.ballon.component.TextImage
+import com.pmb.ballon.component.annotation.AppPreview
 import com.pmb.ballon.component.base.AppBottomSheet
 import com.pmb.ballon.component.base.AppIcon
 import com.pmb.ballon.component.base.BodySmallText
@@ -43,6 +41,7 @@ import com.pmb.ballon.component.base.IconType
 import com.pmb.ballon.models.IconStyle
 import com.pmb.ballon.models.ImageStyle
 import com.pmb.ballon.models.Size
+import com.pmb.ballon.models.TextStyle
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.ballon.ui.theme.HamrahBankTheme
 
@@ -70,13 +69,18 @@ fun ShareDepositBottomSheetContent(
     onShareClick: (String) -> Unit
 ) {
     Column(
-        modifier = Modifier.padding(16.dp),
+        modifier = Modifier
+            .background(color = AppTheme.colorScheme.background1Neutral)
+            .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         TextImage(
             image = IconType.Painter(painterResource(R.drawable.card_info)),
             text = stringResource(R.string.deposit_info),
-            imageStyle = ImageStyle(size = Size.FIX(80.dp))
+            imageStyle = ImageStyle(size = Size.FIX(80.dp)),
+            textStyle = TextStyle(
+                color = AppTheme.colorScheme.onBackgroundNeutralDefault,
+            )
         )
 
         Spacer(modifier = Modifier.height(32.dp))
@@ -91,9 +95,15 @@ fun ShareDepositBottomSheetContent(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column(modifier = Modifier.weight(1f)) {
-                    Headline6Text(text = stringResource(R.string.deposit_number))
+                    Headline6Text(
+                        text = stringResource(R.string.deposit_number),
+                        color = AppTheme.colorScheme.foregroundNeutralDefault
+                    )
                     Spacer(modifier = Modifier.height(8.dp))
-                    CaptionText(text = info.depositNumber)
+                    CaptionText(
+                        text = info.depositNumber,
+                        color = AppTheme.colorScheme.onBackgroundNeutralSubdued
+                    )
                 }
                 Row {
 
@@ -119,9 +129,15 @@ fun ShareDepositBottomSheetContent(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column(modifier = Modifier.weight(1f)) {
-                    Headline6Text(text = stringResource(R.string.cart_number))
+                    Headline6Text(
+                        text = stringResource(R.string.cart_number),
+                        color = AppTheme.colorScheme.foregroundNeutralDefault
+                    )
                     Spacer(modifier = Modifier.height(8.dp))
-                    CaptionText(text = info.cardNumber)
+                    CaptionText(
+                        text = info.cardNumber,
+                        color = AppTheme.colorScheme.onBackgroundNeutralSubdued
+                    )
                 }
                 Row {
 
@@ -147,9 +163,15 @@ fun ShareDepositBottomSheetContent(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column(modifier = Modifier.weight(1f)) {
-                    Headline6Text(text = stringResource(R.string.iban_number))
+                    Headline6Text(
+                        text = stringResource(R.string.iban_number),
+                        color = AppTheme.colorScheme.foregroundNeutralDefault
+                    )
                     Spacer(modifier = Modifier.height(8.dp))
-                    CaptionText(text = info.ibanNumber)
+                    CaptionText(
+                        text = info.ibanNumber,
+                        color = AppTheme.colorScheme.onBackgroundNeutralSubdued
+                    )
                 }
                 Row {
 
@@ -200,10 +222,14 @@ fun ShareDepositBottomSheetContent(
                     ) {
                         Icon(
                             painter = painterResource(com.pmb.ballon.R.drawable.ic_copy),
+                            tint = AppTheme.colorScheme.onBackgroundTintNeutralDefault,
                             contentDescription = null
                         )
                         Spacer(modifier = Modifier.height(8.dp))
-                        BodySmallText(text = stringResource(R.string.copy_all_data))
+                        BodySmallText(
+                            text = stringResource(R.string.copy_all_data),
+                            color = AppTheme.colorScheme.onBackgroundTintNeutralDefault,
+                        )
                     }
                 }
 
@@ -225,10 +251,14 @@ fun ShareDepositBottomSheetContent(
                     ) {
                         Icon(
                             painter = painterResource(com.pmb.ballon.R.drawable.ic_share),
+                            tint = AppTheme.colorScheme.onBackgroundTintNeutralDefault,
                             contentDescription = null
                         )
                         Spacer(modifier = Modifier.height(8.dp))
-                        BodySmallText(text = stringResource(R.string.share_all_data))
+                        BodySmallText(
+                            text = stringResource(R.string.share_all_data),
+                            color = AppTheme.colorScheme.onBackgroundTintNeutralDefault,
+                        )
                     }
                 }
             }
@@ -236,7 +266,7 @@ fun ShareDepositBottomSheetContent(
     }
 }
 
-@Preview(showBackground = true)
+@AppPreview
 @Composable
 private fun ContentPreview() {
     val dip = DepositModel(
@@ -248,9 +278,7 @@ private fun ContentPreview() {
         ibanNumber = "IR1234567890098765432112",
         cardNumber = "6219861920241234",
     )
-    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
-        HamrahBankTheme {
-            ShareDepositBottomSheetContent(info = dip, onCopyAllClick = {}, onShareClick = {})
-        }
+    HamrahBankTheme {
+        ShareDepositBottomSheetContent(info = dip, onCopyAllClick = {}, onShareClick = {})
     }
 }

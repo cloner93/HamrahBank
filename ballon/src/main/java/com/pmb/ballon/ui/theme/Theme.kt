@@ -7,8 +7,11 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import com.pmb.core.platform.ThemeMode
 
 object AppTheme {
 
@@ -46,17 +49,25 @@ val LocalTypography = staticCompositionLocalOf { CustomTypography() }
 fun HamrahBankTheme(
     spaces: CustomSpaces = AppTheme.spaces,
     typography: CustomTypography = AppTheme.typography,
-    colors: CustomColors = AppTheme.colorScheme,
-    darkColors: CustomColors? = null,
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    themeMode: ThemeMode = ThemeMode.LIGHT,
     content: @Composable () -> Unit,
 ) {
-    val currentColor = remember { if (darkColors != null && darkTheme) darkColors else colors }
-    val rememberedColors = remember { currentColor.copy() }.apply { updateColorsFrom(currentColor) }
+    val darkTheme = when (themeMode) {
+        ThemeMode.LIGHT -> false
+        ThemeMode.DARK -> true
+        ThemeMode.SYSTEM -> isSystemInDarkTheme()
+    }
+
+    val currentColor = if (darkTheme) darkColors() else lightColors()
+    val rememberedColors = remember(currentColor) { currentColor.copy() }.apply {
+        updateColorsFrom(currentColor)
+    }
+
     CompositionLocalProvider(
         LocalColors provides rememberedColors,
         LocalSpaces provides spaces,
         LocalTypography provides typography,
+        LocalLayoutDirection provides LayoutDirection.Rtl
     ) {
         ProvideTextStyle(typography.bodyMedium, content = content)
     }
