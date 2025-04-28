@@ -18,11 +18,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.BasicText
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -36,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
@@ -46,6 +46,9 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import com.pmb.ballon.component.annotation.AppPreview
+import com.pmb.ballon.component.base.SubtitleMediumText
+import com.pmb.ballon.ui.theme.AppTheme
 import kotlinx.coroutines.launch
 import kotlin.math.abs
 import kotlin.math.roundToInt
@@ -139,6 +142,7 @@ fun NumberPicker(
                         .alpha(
                             maxOf(minimumAlpha, coercedAnimatedOffset / halfNumbersColumnHeightPx)
                         ),
+                    color = AppTheme.colorScheme.onBackgroundNeutralDefault,
                 )
                 var showTextEdit by remember { mutableStateOf(false) }
                 Crossfade(showTextEdit, label = "edit toggle") { state ->
@@ -183,7 +187,7 @@ fun NumberPicker(
                                 ),
                                 textStyle = LocalTextStyle.current.copy(
                                     textAlign = TextAlign.Center,
-                                    color = LocalContentColor.current,
+                                    color = AppTheme.colorScheme.onBackgroundNeutralDefault,
                                 ),
                                 modifier = Modifier.focusRequester(focusRequester),
                             )
@@ -203,8 +207,11 @@ fun NumberPicker(
                                     indication = null,
                                     interactionSource = null,
                                     onClickLabel = onClickLabel,
-                                ) { showTextEdit = true },
+                                ) {
+                                    showTextEdit = true
+                                },
                             ),
+                        color = AppTheme.colorScheme.onBackgroundNeutralDefault,
                     )
                 }
                 if (indexOfElement < range.last - range.first) Label(
@@ -216,6 +223,7 @@ fun NumberPicker(
                         .alpha(
                             maxOf(minimumAlpha, -coercedAnimatedOffset / halfNumbersColumnHeightPx)
                         ),
+                    color = AppTheme.colorScheme.onBackgroundNeutralDefault,
                 )
             }
         },
@@ -241,20 +249,9 @@ private fun getItemIndexForOffset(
 }
 
 @Composable
-private fun Label(text: String, modifier: Modifier) {
+private fun Label(text: String, modifier: Modifier, color: Color) {
     Box(contentAlignment = Alignment.Center, modifier = modifier.fillMaxWidth()) {
-        val contentColor = LocalContentColor.current
-        BasicText(
-            text = text,
-            color = { contentColor },
-            style = LocalTextStyle.current,
-            maxLines = 1,
-            softWrap = false,
-//            autoSize = TextAutoSize.StepBased(
-//                minFontSize = MaterialTheme.typography.labelSmall.fontSize,
-//                maxFontSize = LocalTextStyle.current.fontSize,
-//            )
-        )
+        SubtitleMediumText(text = text, color = color)
     }
 }
 
@@ -281,12 +278,13 @@ private suspend fun Animatable<Float, AnimationVector1D>.fling(
     }
 }
 
-fun formatNumber(number: Int, digits: CharArray = PERSIAN_DIGITS): String =
-    formatNumber(number.toString(), digits)
-
-fun formatNumber(number: String, digits: CharArray): String {
-    return number.map { digits.getOrNull(Character.getNumericValue(it)) ?: it }
-        .joinToString("")
+@AppPreview
+@Composable
+private fun NumberPickerPrev() {
+    NumberPicker(
+        modifier = Modifier.width(100.dp),
+        label = { formatNumber(it) },
+        range = 1..30,
+        value = 3,
+    ) { }
 }
-
-val PERSIAN_DIGITS = charArrayOf('۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹')
