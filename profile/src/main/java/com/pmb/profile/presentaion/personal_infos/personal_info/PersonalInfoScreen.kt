@@ -186,7 +186,7 @@ private fun ProfileInfoItemsComponent(viewModel: PersonalInfoViewModel) {
                 startIconStyle = IconStyle(tint = AppTheme.colorScheme.onBackgroundPrimaryCTA),
                 endContent = {
                     CaptionText(
-                        text = viewState.personalInfo.safeEducation,
+                        text = viewState.personalInfo.safeEducation.title,
                         color = AppTheme.colorScheme.onBackgroundNeutralSubdued
                     )
                 },

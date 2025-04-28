@@ -46,6 +46,7 @@ fun CustomSpinner(
             onValueChange = {},
             label = labelString,
             enabled = isEnabled,
+            hideCursor = true,
             trailingIcon = {
                 Icon(
                     imageVector = if (expanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,

@@ -59,6 +59,7 @@ fun AppBaseTextField(
     focusRequester: FocusRequester = remember { FocusRequester() },
     enabled: Boolean = true,
     readOnly: Boolean = false,
+    hideCursor: Boolean = false,
     label: String? = null,
     leadingIcon: @Composable (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
@@ -117,7 +118,8 @@ fun AppBaseTextField(
             unfocusedBorderColor = if (bordered) AppTextField.defaultColors().unfocusedIndicatorColor else Color.Transparent,
             focusedLabelColor = AppTextField.defaultColors().focusedLabelColor,
             unfocusedLabelColor = AppTextField.defaultColors().unfocusedLabelColor,
-            cursorColor = AppTheme.colorScheme.onBackgroundNeutralDefault,
+            cursorColor = if (hideCursor) Color.Transparent else
+                AppTheme.colorScheme.onBackgroundNeutralDefault,
             errorBorderColor = AppTextField.defaultColors().errorIndicatorColor,
             errorLabelColor = AppTextField.defaultColors().errorLabelColor,
             disabledLabelColor = AppTextField.defaultColors().disabledLabelColor,

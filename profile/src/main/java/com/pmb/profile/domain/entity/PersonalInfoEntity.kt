@@ -6,12 +6,12 @@ data class PersonalInfoEntity(
     val username: String? = null,
     val phoneNumber: String? = null,
     val addressEntity: AddressEntity? = AddressEntity(),
-    val education: String? = null,
+    val educationEntity: EducationEntity? = null,
     val jobEntity: JobEntity? = null,
 ) : DomainModel {
     val safeUsername: String get() = username.orEmpty()
     val safePhoneNumber: String get() = phoneNumber.orEmpty()
     val safeAddressEntity: AddressEntity get() = addressEntity ?: AddressEntity().safeAddressEntity
-    val safeEducation: String get() = education.orEmpty()
+    val safeEducation: EducationEntity get() = educationEntity ?: EducationEntity.createEmpty()
     val safeJobEntity: JobEntity get() = jobEntity ?: JobEntity.createEmpty()
 }

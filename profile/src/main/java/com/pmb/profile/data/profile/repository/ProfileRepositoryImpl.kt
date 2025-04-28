@@ -2,6 +2,7 @@ package com.pmb.profile.data.profile.repository
 
 import com.pmb.core.platform.Result
 import com.pmb.profile.domain.entity.AddressEntity
+import com.pmb.profile.domain.entity.EducationEntity
 import com.pmb.profile.domain.entity.JobEntity
 import com.pmb.profile.domain.entity.OtpEntity
 import com.pmb.profile.domain.entity.PersonalInfoEntity
@@ -96,6 +97,28 @@ class ProfileRepositoryImpl @Inject constructor() : ProfileRepository {
         delay(2000)
         emit(Result.Success(JobEntity(id, title)))
     }
+
+    override suspend fun fetchEducations(): Flow<Result<List<EducationEntity>>> = flow {
+        emit(Result.Loading)
+        delay(2000)
+        emit(Result.Success(mockEducationEntities))
+    }
+
+    override suspend fun updateEducation(
+        id: Long,
+        title: String
+    ): Flow<Result<EducationEntity>> = flow {
+        emit(Result.Loading)
+        delay(2000)
+        emit(
+            Result.Success(
+                EducationEntity(
+                    id = id,
+                    title = title
+                )
+            )
+        )
+    }
 }
 
 private val mockJobEntities = listOf(
@@ -131,6 +154,18 @@ private val mockJobEntities = listOf(
     JobEntity(30, "پیک موتوری")
 )
 
+private val mockEducationEntities = listOf(
+    EducationEntity(1, "دیپلم"),
+    EducationEntity(2, "فوق دیپلم"),
+    EducationEntity(3, "کارشناسی"),
+    EducationEntity(4, "کارشناسی ارشد"),
+    EducationEntity(5, "دکتری"),
+    EducationEntity(6, "دکتری تخصصی (Ph.D)"),
+    EducationEntity(7, "دیپلم فنی"),
+    EducationEntity(8, "کارشناسی ناپیوسته"),
+    EducationEntity(9, "کارشناسی ارشد پیوسته"),
+    EducationEntity(10, "فوق دکتری")
+)
 
 private val mockPersonalInfoEntity
     get() = PersonalInfoEntity(
@@ -141,10 +176,13 @@ private val mockPersonalInfoEntity
             address = "تهران، کوی نصر، خیابان ۲۷، پلاکfif، واحد ۳",
             postalCode = "1234567890"
         ),
-        education = "دانشجو",
+        educationEntity = EducationEntity(
+            id = 20,
+            title = "دانشجو"
+        ),
         jobEntity = JobEntity(
             id = 10,
-            title =  "کارشناسی"
+            title = "کارشناسی"
         ),
     )
 

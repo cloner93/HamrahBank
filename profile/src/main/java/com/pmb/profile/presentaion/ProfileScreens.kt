@@ -11,6 +11,8 @@ import com.pmb.navigation.moduleScreen.ProfileScreens
 import com.pmb.profile.presentaion.personal_infos.PersonalInfoSharedViewModel
 import com.pmb.profile.presentaion.personal_infos.change_address.ChangeAddressScreen
 import com.pmb.profile.presentaion.personal_infos.change_address.viewmodel.ChangeAddressViewModel
+import com.pmb.profile.presentaion.personal_infos.change_education.ChangeEducationScreen
+import com.pmb.profile.presentaion.personal_infos.change_education.viewmodel.ChangeEducationViewModel
 import com.pmb.profile.presentaion.personal_infos.change_job.ChangeJobScreen
 import com.pmb.profile.presentaion.personal_infos.change_job.viewmodel.ChangeJobViewModel
 import com.pmb.profile.presentaion.personal_infos.change_phone_number.ChangePhoneNumberScreen
@@ -59,7 +61,7 @@ fun NavGraphBuilder.profileScreensHandle() {
                         phoneNumber = it.phoneNumber,
                         addressEntity = it.addressEntity,
                         jobEntity = it.jobEntity,
-                        education = it.education,
+                        educationEntity = it.educationEntity,
                         queueJob = null
                     )
                 }
@@ -156,7 +158,18 @@ fun NavGraphBuilder.profileScreensHandle() {
 
         }
         composable(route = ProfileScreens.PersonalInfo.ChangeEducation.route) {
-
+            val sharedViewModel =
+                it.navigationManager.retrieveSharedViewModel<PersonalInfoSharedViewModel>(
+                    screen = ProfileScreens.PersonalInfo.Graph, navBackStackEntry = it
+                )
+            val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
+            ChangeEducationScreen(
+                viewModel = hiltViewModel<ChangeEducationViewModel>(),
+                sharedState = sharedState.value,
+                result = {
+                    sharedViewModel.updateState { copy(educationEntity = it) }
+                }
+            )
         }
     }
 }
