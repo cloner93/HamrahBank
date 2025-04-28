@@ -72,8 +72,8 @@ fun ChargeScreen(
             HistoryListComponent(
                 modifier = Modifier.fillMaxWidth(),
                 pageImage = drawable.ic_charge,
-                historyTitle = stringResource(string.buying_history),
-                historyButtonTitle = stringResource(string.latest_number),
+                historyButtonTitle  = stringResource(string.buying_history),
+                historyTitle= stringResource(string.latest_number),
                 items = it,
                 onHistoryClickListener = {
                     navigationManager.navigate(ChargeScreens.ChargeHistory)

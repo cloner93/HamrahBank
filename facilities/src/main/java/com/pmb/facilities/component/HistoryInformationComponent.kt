@@ -1,6 +1,5 @@
 package com.pmb.facilities.component
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.runtime.Composable
@@ -18,7 +17,7 @@ fun HistoryInformationComponent(
     historyTitle: String,
     titleColor: Color,
     historyColor: Color,
-    historyOnClick: () -> Unit = {}
+    onHistoryClickListener: () -> Unit = {}
 ) {
     Row(
         modifier = modifier,
@@ -34,7 +33,7 @@ fun HistoryInformationComponent(
             colors = AppButton.textButtonColors(
                 contentColor = historyColor
             ),
-            onClick = historyOnClick
+            onClick = onHistoryClickListener
         )
 
     }

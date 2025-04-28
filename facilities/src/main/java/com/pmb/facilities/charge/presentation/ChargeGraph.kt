@@ -8,6 +8,8 @@ import androidx.navigation.navigation
 import com.pmb.facilities.charge.presentation.charge.ChargeScreen
 import com.pmb.facilities.charge.presentation.charge.ChargeViewModel
 import com.pmb.facilities.charge.presentation.charge_history.ChargeHistoryScreen
+import com.pmb.facilities.charge.presentation.charge_history.viewModel.ChargeHistoryViewModel
+import com.pmb.facilities.charge.presentation.choose_charge_price.ChooseChargePriceScreen
 import com.pmb.facilities.charge.presentation.purchase_charge.PurchaseChargeScreen
 import com.pmb.facilities.charge.presentation.purchase_charge.PurchaseChargeViewModel
 import com.pmb.navigation.manager.navigationManager
@@ -49,7 +51,17 @@ fun NavGraphBuilder.chargeGraphHandler() {
                     screen = ChargeScreens.ChargeGraph, navBackStackEntry = it
                 )
             val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
-            ChargeHistoryScreen()
+            ChargeHistoryScreen(
+                viewModel = hiltViewModel<ChargeHistoryViewModel>()
+            )
+        }
+        composable(route = ChargeScreens.ChooseChargePrice.route) {
+            val sharedViewModel =
+                it.navigationManager.retrieveSharedViewModel<ChargeSharedViewModel>(
+                    screen = ChargeScreens.ChargeGraph, navBackStackEntry = it
+                )
+            val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
+            ChooseChargePriceScreen()
         }
     }
 }

@@ -8,4 +8,5 @@ sealed class ChargeScreens(route: String, arguments: Map<String, String> = empty
     data object Charge : ChargeScreens(route = "charge")
     data object PurchaseCharge : ChargeScreens(route = "purchase_charge")
     data object ChargeHistory : ChargeScreens(route = "charge_history")
+    data object ChooseChargePrice : ChargeScreens(route = "charge_price")
 }

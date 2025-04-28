@@ -78,7 +78,6 @@ fun AppNavHost(navController: NavHostController, innerPadding: PaddingValues) {
             transferScreensHandle()
             accountScreensHandle()
             profileScreensHandle()
-            chargeGraphHandler()
 
         }
     }
