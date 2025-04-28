@@ -10,12 +10,12 @@ import androidx.compose.ui.res.stringResource
 import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.facilities.R
-import com.pmb.facilities.charge.presentation.buying_charge.ChooseOperator
+import com.pmb.facilities.charge.domain.purchase_charge.entity.Operator
 
 @Composable
 fun ChooseListOperatorComponent(
     modifier: Modifier = Modifier,
-    chooseOperator: List<ChooseOperator>
+    chooseOperator: List<Operator>
 ) {
     Column(
         modifier = modifier,

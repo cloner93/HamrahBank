@@ -19,6 +19,7 @@ import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.facilities.R.drawable
 import com.pmb.facilities.R.string
 import com.pmb.facilities.charge.presentation.ChargeSharedState
+import com.pmb.facilities.charge.presentation.choose_charge_price.ChooseChargePriceScreen
 import com.pmb.facilities.complex_component.HistoryListComponent
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.moduleScreen.ChargeScreens
@@ -37,7 +38,7 @@ fun ChargeScreen(
             when (event) {
                 ChargeViewEvents.UseTheLatestNumber -> {
                     updateState.invoke(viewState.value.copy())
-                    navigationManager.navigate(ChargeScreens.PurchaseCharge)
+                    navigationManager.navigate(ChargeScreens.ChooseChargePrice)
                 }
             }
         }

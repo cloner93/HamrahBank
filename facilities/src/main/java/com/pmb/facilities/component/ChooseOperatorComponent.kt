@@ -15,12 +15,12 @@ import com.pmb.ballon.component.base.AppImage
 import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.models.ImageStyle
 import com.pmb.ballon.models.Size
-import com.pmb.facilities.charge.presentation.buying_charge.ChooseOperator
+import com.pmb.facilities.charge.domain.purchase_charge.entity.Operator
 
 @Composable
 fun ChooseOperatorComponent(
     modifier: Modifier = Modifier,
-    data: ChooseOperator
+    data: Operator
 ) {
     Row(
         modifier = modifier.padding(vertical = 12.dp),

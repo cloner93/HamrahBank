@@ -43,6 +43,7 @@ fun NavGraphBuilder.chargeGraphHandler() {
                 viewModel = hiltViewModel<PurchaseChargeViewModel>(),
                 sharedState = sharedState
             ) { childState ->
+                sharedViewModel.updateState { sharedState.value.copy(simNumber = childState.mobile) }
             }
         }
         composable(route = ChargeScreens.ChargeHistory.route) {
@@ -61,7 +62,9 @@ fun NavGraphBuilder.chargeGraphHandler() {
                     screen = ChargeScreens.ChargeGraph, navBackStackEntry = it
                 )
             val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
-            ChooseChargePriceScreen()
+            ChooseChargePriceScreen(sharedState = sharedState) { childState ->
+
+            }
         }
     }
 }

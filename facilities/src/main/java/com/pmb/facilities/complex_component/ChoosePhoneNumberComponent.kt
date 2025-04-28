@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.pmb.facilities.charge.presentation.buying_charge.ChooseOperator
+import com.pmb.facilities.charge.domain.purchase_charge.entity.Operator
 import com.pmb.facilities.component.ChooseListOperatorComponent
 import com.pmb.facilities.component.PhoneNumberWithContactComponent
 
@@ -14,9 +14,10 @@ import com.pmb.facilities.component.PhoneNumberWithContactComponent
 fun ChoosePhoneNumberComponent(
     modifier: Modifier = Modifier,
     mobile: String,
-    item: List<ChooseOperator>,
+    item: List<Operator>?,
     onValidate: (Boolean) -> Unit,
     onValueChange: (String) -> Unit,
+    onContactClickListener: () -> Unit
 ) {
     PhoneNumberWithContactComponent(
         modifier = modifier,
@@ -28,12 +29,14 @@ fun ChoosePhoneNumberComponent(
             onValueChange(it)
         }
     ) {
-
+        onContactClickListener()
     }
     Spacer(modifier = Modifier.size(40.dp))
-    ChooseListOperatorComponent(
-        modifier = Modifier.fillMaxWidth(),
-        chooseOperator = item
-    )
+    item?.let {
+        ChooseListOperatorComponent(
+            modifier = Modifier.fillMaxWidth(),
+            chooseOperator = it
+        )
+    }
 }
 
