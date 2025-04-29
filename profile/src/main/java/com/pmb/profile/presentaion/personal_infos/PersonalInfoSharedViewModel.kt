@@ -2,6 +2,9 @@ package com.pmb.profile.presentaion.personal_infos
 
 import com.pmb.core.platform.BaseSharedState
 import com.pmb.core.platform.BaseSharedViewModel
+import com.pmb.profile.domain.entity.AddressEntity
+import com.pmb.profile.domain.entity.EducationEntity
+import com.pmb.profile.domain.entity.JobEntity
 import com.pmb.profile.domain.entity.OtpEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -13,19 +16,10 @@ class PersonalInfoSharedViewModel @Inject constructor() :
 data class PersonalInfoSharedState(
     val username: String? = null,
     val phoneNumber: String? = null,
-    val address: String? = null,
-    val job: String? = null,
-    val education: String? = null,
-    val otpEntity: OtpEntity? = null
-) : BaseSharedState {
-    val usernameOrEmpty: String
-        get() = username.orEmpty()
-    val phoneNumberOrEmpty: String
-        get() = phoneNumber.orEmpty()
-    val addressOrEmpty: String
-        get() = address.orEmpty()
-    val jobOrEmpty: String
-        get() = job.orEmpty()
-    val educationOrEmpty: String
-        get() = education.orEmpty()
-}
+    val addressEntity: AddressEntity? = AddressEntity(),
+    val jobEntity: JobEntity? = null,
+    val educationEntity: EducationEntity? = null,
+    val otpEntity: OtpEntity? = null,
+    val jobEntities: List<JobEntity> = emptyList(),
+    val queueJob: JobEntity? = null,
+) : BaseSharedState

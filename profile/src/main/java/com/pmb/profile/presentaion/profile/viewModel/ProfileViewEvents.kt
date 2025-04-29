@@ -4,4 +4,5 @@ import com.pmb.core.platform.BaseViewEvent
 
 sealed interface ProfileViewEvents : BaseViewEvent {
     data object LogoutAccountSucceed : ProfileViewEvents
+    object NavigateToThemeScreen : ProfileViewEvents
 }

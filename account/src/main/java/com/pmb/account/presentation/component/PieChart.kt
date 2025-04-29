@@ -8,11 +8,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.pmb.account.presentation.balance.DepositsChartModel
 import com.pmb.account.utils.mapToDepositsChartModel
+import com.pmb.ballon.component.annotation.AppPreview
 
 @Composable
 internal fun PieChart(
@@ -39,9 +39,7 @@ internal fun PieChart(
                     sweepAngle = sweepAngle,
                     useCenter = false,
                     style = Stroke(
-                        width = strokeWidth.toPx(),
-                        cap = StrokeCap.Round,
-                        join = StrokeJoin.Round
+                        width = strokeWidth.toPx(), cap = StrokeCap.Butt, join = StrokeJoin.Miter
                     )
                 )
 
@@ -51,7 +49,7 @@ internal fun PieChart(
 
 }
 
-@Preview(showBackground = true)
+@AppPreview
 @Composable
 private fun PieChartPreview() {
     val depositsChartList = listOf<DepositModel>(
@@ -84,9 +82,6 @@ private fun PieChartPreview() {
         ),
     ).mapToDepositsChartModel()
     PieChart(
-        modifier = Modifier,
-        charts = depositsChartList,
-        size = 100.dp,
-        strokeWidth = 5.dp
+        modifier = Modifier, charts = depositsChartList, size = 100.dp, strokeWidth = 5.dp
     )
 }

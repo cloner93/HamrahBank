@@ -28,12 +28,12 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.pmb.auth.R
 import com.pmb.auth.domain.register.search_opening_branch.entity.OpeningBranch
-import com.pmb.auth.presentation.component.RoundedCornerCheckboxComponent
 import com.pmb.auth.presentation.register.deposit_information.viewModel.DepositInformationViewActions
 import com.pmb.auth.presentation.register.deposit_information.viewModel.DepositInformationViewEvents
 import com.pmb.auth.presentation.register.deposit_information.viewModel.DepositInformationViewModel
 import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.CustomSpinner
+import com.pmb.ballon.component.RoundedCornerCheckboxComponent
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppClickableReadOnlyTextField
 import com.pmb.ballon.component.base.AppContent
@@ -55,7 +55,7 @@ fun DepositInformationScreen(
     val navigationManager: NavigationManager = LocalNavigationManager.current
     val viewState by viewModel.viewState.collectAsState()
     var showBottomSheet by remember { mutableStateOf(false) }
-    BackHandler() {
+    BackHandler {
         if (showBottomSheet) {
             showBottomSheet = false
         } else {

@@ -1,28 +1,40 @@
 package com.pmb.profile.presentaion.profile
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.HelpOutline
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.MenuItem
 import com.pmb.ballon.component.TextImage
+import com.pmb.ballon.component.annotation.AppPreview
+import com.pmb.ballon.component.base.AppButtonIcon
 import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.models.IconStyle
-import com.pmb.ballon.models.TextStyle
 import com.pmb.ballon.ui.theme.AppTheme
+import com.pmb.ballon.ui.theme.HamrahBankTheme
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.moduleScreen.ProfileScreens
 import com.pmb.profile.R
@@ -32,72 +44,77 @@ import com.pmb.profile.presentaion.profile.viewModel.ProfileViewModel
 
 
 @Composable
-fun ProfileScreen(viewModel: ProfileViewModel) {
-    val navigationManager = LocalNavigationManager.current
+fun ProfileScreen(viewModel : ProfileViewModel) {
     val viewState by viewModel.viewState.collectAsState()
+
+    val navigationManager = LocalNavigationManager.current
+
     LaunchedEffect(Unit) {
         viewModel.viewEvent.collect { event ->
             when (event) {
                 ProfileViewEvents.LogoutAccountSucceed -> {
-                    // in the future based on our logic and business can we call it and change some thing else  or navigate other screen
-                    Unit
+
+                }
+
+                ProfileViewEvents.NavigateToThemeScreen -> {
+                    navigationManager.navigate(ProfileScreens.ThemeScreen)
                 }
             }
         }
     }
-    AppContent {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            TextImage(
-                modifier = Modifier.padding(all = 32.dp),
-                image = com.pmb.ballon.R.drawable.profile_placeholder,
-                text = viewState.userData?.userName ?: ""
-            )
 
-            Column(
+    AppContent(
+        modifier = Modifier
+            .padding(horizontal = 16.dp),
+        backgroundColor = AppTheme.colorScheme.background3Neutral,
+        scrollState = rememberScrollState(),
+        topBar = {
+
+            Box(
                 modifier = Modifier
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(color = AppTheme.colorScheme.onForegroundNeutralDefault)
+                    .fillMaxWidth()
+                    .padding(16.dp),
             ) {
-                MenuItem(
-                    title = stringResource(R.string.buy_subscription),
-                    subtitle = stringResource(R.string.buy_subscription_subtitle),
-                    startIcon = com.pmb.ballon.R.drawable.ic_star_magic,
-                    endIcon = com.pmb.ballon.R.drawable.ic_arrow_left,
-                    bottomDivider = true,
-                    titleStyle = TextStyle(color = AppTheme.colorScheme.onBackgroundPrimaryCTA),
-                    startIconStyle = IconStyle(tint = AppTheme.colorScheme.onBackgroundPrimaryCTA),
-                    clickable = false,
-                    onItemClick = {
+                AppButtonIcon(
+                    modifier = Modifier
+                        .align(Alignment.Companion.TopStart),
+                    icon = Icons.Outlined.HelpOutline,
+                    style = IconStyle(tint = AppTheme.colorScheme.onBackgroundNeutralDefault),
+                    onClick = {
 
                     })
-
-                MenuItem(
-                    title = stringResource(R.string.my_services),
-                    startIcon = com.pmb.ballon.R.drawable.ic_my_services,
-                    endIcon = com.pmb.ballon.R.drawable.ic_arrow_left,
-                    startIconStyle = IconStyle(tint = AppTheme.colorScheme.iconColor),
-                    clickable = false,
-                    onItemClick = {
-
-                    })
+                Row(
+                    modifier = Modifier
+                        .align(Alignment.Companion.Center)
+                ) {
+                    TextImage(
+                        image = R.drawable.ic_profile,
+                        spacer = 0.dp,
+                        text = "userData "
+                    )
+                }
             }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
+        },
+    ) {
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(containerColor = AppTheme.colorScheme.background1Neutral),
+            elevation = CardDefaults.cardElevation(0.dp)
+        ) {
             Column(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(color = AppTheme.colorScheme.onForegroundNeutralDefault)
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
+
                 MenuItem(
                     title = stringResource(R.string.user_info),
                     startIcon = com.pmb.ballon.R.drawable.ic_user_circle_black,
                     endIcon = com.pmb.ballon.R.drawable.ic_arrow_left,
                     bottomDivider = true,
-                    startIconStyle = IconStyle(tint = AppTheme.colorScheme.iconColor),
+                    startIconStyle = IconStyle(tint = AppTheme.colorScheme.onBackgroundNeutralCTA),
+                    endIconStyle = IconStyle(tint = AppTheme.colorScheme.foregroundNeutralRest),
+                    clickable = true,
                     onItemClick = {
                         navigationManager.navigate(ProfileScreens.PersonalInfo.Graph)
                     })
@@ -107,121 +124,122 @@ fun ProfileScreen(viewModel: ProfileViewModel) {
                     startIcon = com.pmb.ballon.R.drawable.ic_lock,
                     endIcon = com.pmb.ballon.R.drawable.ic_arrow_left,
                     bottomDivider = true,
-                    startIconStyle = IconStyle(tint = AppTheme.colorScheme.iconColor),
-                    clickable = false,
+                    startIconStyle = IconStyle(tint = AppTheme.colorScheme.onBackgroundNeutralCTA),
+                    endIconStyle = IconStyle(tint = AppTheme.colorScheme.foregroundNeutralRest),
+                    clickable = true,
                     onItemClick = {
 
                     })
 
                 MenuItem(
                     title = stringResource(R.string.appearance_of_program),
-                    startIcon = com.pmb.ballon.R.drawable.ic_painting_palette,
+                    startIcon = R.drawable.ic_theme,
                     endIcon = com.pmb.ballon.R.drawable.ic_arrow_left,
                     bottomDivider = true,
-                    startIconStyle = IconStyle(tint = AppTheme.colorScheme.iconColor),
-                    clickable = false,
+                    startIconStyle = IconStyle(tint = AppTheme.colorScheme.onBackgroundNeutralCTA),
+                    endIconStyle = IconStyle(tint = AppTheme.colorScheme.foregroundNeutralRest),
+                    clickable = true,
                     onItemClick = {
-
+                        viewModel.handle(ProfileViewActions.NavigateToThemeScreen)
                     })
 
                 MenuItem(
                     title = stringResource(R.string.update),
-                    startIcon = com.pmb.ballon.R.drawable.ic_refresh,
+                    startIcon = R.drawable.ic_update,
                     endIcon = com.pmb.ballon.R.drawable.ic_arrow_left,
-                    startIconStyle = IconStyle(tint = AppTheme.colorScheme.iconColor),
-                    clickable = false,
+                    startIconStyle = IconStyle(tint = AppTheme.colorScheme.onBackgroundNeutralCTA),
+                    endIconStyle = IconStyle(tint = AppTheme.colorScheme.foregroundNeutralRest),
+                    clickable = true,
                     onItemClick = {
 
                     })
             }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(containerColor = AppTheme.colorScheme.background1Neutral),
+            elevation = CardDefaults.cardElevation(0.dp)
+        ) {
             Column(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(color = AppTheme.colorScheme.onForegroundNeutralDefault)
-            ) {
-                MenuItem(
-                    title = stringResource(R.string.login_to_internet_bank),
-                    startIcon = com.pmb.ballon.R.drawable.ic_qr_scan,
-                    endIcon = com.pmb.ballon.R.drawable.ic_arrow_left,
-                    startIconStyle = IconStyle(tint = AppTheme.colorScheme.iconColor),
-                    clickable = false,
-                    onItemClick = {
-
-                    })
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Column(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(color = AppTheme.colorScheme.onForegroundNeutralDefault)
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 MenuItem(
                     title = stringResource(R.string.support),
-                    startIcon = com.pmb.ballon.R.drawable.ic_support,
+                    startIcon = R.drawable.ic_support,
                     endIcon = com.pmb.ballon.R.drawable.ic_arrow_left,
+
                     bottomDivider = true,
-                    startIconStyle = IconStyle(tint = AppTheme.colorScheme.iconColor),
-                    clickable = false,
+                    startIconStyle = IconStyle(tint = AppTheme.colorScheme.onBackgroundNeutralCTA),
+                    endIconStyle = IconStyle(tint = AppTheme.colorScheme.foregroundNeutralRest),
+                    clickable = true,
                     onItemClick = {
 
                     })
 
                 MenuItem(
                     title = stringResource(R.string.invite_friend),
-                    startIcon = com.pmb.ballon.R.drawable.ic_happy_heart,
-                    endIcon = com.pmb.ballon.R.drawable.ic_arrow_left,
+                    startIcon = R.drawable.ic_invite,
                     bottomDivider = true,
-                    startIconStyle = IconStyle(tint = AppTheme.colorScheme.iconColor),
-                    clickable = false,
+                    endIcon = com.pmb.ballon.R.drawable.ic_arrow_left,
+                    startIconStyle = IconStyle(tint = AppTheme.colorScheme.onBackgroundNeutralCTA),
+                    endIconStyle = IconStyle(tint = AppTheme.colorScheme.foregroundNeutralRest),
+                    clickable = true,
                     onItemClick = {
 
                     })
 
                 MenuItem(
                     title = stringResource(R.string.about_app),
-                    startIcon = com.pmb.ballon.R.drawable.ic_info_circle,
-                    endIcon = com.pmb.ballon.R.drawable.ic_arrow_left,
+                    startIcon = R.drawable.ic_info,
                     bottomDivider = true,
-                    startIconStyle = IconStyle(tint = AppTheme.colorScheme.iconColor),
-                    clickable = false,
+                    endIcon = com.pmb.ballon.R.drawable.ic_arrow_left,
+                    startIconStyle = IconStyle(tint = AppTheme.colorScheme.onBackgroundNeutralCTA),
+                    endIconStyle = IconStyle(tint = AppTheme.colorScheme.foregroundNeutralRest),
+                    clickable = true,
                     onItemClick = {
 
                     })
 
                 MenuItem(
                     title = stringResource(R.string.comments_and_suggestions),
-                    startIcon = com.pmb.ballon.R.drawable.ic_comment,
+                    startIcon = R.drawable.ic_comment,
                     endIcon = com.pmb.ballon.R.drawable.ic_arrow_left,
-                    startIconStyle = IconStyle(tint = AppTheme.colorScheme.iconColor),
-                    clickable = false,
+                    startIconStyle = IconStyle(tint = AppTheme.colorScheme.onBackgroundNeutralCTA),
+                    endIconStyle = IconStyle(tint = AppTheme.colorScheme.foregroundNeutralRest),
+                    clickable = true,
                     onItemClick = {
 
                     })
             }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(containerColor = AppTheme.colorScheme.background1Neutral),
+            elevation = CardDefaults.cardElevation(0.dp)
+        ) {
             Column(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(color = AppTheme.colorScheme.onForegroundNeutralDefault)
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 MenuItem(
                     title = stringResource(R.string.logout_account),
-                    startIcon = com.pmb.ballon.R.drawable.ic_logout,
+                    startIcon = R.drawable.ic_logout,
                     endIcon = com.pmb.ballon.R.drawable.ic_arrow_left,
-                    clickable = false,
+                    startIconStyle = IconStyle(tint = AppTheme.colorScheme.onBackgroundNeutralCTA),
+                    endIconStyle = IconStyle(tint = AppTheme.colorScheme.foregroundNeutralRest),
+                    clickable = true,
                     onItemClick = {
-                        viewModel.handle(ProfileViewActions.LogoutAccount)
+//                        viewModel.handle(ProfileViewActions.LogoutAccount)
                     })
             }
-            Spacer(modifier = Modifier.height(16.dp))
         }
+
+
     }
     if (viewState.loading) {
         AppLoading()
@@ -230,3 +248,14 @@ fun ProfileScreen(viewModel: ProfileViewModel) {
         AlertComponent(viewState.alertModelState!!)
     }
 }
+
+@AppPreview
+@Composable
+private fun ProfileScreenPreview() {
+    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+        HamrahBankTheme {
+//            ProfileScreen()
+        }
+    }
+}
+

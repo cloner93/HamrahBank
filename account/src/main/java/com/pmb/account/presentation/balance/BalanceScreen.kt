@@ -55,6 +55,7 @@ fun BalanceScreen() {
 
     AppContent(
         modifier = Modifier.padding(horizontal = 16.dp),
+        backgroundColor = AppTheme.colorScheme.background3Neutral,
         topBar = {
             AppTopBar(
                 title = "دارایی ها",
@@ -81,14 +82,21 @@ fun BalanceScreen() {
 
                 BodySmallText(
                     modifier = Modifier.padding(vertical = 8.dp),
-                    text = "مجموع دارایی ها"
+                    text = "مجموع دارایی ها",
+                    color = AppTheme.colorScheme.onBackgroundNeutralSubdued
                 )
                 Row(
                     modifier = Modifier.padding(bottom = 16.dp)
                 ) {
-                    Headline6Text(text = viewState.totalBalance.toCurrency())
+                    Headline6Text(
+                        text = viewState.totalBalance.toCurrency(),
+                        color = AppTheme.colorScheme.onBackgroundNeutralDefault
+                    )
 
-                    BodySmallText(text = "ریال")
+                    BodySmallText(
+                        text = "ریال",
+                        color = AppTheme.colorScheme.onBackgroundNeutralDefault
+                    )
                 }
             }
         }
@@ -132,7 +140,10 @@ fun DepositRow(deposit: DepositsChartModel, onClick: () -> Unit) {
         )
 
         Column(modifier = Modifier.fillMaxWidth()) {
-            Headline6Text(text = deposit.title)
+            Headline6Text(
+                text = deposit.title,
+                color = AppTheme.colorScheme.foregroundNeutralDefault
+            )
             Spacer(modifier = Modifier.height(4.dp))
             Row {
                 BodyMediumText(
@@ -141,9 +152,15 @@ fun DepositRow(deposit: DepositsChartModel, onClick: () -> Unit) {
                     color = AppTheme.colorScheme.onBackgroundNeutralDefault
                 )
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Headline6Text(text = deposit.amount.toCurrency())
+                    Headline6Text(
+                        text = deposit.amount.toCurrency(),
+                        color = AppTheme.colorScheme.onBackgroundNeutralDefault
+                    )
                     Spacer(modifier = Modifier.width(4.dp))
-                    CaptionText(text = deposit.currency)
+                    CaptionText(
+                        text = deposit.currency,
+                        color = AppTheme.colorScheme.onBackgroundNeutralDefault
+                    )
                 }
             }
         }

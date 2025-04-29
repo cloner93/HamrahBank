@@ -28,6 +28,8 @@ import com.pmb.ballon.component.base.AppButtonIcon
 import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppSearchTextField
 import com.pmb.ballon.component.base.IconType
+import com.pmb.ballon.models.IconStyle
+import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.navigation.manager.LocalNavigationManager
 
 @Composable
@@ -54,6 +56,7 @@ fun TransactionSearchScreen() {
             ) {
                 AppButtonIcon(
                     icon = IconType.ImageVector(Icons.Filled.ArrowForward),
+                    style = IconStyle(tint = AppTheme.colorScheme.onBackgroundNeutralDefault),
                     onClick = {
                         viewModel.handle(TransactionSearchViewActions.NavigateBack)
                     }

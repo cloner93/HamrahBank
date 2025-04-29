@@ -6,12 +6,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import com.pmb.ballon.models.TextStyle
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.ballon.ui.theme.AppTypography
 
 @Composable
-fun BaseAppText(modifier: Modifier = Modifier, title: String, style: TextStyle? = null) {
+fun BaseAppText(
+    modifier: Modifier = Modifier,
+    title: String,
+    minLines: Int = 1,
+    maxLines: Int = Int.MAX_VALUE,
+    style: TextStyle? = null,
+) {
     val textColor = style?.color ?: Color.Unspecified
     val typography = style?.typography ?: AppTypography.bodyLarge
     Text(
@@ -19,6 +26,9 @@ fun BaseAppText(modifier: Modifier = Modifier, title: String, style: TextStyle? 
         text = title,
         color = textColor,
         style = typography,
+        minLines = minLines,
+        maxLines = maxLines,
+        overflow = style?.overflow ?: TextOverflow.Clip,
         textAlign = style?.textAlign
     )
 }
@@ -46,13 +56,15 @@ fun CaptionText(
     modifier: Modifier = Modifier,
     text: String,
     color: Color = Color.Unspecified,
-    textAlign: TextAlign = TextAlign.Unspecified
+    textAlign: TextAlign = TextAlign.Unspecified,
+    overflow: TextOverflow = TextOverflow.Clip
 ) {
     BaseAppText(
         modifier = modifier, title = text, style = TextStyle(
             color = color,
             typography = AppTheme.typography.caption,
-            textAlign = textAlign
+            textAlign = textAlign,
+            overflow = overflow
         )
     )
 }

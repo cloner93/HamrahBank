@@ -1,17 +1,18 @@
 package com.pmb.ballon.models
 
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.ballon.ui.theme.AppTypography
 
 data class TextStyle(
     val color: Color,
     val typography: TextStyle? = AppTypography.bodyMedium,
-    val textAlign: TextAlign = TextAlign.Unspecified
+    val textAlign: TextAlign = TextAlign.Unspecified,
+    val overflow: TextOverflow = TextOverflow.Clip
 ) {
 
     companion object {
@@ -25,6 +26,7 @@ data class TextStyle(
             typography = typography,
             textAlign = textAlign
         )
+
         @Composable
         fun defaultTopBar(
             color: Color = AppTheme.colorScheme.onBackgroundNeutralDefault,

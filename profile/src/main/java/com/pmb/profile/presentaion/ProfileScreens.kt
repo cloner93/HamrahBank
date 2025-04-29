@@ -9,6 +9,12 @@ import androidx.navigation.compose.navigation
 import com.pmb.navigation.manager.navigationManager
 import com.pmb.navigation.moduleScreen.ProfileScreens
 import com.pmb.profile.presentaion.personal_infos.PersonalInfoSharedViewModel
+import com.pmb.profile.presentaion.personal_infos.change_address.ChangeAddressScreen
+import com.pmb.profile.presentaion.personal_infos.change_address.viewmodel.ChangeAddressViewModel
+import com.pmb.profile.presentaion.personal_infos.change_education.ChangeEducationScreen
+import com.pmb.profile.presentaion.personal_infos.change_education.viewmodel.ChangeEducationViewModel
+import com.pmb.profile.presentaion.personal_infos.change_job.ChangeJobScreen
+import com.pmb.profile.presentaion.personal_infos.change_job.viewmodel.ChangeJobViewModel
 import com.pmb.profile.presentaion.personal_infos.change_phone_number.ChangePhoneNumberScreen
 import com.pmb.profile.presentaion.personal_infos.change_phone_number.viewmodel.ChangePhoneNumberViewModel
 import com.pmb.profile.presentaion.personal_infos.change_phone_number_otp.ChangePhoneNumberOtpScreen
@@ -17,13 +23,22 @@ import com.pmb.profile.presentaion.personal_infos.change_username.ChangeUsername
 import com.pmb.profile.presentaion.personal_infos.change_username.viewmodel.ChangeUsernameViewModel
 import com.pmb.profile.presentaion.personal_infos.personal_info.PersonalInfoScreen
 import com.pmb.profile.presentaion.personal_infos.personal_info.viewmodel.PersonalInfoViewModel
+import com.pmb.profile.presentaion.personal_infos.select_job.SelectJobScreen
+import com.pmb.profile.presentaion.personal_infos.select_job.viewmodel.SelectJobViewModel
 import com.pmb.profile.presentaion.profile.ProfileScreen
 import com.pmb.profile.presentaion.profile.viewModel.ProfileViewModel
+import com.pmb.profile.presentaion.themeScreen.ThemeScreen
 
 
 fun NavGraphBuilder.profileScreensHandle() {
     composable(route = ProfileScreens.Profile.route) {
         ProfileScreen(viewModel = hiltViewModel<ProfileViewModel>())
+    }
+
+    composable(route = ProfileScreens.ThemeScreen.route) {
+        ThemeScreen(
+//            viewModel = hiltViewModel<ProfileViewModel>()
+        )
     }
 
     navigation(
@@ -44,9 +59,10 @@ fun NavGraphBuilder.profileScreensHandle() {
                     copy(
                         username = it.username,
                         phoneNumber = it.phoneNumber,
-                        address = it.address,
-                        job = it.job,
-                        education = it.education
+                        addressEntity = it.addressEntity,
+                        jobEntity = it.jobEntity,
+                        educationEntity = it.educationEntity,
+                        queueJob = null
                     )
                 }
             }
@@ -99,13 +115,61 @@ fun NavGraphBuilder.profileScreensHandle() {
         }
 
         composable(route = ProfileScreens.PersonalInfo.ChangeAddress.route) {
-
+            val sharedViewModel =
+                it.navigationManager.retrieveSharedViewModel<PersonalInfoSharedViewModel>(
+                    screen = ProfileScreens.PersonalInfo.Graph, navBackStackEntry = it
+                )
+            val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
+            ChangeAddressScreen(
+                viewModel = hiltViewModel<ChangeAddressViewModel>(),
+                shareState = sharedState.value,
+                result = {
+                    sharedViewModel.updateState { copy(addressEntity = it) }
+                }
+            )
         }
         composable(route = ProfileScreens.PersonalInfo.ChangeJob.route) {
+            val sharedViewModel =
+                it.navigationManager.retrieveSharedViewModel<PersonalInfoSharedViewModel>(
+                    screen = ProfileScreens.PersonalInfo.Graph, navBackStackEntry = it
+                )
+            val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
+            ChangeJobScreen(
+                viewModel = hiltViewModel<ChangeJobViewModel>(),
+                sharedState = sharedState.value,
+                result = {
+                    sharedViewModel.setState(it)
+                }
+            )
+        }
+        composable(route = ProfileScreens.PersonalInfo.SelectJob.route) {
+            val sharedViewModel =
+                it.navigationManager.retrieveSharedViewModel<PersonalInfoSharedViewModel>(
+                    screen = ProfileScreens.PersonalInfo.Graph, navBackStackEntry = it
+                )
+            val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
+            SelectJobScreen(
+                viewModel = hiltViewModel<SelectJobViewModel>(),
+                sharedState = sharedState.value,
+                result = {
+                    sharedViewModel.updateState { copy(queueJob = it) }
+                }
+            )
 
         }
         composable(route = ProfileScreens.PersonalInfo.ChangeEducation.route) {
-
+            val sharedViewModel =
+                it.navigationManager.retrieveSharedViewModel<PersonalInfoSharedViewModel>(
+                    screen = ProfileScreens.PersonalInfo.Graph, navBackStackEntry = it
+                )
+            val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
+            ChangeEducationScreen(
+                viewModel = hiltViewModel<ChangeEducationViewModel>(),
+                sharedState = sharedState.value,
+                result = {
+                    sharedViewModel.updateState { copy(educationEntity = it) }
+                }
+            )
         }
     }
 }
