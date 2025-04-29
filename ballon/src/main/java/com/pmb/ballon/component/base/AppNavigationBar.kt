@@ -2,27 +2,24 @@ package com.pmb.ballon.component.base
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.pmb.ballon.R
 import com.pmb.ballon.ui.theme.AppTheme
-import java.nio.file.WatchEvent.Modifier
 
 sealed class BottomNavItem(
     @StringRes
@@ -90,7 +87,15 @@ fun AppBottomBar(tabBarItems: List<BottomNavItem>, selectedItem: (BottomNavItem)
                 label = {
                     if (selectedTabIndex == index) ButtonXSmallText(text = stringResource(tabBarItem.title))
                     else CaptionText(text = stringResource(tabBarItem.title))
-                })
+                },
+                colors = NavigationBarItemDefaults.colors(
+                    selectedIconColor = AppTheme.colorScheme.onBackgroundNeutralDefault,
+                    selectedTextColor = AppTheme.colorScheme.onBackgroundNeutralDefault,
+                    indicatorColor = AppTheme.colorScheme.backgroundTintPrimaryDefault,
+                    unselectedIconColor = AppTheme.colorScheme.onBackgroundNeutralSubdued,
+                    unselectedTextColor = AppTheme.colorScheme.onBackgroundNeutralSubdued,
+                )
+            )
         }
     }
 }

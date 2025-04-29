@@ -21,10 +21,13 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.pmb.ballon.component.annotation.AppPreview
 import com.pmb.ballon.component.base.SubtitleMediumText
 import com.pmb.ballon.ui.theme.AppTheme
+import com.pmb.ballon.ui.theme.HamrahBankTheme
 import com.pmb.calender.Jdn
 import com.pmb.calender.utils.Calendar
+import io.github.persiancalendar.calendar.AbstractDate
 
 @Composable
 fun PersianDatePicker(calendar: Calendar = Calendar.SHAMSI, jdn: Jdn, setJdn: (Jdn) -> Unit) {
@@ -42,11 +45,8 @@ fun PersianDatePicker(calendar: Calendar = Calendar.SHAMSI, jdn: Jdn, setJdn: (J
         calendar.getYearMonths(date.year)
     }
     val monthsFormat = remember(calendar, date.year) {
-//        val months = monthsyearMonthNameOfDate(date);
-        { item: Int ->
-            /*if you want show month name use it. months[item - 1] + " / " +*/
-            item.toString()
-        }
+        val months = yearMonthNameOfDate(date);
+        { item: Int -> months[item - 1] + " / " + item.toString() }
     }
     val todayYear = remember(calendar) { Jdn.today().on(calendar).year }
     val startYear = remember(calendar) { todayYear - 200 }
@@ -105,6 +105,7 @@ fun PersianDatePicker(calendar: Calendar = Calendar.SHAMSI, jdn: Jdn, setJdn: (J
                     label = daysFormat,
                     range = 1..monthsLength,
                     value = date.dayOfMonth,
+                    disableEdit = true,
                     onClickLabel = "day",
                 ) {
                     setJdn(Jdn(calendar, date.year, date.month, it))
@@ -116,6 +117,7 @@ fun PersianDatePicker(calendar: Calendar = Calendar.SHAMSI, jdn: Jdn, setJdn: (J
                     label = monthsFormat,
                     range = 1..yearMonths,
                     value = date.month,
+                    disableEdit = true,
                     onClickLabel = "month",
                 ) { month ->
                     val day =
@@ -128,6 +130,7 @@ fun PersianDatePicker(calendar: Calendar = Calendar.SHAMSI, jdn: Jdn, setJdn: (J
                     modifier = Modifier.weight(1f),
                     range = startYear..startYear + 400,
                     value = date.year,
+                    disableEdit = true,
                     onClickLabel = "year",
                 ) { year ->
                     val month = date.month.coerceIn(1, calendar.getYearMonths(year))
@@ -140,6 +143,42 @@ fun PersianDatePicker(calendar: Calendar = Calendar.SHAMSI, jdn: Jdn, setJdn: (J
     }
 }
 
+fun yearMonthNameOfDate(date: AbstractDate): List<String> {
+    return if (date.year > 1303) persianCalendarMonthsInPersian else persianCalendarMonthsInDariOrPersianOldEra
+}
+
 fun View.performHapticFeedbackVirtualKey() {
     performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+}
+
+fun formatNumber(number: Int, digits: CharArray = PERSIAN_DIGITS): String =
+    formatNumber(number.toString(), digits)
+
+fun formatNumber(number: String, digits: CharArray): String {
+    return number.map { digits.getOrNull(Character.getNumericValue(it)) ?: it }
+        .joinToString("")
+}
+
+val PERSIAN_DIGITS = charArrayOf('۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹')
+
+private val persianCalendarMonthsInPersian = listOf(
+    "فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد",
+    "شهریور", "مهر", "آبان", "آذر", "دی",
+    "بهمن", "اسفند"
+)
+val persianCalendarMonthsInDariOrPersianOldEra = listOf(
+    "حمل", "ثور", "جوزا", "سرطان", "اسد", "سنبله",
+    "میزان", "عقرب", "قوس", "جدی", "دلو", "حوت"
+)
+
+@AppPreview
+@Composable
+private fun PersianDatePickerPrev() {
+    HamrahBankTheme {
+        PersianDatePicker(
+            jdn = Jdn.today()
+        ) {
+
+        }
+    }
 }
