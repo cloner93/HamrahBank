@@ -7,4 +7,5 @@ sealed class BillScreens(route: String, arguments: Map<String, String> = emptyMa
     data object BillGraph : BillScreens("bill_graph")
     data object Bill : BillScreens("bill")
     data object BillsHistory : BillScreens("bills_history")
+    data object BillIdentify: BillScreens("bill_identify")
 }

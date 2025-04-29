@@ -43,7 +43,7 @@ fun BillScreen(
             when (event) {
                 BillViewEvents.SetBillType -> {
                     updateState.invoke(viewState.value.copy())
-//                    navigationManager.navigate(ChargeScreens.ChooseChargePrice)
+                    navigationManager.navigate(BillScreens.BillIdentify)
                 }
             }
         }

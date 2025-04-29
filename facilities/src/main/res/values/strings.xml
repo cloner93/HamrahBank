@@ -22,4 +22,6 @@
     <string name="choose_transaction_operator">در صورت ترابرد اپراتور خود را انتخاب نمایید.</string>
     <string name="choose_sim_type">انتخاب نوع سیم کارت</string>
     <string name="choose_bill_type">انتخاب نوع قبض</string>
+    <string name="identify_number">شماره شناسه قبض</string>
+    <string name="phone_number_or_mobile">شماره تلفن ثابت یا همراه</string>
 </resources>

@@ -1,6 +1,7 @@
 package com.pmb.facilities.bill.di
 
 import com.pmb.facilities.bill.presentation.bill.viewModel.BillViewState
+import com.pmb.facilities.bill.presentation.bill_identify.viewModel.BillIdentifyViewState
 import com.pmb.facilities.bill.presentation.bills_history.viewModel.BillsHistoryViewState
 import dagger.Module
 import dagger.Provides
@@ -14,4 +15,6 @@ object StateModule {
     fun provideBillViewState(): BillViewState = BillViewState()
     @Provides
     fun provideBillsHistoryViewState(): BillsHistoryViewState = BillsHistoryViewState()
+    @Provides
+    fun provideBillIdentifyViewState(): BillIdentifyViewState = BillIdentifyViewState()
 }
