@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -25,11 +24,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.pmb.account.R
@@ -45,16 +41,15 @@ import com.pmb.account.utils.mapToDepositModel
 import com.pmb.ballon.component.DepositBottomSheet
 import com.pmb.ballon.component.MenuBottomSheet
 import com.pmb.ballon.component.MenuItem
+import com.pmb.ballon.component.MenuItemDefaults
 import com.pmb.ballon.component.base.AppButtonIcon
 import com.pmb.ballon.component.base.RoundedTopColumn
 import com.pmb.ballon.models.IconStyle
 import com.pmb.ballon.models.MenuSheetModel
 import com.pmb.ballon.models.TextStyle
 import com.pmb.ballon.ui.theme.AppTheme
-import com.pmb.ballon.ui.theme.HamrahBankTheme
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.moduleScreen.AccountScreens
-
 
 @Composable
 fun DepositsScreen() {
@@ -158,6 +153,7 @@ fun DepositsScreen() {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(top = 25.dp)
                 .height(92.dp)
                 .padding(horizontal = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -165,7 +161,7 @@ fun DepositsScreen() {
         ) {
             AppButtonIcon(
                 icon = com.pmb.ballon.R.drawable.ic_help,
-                style = IconStyle(tint = Color.White),
+                style = IconStyle(tint = AppTheme.colorScheme.onForegroundNeutralDefault),
                 onClick = {
                     viewModel.handle(DepositsViewActions.ShowHelp)
                 })
@@ -173,7 +169,7 @@ fun DepositsScreen() {
 
             AppButtonIcon(
                 icon = com.pmb.ballon.R.drawable.ic_coins,
-                style = IconStyle(tint = Color.White),
+                style = IconStyle(tint = AppTheme.colorScheme.onForegroundNeutralDefault),
                 onClick = {
                     viewModel.handle(DepositsViewActions.NavigateToBalanceScreen)
                 })
@@ -187,7 +183,6 @@ fun DepositsScreen() {
             isAmountVisible = viewState.isAmountVisible
         )
 
-
         Spacer(modifier = Modifier.height(32.dp))
 
         RoundedTopColumn(
@@ -199,7 +194,7 @@ fun DepositsScreen() {
                     .clip(RoundedCornerShape(16.dp))
                     .background(color = AppTheme.colorScheme.backgroundTintNeutralDefault),
                 title = stringResource(R.string.deposit_card_sheba),
-                horizontalPadding = 16.dp,
+                horizontalDividerPadding = MenuItemDefaults.horizontalDividerPadding.copy(vertical = 0.dp),
                 startIcon = com.pmb.ballon.R.drawable.ic_racket,
                 titleStyle = TextStyle(
                     color = AppTheme.colorScheme.foregroundNeutralDefault,
@@ -219,7 +214,6 @@ fun DepositsScreen() {
                         shape = RoundedCornerShape(16.dp)
                     ),
                 title = stringResource(R.string.transactions),
-                horizontalPadding = 16.dp,
                 startIcon = com.pmb.ballon.R.drawable.ic_bar_chart_vertical,
                 endIcon = com.pmb.ballon.R.drawable.ic_arrow_left,
                 titleStyle = TextStyle(
@@ -287,14 +281,4 @@ fun DepositsScreen() {
             )
         }
 
-}
-
-@Preview
-@Composable
-private fun DepositsScreenPrev() {
-    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
-        HamrahBankTheme {
-//            DepositsScreen()
-        }
-    }
 }

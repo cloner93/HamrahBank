@@ -23,9 +23,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.pmb.ballon.component.annotation.AppPreview
 import com.pmb.ballon.models.IconStyle
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.ballon.ui.theme.HamrahBankTheme
@@ -81,7 +81,7 @@ fun ChipWithIcon(
     }
 }
 
-@Preview
+@AppPreview
 @Composable
 fun PreviewChipDefault() {
         HamrahBankTheme {

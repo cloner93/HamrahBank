@@ -12,7 +12,7 @@ data class PersonalInfoViewState(
     val showPersonalInfo: Boolean
         get() = personalInfo.safeUsername.isNotEmpty() ||
                 personalInfo.safePhoneNumber.isNotEmpty() ||
-                personalInfo.safeAddress.isNotEmpty() ||
-                personalInfo.safeJob.isNotEmpty() ||
+                personalInfo.safeAddressEntity.isNotEmpty() ||
+                personalInfo.safeJobEntity.isNotEmpty() ||
                 personalInfo.safeEducation.isNotEmpty()
 }

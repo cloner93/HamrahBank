@@ -1,6 +1,5 @@
 package com.pmb.transfer.presentation.transfer_receipt
 
-import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width

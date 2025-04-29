@@ -101,7 +101,7 @@ fun AppButtonWithWeightIcon(
         BaseAppText(title = title, style = textStyle)
         icon?.let {
             Spacer(modifier = Modifier.weight(1f))
-            AppIcon(icon = icon, iconStyle)
+            AppIcon(icon = icon, style = iconStyle)
         }
     }
 }

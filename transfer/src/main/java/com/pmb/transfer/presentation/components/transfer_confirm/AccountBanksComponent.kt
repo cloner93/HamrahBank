@@ -48,7 +48,6 @@ fun AccountBanksComponent(
                 border = BorderStroke(1.dp, AppTheme.colorScheme.strokeNeutral1Default),
                 shape = RoundedCornerShape(12.dp)
             ),
-        horizontalPadding = 12.dp,
         title = "${defaultAccountBank.accountType} (${defaultAccountBank.accountNumber})",
         subtitle = "قابل برداشت: ${defaultAccountBank.accountBalance.toCurrency()} ریال",
         endIcon = com.pmb.ballon.R.drawable.ic_drrow_down,
@@ -75,7 +74,6 @@ fun AccountBanksComponent(
                 border = BorderStroke(1.dp, AppTheme.colorScheme.strokeNeutral1Default),
                 shape = RoundedCornerShape(12.dp)
             ),
-        horizontalPadding = 12.dp,
         title = defaultReason?.title ?: stringResource(R.string.cause_of_transfer),
         endIcon = com.pmb.ballon.R.drawable.ic_drrow_down,
         titleStyle = TextStyle(

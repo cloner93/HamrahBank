@@ -1,6 +1,5 @@
 package com.pmb.account.presentation.component
 
-import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,13 +20,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.pmb.ballon.R
+import com.pmb.ballon.component.annotation.AppPreview
 import com.pmb.ballon.component.base.AppButtonIcon
 import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.component.base.BodySmallText
@@ -39,7 +37,6 @@ import com.pmb.ballon.models.Size
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.ballon.ui.theme.HamrahBankTheme
 import com.pmb.core.utils.toCurrency
-import java.util.Locale
 
 data class DepositModel(
     val title: String,
@@ -79,10 +76,12 @@ fun DepositWidget(
             ) {
                 AppButtonIcon(
                     icon = Icons.Outlined.MoreHoriz,
+                    style = IconStyle(tint = AppTheme.colorScheme.onBackgroundNeutralDefault),
                     onClick = moreClick
                 )
                 AppButtonIcon(
                     icon = if (isAmountVisible) Icons.Outlined.Visibility else Icons.Outlined.VisibilityOff,
+                    style = IconStyle(tint = AppTheme.colorScheme.onBackgroundNeutralDefault),
                     onClick = onAmountVisibilityClick
                 )
                 Spacer(modifier = Modifier.weight(1f))
@@ -90,12 +89,13 @@ fun DepositWidget(
                 ChipWithIcon(
                     value = "سپرده ها",
                     startIcon = Icons.Default.ArrowDropDown,
+                    color = AppTheme.colorScheme.backgroundTintPrimaryDefault,
                     startIconStyle = IconStyle(
-                        tint = AppTheme.colorScheme.onBackgroundNeutralDefault,
+                        tint = AppTheme.colorScheme.onBackgroundTintPrimaryDefault,
                         size = Size.FIX(18.dp)
                     ),
                     clickable = onDepositListChipsClick,
-                    assetColor = AppTheme.colorScheme.onBackgroundNeutralDefault
+                    assetColor = AppTheme.colorScheme.onBackgroundTintPrimaryDefault
                 )
             }
             Spacer(modifier = Modifier.height(12.dp))
@@ -104,65 +104,34 @@ fun DepositWidget(
                 color = AppTheme.colorScheme.onBackgroundNeutralDefault
             )
             Spacer(modifier = Modifier.height(8.dp))
-            CaptionText(modifier = Modifier.padding(horizontal = 8.dp), text = item.title)
+            CaptionText(
+                modifier = Modifier.padding(horizontal = 8.dp), text = item.title,
+                color = AppTheme.colorScheme.onBackgroundNeutralDefault
+            )
             Spacer(modifier = Modifier.height(8.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
                 if (isAmountVisible) {
-                    Headline2Text(text = item.amount.toCurrency())
+                    Headline2Text(
+                        text = item.amount.toCurrency(),
+                        color = AppTheme.colorScheme.onBackgroundNeutralDefault
+                    )
                     Spacer(modifier = Modifier.width(6.dp))
-                    BodySmallText(text = item.currency)
+                    BodySmallText(
+                        text = item.currency,
+                        color = AppTheme.colorScheme.onBackgroundNeutralDefault
+                    )
                 } else {
-                    Headline2Text(text = "********")
+                    Headline2Text(
+                        text = "********",
+                        color = AppTheme.colorScheme.foregroundNeutralDefault
+                    )
                 }
             }
         }
     }
 }
 
-/*@Composable
-fun ChipWithIcon(
-    modifier: Modifier = Modifier,
-    value: String,
-    startIcon: ImageVector? = null,
-    startIconStyle: IconStyle = IconStyle(),
-    endIcon: ImageVector? = null,
-    endIconStyle: IconStyle = IconStyle(),
-    clickable: () -> Unit,
-    roundedShape: Dp = 16.dp,
-    color: Color = AppTheme.colorScheme.backgroundTintPrimaryDefault,
-    assetColor: Color = AppTheme.colorScheme.onBackgroundTintPrimaryDefault,
-) {
-    Box(
-        modifier = modifier
-            .wrapContentSize()
-            .height(32.dp)
-            .clip(shape = RoundedCornerShape(roundedShape))
-            .background(color = color)
-            .clickable { clickable.invoke() }
-            .padding(horizontal = 10.dp, vertical = 6.dp),
-    ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            if (startIcon != null) {
-                AppIcon(
-                    icon = startIcon,
-                    style = startIconStyle
-                )
-                Spacer(modifier = Modifier.size(6.dp))
-            }
-            BodySmallText(text = value, color = assetColor)
-            if (endIcon != null) {
-                Spacer(modifier = Modifier.size(6.dp))
-                AppIcon(
-                    icon = endIcon,
-                    style = endIconStyle
-                )
-            }
-        }
-    }
-}*/
-
-
-@Preview
+@AppPreview
 @Composable
 private fun DepositPrev() {
     val dip = DepositModel(
@@ -175,7 +144,8 @@ private fun DepositPrev() {
         cardNumber = "6219861920241234",
     )
     CompositionLocalProvider(
-        LocalLayoutDirection provides LayoutDirection.Rtl) {
+        LocalLayoutDirection provides LayoutDirection.Rtl
+    ) {
         HamrahBankTheme {
 
             DepositWidget(
@@ -188,7 +158,7 @@ private fun DepositPrev() {
     }
 }
 
-@Preview
+@AppPreview
 @Composable
 private fun DepositPrev2() {
     val dip = DepositModel(
@@ -200,20 +170,14 @@ private fun DepositPrev2() {
         ibanNumber = "IR1234567890098765432112",
         cardNumber = "6219861920241234",
     )
-    CompositionLocalProvider(
-        LocalLayoutDirection provides LayoutDirection.Rtl,
-        LocalConfiguration provides Configuration().apply {
-            setLocale(Locale("fa"))
+    HamrahBankTheme {
 
-        }) {
-        HamrahBankTheme {
-
-            DepositWidget(
-                item = dip,
-                isAmountVisible = false,
-                moreClick = {},
-                onAmountVisibilityClick = { }
-            ) { }
-        }
+        DepositWidget(
+            item = dip,
+            isAmountVisible = false,
+            moreClick = {},
+            onAmountVisibilityClick = { }
+        ) { }
     }
+
 }

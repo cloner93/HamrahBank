@@ -32,6 +32,7 @@ import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.component.base.ChipWithIcon
 import com.pmb.ballon.component.base.IconType
+import com.pmb.ballon.component.datePicker.ShowPersianDatePickerBottomSheet
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.navigation.manager.LocalNavigationManager
 
@@ -115,8 +116,8 @@ fun DepositStatementScreen() {
                                 )
                             )
                     },
-                    color = if (viewState.dateType == DateType.TODAY) AppTheme.colorScheme.stateLayerNeutralPressed else Color.White,
-                    assetColor = Color.Black,
+                    color = if (viewState.dateType == DateType.TODAY) AppTheme.colorScheme.stateLayerNeutralPressed else Color.Transparent,
+                    assetColor = AppTheme.colorScheme.onBackgroundNeutralDefault,
                     borderColor = AppTheme.colorScheme.strokeNeutral1Default,
                 )
                 ChipWithIcon(
@@ -133,8 +134,8 @@ fun DepositStatementScreen() {
                                 )
                             )
                     },
-                    color = if (viewState.dateType == DateType.LAST_WEEK) AppTheme.colorScheme.stateLayerNeutralPressed else Color.White,
-                    assetColor = Color.Black,
+                    color = if (viewState.dateType == DateType.LAST_WEEK) AppTheme.colorScheme.stateLayerNeutralPressed else Color.Transparent,
+                    assetColor = AppTheme.colorScheme.onBackgroundNeutralDefault,
                     borderColor = AppTheme.colorScheme.strokeNeutral1Default,
                 )
 
@@ -152,8 +153,8 @@ fun DepositStatementScreen() {
                                 )
                             )
                     },
-                    color = if (viewState.dateType == DateType.LAST_MONTH) AppTheme.colorScheme.stateLayerNeutralPressed else Color.White,
-                    assetColor = Color.Black,
+                    color = if (viewState.dateType == DateType.LAST_MONTH) AppTheme.colorScheme.stateLayerNeutralPressed else Color.Transparent,
+                    assetColor = AppTheme.colorScheme.onBackgroundNeutralDefault,
                     borderColor = AppTheme.colorScheme.strokeNeutral1Default,
                 )
                 ChipWithIcon(
@@ -170,8 +171,8 @@ fun DepositStatementScreen() {
                                 )
                             )
                     },
-                    color = if (viewState.dateType == DateType.CURRENT_MONTH) AppTheme.colorScheme.stateLayerNeutralPressed else Color.White,
-                    assetColor = Color.Black,
+                    color = if (viewState.dateType == DateType.CURRENT_MONTH) AppTheme.colorScheme.stateLayerNeutralPressed else Color.Transparent,
+                    assetColor = AppTheme.colorScheme.onBackgroundNeutralDefault,
                     borderColor = AppTheme.colorScheme.strokeNeutral1Default,
                 )
                 ChipWithIcon(
@@ -188,8 +189,8 @@ fun DepositStatementScreen() {
                                 )
                             )
                     },
-                    color = if (viewState.dateType == DateType.TWO_MONTH) AppTheme.colorScheme.stateLayerNeutralPressed else Color.White,
-                    assetColor = Color.Black,
+                    color = if (viewState.dateType == DateType.TWO_MONTH) AppTheme.colorScheme.stateLayerNeutralPressed else Color.Transparent,
+                    assetColor = AppTheme.colorScheme.onBackgroundNeutralDefault,
                     borderColor = AppTheme.colorScheme.strokeNeutral1Default,
                 )
                 ChipWithIcon(
@@ -206,8 +207,8 @@ fun DepositStatementScreen() {
                                 )
                             )
                     },
-                    color = if (viewState.dateType == DateType.THREE_MONTH) AppTheme.colorScheme.stateLayerNeutralPressed else Color.White,
-                    assetColor = Color.Black,
+                    color = if (viewState.dateType == DateType.THREE_MONTH) AppTheme.colorScheme.stateLayerNeutralPressed else Color.Transparent,
+                    assetColor = AppTheme.colorScheme.onBackgroundNeutralDefault,
                     borderColor = AppTheme.colorScheme.strokeNeutral1Default,
                 )
                 ChipWithIcon(
@@ -224,8 +225,8 @@ fun DepositStatementScreen() {
                                 )
                             )
                     },
-                    color = if (viewState.dateType == DateType.CUSTOM) AppTheme.colorScheme.stateLayerNeutralPressed else Color.White,
-                    assetColor = Color.Black,
+                    color = if (viewState.dateType == DateType.CUSTOM) AppTheme.colorScheme.stateLayerNeutralPressed else Color.Transparent,
+                    assetColor = AppTheme.colorScheme.onBackgroundNeutralDefault,
                     borderColor = AppTheme.colorScheme.strokeNeutral1Default,
                 )
             }

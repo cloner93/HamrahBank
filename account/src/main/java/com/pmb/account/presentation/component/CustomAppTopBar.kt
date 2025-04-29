@@ -25,6 +25,7 @@ import com.pmb.ballon.component.base.ButtonMediumText
 import com.pmb.ballon.component.base.ChipWithIcon
 import com.pmb.ballon.component.base.ClickableIcon
 import com.pmb.ballon.component.base.IconType
+import com.pmb.ballon.models.IconStyle
 import com.pmb.ballon.ui.theme.AppTheme
 
 @Composable
@@ -50,6 +51,7 @@ fun CustomAppTopBar(
                 modifier = Modifier
                     .align(Alignment.Companion.CenterStart),
                 icon = startIcon.icon,
+                style = IconStyle(tint = startIcon.tint),
                 onClick = startIcon.onClick
             )
         }
@@ -58,6 +60,7 @@ fun CustomAppTopBar(
                 modifier = Modifier
                     .align(Alignment.Companion.CenterEnd),
                 icon = endIcon.icon,
+                style = IconStyle(tint = endIcon.tint),
                 onClick = endIcon.onClick
             )
         }

@@ -28,23 +28,24 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.pmb.ballon.component.annotation.AppPreview
 import com.pmb.ballon.component.base.ButtonLargeText
 import com.pmb.ballon.component.base.ButtonSmallText
 import com.pmb.ballon.ui.theme.AppTheme
+import com.pmb.ballon.ui.theme.HamrahBankTheme
 
 @Composable
 fun DynamicTabSelector(
     modifier: Modifier = Modifier,
     tabs: List<String>, // Can be 2 to 4 options
     selectedOption: Int = 0,
-    containerColor: Color = Color(0x66000000),
-    tabColor: Color = Color.White,
-    selectedOptionColor: Color = Color(0xFF7980FF),
-    unselectedTextColor: Color = AppTheme.colorScheme.strokeNeutral1Default,
+    containerColor: Color = AppTheme.colorScheme.foregroundNeutralDefault.copy(alpha = 0.4f),
+    tabColor: Color = AppTheme.colorScheme.onForegroundNeutralDefault,
+    selectedOptionColor: Color = AppTheme.colorScheme.onBackgroundNeutralActive,
+    unselectedTextColor: Color = AppTheme.colorScheme.onForegroundNeutralDefault,
     containerCornerRadius: Dp = 16.dp,
     tabCornerRadius: Dp = 12.dp,
     selectorHeight: Dp = 48.dp,
@@ -96,7 +97,8 @@ fun DynamicTabSelector(
             verticalAlignment = Alignment.CenterVertically
         ) {
             tabs.forEachIndexed { index, text ->
-                ButtonSmallText(text = text,
+                ButtonSmallText(
+                    text = text,
                     color = unselectedTextColor,
                     textAlign = TextAlign.Center,
                     modifier = Modifier
@@ -131,27 +133,28 @@ fun DynamicTabSelector(
     }
 }
 
-@Preview
+@AppPreview
 @Composable
 fun DynamicTabSelectorPreview() {
-    /**
-     * This preview demonstrates the use of remember { mutableStateOf(0) } to maintain the
-     * selected tab's state across recompositions in DynamicTabSelector, enabling dynamic
-     * UI updates in Jetpack Compose.
-     **/
-    val selectedOption = remember { mutableIntStateOf(0) }
-    val optionTexts = listOf("Tab 1", "Tab 2", "Tab 3")
-    val context = LocalContext.current
-    Box(
-        modifier = Modifier
-            .background(Color.Gray)
-            .fillMaxSize()
-            .padding(24.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        DynamicTabSelector(tabs = optionTexts, selectedOption = selectedOption.intValue) {
-            Toast.makeText(context, "Selected tab: ${it + 1}", Toast.LENGTH_SHORT).show()
-            selectedOption.intValue = it
+    HamrahBankTheme {
+        /**
+         * This preview demonstrates the use of remember { mutableStateOf(0) } to maintain the
+         * selected tab's state across recompositions in DynamicTabSelector, enabling dynamic
+         * UI updates in Jetpack Compose.
+         **/
+        val selectedOption = remember { mutableIntStateOf(0) }
+        val optionTexts = listOf("Tab 1", "Tab 2", "Tab 3")
+        val context = LocalContext.current
+        Box(
+            modifier = Modifier
+                .background(AppTheme.colorScheme.background1Neutral)
+                .padding(24.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            DynamicTabSelector(tabs = optionTexts, selectedOption = selectedOption.intValue) {
+                Toast.makeText(context, "Selected tab: ${it + 1}", Toast.LENGTH_SHORT).show()
+                selectedOption.intValue = it
+            }
         }
     }
 }

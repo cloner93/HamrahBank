@@ -30,8 +30,8 @@ import com.pmb.auth.R
 import com.pmb.auth.presentation.activation.activate.viewModel.ActivationViewActions
 import com.pmb.auth.presentation.activation.activate.viewModel.ActivationViewEvents
 import com.pmb.auth.presentation.activation.activate.viewModel.ActivationViewModel
-import com.pmb.auth.presentation.component.RoundedCornerCheckboxComponent
 import com.pmb.ballon.component.AlertComponent
+import com.pmb.ballon.component.RoundedCornerCheckboxComponent
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppImage
@@ -56,7 +56,7 @@ fun ActivationScreen(viewModel: ActivationViewModel) {
     var isMobile by remember { mutableStateOf(false) }
     var isNationalId by remember { mutableStateOf(false) }
     var showBottomSheet by remember { mutableStateOf(false) }
-    BackHandler() {
+    BackHandler {
         if (showBottomSheet) {
             showBottomSheet = false
         } else {

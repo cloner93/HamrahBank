@@ -85,6 +85,7 @@ fun CardsScreen() {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .padding(top = 25.dp)
                     .height(92.dp)
                     .padding(horizontal = 8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -92,14 +93,14 @@ fun CardsScreen() {
             ) {
                 AppButtonIcon(
                     icon = com.pmb.ballon.R.drawable.ic_help,
-                    style = IconStyle(tint = Color.Black),
+                    style = IconStyle(tint = AppTheme.colorScheme.foregroundNeutralDefault),
                     onClick = {
                         viewModel.handle(CardsViewActions.ShowHelp)
                     })
 
                 AppButtonIcon(
                     icon = com.pmb.ballon.R.drawable.ic_coins,
-                    style = IconStyle(tint = Color.Black),
+                    style = IconStyle(tint = AppTheme.colorScheme.foregroundNeutralDefault),
                     onClick = {
                         viewModel.handle(CardsViewActions.NavigateToBalanceScreen)
                     })

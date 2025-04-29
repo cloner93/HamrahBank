@@ -11,12 +11,15 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.MenuItem
+import com.pmb.ballon.component.MenuItemDefaults
 import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.component.base.AppTopBar
+import com.pmb.ballon.component.base.BaseAppText
 import com.pmb.ballon.component.base.CaptionText
 import com.pmb.ballon.models.IconStyle
 import com.pmb.ballon.models.TextStyle
@@ -102,7 +105,6 @@ private fun ProfileInfoItemsComponent(viewModel: PersonalInfoViewModel) {
         colors = CardDefaults.cardColors(containerColor = AppTheme.colorScheme.background1Neutral),
         content = {
             MenuItem(
-                horizontalPadding = 16.dp,
                 title = stringResource(R.string.change_username),
                 startIcon = com.pmb.ballon.R.drawable.ic_edit_username,
                 endIcon = com.pmb.ballon.R.drawable.ic_arrow_left,
@@ -120,7 +122,6 @@ private fun ProfileInfoItemsComponent(viewModel: PersonalInfoViewModel) {
                 })
 
             MenuItem(
-                horizontalPadding = 16.dp,
                 title = stringResource(R.string.change_phone_number),
                 startIcon = com.pmb.ballon.R.drawable.ic_mobile,
                 endIcon = com.pmb.ballon.R.drawable.ic_arrow_left,
@@ -138,7 +139,6 @@ private fun ProfileInfoItemsComponent(viewModel: PersonalInfoViewModel) {
                 })
 
             MenuItem(
-                horizontalPadding = 16.dp,
                 title = stringResource(R.string.change_address),
                 startIcon = com.pmb.ballon.R.drawable.ic_address,
                 endIcon = com.pmb.ballon.R.drawable.ic_arrow_left,
@@ -146,9 +146,15 @@ private fun ProfileInfoItemsComponent(viewModel: PersonalInfoViewModel) {
                 titleStyle = TextStyle(color = AppTheme.colorScheme.foregroundNeutralDefault),
                 startIconStyle = IconStyle(tint = AppTheme.colorScheme.onBackgroundPrimaryCTA),
                 endContent = {
-                    CaptionText(
-                        text = viewState.personalInfo.safeAddress,
-                        color = AppTheme.colorScheme.onBackgroundNeutralSubdued
+                    BaseAppText(
+                        modifier = Modifier.weight(4f).padding(start = 16.dp),
+                        title = viewState.personalInfo.safeAddressEntity.safeAddress,
+                        maxLines = 1,
+                        style = TextStyle(
+                            color = AppTheme.colorScheme.onBackgroundNeutralSubdued,
+                            typography = AppTheme.typography.caption,
+                            overflow = TextOverflow.Ellipsis
+                        ),
                     )
                 },
                 onItemClick = {
@@ -156,7 +162,6 @@ private fun ProfileInfoItemsComponent(viewModel: PersonalInfoViewModel) {
                 })
 
             MenuItem(
-                horizontalPadding = 16.dp,
                 title = stringResource(R.string.change_job),
                 startIcon = com.pmb.ballon.R.drawable.ic_job,
                 endIcon = com.pmb.ballon.R.drawable.ic_arrow_left,
@@ -165,7 +170,7 @@ private fun ProfileInfoItemsComponent(viewModel: PersonalInfoViewModel) {
                 startIconStyle = IconStyle(tint = AppTheme.colorScheme.onBackgroundPrimaryCTA),
                 endContent = {
                     CaptionText(
-                        text = viewState.personalInfo.safeJob,
+                        text = viewState.personalInfo.safeJobEntity.title,
                         color = AppTheme.colorScheme.onBackgroundNeutralSubdued
                     )
                 },
@@ -173,7 +178,6 @@ private fun ProfileInfoItemsComponent(viewModel: PersonalInfoViewModel) {
                     viewModel.handle(PersonalInfoViewActions.ChangeJob)
                 })
             MenuItem(
-                horizontalPadding = 16.dp,
                 title = stringResource(R.string.change_education),
                 startIcon = com.pmb.ballon.R.drawable.ic_education,
                 endIcon = com.pmb.ballon.R.drawable.ic_arrow_left,
@@ -182,7 +186,7 @@ private fun ProfileInfoItemsComponent(viewModel: PersonalInfoViewModel) {
                 startIconStyle = IconStyle(tint = AppTheme.colorScheme.onBackgroundPrimaryCTA),
                 endContent = {
                     CaptionText(
-                        text = viewState.personalInfo.safeEducation,
+                        text = viewState.personalInfo.safeEducation.title,
                         color = AppTheme.colorScheme.onBackgroundNeutralSubdued
                     )
                 },

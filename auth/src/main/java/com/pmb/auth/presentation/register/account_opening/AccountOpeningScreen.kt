@@ -16,7 +16,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.pmb.auth.R
-import com.pmb.auth.presentation.component.ShowPersianDatePickerBottomSheet
 import com.pmb.auth.utils.ComingType
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppButtonIcon
@@ -26,6 +25,9 @@ import com.pmb.ballon.component.base.AppMobileTextField
 import com.pmb.ballon.component.base.AppNationalIdTextField
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.IconType
+import com.pmb.ballon.component.datePicker.ShowPersianDatePickerBottomSheet
+import com.pmb.calender.Jdn
+import com.pmb.calender.utils.Calendar
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.manager.NavigationManager
 
@@ -36,12 +38,11 @@ fun AccountOpeningScreen(
     val navigationManager: NavigationManager = LocalNavigationManager.current
     var phoneNumber by remember { mutableStateOf("09128353268") }
     var nationalId by remember { mutableStateOf("0012345678") }
-    var birthday by remember { mutableStateOf("1371/08/28") }
+    var birthday by remember { mutableStateOf(Jdn(Calendar.SHAMSI, 1371, 8, 28).toPersianDate()) }
 
     var showBirthdayPicker by remember { mutableStateOf(false) }
     var isMobile by remember { mutableStateOf(false) }
     var isNationalId by remember { mutableStateOf(false) }
-    var isBirthday by remember { mutableStateOf(false) }
 
 
     AppContent(
@@ -86,7 +87,8 @@ fun AccountOpeningScreen(
             onValueChange = { nationalId = it })
         Spacer(modifier = Modifier.size(24.dp))
         AppClickableReadOnlyTextField(
-            value = birthday,
+//            value = birthday.toPersianDate(),
+            value = "${birthday.dayOfMonth}/${birthday.month}/${birthday.year}", // TODO: fix it
             label = stringResource(R.string.birthday),
             trailingIcon = {
                 AppButtonIcon(
@@ -104,12 +106,13 @@ fun AccountOpeningScreen(
 
     if (showBirthdayPicker) {
         ShowPersianDatePickerBottomSheet(
-            defaultDate = birthday,
+            title = stringResource(R.string.birthday),
+            defaultDate = Jdn(birthday.toJdn()),
             onDismiss = { showBirthdayPicker = false },
             onChangeValue = { year, month, day ->
-                birthday = "$day/$month/$year"
+                birthday = Jdn(Calendar.SHAMSI, 1371, 8, 28).toPersianDate()
                 showBirthdayPicker = false
-            }
+            },
         )
     }
 }
