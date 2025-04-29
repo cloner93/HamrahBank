@@ -2,6 +2,7 @@ package com.pmb.facilities.charge.di
 
 import com.pmb.facilities.charge.presentation.charge.ChargeViewState
 import com.pmb.facilities.charge.presentation.charge_history.viewModel.ChargeHistoryViewState
+import com.pmb.facilities.charge.presentation.choose_charge_price.viewModel.ChooseChargePriceViewState
 import com.pmb.facilities.charge.presentation.purchase_charge.PurchaseChargeViewState
 import dagger.Module
 import dagger.Provides
@@ -20,4 +21,8 @@ object StateModule {
 
     @Provides
     fun providePurchaseChargeViewState(): PurchaseChargeViewState = PurchaseChargeViewState()
+
+    @Provides
+    fun provideChooseChargePriceViewState(): ChooseChargePriceViewState =
+        ChooseChargePriceViewState()
 }

@@ -25,13 +25,12 @@ class PurchaseChargeRepositoryImpl @Inject constructor() : PurchaseChargeReposit
                             operatorImage = R.drawable.ic_mci,
                         ),
                         Operator(
-                            id = 2,
+                            id = 1,
                             operator = "ایرانسل",
                             operatorImage = R.drawable.ic_irancell,
-                            isChecked = true
                         ),
                         Operator(
-                            id = 3,
+                            id = 2,
                             operator = "رایتل",
                             operatorImage = R.drawable.ic_rightel,
                         ),

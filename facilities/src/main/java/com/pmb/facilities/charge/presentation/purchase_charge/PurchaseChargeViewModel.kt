@@ -6,7 +6,9 @@ import com.pmb.core.permissions.PermissionDispatcher
 import com.pmb.core.platform.AlertModelState
 import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.platform.Result
+import com.pmb.facilities.charge.domain.purchase_charge.entity.Operator
 import com.pmb.facilities.charge.domain.purchase_charge.useCase.GetOperatorUseCase
+import com.pmb.facilities.utils.SimOperatorDetector
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -33,6 +35,36 @@ class PurchaseChargeViewModel @Inject constructor(
             is PurchaseChargeViewActions.SetMobileNumber -> {
                 setMobileNumber(action)
             }
+
+            is PurchaseChargeViewActions.ClearMobileOperator -> {
+                handleClearMobileOperator()
+            }
+            is PurchaseChargeViewActions.SetMobileOperator -> {
+                handleSetMobileOperator()
+            }
+        }
+    }
+
+    private fun handleSetMobileOperator() {
+        val operator = SimOperatorDetector.detectOperator(viewState.value.mobile)
+        viewState.value.operatorData?.findLast { it.isChecked.value }?.apply {
+            isChecked.value = false
+        }
+        viewState.value.operatorData?.findLast { it.id == operator?.id  }?.apply {
+            isChecked.value = true
+        }?.also { op->
+            setState {
+                it.copy(operator =op)
+            }
+        }
+    }
+
+    private fun handleClearMobileOperator() {
+        viewState.value.operator?.apply {
+            null
+        }
+        viewState.value.operatorData?.findLast { it.isChecked.value }?.apply {
+            isChecked.value = false
         }
     }
 

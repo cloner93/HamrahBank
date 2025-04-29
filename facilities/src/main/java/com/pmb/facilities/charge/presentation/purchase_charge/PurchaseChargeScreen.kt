@@ -1,6 +1,7 @@
 package com.pmb.facilities.charge.presentation.purchase_charge
 
 import android.net.Uri
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,6 +26,8 @@ import com.pmb.core.utils.fetchContactPhoneNumber
 import com.pmb.facilities.R
 import com.pmb.facilities.charge.presentation.ChargeSharedState
 import com.pmb.facilities.complex_component.ChoosePhoneNumberComponent
+import com.pmb.facilities.utils.SimOperatorDetector
+import com.pmb.facilities.utils.SimOperatorDetector.normalizeIranPhone
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.moduleScreen.ChargeScreens
 
@@ -47,7 +50,8 @@ fun PurchaseChargeScreen(
         contract = ActivityResultContracts.PickContact()
     ) { uri: Uri? ->
         context.fetchContactPhoneNumber(uri)?.let {
-            viewModel.handle(PurchaseChargeViewActions.SetMobileNumber(it.replace(" ", "")))
+            viewModel.handle(PurchaseChargeViewActions.SetMobileNumber(it.replace(" ", "").normalizeIranPhone()))
+            viewModel.handle(PurchaseChargeViewActions.SetMobileOperator)
         }
     }
     LaunchedEffect(Unit) {
@@ -60,8 +64,13 @@ fun PurchaseChargeScreen(
             }
         }
     }
-
     var isMobile by remember { mutableStateOf(false) }
+    LaunchedEffect(isMobile) {
+        if (isMobile)
+            viewModel.handle(PurchaseChargeViewActions.SetMobileOperator)
+        else
+            viewModel.handle(PurchaseChargeViewActions.ClearMobileOperator)
+    }
     AppContent(
         modifier = Modifier.padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -93,6 +102,7 @@ fun PurchaseChargeScreen(
             },
             onValueChange = {
                 viewModel.handle(PurchaseChargeViewActions.SetMobileNumber(it))
+
             }
         ) {
             viewModel.handle(PurchaseChargeViewActions.RequestContactPermission(permissionLauncher))

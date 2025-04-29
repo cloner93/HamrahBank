@@ -20,7 +20,7 @@ class ChargeRepositoryImpl @Inject constructor() : ChargeRepository {
                     isSuccess = true, data = listOf(
                         ChargeData(
                             id = 0,
-                            imageString = R.drawable.ic_irancell,
+                            imageString = R.drawable.ic_mci,
                             title = "ایرانسل",
                             subTitle = "۰۹۹۱۱۰۵۱۷۲۵",
                         ),
@@ -32,7 +32,7 @@ class ChargeRepositoryImpl @Inject constructor() : ChargeRepository {
                         ),
                         ChargeData(
                             id = 2,
-                            imageString = R.drawable.ic_irancell,
+                            imageString = R.drawable.ic_rightel,
                             title = "ایرانسل",
                             subTitle = "09308160417"
                         )

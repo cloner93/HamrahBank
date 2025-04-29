@@ -130,10 +130,10 @@ fun TransferReceiptScreen(
 
     if (viewState.showShareBottomSheet) {
         MenuBottomSheet(
-            title = stringResource(R.string.select_share_type),
+            title = stringResource(com.pmb.ballon.R.string.select_share_type),
             items = listOf(
                 MenuSheetModel(
-                    title = stringResource(R.string.text),
+                    title = stringResource(com.pmb.ballon.R.string.text),
                     icon = com.pmb.ballon.R.drawable.ic_text,
                     iconTint = { AppTheme.colorScheme.onBackgroundNeutralCTA },
                     showEndIcon = false,
@@ -142,7 +142,7 @@ fun TransferReceiptScreen(
                     }
                 ),
                 MenuSheetModel(
-                    title = stringResource(R.string.image),
+                    title = stringResource(com.pmb.ballon.R.string.image),
                     icon = com.pmb.ballon.R.drawable.ic_image,
                     iconTint = { AppTheme.colorScheme.onBackgroundNeutralCTA },
                     showEndIcon = false,

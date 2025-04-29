@@ -1,61 +1,65 @@
-package com.pmb.facilities.charge.presentation.charge
+package com.pmb.facilities.charge.presentation.choose_charge_price.viewModel
 
 import androidx.lifecycle.viewModelScope
 import com.pmb.core.platform.AlertModelState
 import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.platform.Result
-import com.pmb.facilities.charge.domain.charge.useCase.GetLatestChargeUseCase
-import com.pmb.facilities.charge.domain.purchase_charge.entity.Operator
-import com.pmb.facilities.utils.SimOperatorDetector
+import com.pmb.facilities.charge.domain.choose_charge_price.useCase.GetChargePriceUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ChargeViewModel @Inject constructor(
-    initialState: ChargeViewState,
-    private val getLatestChargeUseCase: GetLatestChargeUseCase
-) :
-    BaseViewModel<ChargeViewActions, ChargeViewState, ChargeViewEvents>(initialState) {
-
-    override fun handle(action: ChargeViewActions) {
+class ChooseChargePriceViewModel @Inject constructor(
+    initialState: ChooseChargePriceViewState,
+    private val getChargePriceUseCase: GetChargePriceUseCase
+) : BaseViewModel<ChooseChargePriceViewActions, ChooseChargePriceViewState, ChooseChargePriceViewEvents>(
+    initialState
+) {
+    override fun handle(action: ChooseChargePriceViewActions) {
         when (action) {
-            is ChargeViewActions.GetLatestChargeHistory -> {
-                handleGetLatestData()
-            }
-
-            is ChargeViewActions.ClearAlertModelState -> {
+            is ChooseChargePriceViewActions.ClearAlertModelState -> {
                 setState {
                     it.copy(
                         isLoading = false
                     )
                 }
             }
-            is ChargeViewActions.SetSelectedSimNumber ->{
-                handleSetSelectedSimNumber(action)
+
+            is ChooseChargePriceViewActions.GetChargePrice -> {
+                handleGetChargePrice()
+            }
+
+            is ChooseChargePriceViewActions.SetSelectedPrice -> {
+                handleSelectedPrice(action)
             }
         }
     }
 
-    private fun handleSetSelectedSimNumber(number: ChargeViewActions.SetSelectedSimNumber) {
-        val op = SimOperatorDetector.detectOperator(number.simNumber.subTitle)
-        setState {
-            it.copy(
-                selectedSim = number.simNumber.subTitle,
-                operator = Operator(
-                    id = op?.id ?:-1,
-                    operator = op?.operatorName?:"",
-                    operatorImage = number.simNumber.imageString
-                )
-            )
+    private fun handleSelectedPrice(price: ChooseChargePriceViewActions.SetSelectedPrice) {
+        viewModelScope.launch {
+            if (price.choosePrice.id != viewState.value.selectedPrice?.id) {
+                viewState.value.chargePriceData?.findLast { !it.isChecked.value && it.id == price.choosePrice.id }
+                    ?.apply {
+                        isChecked.value = true
+                    }
+                viewState.value.chargePriceData?.findLast { it.id == viewState.value.selectedPrice?.id }
+                    ?.apply {
+                        isChecked.value = false
+                    }
+                setState {
+                    it.copy(
+                        selectedPrice = price.choosePrice
+                    )
+                }
+            }
         }
-        postEvent(ChargeViewEvents.UseTheLatestNumber)
     }
 
-    private fun handleGetLatestData() {
+    private fun handleGetChargePrice() {
         viewModelScope.launch {
-            getLatestChargeUseCase.invoke(Unit).collectLatest { result ->
+            getChargePriceUseCase.invoke(Unit).collectLatest { result ->
                 when (result) {
                     is Result.Error -> {
                         setState {
@@ -77,7 +81,7 @@ class ChargeViewModel @Inject constructor(
                         setState {
                             it.copy(
                                 isLoading = false,
-                                simCartList = result.data.data
+                                chargePriceData = result.data.data
                             )
                         }
                     }
@@ -93,6 +97,6 @@ class ChargeViewModel @Inject constructor(
     }
 
     init {
-        handle(ChargeViewActions.GetLatestChargeHistory)
+        handle(ChooseChargePriceViewActions.GetChargePrice)
     }
 }

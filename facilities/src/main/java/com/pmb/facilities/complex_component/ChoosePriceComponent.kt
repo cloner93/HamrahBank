@@ -26,6 +26,7 @@ import com.pmb.ballon.models.Size
 import com.pmb.ballon.models.TextStyle
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.core.utils.toCurrency
+import com.pmb.facilities.charge.domain.choose_charge_price.entity.ChoosePrice
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -33,9 +34,9 @@ fun ChoosePriceComponent(
     headerImage: Int,
     headerText: String,
     chosenText: String,
-    items: List<String>
+    items: List<ChoosePrice>,
+    onItemClickCallBack:(ChoosePrice)-> Unit
 ) {
-    var selectedItem by remember { mutableStateOf<String?>(null) }
     Column (horizontalAlignment = Alignment.CenterHorizontally){
         TextImage(
             image = headerImage,
@@ -66,15 +67,14 @@ fun ChoosePriceComponent(
                 .padding(8.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
-            maxItemsInEachRow = Int.MAX_VALUE // let it wrap based on width
+            maxItemsInEachRow = Int.MAX_VALUE
         ) {
             items.forEach { item ->
-                val isSelected = item == selectedItem
                 ChipWithIcon(
                     modifier = Modifier,
-                    value = item.toCurrency(),
-                    clickable = { selectedItem = item },
-                    color = if (isSelected) AppTheme.colorScheme.stateLayerNeutralPressed else Color.White,
+                    value = item.price.toCurrency(),
+                    clickable = { onItemClickCallBack(item) },
+                    color = if (item.isChecked.value) AppTheme.colorScheme.stateLayerNeutralPressed else Color.White,
                     assetColor = Color.Black,
                     borderColor = AppTheme.colorScheme.strokeNeutral1Default,
                     fillMaxWidth = false

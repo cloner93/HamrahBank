@@ -34,7 +34,7 @@ fun HistoryListComponent(
     items: List<ChargeData>,
     isInnerComponent: Boolean = false,
     onHistoryClickListener: () -> Unit,
-    onItemClickListener: (String) -> Unit
+    onItemClickListener: (ChargeData) -> Unit
 ) {
     Column(
         modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally
@@ -82,7 +82,7 @@ fun HistoryListComponent(
                     subtitle = item.subTitle,
                     clickable = true,
                     onItemClick = {
-                        onItemClickListener(item.subTitle)
+                        onItemClickListener(item)
                     }
                 )
             }

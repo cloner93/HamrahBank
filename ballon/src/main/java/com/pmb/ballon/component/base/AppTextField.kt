@@ -213,7 +213,11 @@ fun AppMobileTextField(
             onValidate?.invoke(result.isValid)
         },
         trailingIcon = @Composable {
-            if (value.isNotEmpty()) AppButtonIcon(icon = Icons.Default.Close) { onValueChange("") }
+            if (value.isNotEmpty())
+                AppButtonIcon(icon = Icons.Default.Close) {
+                    onValidate?.invoke(false)
+                    onValueChange("")
+                }
         },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone)
     )

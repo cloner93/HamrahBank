@@ -37,7 +37,7 @@ fun ChooseOperatorComponent(
                 .fillMaxHeight()
                 .weight(1f),
         )
-        if (data.isChecked)
+        if (data.isChecked.value)
             AppImage(image = painterResource(R.drawable.ic_checked))
     }
 }

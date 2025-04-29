@@ -8,5 +8,6 @@ data class PurchaseChargeViewState(
     val isLoading: Boolean = false,
     val alertModelState: AlertModelState?=null,
     val mobile : String ="",
-    val operatorData :List<Operator>?=null
+    val operatorData :List<Operator>?=null,
+    val operator : Operator?=null
 ) : BaseViewState
