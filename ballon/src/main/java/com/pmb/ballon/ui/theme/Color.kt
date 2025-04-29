@@ -540,4 +540,5 @@ fun darkColors() = CustomColors(
     iconColor = Color(0xFF00629D),
     iconBackgroundColor = Color(0x4D00629D),
     isLight = false,
+    strokeNeutral3Divider = Color(0xFF38383D),
 )
