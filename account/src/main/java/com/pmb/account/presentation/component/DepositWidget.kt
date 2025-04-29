@@ -28,11 +28,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.pmb.ballon.R
-import com.pmb.ballon.component.ChipWithIcon
 import com.pmb.ballon.component.base.AppButtonIcon
 import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.component.base.BodySmallText
 import com.pmb.ballon.component.base.CaptionText
+import com.pmb.ballon.component.base.ChipWithIcon
 import com.pmb.ballon.component.base.Headline2Text
 import com.pmb.ballon.models.IconStyle
 import com.pmb.ballon.models.Size

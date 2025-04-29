@@ -1,4 +1,4 @@
-package com.pmb.ballon.component
+package com.pmb.ballon.component.base
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -18,19 +18,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import com.pmb.ballon.component.base.AppIcon
-import com.pmb.ballon.component.base.BodySmallText
 import com.pmb.ballon.models.IconStyle
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.ballon.ui.theme.HamrahBankTheme
@@ -86,12 +81,9 @@ fun ChipWithIcon(
     }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
 fun PreviewChipDefault() {
-    CompositionLocalProvider(
-        LocalLayoutDirection provides LayoutDirection.Rtl
-    ) {
         HamrahBankTheme {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -130,16 +122,8 @@ fun PreviewChipDefault() {
                     color = Color.Blue.copy(alpha = 0.1f),
                     assetColor = Color.Blue
                 )
-                ChipWithIcon(
-                    value = "Without Icon",
-                    startIcon = Icons.Default.ArrowDropDown,
-                    clickable = { },
-                    color = Color.White,
-                    assetColor = Color.Black,
-                    borderColor = Color.Gray
-                )
             }
         }
-    }
+
 
 }

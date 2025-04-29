@@ -52,7 +52,6 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.pmb.account.R
-import com.pmb.ballon.component.ChipWithIcon
 import com.pmb.account.presentation.component.CustomAppTopBar
 import com.pmb.account.presentation.component.TransactionModel
 import com.pmb.account.presentation.component.TransactionType
@@ -72,6 +71,7 @@ import com.pmb.ballon.component.base.AppImage
 import com.pmb.ballon.component.base.BodySmallText
 import com.pmb.ballon.component.base.ButtonMediumText
 import com.pmb.ballon.component.base.CaptionText
+import com.pmb.ballon.component.base.ChipWithIcon
 import com.pmb.ballon.component.base.ClickableIcon
 import com.pmb.ballon.component.base.Headline6Text
 import com.pmb.ballon.component.base.IconType

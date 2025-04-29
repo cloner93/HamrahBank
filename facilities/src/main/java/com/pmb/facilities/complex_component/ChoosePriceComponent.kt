@@ -18,8 +18,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.pmb.ballon.component.ChipWithIcon
 import com.pmb.ballon.component.TextImage
+import com.pmb.ballon.component.base.ChipWithIcon
 import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.models.ImageStyle
 import com.pmb.ballon.models.Size

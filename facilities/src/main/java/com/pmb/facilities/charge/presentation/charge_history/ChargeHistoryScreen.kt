@@ -20,7 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.pmb.ballon.component.AmountText
-import com.pmb.ballon.component.ChipWithIcon
+import com.pmb.ballon.component.base.ChipWithIcon
 import com.pmb.ballon.component.ImageItemRow
 import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppTopBar

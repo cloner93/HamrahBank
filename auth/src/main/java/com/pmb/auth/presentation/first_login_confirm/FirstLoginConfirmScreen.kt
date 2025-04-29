@@ -4,6 +4,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -20,7 +22,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.pmb.auth.R
-import com.pmb.auth.presentation.component.ChipWithIcon
 import com.pmb.auth.presentation.component.ShowInvalidLoginBottomSheet
 import com.pmb.auth.presentation.first_login_confirm.viewModel.FirstLoginConfirmViewActions
 import com.pmb.auth.presentation.first_login_confirm.viewModel.FirstLoginConfirmViewEvents
@@ -36,6 +37,7 @@ import com.pmb.ballon.component.base.AppNumberTextField
 import com.pmb.ballon.component.base.AppTextButton
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.BodyMediumText
+import com.pmb.ballon.component.base.ChipWithIcon
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.manager.NavigationManager
 import com.pmb.navigation.moduleScreen.AuthScreens
@@ -113,7 +115,7 @@ fun FirstLoginConfirmScreen(
         Spacer(modifier = Modifier.size(32.dp))
         ChipWithIcon(
             value = phonenumber,
-            icon = com.pmb.ballon.R.drawable.ic_edit,
+            startIcon = Icons.Default.Edit,
             clickable = {
                 if (comingType === ComingType.COMING_LOGIN)
                     navigationManager.navigateBack()
