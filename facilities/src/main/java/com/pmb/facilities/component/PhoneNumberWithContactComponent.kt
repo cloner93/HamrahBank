@@ -12,7 +12,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.pmb.ballon.component.base.AppButtonIcon
-import com.pmb.ballon.component.base.AppIcon
 import com.pmb.ballon.component.base.AppMobileTextField
 import com.pmb.ballon.models.IconStyle
 import com.pmb.ballon.models.Size
@@ -24,7 +23,7 @@ fun PhoneNumberWithContactComponent(
     mobile: String,
     onValidate: (Boolean) -> Unit,
     onValueChange: (String) -> Unit,
-    onContactClickListener:()-> Unit
+    onContactClickListener: () -> Unit
 ) {
     Row(
         modifier = modifier,
@@ -36,10 +35,10 @@ fun PhoneNumberWithContactComponent(
             label = stringResource(R.string.mobile),
             onValidate = { onValidate(it) },
             onValueChange = { onValueChange(it) })
-        AppButtonIcon (
+        AppButtonIcon(
             icon = painterResource(com.pmb.ballon.R.drawable.ic_contact),
             style = IconStyle(size = Size.FIX(24.dp))
-        ){
+        ) {
             onContactClickListener()
         }
 

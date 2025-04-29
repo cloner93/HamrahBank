@@ -1,61 +1,38 @@
-package com.pmb.facilities.charge.presentation.charge
+package com.pmb.facilities.bill.presentation.bill.viewModel
 
 import androidx.lifecycle.viewModelScope
 import com.pmb.core.platform.AlertModelState
 import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.platform.Result
-import com.pmb.facilities.charge.domain.charge.useCase.GetLatestChargeUseCase
-import com.pmb.facilities.charge.domain.purchase_charge.entity.Operator
-import com.pmb.facilities.utils.SimOperatorDetector
+import com.pmb.facilities.bill.domain.bill.useCase.GetBillsDataUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ChargeViewModel @Inject constructor(
-    initialState: ChargeViewState,
-    private val getLatestChargeUseCase: GetLatestChargeUseCase
-) :
-    BaseViewModel<ChargeViewActions, ChargeViewState, ChargeViewEvents>(initialState) {
-
-    override fun handle(action: ChargeViewActions) {
+class BillViewModel @Inject constructor(
+    initialState: BillViewState,
+    private val getBillsDataUseCase: GetBillsDataUseCase
+) : BaseViewModel<BillViewActions, BillViewState, BillViewEvents>(initialState) {
+    override fun handle(action: BillViewActions) {
         when (action) {
-            is ChargeViewActions.GetLatestChargeHistory -> {
-                handleGetLatestData()
-            }
-
-            is ChargeViewActions.ClearAlertModelState -> {
+            is BillViewActions.ClearAlertModelState -> {
                 setState {
                     it.copy(
                         isLoading = false
                     )
                 }
             }
-            is ChargeViewActions.SetSelectedSimNumber ->{
-                handleSetSelectedSimNumber(action)
+            is BillViewActions.GetBillsData -> {
+                handleGetBillsData()
             }
         }
     }
 
-    private fun handleSetSelectedSimNumber(number: ChargeViewActions.SetSelectedSimNumber) {
-        val op = SimOperatorDetector.detectOperator(number.simNumber.subTitle)
-        setState {
-            it.copy(
-                selectedSim = number.simNumber.subTitle,
-                operator = Operator(
-                    id = op?.id ?:-1,
-                    operator = op?.operatorName?:"",
-                    operatorImage = number.simNumber.imageString
-                )
-            )
-        }
-        postEvent(ChargeViewEvents.UseTheLatestNumber)
-    }
-
-    private fun handleGetLatestData() {
+    private fun handleGetBillsData() {
         viewModelScope.launch {
-            getLatestChargeUseCase.invoke(Unit).collectLatest { result ->
+            getBillsDataUseCase.invoke(Unit).collectLatest {result->
                 when (result) {
                     is Result.Error -> {
                         setState {
@@ -77,7 +54,7 @@ class ChargeViewModel @Inject constructor(
                         setState {
                             it.copy(
                                 isLoading = false,
-                                simCardList = result.data.data
+                                billsData = result.data.data
                             )
                         }
                     }
@@ -91,8 +68,7 @@ class ChargeViewModel @Inject constructor(
             }
         }
     }
-
     init {
-        handle(ChargeViewActions.GetLatestChargeHistory)
+        handle(BillViewActions.GetBillsData)
     }
 }

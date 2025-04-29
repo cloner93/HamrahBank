@@ -4,6 +4,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.pmb.facilities.bill.presentation.billGraphHandler
 import com.pmb.facilities.charge.presentation.chargeGraphHandler
 import com.pmb.home.presentation.home.HomeScreen
 import com.pmb.home.presentation.home.viewModel.HomeViewModel
@@ -22,5 +23,6 @@ fun NavGraphBuilder.homeScreensHandle() {
             )
         }
         chargeGraphHandler()
+        billGraphHandler()
     }
 }
