@@ -7,10 +7,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.pmb.facilities.bill.presentation.bill.BillScreen
 import com.pmb.facilities.bill.presentation.bill.viewModel.BillViewModel
-import com.pmb.facilities.charge.presentation.ChargeSharedViewModel
+import com.pmb.facilities.bill.presentation.bills_history.BillsHistoryScreen
+import com.pmb.facilities.bill.presentation.bills_history.viewModel.BillsHistoryViewModel
 import com.pmb.navigation.manager.navigationManager
 import com.pmb.navigation.moduleScreen.BillScreens
-import com.pmb.navigation.moduleScreen.ChargeScreens
 
 fun NavGraphBuilder.billGraphHandler() {
     navigation(
@@ -26,6 +26,19 @@ fun NavGraphBuilder.billGraphHandler() {
             BillScreen(
                 sharedState = sharedState,
                 viewModel = hiltViewModel<BillViewModel>()
+            ) {
+
+            }
+        }
+        composable(route = BillScreens.BillsHistory.route) {
+            val sharedViewModel =
+                it.navigationManager.retrieveSharedViewModel<BillSharedViewModel>(
+                    screen = BillScreens.BillGraph, navBackStackEntry = it
+                )
+            val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
+            BillsHistoryScreen(
+                sharedState = sharedState,
+                viewModel = hiltViewModel<BillsHistoryViewModel>()
             ) {
 
             }

@@ -22,6 +22,7 @@ import com.pmb.facilities.bill.presentation.bill.viewModel.BillViewModel
 import com.pmb.facilities.bill.presentation.bill.viewModel.BillViewState
 import com.pmb.facilities.complex_component.HistoryListComponent
 import com.pmb.navigation.manager.LocalNavigationManager
+import com.pmb.navigation.moduleScreen.BillScreens
 
 @Composable
 fun BillScreen(
@@ -64,7 +65,7 @@ fun BillScreen(
                 historyTitle = stringResource(string.bills),
                 items = it,
                 onHistoryClickListener = {
-//                navigationManager.navigate(ChargeScreens.ChargeHistory)
+                    navigationManager.navigate (BillScreens.BillsHistory)
                 }
             ) {
 //            viewModel.handle(ChargeViewActions.SetSelectedSimNumber(it))
