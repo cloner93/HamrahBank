@@ -7,6 +7,8 @@ import com.pmb.core.platform.Result
 import com.pmb.facilities.bill.domain.bill.entity.BillType
 import com.pmb.facilities.bill.domain.bill.entity.BillsType
 import com.pmb.facilities.bill.domain.bill.useCase.GetBillsDataUseCase
+import com.pmb.facilities.bill.domain.bill_id.entity.BillIdParams
+import com.pmb.facilities.bill.domain.bill_id.useCase.GetBillDataBasedIdUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -15,7 +17,8 @@ import javax.inject.Inject
 @HiltViewModel
 class BillViewModel @Inject constructor(
     initialState: BillViewState,
-    private val getBillsDataUseCase: GetBillsDataUseCase
+    private val getBillsDataUseCase: GetBillsDataUseCase,
+    private val billDataBasedIdUseCase: GetBillDataBasedIdUseCase
 ) : BaseViewModel<BillViewActions, BillViewState, BillViewEvents>(initialState) {
     private val billsType = listOf<BillType>(
         BillType(
@@ -51,6 +54,14 @@ class BillViewModel @Inject constructor(
 
             is BillViewActions.SetBillTypeData -> {
                 handleSetBillType(action)
+            }
+
+            is BillViewActions.SetPurchaseBottomSheetVisibility -> {
+                handlePurchaseBottomSheetVisibility()
+            }
+
+            is BillViewActions.GetBillDataBasedId -> {
+                handleGetBillData(action)
             }
         }
     }
@@ -103,6 +114,56 @@ class BillViewModel @Inject constructor(
                                 billsData = result.data.data
                             )
                         }
+                    }
+
+                    is Result.Loading -> {
+                        setState {
+                            it.copy(isLoading = true)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun handlePurchaseBottomSheetVisibility() {
+        setState {
+            it.copy(
+                isPurchaseBottomSheetVisibility = !it.isPurchaseBottomSheetVisibility
+            )
+        }
+    }
+
+    private fun handleGetBillData(data: BillViewActions.GetBillDataBasedId) {
+        viewModelScope.launch {
+            billDataBasedIdUseCase.invoke(
+                params = BillIdParams(data.billId)
+            ).collectLatest { result ->
+                when (result) {
+                    is Result.Error -> {
+                        setState {
+                            it.copy(
+                                isLoading = false,
+                                alertModelState = AlertModelState.Dialog(
+                                    title = "Get data  failed",
+                                    description = "failed to fetch data because ${result.message}",
+                                    positiveButtonTitle = "okay",
+                                    onPositiveClick = {
+                                        setState { state -> state.copy(alertModelState = null) }
+                                    }
+                                )
+                            )
+                        }
+                    }
+
+                    is Result.Success -> {
+                        setState {
+                            it.copy(
+                                isLoading = false,
+                                billIdEntity = result.data
+                            )
+                        }
+                        handle(BillViewActions.SetPurchaseBottomSheetVisibility)
                     }
 
                     is Result.Loading -> {

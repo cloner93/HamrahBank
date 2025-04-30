@@ -2,6 +2,7 @@ package com.pmb.facilities.component
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -17,13 +18,22 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.pmb.ballon.component.base.AppBottomSheet
+import com.pmb.ballon.component.base.AppButton
+import com.pmb.ballon.component.base.AppImage
 import com.pmb.ballon.component.base.BaseAppText
 import com.pmb.ballon.component.base.BodyMediumText
+import com.pmb.ballon.component.base.BodySmallText
+import com.pmb.ballon.component.base.CaptionText
+import com.pmb.ballon.component.base.Headline5Text
+import com.pmb.ballon.models.ImageStyle
+import com.pmb.ballon.models.Size
 import com.pmb.ballon.models.TextStyle
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.ballon.ui.theme.AppTypography
+import com.pmb.core.utils.toCurrency
 import com.pmb.facilities.R
 import com.pmb.facilities.bill.domain.bill.entity.BillType
+import com.pmb.facilities.bill.domain.bill_id.entity.BillIdEntity
 
 @Composable
 fun ChooseSimTypeBottomSheet(
@@ -66,6 +76,7 @@ fun ChooseSimTypeBottomSheet(
             }
         })
 }
+
 @Composable
 fun ChooseBillTypeBottomSheet(
     items: List<BillType>,
@@ -108,4 +119,107 @@ fun ChooseBillTypeBottomSheet(
                 }
             }
         })
+}
+
+@Composable
+fun PurchaseBillBottomSheet(
+    bottomSheetData: BillIdEntity,
+    onPurchaseClickListener: () -> Unit,
+    onDismiss: () -> Unit
+) {
+    var isVisible by remember { mutableStateOf(true) }
+    AppBottomSheet(
+        isVisible = isVisible,
+        onDismiss = {
+            onDismiss.invoke()
+        }, cancelable = true
+    ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Spacer(modifier = Modifier.size(32.dp))
+            AppImage(
+                image = bottomSheetData.billImage,
+                style = ImageStyle(size = Size.FIX(44.dp))
+            )
+            Spacer(modifier = Modifier.size(12.dp))
+            BodySmallText(
+                text = bottomSheetData.billTitle,
+                color = AppTheme.colorScheme.onBackgroundNeutralDefault
+            )
+            CaptionText(
+                text = bottomSheetData.billId,
+                color = AppTheme.colorScheme.onBackgroundNeutralSubdued
+            )
+            Spacer(modifier = Modifier.size(12.dp))
+            Headline5Text(
+                text = "${bottomSheetData.billPrice.toCurrency()} ${stringResource(com.pmb.ballon.R.string.rial)}",
+                color = AppTheme.colorScheme.onBackgroundNeutralDefault
+            )
+            CaptionText(
+                text = bottomSheetData.billPriceTitle,
+                color = AppTheme.colorScheme.onBackgroundNeutralSubdued
+            )
+            Spacer(modifier = Modifier.size(32.dp))
+            Column(modifier = Modifier.fillMaxWidth()) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 14.dp)
+                ) {
+                    BodySmallText(
+                        text = stringResource(R.string.customer_name),
+                        color = AppTheme.colorScheme.onBackgroundNeutralSubdued
+                    )
+                    BodySmallText(
+                        text = bottomSheetData.billDetails.billCustomer,
+                        modifier = Modifier.weight(1f),
+                        textAlign = TextAlign.Left,
+                        color = AppTheme.colorScheme.onBackgroundNeutralDefault
+                    )
+                }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 14.dp)
+                ) {
+                    BodySmallText(
+                        text = stringResource(R.string.address),
+                        color = AppTheme.colorScheme.onBackgroundNeutralSubdued
+                    )
+                    BodySmallText(
+                        text = bottomSheetData.billDetails.address,
+                        modifier = Modifier.weight(1f),
+                        textAlign = TextAlign.Left,
+                        color = AppTheme.colorScheme.onBackgroundNeutralDefault
+                    )
+                }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 14.dp)
+                ) {
+                    BodySmallText(
+                        text = stringResource(R.string.expire_date),
+                        color = AppTheme.colorScheme.onBackgroundNeutralSubdued
+                    )
+                    BodySmallText(
+                        text = bottomSheetData.billDetails.expireDate,
+                        modifier = Modifier.weight(1f),
+                        textAlign = TextAlign.Left,
+                        color = AppTheme.colorScheme.onBackgroundNeutralDefault
+                    )
+                }
+            }
+            AppButton(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        horizontal = 24.dp, vertical = 17.dp
+                    ),
+                title = stringResource(com.pmb.ballon.R.string.purchase),
+                enable = true,
+                onClick = {
+                    onPurchaseClickListener()
+                })
+        }
+    }
 }

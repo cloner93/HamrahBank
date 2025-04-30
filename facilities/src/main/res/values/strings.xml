@@ -24,4 +24,7 @@
     <string name="choose_bill_type">انتخاب نوع قبض</string>
     <string name="identify_number">شماره شناسه قبض</string>
     <string name="phone_number_or_mobile">شماره تلفن ثابت یا همراه</string>
+    <string name="customer_name">نام مشترک</string>
+    <string name="address">نشانی</string>
+    <string name="expire_date">مهلت پرداخت</string>
 </resources>

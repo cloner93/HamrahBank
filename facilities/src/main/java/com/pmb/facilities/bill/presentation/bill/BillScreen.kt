@@ -1,5 +1,6 @@
 package com.pmb.facilities.bill.presentation.bill
 
+import android.util.Log
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -24,8 +25,10 @@ import com.pmb.facilities.bill.presentation.bill.viewModel.BillViewActions
 import com.pmb.facilities.bill.presentation.bill.viewModel.BillViewEvents
 import com.pmb.facilities.bill.presentation.bill.viewModel.BillViewModel
 import com.pmb.facilities.bill.presentation.bill.viewModel.BillViewState
+import com.pmb.facilities.bill.presentation.bill_identify.viewModel.BillIdentifyViewActions
 import com.pmb.facilities.complex_component.HistoryListComponent
 import com.pmb.facilities.component.ChooseBillTypeBottomSheet
+import com.pmb.facilities.component.PurchaseBillBottomSheet
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.moduleScreen.BillScreens
 
@@ -85,7 +88,7 @@ fun BillScreen(
                     navigationManager.navigate(BillScreens.BillsHistory)
                 }
             ) {
-
+                viewModel.handle(BillViewActions.GetBillDataBasedId(it.subTitle))
             }
         }
     }
@@ -107,5 +110,17 @@ fun BillScreen(
             viewModel.handle(BillViewActions.SetBottomSheetVisibility)
         }
 
+    }
+    if (viewState.value.isPurchaseBottomSheetVisibility) {
+        viewState.value.billIdEntity?.let {
+            PurchaseBillBottomSheet(
+                it,
+                onPurchaseClickListener = {
+                    updateState.invoke(viewState.value.copy())
+                }
+            ) {
+                viewModel.handle(BillViewActions.SetPurchaseBottomSheetVisibility)
+            }
+        }
     }
 }

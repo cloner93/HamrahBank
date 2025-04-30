@@ -4,6 +4,6 @@ import com.pmb.core.platform.BaseSharedState
 import com.pmb.facilities.bill.domain.bill.entity.BillType
 
 data class BillSharedState(
-    val number: String = "",
+    val billIdentifier: String = "",
     val billType: BillType ?=null
 ) : BaseSharedState

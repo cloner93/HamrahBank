@@ -8,5 +8,8 @@ data class BillType(
 
 enum class BillsType {
     TELECOMMUNICATION_BILL,
+    GAS,
+    ELECTRIC,
+    WATER,
     OTHER
 }
