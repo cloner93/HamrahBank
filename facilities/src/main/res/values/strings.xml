@@ -8,6 +8,7 @@
     <string name="purchase_internet">خرید اینترنت</string>
     <string name="choose_charge_price">انتخاب مبلغ شارژ</string>
     <string name="charge_confirm">تایید خرید شارژ</string>
+    <string name="bill_confirm">تایید خرید قبض</string>
     <string name="choose_your_charge">مبلغ شارژ را انتخاب کنید.</string>
     <string name="buying_history">سوابق خرید</string>
     <string name="purchase_history">سوابق پرداخت</string>

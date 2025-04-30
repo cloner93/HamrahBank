@@ -121,6 +121,7 @@ fun BillScreen(
                 it,
                 onPurchaseClickListener = {
                     updateState.invoke(viewState.value.copy())
+                    navigationManager.navigate(BillScreens.BillPurchaseConfirm)
                 }
             ) {
                 viewModel.handle(BillViewActions.SetPurchaseBottomSheetVisibility)
@@ -133,6 +134,7 @@ fun BillScreen(
                 it,
                 onPurchaseClickListener = {
                     updateState.invoke(viewState.value.copy())
+                    navigationManager.navigate(BillScreens.BillPurchaseConfirm)
                 }) {
                 viewModel.handle(BillViewActions.SetTeleComBottomSheetVisibility)
             }

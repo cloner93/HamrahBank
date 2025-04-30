@@ -28,6 +28,7 @@ import com.pmb.facilities.bill.presentation.bill_identify.viewModel.BillIdentify
 import com.pmb.facilities.component.PurchaseBillBottomSheet
 import com.pmb.facilities.component.TeleComBillBottomSheet
 import com.pmb.navigation.manager.LocalNavigationManager
+import com.pmb.navigation.moduleScreen.BillScreens
 
 @Composable
 fun BillIdentifyScreen(
@@ -112,6 +113,7 @@ fun BillIdentifyScreen(
                 it,
                 onPurchaseClickListener = {
                     updateState.invoke(viewState)
+                    navigationManager.navigate(BillScreens.BillPurchaseConfirm)
                 }
             ) {
                 viewModel.handle(BillIdentifyViewActions.SetBottomSheetVisibility)
@@ -124,6 +126,7 @@ fun BillIdentifyScreen(
                 it,
                 onPurchaseClickListener = {
                     updateState.invoke(viewState.copy())
+                    navigationManager.navigate(BillScreens.BillPurchaseConfirm)
                 }) {
                 viewModel.handle(BillIdentifyViewActions.SetTeleComBottomSheetVisibility)
             }

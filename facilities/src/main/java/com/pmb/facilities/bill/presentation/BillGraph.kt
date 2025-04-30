@@ -5,8 +5,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.pmb.facilities.bill.domain.bill_id.entity.BillIdEntity
 import com.pmb.facilities.bill.presentation.bill.BillScreen
 import com.pmb.facilities.bill.presentation.bill.viewModel.BillViewModel
+import com.pmb.facilities.bill.presentation.bill_confirm.BillConfirmScreen
 import com.pmb.facilities.bill.presentation.bill_identify.BillIdentifyScreen
 import com.pmb.facilities.bill.presentation.bill_identify.viewModel.BillIdentifyViewModel
 import com.pmb.facilities.bill.presentation.bills_history.BillsHistoryScreen
@@ -31,7 +33,18 @@ fun NavGraphBuilder.billGraphHandler() {
             ) { childState ->
                 sharedViewModel.updateState {
                     sharedState.value.copy(
-                        billType = childState.billType
+                        billType = childState.billType,
+                        billIdEntity = if (childState.billIdEntity != null) {
+                            childState.billIdEntity
+                        } else if (childState.teleCommunicationEntity != null) {
+                            BillIdEntity(
+                                billImage = childState.teleCommunicationEntity.billImage,
+                                billTitle = childState.teleCommunicationEntity.billTitle,
+                                billId = childState.teleCommunicationEntity.phoneNumber,
+                                billPrice = 1460000.toDouble(),
+                                billPriceTitle = "مبلغ بدهی",
+                            )
+                        } else null
                     )
                 }
             }
@@ -57,7 +70,38 @@ fun NavGraphBuilder.billGraphHandler() {
             BillIdentifyScreen(
                 sharedState = sharedState,
                 viewModel = hiltViewModel<BillIdentifyViewModel>()
-            ) { }
+            ) { childState ->
+                if (childState.billIdEntity != null) {
+                    sharedViewModel.updateState {
+                        sharedState.value.copy(
+                            billIdEntity = childState.billIdEntity
+                        )
+                    }
+                } else if (childState.teleCommunicationEntity != null) {
+                    sharedViewModel.updateState {
+                        sharedState.value.copy(
+                            billIdEntity = BillIdEntity(
+                                billImage = childState.teleCommunicationEntity.billImage,
+                                billTitle = childState.teleCommunicationEntity.billTitle,
+                                billId = childState.teleCommunicationEntity.phoneNumber,
+                                billPrice = 1460000.toDouble(),
+                                billPriceTitle = "مبلغ بدهی",
+                            )
+                        )
+                    }
+                }
+            }
+
+        }
+        composable(route = BillScreens.BillPurchaseConfirm.route) {
+            val sharedViewModel =
+                it.navigationManager.retrieveSharedViewModel<BillSharedViewModel>(
+                    screen = BillScreens.BillGraph, navBackStackEntry = it
+                )
+            val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
+            BillConfirmScreen(
+                sharedState = sharedState
+            )
         }
     }
 }

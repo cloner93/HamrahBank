@@ -173,7 +173,7 @@ fun PurchaseBillBottomSheet(
                         color = AppTheme.colorScheme.onBackgroundNeutralSubdued
                     )
                     BodySmallText(
-                        text = bottomSheetData.billDetails.billCustomer,
+                        text = bottomSheetData.billDetails?.billCustomer ?: "",
                         modifier = Modifier.weight(1f),
                         textAlign = TextAlign.Left,
                         color = AppTheme.colorScheme.onBackgroundNeutralDefault
@@ -189,7 +189,7 @@ fun PurchaseBillBottomSheet(
                         color = AppTheme.colorScheme.onBackgroundNeutralSubdued
                     )
                     BodySmallText(
-                        text = bottomSheetData.billDetails.address,
+                        text = bottomSheetData.billDetails?.address ?: "",
                         modifier = Modifier.weight(1f),
                         textAlign = TextAlign.Left,
                         color = AppTheme.colorScheme.onBackgroundNeutralDefault
@@ -205,7 +205,7 @@ fun PurchaseBillBottomSheet(
                         color = AppTheme.colorScheme.onBackgroundNeutralSubdued
                     )
                     BodySmallText(
-                        text = bottomSheetData.billDetails.expireDate,
+                        text = bottomSheetData.billDetails?.expireDate ?: "",
                         modifier = Modifier.weight(1f),
                         textAlign = TextAlign.Left,
                         color = AppTheme.colorScheme.onBackgroundNeutralDefault
@@ -221,6 +221,7 @@ fun PurchaseBillBottomSheet(
                 title = stringResource(com.pmb.ballon.R.string.purchase),
                 enable = true,
                 onClick = {
+                    onDismiss()
                     onPurchaseClickListener()
                 })
         }
@@ -301,6 +302,7 @@ fun TeleComBillBottomSheet(
                 title = stringResource(com.pmb.ballon.R.string.purchase),
                 enable = true,
                 onClick = {
+                    onDismiss()
                     onPurchaseClickListener()
                 })
         }

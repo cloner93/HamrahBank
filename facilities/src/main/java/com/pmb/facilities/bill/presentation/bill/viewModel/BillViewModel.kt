@@ -102,7 +102,8 @@ class BillViewModel @Inject constructor(
                         setState {
                             it.copy(
                                 isLoading = false,
-                                teleCommunicationEntity = result.data
+                                teleCommunicationEntity = result.data,
+                                billIdEntity = null
                             )
                         }
                         handle(BillViewActions.SetTeleComBottomSheetVisibility)
@@ -224,7 +225,8 @@ class BillViewModel @Inject constructor(
                         setState {
                             it.copy(
                                 isLoading = false,
-                                billIdEntity = result.data
+                                billIdEntity = result.data,
+                                teleCommunicationEntity = null
                             )
                         }
                         handle(BillViewActions.SetPurchaseBottomSheetVisibility)

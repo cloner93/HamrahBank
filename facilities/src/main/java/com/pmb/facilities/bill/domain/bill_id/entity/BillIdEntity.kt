@@ -6,7 +6,7 @@ data class BillIdEntity(
     val billId: String,
     val billPrice: Double,
     val billPriceTitle: String,
-    val billDetails: BillDetails
+    val billDetails: BillDetails?=null
 )
 
 data class BillDetails(
