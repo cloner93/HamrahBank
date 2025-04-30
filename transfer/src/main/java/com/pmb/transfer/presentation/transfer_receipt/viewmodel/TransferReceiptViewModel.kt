@@ -1,18 +1,14 @@
 package com.pmb.transfer.presentation.transfer_receipt.viewmodel
 
 import androidx.compose.ui.unit.LayoutDirection
-import com.pmb.ballon.models.RowType
-import com.pmb.ballon.models.TextStyle
-import com.pmb.ballon.ui.theme.AppTypography
-import com.pmb.ballon.ui.theme.lightColors
 import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.utils.Convert
 import com.pmb.core.utils.toCurrency
+import com.pmb.receipt.model.RowData
 import com.pmb.transfer.domain.entity.TransferReceiptEntity
 import com.pmb.transfer.domain.entity.TransferSourceEntity
 import com.pmb.transfer.utils.BankUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 
 @HiltViewModel
@@ -42,37 +38,28 @@ class TransferReceiptViewModel @Inject constructor() :
         setState {
             it.copy(
                 receipt = receipt,
-                rowTypes = listOf(
-                    RowType.PaymentRow(
+                rows = listOf(
+                    RowData.Payment(
                         title = "مبلغ انتقال",
                         amount = receipt.amount.toCurrency(),
                         currency = "ریال",
-                        textStyle = titleStyle(),
-                        amountStyle = amountStyle(),
-                        currencyStyle = currencyStyle(),
                     ),
-                    RowType.TwoTextRow(
+                    RowData.TwoText(
                         title = "زمان",
                         subtitle = Convert.timestampToPersianDate(receipt.date),
-                        textStyle = titleStyle(),
-                        subtitleStyle = subtitleStyle(),
                     ),
-                    RowType.TwoTextRow(
+                    RowData.TwoText(
                         subtitle = when (receipt.source) {
                             is TransferSourceEntity.Account -> receipt.source.account.accountHolderName
                             is TransferSourceEntity.Card -> receipt.source.card.cardHolderName
                         },
                         title = "شخص انتقال دهنده",
-                        textStyle = titleStyle(),
-                        subtitleStyle = subtitleStyle(),
                     ),
-                    RowType.TwoTextRow(
+                    RowData.TwoText(
                         title = "روش انتقال",
                         subtitle = receipt.paymentType.value,
-                        textStyle = titleStyle(),
-                        subtitleStyle = subtitleStyle(),
                     ),
-                    RowType.TwoTextRow(
+                    RowData.TwoText(
                         title = when (receipt.source) {
                             is TransferSourceEntity.Account -> "سپرده مبداء"
                             is TransferSourceEntity.Card -> "کارت مبدأ"
@@ -85,40 +72,14 @@ class TransferReceiptViewModel @Inject constructor() :
                                 is TransferSourceEntity.Card ->
                                     BankUtil.formatMaskCardNumber(receipt.source.card.cardNumber)
                             },
-                        textStyle = titleStyle(),
-                        subtitleStyle = subtitleStyle(),
                         subtitleLayoutDirection = LayoutDirection.Ltr
                     ),
-                    RowType.TwoTextRow(
+                    RowData.TwoText(
                         title = "شماره پیگیری",
                         subtitle = receipt.trackingNumber.toString(),
-                        textStyle = titleStyle(),
-                        subtitleStyle = subtitleStyle(),
                     )
                 )
             )
         }
     }
 }
-
-private val _colors = MutableStateFlow(lightColors())
-
-private fun titleStyle() = TextStyle(
-    color = _colors.value.onBackgroundNeutralSubdued,
-    typography = AppTypography.bodySmall,
-)
-
-private fun amountStyle() = TextStyle(
-    color = _colors.value.onBackgroundNeutralDefault,
-    typography = AppTypography.headline3,
-)
-
-private fun currencyStyle() = TextStyle(
-    color = _colors.value.onBackgroundNeutralDefault,
-    typography = AppTypography.bodySmall,
-)
-
-private fun subtitleStyle() = TextStyle(
-    color = _colors.value.onBackgroundNeutralDefault,
-    typography = AppTypography.bodySmall,
-)

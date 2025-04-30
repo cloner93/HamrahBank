@@ -1,4 +1,4 @@
-package com.pmb.ballon.component.receipt
+package com.pmb.receipt.component
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,7 +13,7 @@ import com.pmb.ballon.models.ImageStyle
 import com.pmb.ballon.models.Size
 
 @Composable
-fun ReceiptFooterComponent() {
+internal fun ReceiptFooterComponent() {
     Spacer(modifier = Modifier.size(16.dp))
     Row(verticalAlignment = Alignment.CenterVertically) {
         AppImage(

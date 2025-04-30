@@ -21,8 +21,6 @@ import com.pmb.ballon.component.MenuBottomSheet
 import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.component.base.AppTopBar
-import com.pmb.ballon.component.receipt.ReceiptComponent
-import com.pmb.ballon.component.receipt.ReceiptSaveOrShareComponent
 import com.pmb.ballon.component.utils.ComposeToBitmap
 import com.pmb.ballon.models.MenuSheetModel
 import com.pmb.ballon.ui.theme.AppTheme
@@ -33,6 +31,9 @@ import com.pmb.core.utils.shareImage
 import com.pmb.core.utils.shareText
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.moduleScreen.TransferScreens
+import com.pmb.receipt.component.ReceiptComponent
+import com.pmb.receipt.component.ReceiptSaveOrShareComponent
+import com.pmb.receipt.model.mapToRowType
 import com.pmb.transfer.R
 import com.pmb.transfer.domain.entity.TransferReceiptEntity
 import com.pmb.transfer.presentation.components.ReceiptHeaderComponent
@@ -89,7 +90,7 @@ fun TransferReceiptScreen(
                 modifier = Modifier
                     .background(color = AppTheme.colorScheme.background1Neutral)
                     .padding(16.dp),
-                rowTypes = viewState.rowTypes,
+                rowTypes = viewState.rows.map { it.mapToRowType() },
                 headerContent = {
                     ReceiptHeaderComponent(viewState.receipt)
                 })
@@ -118,7 +119,7 @@ fun TransferReceiptScreen(
                         .width(screenWidthDp)
                         .background(color = AppTheme.colorScheme.background1Neutral)
                         .padding(16.dp),
-                    rowTypes = viewState.rowTypes,
+                    rowTypes = viewState.rows.map { it.mapToRowType() },
                     captureMode = true,
                     headerContent = {
                         ReceiptHeaderComponent(viewState.receipt)
@@ -137,7 +138,7 @@ fun TransferReceiptScreen(
                     iconTint = { AppTheme.colorScheme.onBackgroundNeutralCTA },
                     showEndIcon = false,
                     onClicked = {
-                        context.shareText( "textToShare")// TODO:: get receipt text
+                        context.shareText("textToShare")// TODO:: get receipt text
                     }
                 ),
                 MenuSheetModel(
