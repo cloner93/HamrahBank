@@ -473,7 +473,6 @@ fun lightColors() = CustomColors(
     iconBackgroundColor = Color(0x4D00629D),
     isLight = true,
 )
-
 fun darkColors() = CustomColors(
     onForegroundNeutralDefault = Color(0xFF212124),
     onForegroundNeutralDisabled = Color(0xFF71717A),

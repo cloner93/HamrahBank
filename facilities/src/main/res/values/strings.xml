@@ -1,19 +1,31 @@
 <resources>
     <string name="charge_screen_title">شارژ</string>
+    <string name="bill_screen_title">قبض</string>
     <string name="internet_screen_title">اینترنت</string>
     <string name="buy_new_charge">خرید شارژ جدید</string>
+    <string name="purchase_new_bill">پرداخت قبض جدید</string>
     <string name="buy_charge">خرید شارژ</string>
     <string name="purchase_internet">خرید اینترنت</string>
     <string name="choose_charge_price">انتخاب مبلغ شارژ</string>
     <string name="charge_confirm">تایید خرید شارژ</string>
+    <string name="bill_confirm">تایید خرید قبض</string>
     <string name="choose_your_charge">مبلغ شارژ را انتخاب کنید.</string>
     <string name="buying_history">سوابق خرید</string>
+    <string name="purchase_history">سوابق پرداخت</string>
     <string name="charge_history">سوابق خرید شارژ</string>
+    <string name="bills_history">سوابق پرداخت</string>
     <string name="internet_history">سوابق خرید اینترنت</string>
     <string name="charge_receipt">رسید خرید شارژ</string>
     <string name="latest_number">شماره های اخیر</string>
     <string name="save_to_favorite_destination">افزودن به مقاصد منتخب</string>
     <string name="mobile">شماره همراه</string>
+    <string name="bills">قبض ها</string>
     <string name="choose_transaction_operator">در صورت ترابرد اپراتور خود را انتخاب نمایید.</string>
     <string name="choose_sim_type">انتخاب نوع سیم کارت</string>
+    <string name="choose_bill_type">انتخاب نوع قبض</string>
+    <string name="identify_number">شماره شناسه قبض</string>
+    <string name="phone_number_or_mobile">شماره تلفن ثابت یا همراه</string>
+    <string name="customer_name">نام مشترک</string>
+    <string name="address">نشانی</string>
+    <string name="expire_date">مهلت پرداخت</string>
 </resources>

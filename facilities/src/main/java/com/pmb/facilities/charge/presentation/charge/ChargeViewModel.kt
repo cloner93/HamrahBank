@@ -77,7 +77,7 @@ class ChargeViewModel @Inject constructor(
                         setState {
                             it.copy(
                                 isLoading = false,
-                                simCartList = result.data.data
+                                simCardList = result.data.data
                             )
                         }
                     }

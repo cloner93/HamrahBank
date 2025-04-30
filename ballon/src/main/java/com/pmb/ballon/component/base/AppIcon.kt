@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -18,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import com.pmb.ballon.R
 import com.pmb.ballon.models.IconStyle
 import com.pmb.ballon.models.Size
+import com.pmb.ballon.ui.theme.AppTheme
 
 @Composable
 fun AppIcon(modifier: Modifier = Modifier, icon: IconType, style: IconStyle? = null) {
@@ -42,7 +42,7 @@ fun AppIcon(modifier: Modifier = Modifier, @DrawableRes icon: Int, style: IconSt
             Size.DEFAULT -> modifier.size(24.dp)
         }
     } ?: modifier.size(24.dp)
-    val tint = style?.tint ?: LocalContentColor.current
+    val tint = style?.tint ?: AppTheme.colorScheme.onForegroundNeutralDefault
 
     Icon(
         modifier = _modifier,
@@ -61,7 +61,7 @@ fun AppIcon(modifier: Modifier = Modifier, icon: ImageVector, style: IconStyle? 
             Size.DEFAULT -> modifier.size(24.dp)
         }
     } ?: modifier.size(24.dp)
-    val tint = style?.tint ?: LocalContentColor.current
+    val tint = style?.tint ?: AppTheme.colorScheme.onForegroundNeutralDefault
 
     Icon(
         modifier = _modifier,
@@ -84,7 +84,7 @@ fun AppIcon(
             Size.DEFAULT -> modifier.size(24.dp)
         }
     } ?: modifier.size(24.dp)
-    val tint = style?.tint ?: LocalContentColor.current
+    val tint = style?.tint ?: AppTheme.colorScheme.onForegroundNeutralDefault
 
     Icon(
         modifier = iconModifier,
@@ -103,7 +103,7 @@ fun AppIcon(modifier: Modifier = Modifier, icon: ImageBitmap, style: IconStyle? 
             Size.DEFAULT -> modifier.size(24.dp)
         }
     } ?: modifier.size(24.dp)
-    val tint = style?.tint ?: LocalContentColor.current
+    val tint = style?.tint ?: AppTheme.colorScheme.onForegroundNeutralDefault
 
     Icon(
         modifier = _modifier,
@@ -151,7 +151,7 @@ fun AppButtonIcon(
     style: IconStyle? = null,
     onClick: () -> Unit
 ) {
-    val tint = style?.tint ?: LocalContentColor.current
+    val tint = style?.tint ?: AppTheme.colorScheme.onBackgroundNeutralDefault
 
     IconButton(
         onClick = onClick,
@@ -172,7 +172,7 @@ fun AppButtonIcon(
     style: IconStyle? = null,
     onClick: () -> Unit
 ) {
-    val tint = style?.tint ?: LocalContentColor.current
+    val tint = style?.tint ?: AppTheme.colorScheme.onBackgroundNeutralDefault
 
     IconButton(
         onClick = onClick,
@@ -193,7 +193,7 @@ fun AppButtonIcon(
     style: IconStyle? = null,
     onClick: () -> Unit
 ) {
-    val tint = style?.tint ?: LocalContentColor.current
+    val tint = style?.tint ?: AppTheme.colorScheme.onBackgroundNeutralDefault
 
     IconButton(
         onClick = onClick,

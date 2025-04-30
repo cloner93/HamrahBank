@@ -1,5 +1,6 @@
 package com.pmb.home.presentation.home
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,10 +31,12 @@ import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.component.base.Headline5Text
 import com.pmb.ballon.models.ImageStyle
 import com.pmb.ballon.models.Size
+import com.pmb.ballon.ui.theme.AppTheme
+import com.pmb.home.domain.home.entity.HomeItemType
 import com.pmb.home.presentation.home.viewModel.HomeViewModel
 import com.pmb.navigation.manager.LocalNavigationManager
+import com.pmb.navigation.moduleScreen.BillScreens
 import com.pmb.navigation.moduleScreen.ChargeScreens
-import com.pmb.navigation.moduleScreen.HomeScreens
 
 @Composable
 fun HomeScreen(
@@ -72,7 +75,11 @@ fun HomeScreen(
                         }
                     )
                 }
-                Headline5Text(modifier = Modifier.align(Alignment.Center), text = "همراه بانک ملت")
+                Headline5Text(
+                    modifier = Modifier.align(Alignment.Center),
+                    text = "همراه بانک ملت",
+                    color = AppTheme.colorScheme.onBackgroundNeutralDefault
+                )
             }
         }
     ) {
@@ -98,7 +105,22 @@ fun HomeScreen(
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier
-                            .padding(8.dp),
+                            .padding(8.dp)
+                            .clickable {
+                                when (item.type) {
+                                    HomeItemType.CHARGE -> {
+                                        navigationManager.navigate(ChargeScreens.Charge)
+                                    }
+
+                                    HomeItemType.BILL -> {
+                                        navigationManager.navigate(BillScreens.Bill)
+                                    }
+
+                                    else -> {
+
+                                    }
+                                }
+                            },
                         verticalArrangement = Arrangement.Center
                     ) {
                         AppImage(
@@ -108,7 +130,8 @@ fun HomeScreen(
                         BodyMediumText(
                             text = item.title,
                             textAlign = TextAlign.Center,
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth(),
+                            color = AppTheme.colorScheme.onBackgroundNeutralSubdued
                         )
                     }
                 }

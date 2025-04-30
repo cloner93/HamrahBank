@@ -9,6 +9,6 @@ data class ChargeViewState(
     val isLoading: Boolean = false,
     val alertModelState: AlertModelState?=null,
     val selectedSim: String = "",
-    val simCartList: List<ChargeData>? = null,
+    val simCardList: List<ChargeData>? = null,
     val operator: Operator?=null
 ) : BaseViewState

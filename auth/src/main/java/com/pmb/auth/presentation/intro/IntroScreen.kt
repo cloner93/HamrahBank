@@ -27,6 +27,7 @@ import com.pmb.ballon.component.base.AppImage
 import com.pmb.ballon.component.base.AppOutlineButton
 import com.pmb.ballon.models.ImageStyle
 import com.pmb.ballon.models.Size
+import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.manager.NavigationManager
 import com.pmb.navigation.moduleScreen.AuthScreens
@@ -41,20 +42,24 @@ fun IntroScreen(
             .fillMaxSize()
             .background(
                 brush = Brush.linearGradient(
-                    colors = listOf(Color(0xFFFBE7EB), Color.White),
+                    colors = listOf(
+                        AppTheme.colorScheme.background2Primary,
+                        AppTheme.colorScheme.onForegroundNeutralDefault
+                    ),
                     start = Offset(0f, 0f),
                     end = Offset(1000f, 2000f)
                 )
             ),
         contentAlignment = Alignment.Center
     ) {
+        val color = AppTheme.colorScheme.onForegroundNeutralDefault
         Canvas(
             modifier = Modifier
                 .fillMaxSize()
                 .alpha(0.45f)
         ) {
             drawCircle(
-                color = Color.White,
+                color = color ,
                 radius = 418.dp.toPx(),
                 center = Offset(46.dp.toPx() + 418.dp.toPx(), (-256).dp.toPx() + 418.dp.toPx())
             )
