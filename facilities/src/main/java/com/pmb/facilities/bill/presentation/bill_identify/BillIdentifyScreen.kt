@@ -1,6 +1,5 @@
 package com.pmb.facilities.bill.presentation.bill_identify
 
-import android.util.Log
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -16,8 +15,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppContent
+import com.pmb.ballon.component.base.AppMobileTextField
 import com.pmb.ballon.component.base.AppNumberTextField
 import com.pmb.ballon.component.base.AppTopBar
+import com.pmb.core.utils.isMobile
 import com.pmb.facilities.R
 import com.pmb.facilities.bill.domain.bill.entity.BillsType
 import com.pmb.facilities.bill.presentation.BillSharedState
@@ -25,6 +26,7 @@ import com.pmb.facilities.bill.presentation.bill_identify.viewModel.BillIdentify
 import com.pmb.facilities.bill.presentation.bill_identify.viewModel.BillIdentifyViewModel
 import com.pmb.facilities.bill.presentation.bill_identify.viewModel.BillIdentifyViewState
 import com.pmb.facilities.component.PurchaseBillBottomSheet
+import com.pmb.facilities.component.TeleComBillBottomSheet
 import com.pmb.navigation.manager.LocalNavigationManager
 
 @Composable
@@ -36,6 +38,9 @@ fun BillIdentifyScreen(
     val navigationManager = LocalNavigationManager.current
     var identifyNumber by remember {
         mutableStateOf("")
+    }
+    var isMobile by remember {
+        mutableStateOf(false)
     }
     val viewState by viewModel.viewState.collectAsState()
     AppContent(
@@ -56,25 +61,50 @@ fun BillIdentifyScreen(
                         horizontal = 24.dp, vertical = 17.dp
                     ),
                 title = stringResource(com.pmb.ballon.R.string._continue),
-                enable = true,
+                enable = isMobile,
                 onClick = {
-                    viewModel.handle(BillIdentifyViewActions.GetBillData(identifyNumber))
+                    when (sharedState.value.billType?.type) {
+                        BillsType.TELECOMMUNICATION_BILL -> {
+                            viewModel.handle(
+                                BillIdentifyViewActions.GetTeleComBillDataBasedId(
+                                    identifyNumber
+                                )
+                            )
+                        }
+
+                        else -> {
+                            viewModel.handle(BillIdentifyViewActions.GetBillData(identifyNumber))
+                        }
+                    }
                 })
         },
     ) {
-        AppNumberTextField(
-            modifier = Modifier.fillMaxWidth(),
-            value = identifyNumber,
-            label = when (sharedState.value.billType?.type) {
-                BillsType.TELECOMMUNICATION_BILL -> {
-                    stringResource(R.string.phone_number_or_mobile)
-                }
+        when (sharedState.value.billType?.type) {
+            BillsType.TELECOMMUNICATION_BILL -> {
+                AppMobileTextField(
+                    modifier = Modifier.fillMaxWidth(),
+                    value = identifyNumber,
+                    label =
+                        stringResource(R.string.phone_number_or_mobile),
+                    onValidate = {
+                        isMobile = it
+                    },
+                    onValueChange = { identifyNumber = it }
+                )
+            }
 
-                else -> {
-                    stringResource(R.string.identify_number)
-                }
-            },
-            onValueChange = { identifyNumber = it })
+            else -> {
+                AppNumberTextField(
+                    modifier = Modifier.fillMaxWidth(),
+                    value = identifyNumber,
+                    label = stringResource(R.string.identify_number),
+                    onValueChange = {
+                        val result = it.isMobile()
+                        isMobile = !result.isValid
+                        identifyNumber = it
+                    })
+            }
+        }
     }
     if (viewState.bottomSheetVisibility) {
         viewState.billIdEntity?.let {
@@ -85,6 +115,17 @@ fun BillIdentifyScreen(
                 }
             ) {
                 viewModel.handle(BillIdentifyViewActions.SetBottomSheetVisibility)
+            }
+        }
+    }
+    if (viewState.isTeleComBottomSheetVisibility) {
+        viewState.teleCommunicationEntity?.let {
+            TeleComBillBottomSheet(
+                it,
+                onPurchaseClickListener = {
+                    updateState.invoke(viewState.copy())
+                }) {
+                viewModel.handle(BillIdentifyViewActions.SetTeleComBottomSheetVisibility)
             }
         }
     }

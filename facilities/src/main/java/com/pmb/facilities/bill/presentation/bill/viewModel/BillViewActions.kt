@@ -11,4 +11,6 @@ sealed interface BillViewActions : BaseViewAction {
     data class SetBillTypeData(val billType: BillType) : BillViewActions
     data class GetBillDataBasedId(val billId: String) : BillViewActions
     data object SetPurchaseBottomSheetVisibility : BillViewActions
+    data class GetTeleComBillDataBasedId(val billId: String) : BillViewActions
+    data object SetTeleComBottomSheetVisibility : BillViewActions
 }

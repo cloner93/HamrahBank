@@ -5,6 +5,8 @@ import com.pmb.facilities.R
 import com.pmb.facilities.bill.domain.bill_id.entity.BillDetails
 import com.pmb.facilities.bill.domain.bill_id.entity.BillIdEntity
 import com.pmb.facilities.bill.domain.bill_id.entity.BillIdParams
+import com.pmb.facilities.bill.domain.bill_id.entity.TeleCommunicationDetails
+import com.pmb.facilities.bill.domain.bill_id.entity.TeleCommunicationEntity
 import com.pmb.facilities.bill.domain.bill_id.repository.BillIdRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -64,4 +66,32 @@ class BillIdRepositoryImpl @Inject constructor() : BillIdRepository {
             )
         )
     }
+
+    override fun getTeleBillData(params: BillIdParams): Flow<Result<TeleCommunicationEntity>> =
+        flow {
+            emit(Result.Loading)
+            delay(100)
+            emit(
+                Result.Success(
+                    TeleCommunicationEntity(
+                        billImage = R.drawable.ic_mci,
+                        billTitle = "قبض تلفن همراه",
+                        phoneNumber = "۰۹۹۱۱۰۵۱۷۲۵",
+                        teleCommunicationDetails = listOf(
+                            TeleCommunicationDetails(
+                                id = 0,
+                                title = "بدهی میان دوره",
+                                price = 1660000.toDouble()
+                            ),
+                            TeleCommunicationDetails(
+                                id = 1,
+                                title = "بدهی پایان دوره",
+                                price = 1460000.toDouble()
+                            ),
+                        )
+
+                    )
+                )
+            )
+        }
 }

@@ -17,6 +17,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.pmb.ballon.component.AmountText
+import com.pmb.ballon.component.RoundedCornerCheckboxComponent
 import com.pmb.ballon.component.base.AppBottomSheet
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppImage
@@ -34,6 +36,7 @@ import com.pmb.core.utils.toCurrency
 import com.pmb.facilities.R
 import com.pmb.facilities.bill.domain.bill.entity.BillType
 import com.pmb.facilities.bill.domain.bill_id.entity.BillIdEntity
+import com.pmb.facilities.bill.domain.bill_id.entity.TeleCommunicationEntity
 
 @Composable
 fun ChooseSimTypeBottomSheet(
@@ -209,6 +212,86 @@ fun PurchaseBillBottomSheet(
                     )
                 }
             }
+            AppButton(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        horizontal = 24.dp, vertical = 17.dp
+                    ),
+                title = stringResource(com.pmb.ballon.R.string.purchase),
+                enable = true,
+                onClick = {
+                    onPurchaseClickListener()
+                })
+        }
+    }
+}
+
+@Composable
+fun TeleComBillBottomSheet(
+    bottomSheetData: TeleCommunicationEntity,
+    onPurchaseClickListener: () -> Unit,
+    onDismiss: () -> Unit
+) {
+    var isVisible by remember { mutableStateOf(true) }
+    var checkedId by remember { mutableStateOf(-1) }
+    AppBottomSheet(
+        isVisible = isVisible,
+        onDismiss = {
+            onDismiss.invoke()
+        }, cancelable = true
+    ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Spacer(modifier = Modifier.size(32.dp))
+            AppImage(
+                image = bottomSheetData.billImage,
+                style = ImageStyle(size = Size.FIX(44.dp))
+            )
+            Spacer(modifier = Modifier.size(12.dp))
+            BodySmallText(
+                text = bottomSheetData.billTitle,
+                color = AppTheme.colorScheme.onBackgroundNeutralDefault
+            )
+            CaptionText(
+                text = bottomSheetData.phoneNumber,
+                color = AppTheme.colorScheme.onBackgroundNeutralSubdued
+            )
+            Spacer(modifier = Modifier.size(12.dp))
+            Column(modifier = Modifier.fillMaxWidth()) {
+                bottomSheetData.teleCommunicationDetails.forEach { item ->
+                    var isChecked = checkedId == item.id
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 14.dp)
+                    ) {
+                        RoundedCornerCheckboxComponent(
+                            modifier = Modifier.weight(1f),
+                            title = item.title,
+                            isChecked = isChecked
+                        ) {
+                            if (it)
+                                checkedId = item.id
+                            else
+                                checkedId = item.id
+
+                        }
+                        AmountText(
+                            amount = item.price,
+                            currency = stringResource(com.pmb.ballon.R.string.rial),
+                            amountStyle = TextStyle(
+                                color = AppTheme.colorScheme.onBackgroundNeutralDefault,
+                                typography = AppTheme.typography.bodyMedium,
+                            ),
+                            currencyStyle = TextStyle(
+                                color = AppTheme.colorScheme.onBackgroundNeutralSubdued,
+                                typography = AppTheme.typography.caption,
+                            )
+                        )
+                    }
+                }
+            }
+            Spacer(modifier = Modifier.size(32.dp))
             AppButton(
                 modifier = Modifier
                     .fillMaxWidth()

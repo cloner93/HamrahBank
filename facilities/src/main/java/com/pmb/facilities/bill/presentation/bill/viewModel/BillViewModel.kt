@@ -9,6 +9,7 @@ import com.pmb.facilities.bill.domain.bill.entity.BillsType
 import com.pmb.facilities.bill.domain.bill.useCase.GetBillsDataUseCase
 import com.pmb.facilities.bill.domain.bill_id.entity.BillIdParams
 import com.pmb.facilities.bill.domain.bill_id.useCase.GetBillDataBasedIdUseCase
+import com.pmb.facilities.bill.domain.bill_id.useCase.GetTeleComBillDataUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -18,7 +19,8 @@ import javax.inject.Inject
 class BillViewModel @Inject constructor(
     initialState: BillViewState,
     private val getBillsDataUseCase: GetBillsDataUseCase,
-    private val billDataBasedIdUseCase: GetBillDataBasedIdUseCase
+    private val billDataBasedIdUseCase: GetBillDataBasedIdUseCase,
+    private val getTeleComBillDataUseCase: GetTeleComBillDataUseCase
 ) : BaseViewModel<BillViewActions, BillViewState, BillViewEvents>(initialState) {
     private val billsType = listOf<BillType>(
         BillType(
@@ -62,6 +64,68 @@ class BillViewModel @Inject constructor(
 
             is BillViewActions.GetBillDataBasedId -> {
                 handleGetBillData(action)
+            }
+
+            is BillViewActions.GetTeleComBillDataBasedId -> {
+                handleTeleComBillData(action)
+            }
+
+            is BillViewActions.SetTeleComBottomSheetVisibility -> {
+                handleSetTeleComBottomSheetVisibility()
+            }
+        }
+    }
+
+    private fun handleTeleComBillData(phoneNumber: BillViewActions.GetTeleComBillDataBasedId) {
+        viewModelScope.launch {
+            getTeleComBillDataUseCase.invoke(
+                params = BillIdParams(phoneNumber.billId)
+            ).collectLatest { result ->
+                when (result) {
+                    is Result.Error -> {
+                        setState {
+                            it.copy(
+                                isLoading = false,
+                                alertModelState = AlertModelState.Dialog(
+                                    title = "Get data  failed",
+                                    description = "failed to fetch data because ${result.message}",
+                                    positiveButtonTitle = "okay",
+                                    onPositiveClick = {
+                                        setState { state -> state.copy(alertModelState = null) }
+                                    }
+                                )
+                            )
+                        }
+                    }
+
+                    is Result.Success -> {
+                        setState {
+                            it.copy(
+                                isLoading = false,
+                                teleCommunicationEntity = result.data
+                            )
+                        }
+                        handle(BillViewActions.SetTeleComBottomSheetVisibility)
+                    }
+
+                    is Result.Loading -> {
+                        setState {
+                            it.copy(isLoading = true)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+    private fun handleSetTeleComBottomSheetVisibility() {
+
+        viewModelScope.launch {
+            setState {
+                it.copy(
+                    isTeleComBottomSheetVisibility = !it.isTeleComBottomSheetVisibility
+                )
             }
         }
     }

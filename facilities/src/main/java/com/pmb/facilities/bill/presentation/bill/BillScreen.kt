@@ -1,6 +1,5 @@
 package com.pmb.facilities.bill.presentation.bill
 
-import android.util.Log
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -20,15 +19,16 @@ import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.facilities.R
 import com.pmb.facilities.R.drawable
 import com.pmb.facilities.R.string
+import com.pmb.facilities.bill.domain.bill.entity.BillsType
 import com.pmb.facilities.bill.presentation.BillSharedState
 import com.pmb.facilities.bill.presentation.bill.viewModel.BillViewActions
 import com.pmb.facilities.bill.presentation.bill.viewModel.BillViewEvents
 import com.pmb.facilities.bill.presentation.bill.viewModel.BillViewModel
 import com.pmb.facilities.bill.presentation.bill.viewModel.BillViewState
-import com.pmb.facilities.bill.presentation.bill_identify.viewModel.BillIdentifyViewActions
 import com.pmb.facilities.complex_component.HistoryListComponent
 import com.pmb.facilities.component.ChooseBillTypeBottomSheet
 import com.pmb.facilities.component.PurchaseBillBottomSheet
+import com.pmb.facilities.component.TeleComBillBottomSheet
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.moduleScreen.BillScreens
 
@@ -88,7 +88,11 @@ fun BillScreen(
                     navigationManager.navigate(BillScreens.BillsHistory)
                 }
             ) {
-                viewModel.handle(BillViewActions.GetBillDataBasedId(it.subTitle))
+                if (it.type == BillsType.TELECOMMUNICATION_BILL) {
+                    viewModel.handle(BillViewActions.GetTeleComBillDataBasedId(it.subTitle))
+                } else {
+                    viewModel.handle(BillViewActions.GetBillDataBasedId(it.subTitle))
+                }
             }
         }
     }
@@ -120,6 +124,17 @@ fun BillScreen(
                 }
             ) {
                 viewModel.handle(BillViewActions.SetPurchaseBottomSheetVisibility)
+            }
+        }
+    }
+    if (viewState.value.isTeleComBottomSheetVisibility) {
+        viewState.value.teleCommunicationEntity?.let {
+            TeleComBillBottomSheet(
+                it,
+                onPurchaseClickListener = {
+                    updateState.invoke(viewState.value.copy())
+                }) {
+                viewModel.handle(BillViewActions.SetTeleComBottomSheetVisibility)
             }
         }
     }

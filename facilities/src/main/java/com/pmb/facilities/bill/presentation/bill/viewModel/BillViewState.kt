@@ -4,6 +4,7 @@ import com.pmb.core.platform.AlertModelState
 import com.pmb.core.platform.BaseViewState
 import com.pmb.facilities.bill.domain.bill.entity.BillType
 import com.pmb.facilities.bill.domain.bill_id.entity.BillIdEntity
+import com.pmb.facilities.bill.domain.bill_id.entity.TeleCommunicationEntity
 import com.pmb.facilities.charge.domain.charge.entity.ChargeData
 
 data class BillViewState(
@@ -13,5 +14,7 @@ data class BillViewState(
     val billType: BillType? = null,
     val billIdEntity: BillIdEntity? = null,
     val isBottomSheetVisibility: Boolean = false,
-    val isPurchaseBottomSheetVisibility: Boolean = false
+    val isPurchaseBottomSheetVisibility: Boolean = false,
+    val teleCommunicationEntity: TeleCommunicationEntity? = null,
+    val isTeleComBottomSheetVisibility: Boolean = false
 ) : BaseViewState
