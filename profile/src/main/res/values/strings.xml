@@ -32,4 +32,9 @@
     <string name="job">شغل</string>
     <string name="search">جستجو</string>
     <string name="education">تحصیلات</string>
+    <string name="msg_new_version_for_update_title">نسخه جدید همراه بانک ملت منتشر شد</string>
+    <string name="msg_update_to_last_version">همراه بانک خود را به اخرین نسخه به‌روزرسانی کنید.</string>
+    <string name="msg_current_version">نسخه فعلی برنامه %1$s</string>
+    <string name="show_new_changes">مشاهده تغییرات نسخه جدید</string>
+    <string name="latest_version">نسخه‌‌های قبلی</string>
 </resources>

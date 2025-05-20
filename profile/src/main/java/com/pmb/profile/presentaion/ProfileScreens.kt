@@ -28,6 +28,8 @@ import com.pmb.profile.presentaion.personal_infos.select_job.viewmodel.SelectJob
 import com.pmb.profile.presentaion.profile.ProfileScreen
 import com.pmb.profile.presentaion.profile.viewModel.ProfileViewModel
 import com.pmb.profile.presentaion.themeScreen.ThemeScreen
+import com.pmb.profile.presentaion.update.status.UpdateStatusScreen
+import com.pmb.profile.presentaion.update.status.viewmodel.UpdateStatusViewModel
 
 
 fun NavGraphBuilder.profileScreensHandle() {
@@ -169,6 +171,17 @@ fun NavGraphBuilder.profileScreensHandle() {
                 result = {
                     sharedViewModel.updateState { copy(educationEntity = it) }
                 }
+            )
+        }
+    }
+
+    navigation(
+        route = ProfileScreens.Update.Graph.route,
+        startDestination = ProfileScreens.Update.Status.route
+    ) {
+        composable(route = ProfileScreens.PersonalInfo.Info.route) {
+            UpdateStatusScreen(
+                viewModel = hiltViewModel<UpdateStatusViewModel>()
             )
         }
     }
