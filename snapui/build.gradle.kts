@@ -1,14 +1,10 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
-    alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.android.hilt)
-    alias(libs.plugins.kotlin.kapt)
-    id("kotlin-parcelize")
 }
 
 android {
-    namespace = "com.pmb.transfer"
+    namespace = "com.pmb.snapui"
     compileSdk = 34
 
     defaultConfig {
@@ -28,36 +24,15 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_19
-        targetCompatibility = JavaVersion.VERSION_19
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = "19"
-    }
-    buildFeatures {
-        compose = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.15"
-    }
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
+        jvmTarget = "11"
     }
 }
 
 dependencies {
-    implementation(project(":core"))
-    implementation(project(":ballon"))
-    implementation(project(":navigation"))
-    implementation(project(":snapui:receipt"))
-    // DI > Hilt
-    implementation(libs.android.hilt)
-    kapt(libs.android.hilt.compiler)
-    implementation(libs.hilt.navigation.compose)
-
-    api(libs.lifecycle.viewmodel.ktx)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

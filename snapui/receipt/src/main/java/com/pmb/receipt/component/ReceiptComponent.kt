@@ -1,4 +1,4 @@
-package com.pmb.ballon.component.receipt
+package com.pmb.receipt.component
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable

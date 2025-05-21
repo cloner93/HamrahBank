@@ -18,6 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.pmb.ballon.component.MenuItem
+import com.pmb.ballon.component.MenuItemDefaults
 import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.models.IconStyle
 import com.pmb.ballon.models.Size
@@ -63,6 +64,7 @@ fun AccountBanksComponent(
             tint = AppTheme.colorScheme.onBackgroundNeutralDefault, size = Size.FIX(24.dp)
         ),
         titleLayoutDirection = LayoutDirection.Ltr,
+        innerPadding = MenuItemDefaults.innerPadding.copy(start = 16.dp),
         onItemClick = { showBottomSheet = true })
 
     Spacer(modifier = Modifier.size(24.dp))
@@ -83,6 +85,7 @@ fun AccountBanksComponent(
         endIconStyle = IconStyle(
             tint = AppTheme.colorScheme.onBackgroundNeutralDefault, size = Size.FIX(24.dp)
         ),
+        innerPadding = MenuItemDefaults.innerPadding.copy(start = 16.dp),
         onItemClick = {
             selectedTransferReason.invoke(defaultReason)
         })

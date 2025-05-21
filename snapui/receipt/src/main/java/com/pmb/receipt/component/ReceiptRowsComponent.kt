@@ -1,4 +1,4 @@
-package com.pmb.ballon.component.receipt
+package com.pmb.receipt.component
 
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Spacer
@@ -15,7 +15,7 @@ import com.pmb.ballon.models.RowType
 import com.pmb.ballon.ui.theme.AppTheme
 
 @Composable
-fun ColumnScope.ReceiptRowsComponent(
+internal fun ColumnScope.ReceiptRowsComponent(
     rowTypes: List<RowType>,
     captureMode: Boolean = false
 ) {

@@ -1,14 +1,12 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
-    alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.android.hilt)
     alias(libs.plugins.kotlin.kapt)
-    id("kotlin-parcelize")
+    alias(libs.plugins.compose.compiler)
 }
 
 android {
-    namespace = "com.pmb.transfer"
+    namespace = "com.pmb.receipt"
     compileSdk = 34
 
     defaultConfig {
@@ -50,15 +48,6 @@ android {
 dependencies {
     implementation(project(":core"))
     implementation(project(":ballon"))
-    implementation(project(":navigation"))
-    implementation(project(":snapui:receipt"))
-    // DI > Hilt
-    implementation(libs.android.hilt)
-    kapt(libs.android.hilt.compiler)
-    implementation(libs.hilt.navigation.compose)
-
-    api(libs.lifecycle.viewmodel.ktx)
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
