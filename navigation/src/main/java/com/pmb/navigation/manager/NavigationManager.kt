@@ -1,11 +1,11 @@
 package com.pmb.navigation.manager
 
-import android.net.Uri
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptionsBuilder
 import com.pmb.navigation.provider.DefaultStartDestinationProvider
@@ -32,6 +32,17 @@ class NavigationManager(
         navController.navigate(screen.route)
     }
 
+    // todo: test it for BottomNavigationBar
+    fun navigateToBottomNavBarScreens(screen: Screen) {
+        navController.navigate(screen.route) {
+            popUpTo(navController.graph.findStartDestination().id) {
+                saveState = true
+            }
+            launchSingleTop = true
+            restoreState = true
+        }
+    }
+
     fun navigateWithString(destination: String) {
         navController.navigate(destination)
     }
@@ -50,13 +61,6 @@ class NavigationManager(
 
     fun <T> getCurrentScreenFlowData(key: String, value: T): StateFlow<T>? =
         navController.currentBackStackEntry?.savedStateHandle?.getStateFlow(key, value)
-
-    fun <T> getPreviousScreenData(key: String): T? =
-        navController.previousBackStackEntry?.savedStateHandle?.get<T>(key)
-
-    fun <T> setDestinationScreenData(screen: Screen, key: String, value: T) {
-        navController.getBackStackEntry(screen.route).savedStateHandle.set(key, value)
-    }
 
     @Composable
     inline fun <reified T : ViewModel> retrieveSharedViewModel(
@@ -81,11 +85,4 @@ class NavigationManager(
             this.launchSingleTop = launchSingleTop
         }
     }
-
-
-    fun navigateWithDeepLink(deepLink: Uri) {
-        navController.navigate(deepLink.toString())
-    }
-
-    fun currentRoute(): String? = navController.currentDestination?.route
 }

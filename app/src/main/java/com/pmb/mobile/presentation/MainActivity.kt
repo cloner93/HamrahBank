@@ -108,10 +108,21 @@ private fun CheckBottomBar(navController: NavHostController) {
         CompositionLocalProvider(LocalNavigationManager provides navigationManager) {
             AppBottomBar(tabBarItems = bottomNavItems) { selectedItem ->
                 when (selectedItem) {
-                    BottomNavItem.Home -> navigationManager.navigate(HomeScreens.Home)
-                    BottomNavItem.Transfer -> navigationManager.navigate(TransferScreens.TransferGraph)
-                    BottomNavItem.AccountCard -> navigationManager.navigate(AccountScreens.Account)
-                    BottomNavItem.Profile -> navigationManager.navigate(ProfileScreens.Profile)
+                    BottomNavItem.Home -> navigationManager.navigateToBottomNavBarScreens(
+                        HomeScreens.Home
+                    )
+
+                    BottomNavItem.Transfer -> navigationManager.navigateToBottomNavBarScreens(
+                        TransferScreens.TransferGraph
+                    )
+
+                    BottomNavItem.AccountCard -> navigationManager.navigateToBottomNavBarScreens(
+                        AccountScreens.Account
+                    )
+
+                    BottomNavItem.Profile -> navigationManager.navigateToBottomNavBarScreens(
+                        ProfileScreens.Profile
+                    )
                 }
             }
         }

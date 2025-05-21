@@ -49,7 +49,7 @@ val LocalTypography = staticCompositionLocalOf { CustomTypography() }
 fun HamrahBankTheme(
     spaces: CustomSpaces = AppTheme.spaces,
     typography: CustomTypography = AppTheme.typography,
-    themeMode: ThemeMode = ThemeMode.LIGHT,
+    themeMode: ThemeMode = ThemeMode.SYSTEM,
     content: @Composable () -> Unit,
 ) {
     val darkTheme = when (themeMode) {
