@@ -1,6 +1,7 @@
 package com.pmb.ballon.component
 
 import androidx.annotation.DrawableRes
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -170,15 +171,19 @@ fun MenuItem(
 @Composable
 private fun MenuItemTitlePreview() {
     HamrahBankTheme {
-        MenuItem(
-            title = "تست منو",
-            startIcon = R.drawable.ic_pin,
-            endIcon = R.drawable.ic_arrow_left,
-            startIconStyle = IconStyle(tint = AppTheme.colorScheme.onBackgroundNeutralCTA),
-            endIconStyle = IconStyle(tint = AppTheme.colorScheme.foregroundNeutralRest),
-            clickable = true,
-            onItemClick = { }
-        )
-    }
+        Row(
+            modifier = Modifier.background(color = AppTheme.colorScheme.background1Neutral)
+        ) {
+            MenuItem(
+                title = "تست منو",
+                startIcon = R.drawable.ic_pin,
+                endIcon = R.drawable.ic_arrow_left,
+                startIconStyle = IconStyle(tint = AppTheme.colorScheme.onBackgroundNeutralCTA),
+                endIconStyle = IconStyle(tint = AppTheme.colorScheme.foregroundNeutralRest),
+                clickable = true,
+                onItemClick = { }
+            )
+        }
 
+    }
 }
