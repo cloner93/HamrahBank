@@ -24,7 +24,6 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.MenuItem
 import com.pmb.ballon.component.TextImage
@@ -128,7 +127,7 @@ fun ProfileScreen(viewModel : ProfileViewModel) {
                     endIconStyle = IconStyle(tint = AppTheme.colorScheme.foregroundNeutralRest),
                     clickable = true,
                     onItemClick = {
-
+                        navigationManager.navigate(ProfileScreens.PrivacyAndSecurity.Graph)
                     })
 
                 MenuItem(

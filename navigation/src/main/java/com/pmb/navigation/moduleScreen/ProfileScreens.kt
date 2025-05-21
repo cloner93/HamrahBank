@@ -5,6 +5,7 @@ import com.pmb.navigation.screen.Screen
 sealed class ProfileScreens(route: String, arguments: Map<String, String> = emptyMap()) :
     Screen(baseRoute = route, arguments = arguments) {
     data object Profile : ProfileScreens(route = "profile")
+
     data object ThemeScreen : ProfileScreens(route = "themeScreen")
 
     sealed class PersonalInfo(route: String) : ProfileScreens(route) {
@@ -20,6 +21,14 @@ sealed class ProfileScreens(route: String, arguments: Map<String, String> = empt
         data object ChangeEducation : PersonalInfo(route = "profile_change_education")
     }
 
+    sealed class PrivacyAndSecurity(route: String) : ProfileScreens(route) {
+        data object Graph : PrivacyAndSecurity(route = "profile_privacy_and_security_graph")
+
+        data object PrivacySecurityScreen : PrivacyAndSecurity(route = "profile_privacy_security")
+        data object ChangePasswordScreen : PrivacyAndSecurity(route = "profile_change_password")
+        data object UserAuthenticationScreen :
+            PrivacyAndSecurity(route = "profile_user_authentication")
+    }
 
     companion object {
         fun fromRoute(route: String?): ProfileScreens? = when (route) {

@@ -25,6 +25,8 @@ import com.pmb.profile.presentaion.personal_infos.personal_info.PersonalInfoScre
 import com.pmb.profile.presentaion.personal_infos.personal_info.viewmodel.PersonalInfoViewModel
 import com.pmb.profile.presentaion.personal_infos.select_job.SelectJobScreen
 import com.pmb.profile.presentaion.personal_infos.select_job.viewmodel.SelectJobViewModel
+import com.pmb.profile.presentaion.privacyAndSecurity.ChangePasswordScreen
+import com.pmb.profile.presentaion.privacyAndSecurity.PrivacySecurityScreen
 import com.pmb.profile.presentaion.profile.ProfileScreen
 import com.pmb.profile.presentaion.profile.viewModel.ProfileViewModel
 import com.pmb.profile.presentaion.themeScreen.ThemeScreen
@@ -171,5 +173,18 @@ fun NavGraphBuilder.profileScreensHandle() {
                 }
             )
         }
+    }
+
+    navigation(
+        route = ProfileScreens.PrivacyAndSecurity.Graph.route,
+        startDestination = ProfileScreens.PrivacyAndSecurity.PrivacySecurityScreen.route
+    ) {
+        composable(route = ProfileScreens.PrivacyAndSecurity.PrivacySecurityScreen.route) {
+            PrivacySecurityScreen()
+        }
+        composable(route = ProfileScreens.PrivacyAndSecurity.ChangePasswordScreen.route) {
+            ChangePasswordScreen()
+        }
+        composable(route = ProfileScreens.PrivacyAndSecurity.UserAuthenticationScreen.route) {}
     }
 }
