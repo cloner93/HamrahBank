@@ -6,6 +6,7 @@ import com.pmb.profile.domain.entity.EducationEntity
 import com.pmb.profile.domain.entity.JobEntity
 import com.pmb.profile.domain.entity.OtpEntity
 import com.pmb.profile.domain.entity.PersonalInfoEntity
+import com.pmb.profile.domain.entity.VersionEntity
 import com.pmb.profile.domain.use_case.PersonalInfoUseCase
 import kotlinx.coroutines.flow.Flow
 
@@ -34,4 +35,7 @@ interface ProfileRepository {
     suspend fun updateJob(id: Long, title: String): Flow<Result<JobEntity>>
     suspend fun fetchEducations(): Flow<Result<List<EducationEntity>>>
     suspend fun updateEducation(id: Long, title: String): Flow<Result<EducationEntity>>
+    suspend fun checkUpdate(): Flow<Result<VersionEntity>>
+    suspend fun updateVersion(): Flow<Result<VersionEntity>>
+    suspend fun fetchVersions(): Flow<Result<List<VersionEntity>>>
 }

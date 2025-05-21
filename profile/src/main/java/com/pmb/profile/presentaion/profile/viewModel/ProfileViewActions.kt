@@ -6,4 +6,5 @@ sealed interface ProfileViewActions : BaseViewAction {
     data object ClearAlert : ProfileViewActions
     data object LogoutAccount : ProfileViewActions
     object NavigateToThemeScreen : ProfileViewActions
+    object NavigateToUpdate : ProfileViewActions
 }
