@@ -55,7 +55,7 @@ object MenuItemColors {
             disabledContentColor = Color.Transparent
         ),
         borderColor: ObjectColors = ObjectColors(
-            contentColor = AppTheme.colorScheme.onBackgroundNeutralSubdued,
+            contentColor = AppTheme.colorScheme.strokeNeutral1Default,
             errorContentColor = AppTheme.colorScheme.onBackgroundNeutralCTA,
             disabledContentColor = AppTheme.colorScheme.strokeNeutral3Rest
         )

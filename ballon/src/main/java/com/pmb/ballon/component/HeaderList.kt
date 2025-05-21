@@ -13,31 +13,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.pmb.ballon.component.base.AppButtonIcon
 import com.pmb.ballon.component.base.AppIcon
-import com.pmb.ballon.component.base.AppTextButton
 import com.pmb.ballon.component.base.Headline6Text
 import com.pmb.ballon.component.base.IconType
-import com.pmb.ballon.models.AppButton
 import com.pmb.ballon.models.IconStyle
+import com.pmb.ballon.ui.theme.AppTheme
 
-@Composable
-fun HeaderList(title: String, buttonText: String, onClick: () -> Unit) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Headline6Text(
-            modifier = Modifier.padding(16.dp),
-            text = title
-        )
-        AppTextButton(
-            modifier = Modifier.padding(4.dp),
-            title = buttonText,
-            colors = AppButton.textButtonBlueColors(),
-            onClick = onClick
-        )
-    }
-}
 
 @Composable
 fun HeaderList(
@@ -54,6 +34,7 @@ fun HeaderList(
     ) {
         Headline6Text(
             modifier = Modifier.padding(16.dp),
+            color = AppTheme.colorScheme.onBackgroundNeutralSubdued,
             text = title
         )
 
@@ -64,20 +45,5 @@ fun HeaderList(
                 .minimumInteractiveComponentSize()
                 .padding(8.dp)
         ) { AppIcon(icon = iconType, style = IconStyle(tint = tint)) }
-    }
-}
-
-
-@Composable
-fun Header(title: String) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Headline6Text(
-            modifier = Modifier.padding(16.dp),
-            text = title
-        )
     }
 }

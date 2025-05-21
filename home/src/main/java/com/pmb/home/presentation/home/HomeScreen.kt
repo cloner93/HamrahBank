@@ -51,7 +51,6 @@ fun HomeScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp)
                     .height(64.dp),
             ) {
                 AppButtonIcon(

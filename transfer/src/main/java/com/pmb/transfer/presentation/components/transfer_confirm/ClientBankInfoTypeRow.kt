@@ -36,12 +36,12 @@ fun ClientBankInfoTypeRow(
     enable: Boolean = true,
     background: Color = Color.Unspecified,
     titleStyle: TextStyle = TextStyle(
-        color = Color(0xFF42474E),
+        color = AppTheme.colorScheme.foregroundNeutralDefault,
         typography = AppTheme.typography.bodyMedium,
         textAlign = TextAlign.Start
     ),
     subtitleStyle: TextStyle = TextStyle(
-        color = Color(0xFF42474E),
+        color = AppTheme.colorScheme.onBackgroundNeutralSubdued,
         typography = AppTheme.typography.caption,
         textAlign = TextAlign.Start
     ),

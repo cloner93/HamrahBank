@@ -41,7 +41,10 @@ fun MenuBottomSheet(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 title?.let {
-                    Headline6Text(text = it)
+                    Headline6Text(
+                        text = it,
+                        color = AppTheme.colorScheme.onBackgroundNeutralSubdued
+                    )
                     Spacer(modifier = Modifier.height(32.dp))
                 }
                 LazyColumn {

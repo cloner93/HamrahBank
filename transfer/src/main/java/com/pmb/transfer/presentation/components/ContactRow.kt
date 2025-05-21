@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.pmb.ballon.component.base.CaptionText
+import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.transfer.domain.entity.TransactionClientBankEntity
 import com.pmb.transfer.utils.BankUtil
 
@@ -26,6 +27,9 @@ fun ContactRow(item: TransactionClientBankEntity, onClick: (TransactionClientBan
             icon = BankUtil.getLogo(item.clientBankEntity.cardNumber),
         )
         Spacer(modifier = Modifier.height(6.dp))
-        CaptionText(text = item.clientBankEntity.name)
+        CaptionText(
+            text = item.clientBankEntity.name,
+            color = AppTheme.colorScheme.onBackgroundNeutralDefault
+        )
     }
 }

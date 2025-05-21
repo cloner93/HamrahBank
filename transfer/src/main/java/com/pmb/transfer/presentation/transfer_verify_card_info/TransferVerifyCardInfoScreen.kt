@@ -24,6 +24,7 @@ import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.component.base.AppNumberTextField
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.ButtonMediumText
+import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.moduleScreen.TransferScreens
 import com.pmb.transfer.R
@@ -91,7 +92,10 @@ fun TransferVerifyCardInfoScreen(
                 Spacer(modifier = Modifier.size(24.dp))
                 viewState.cardBank?.let {
                     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
-                        ButtonMediumText(text = it.cardNumberFormated)
+                        ButtonMediumText(
+                            text = it.cardNumberFormated,
+                            color = AppTheme.colorScheme.onBackgroundNeutralSubdued
+                        )
                     }
                 }
                 Spacer(modifier = Modifier.size(32.dp))

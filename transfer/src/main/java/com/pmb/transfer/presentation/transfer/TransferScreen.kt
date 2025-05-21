@@ -1,9 +1,9 @@
 package com.pmb.transfer.presentation.transfer
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.EmptyList
 import com.pmb.ballon.component.ExtendFAB
@@ -61,30 +62,31 @@ fun TransferScreen(
     }
 
     AppContent(
+        modifier = Modifier
+            .fillMaxSize(),
         scrollState = null,
+        backgroundColor = AppTheme.colorScheme.onForegroundNeutralDefault,
+        topBar = {
+            AppTopBar(
+                title = stringResource(R.string.fund_transfer),
+                startIcon = ClickableIcon(
+                    icon = IconType.Painter(painterResource(com.pmb.ballon.R.drawable.ic_question_circle)),
+                    onClick = {
+
+                    }),
+                endIcon = ClickableIcon(
+                    icon = IconType.Painter(painterResource(com.pmb.ballon.R.drawable.ic_search)),
+                    onClick = {
+                        navigationManager.navigate(TransferScreens.TransferDestinationSearch)
+                    })
+            )
+        }
     ) {
         Box(
+            modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.BottomCenter
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(color = AppTheme.colorScheme.onForegroundNeutralDefault)
-            ) {
-                AppTopBar(
-                    title = stringResource(R.string.fund_transfer),
-                    startIcon = ClickableIcon(
-                        icon = IconType.Painter(painterResource(com.pmb.ballon.R.drawable.ic_question_circle)),
-                        onClick = {
-
-                        }),
-                    endIcon = ClickableIcon(
-                        icon = IconType.Painter(painterResource(com.pmb.ballon.R.drawable.ic_search)),
-                        onClick = {
-                            navigationManager.navigate(TransferScreens.TransferDestinationSearch)
-                        })
-                )
-
+            Column {
                 if (!viewState.loading) {
                     if (viewState.accounts.isEmpty() && viewState.favoriteAccounts.isEmpty()) {
                         EmptyList(
@@ -116,6 +118,7 @@ fun TransferScreen(
             }
 
             ExtendFAB(
+                modifier = Modifier.padding(16.dp),
                 extended = lazyListState.isScrollingUp(),
                 text = stringResource(R.string.new_transfer),
                 icon = IconType.ImageVector(imageVector = Icons.Default.Add),

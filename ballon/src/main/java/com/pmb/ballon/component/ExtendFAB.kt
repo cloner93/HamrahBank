@@ -14,6 +14,7 @@ import com.pmb.ballon.ui.theme.AppTheme
 
 @Composable
 fun ExtendFAB(
+    modifier: Modifier = Modifier,
     extended: Boolean,
     text: String,
     icon: IconType,
@@ -23,7 +24,7 @@ fun ExtendFAB(
     // how it should animate.
     AnimatedVisibility(visible = extended) {
         ExtendedFloatingActionButton(
-            modifier = Modifier.padding(16.dp),
+            modifier = modifier,
             contentColor = AppTheme.colorScheme.onForegroundNeutralDefault,
             containerColor = AppTheme.colorScheme.foregroundNeutralDefault,
             onClick = onClick

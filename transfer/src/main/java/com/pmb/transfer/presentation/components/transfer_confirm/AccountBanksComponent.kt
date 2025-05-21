@@ -39,7 +39,10 @@ fun AccountBanksComponent(
 ) {
     var showBottomSheet by remember { mutableStateOf(false) }
 
-    BodyMediumText(text = stringResource(R.string.withdraw_from_account))
+    BodyMediumText(
+        text = stringResource(R.string.withdraw_from_account),
+        color = AppTheme.colorScheme.onBackgroundNeutralSubdued
+    )
     Spacer(modifier = Modifier.size(8.dp))
     MenuItem(
         modifier = Modifier
@@ -60,11 +63,11 @@ fun AccountBanksComponent(
             color = AppTheme.colorScheme.onBackgroundNeutralDefault,
             typography = AppTheme.typography.caption
         ),
+        innerPadding = MenuItemDefaults.innerPadding.copy(start = 16.dp),
         endIconStyle = IconStyle(
             tint = AppTheme.colorScheme.onBackgroundNeutralDefault, size = Size.FIX(24.dp)
         ),
         titleLayoutDirection = LayoutDirection.Ltr,
-        innerPadding = MenuItemDefaults.innerPadding.copy(start = 16.dp),
         onItemClick = { showBottomSheet = true })
 
     Spacer(modifier = Modifier.size(24.dp))
@@ -82,10 +85,10 @@ fun AccountBanksComponent(
             color = AppTheme.colorScheme.foregroundNeutralDefault,
             typography = AppTheme.typography.bodyMedium
         ),
+        innerPadding = MenuItemDefaults.innerPadding.copy(start = 16.dp),
         endIconStyle = IconStyle(
             tint = AppTheme.colorScheme.onBackgroundNeutralDefault, size = Size.FIX(24.dp)
         ),
-        innerPadding = MenuItemDefaults.innerPadding.copy(start = 16.dp),
         onItemClick = {
             selectedTransferReason.invoke(defaultReason)
         })

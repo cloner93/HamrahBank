@@ -80,7 +80,7 @@ fun UpdateStatusScreen(viewModel: UpdateStatusViewModel, result: (VersionEntity)
         if (!viewState.loading)
             viewState.versionEntity?.let {
                 TextImage(
-                    image = IconType.Painter(painterResource(com.pmb.ballon.R.drawable.profile)),
+                    image = IconType.Painter(painterResource(if (it.updated) R.drawable.img_success else com.pmb.ballon.R.drawable.profile)),
                     text = stringResource(if (it.updated) R.string.msg_new_version_updated_title else R.string.msg_new_version_for_update_title),
                     textStyle = TextStyle(
                         color = AppTheme.colorScheme.onBackgroundNeutralDefault,

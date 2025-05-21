@@ -242,14 +242,10 @@ fun ProfileScreen(viewModel: ProfileViewModel) {
             }
         }
 
-
+        Spacer(modifier = Modifier.height(24.dp))
     }
-    if (viewState.loading) {
-        AppLoading()
-    }
-    if (viewState.alertModelState != null) {
-        AlertComponent(viewState.alertModelState!!)
-    }
+    if (viewState.loading) AppLoading()
+    viewState.alertModelState?.let { AlertComponent(it) }
 }
 
 @AppPreview

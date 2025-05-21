@@ -48,6 +48,7 @@ dependencies {
     implementation(project(":core"))
     implementation(project(":ballon"))
     implementation(project(":navigation"))
+    implementation(project(":snapui:receipt"))
     // DI > Hilt
     implementation(libs.android.hilt)
     kapt(libs.android.hilt.compiler)

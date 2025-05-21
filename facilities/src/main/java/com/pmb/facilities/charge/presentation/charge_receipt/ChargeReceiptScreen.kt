@@ -23,8 +23,6 @@ import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.ClickableIcon
 import com.pmb.ballon.component.base.IconType
-import com.pmb.ballon.component.receipt.ReceiptComponent
-import com.pmb.ballon.component.receipt.ReceiptSaveOrShareComponent
 import com.pmb.ballon.models.MenuSheetModel
 import com.pmb.ballon.models.RowType
 import com.pmb.ballon.models.TextStyle
@@ -36,6 +34,8 @@ import com.pmb.core.utils.shareText
 import com.pmb.core.utils.toCurrency
 import com.pmb.facilities.R
 import com.pmb.facilities.component.ChargeReceiptHeader
+import com.pmb.receipt.component.ReceiptComponent
+import com.pmb.receipt.component.ReceiptSaveOrShareComponent
 import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable

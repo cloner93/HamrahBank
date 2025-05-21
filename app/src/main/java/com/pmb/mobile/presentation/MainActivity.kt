@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -15,6 +16,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -25,7 +27,6 @@ import com.pmb.ballon.component.base.AppBottomBar
 import com.pmb.ballon.component.base.BottomNavItem
 import com.pmb.ballon.component.base.bottomNavItems
 import com.pmb.ballon.ui.theme.HamrahBankTheme
-import com.pmb.facilities.charge.presentation.chargeGraphHandler
 import com.pmb.home.presentation.homeScreensHandle
 import com.pmb.mobile.presentation.viewmodel.MainActivityViewModel
 import com.pmb.navigation.manager.LocalNavigationManager
@@ -44,8 +45,7 @@ class MainActivity : ComponentActivity() {
     private val viewModel: MainActivityViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        enableEdgeToEdge()
-
+//        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         setContent {
 
@@ -72,8 +72,11 @@ fun AppNavHost(navController: NavHostController, innerPadding: PaddingValues) {
         )
     }
 
+    var innerBottomPadding = innerPadding.calculateBottomPadding()
+//    if (innerBottomPadding != 0.dp) innerBottomPadding -= 16.dp
     CompositionLocalProvider(LocalNavigationManager provides navigationManager) {
         NavHost(
+            modifier = Modifier.padding(bottom = innerBottomPadding),
             navController = navigationManager.navController,
             startDestination = navigationManager.getStartDestination().route,
         ) {

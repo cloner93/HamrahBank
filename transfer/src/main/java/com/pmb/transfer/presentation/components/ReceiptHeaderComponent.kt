@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.pmb.ballon.component.base.ButtonSmallText
+import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.transfer.domain.entity.ReceiptStatus
 import com.pmb.transfer.domain.entity.TransferReceiptEntity
 
@@ -17,6 +18,9 @@ fun ReceiptHeaderComponent(receipt: TransferReceiptEntity?) {
     ReceiptStatusBadge(receipt?.status ?: ReceiptStatus.UNKNOWN)
     receipt?.message?.let {
         Spacer(modifier = Modifier.size(12.dp))
-        ButtonSmallText(text = it)
+        ButtonSmallText(
+            text = it,
+            color = AppTheme.colorScheme.onBackgroundNeutralSubdued
+        )
     }
 }

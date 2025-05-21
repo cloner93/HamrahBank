@@ -35,7 +35,7 @@ fun AppContent(
         modifier = wrapperModifier
             .fillMaxSize()
             .background(backgroundColor)
-            .padding(top = 30.dp, bottom = 20.dp),
+            .then(if (footer != null) Modifier.padding(bottom = 16.dp) else Modifier),
     ) {
         topBar?.invoke(this)
         Column(

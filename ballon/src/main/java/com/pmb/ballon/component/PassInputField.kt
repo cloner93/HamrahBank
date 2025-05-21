@@ -31,7 +31,7 @@ fun DynamicPassCardInputField(
         label = stringResource(R.string.second_pass),
         trailingIcon = {
             AppButton(
-                modifier = Modifier.padding(horizontal = 8.dp),
+                modifier = Modifier.padding(all = 8.dp),
                 enable = retryEnabled,
                 title = if (!retryEnabled) String.format(
                     "%02d:%02d",

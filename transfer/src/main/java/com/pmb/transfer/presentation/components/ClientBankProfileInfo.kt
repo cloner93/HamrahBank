@@ -40,7 +40,7 @@ fun ClientBankProfileInfo(
         Spacer(modifier = Modifier.size(12.dp))
         Headline6Text(
             text = item.clientBankEntity.name,
-            color = AppTheme.colorScheme.onBackgroundNeutralDefault
+            color = AppTheme.colorScheme.foregroundNeutralDefault
         )
         Spacer(modifier = Modifier.size(4.dp))
         CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {

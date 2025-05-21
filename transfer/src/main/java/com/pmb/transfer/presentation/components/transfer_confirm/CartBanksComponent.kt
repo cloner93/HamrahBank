@@ -36,7 +36,10 @@ fun CartBanksComponent(
 ) {
     var showCardsBottomSheet by remember { mutableStateOf(false) }
 
-    BodyMediumText(text = stringResource(R.string.withdraw_from_card))
+    BodyMediumText(
+        text = stringResource(R.string.withdraw_from_card),
+        color = AppTheme.colorScheme.onBackgroundNeutralSubdued,
+    )
     Spacer(modifier = Modifier.size(8.dp))
     MenuItem(
         modifier = Modifier
@@ -60,6 +63,7 @@ fun CartBanksComponent(
         endIconStyle = IconStyle(
             tint = AppTheme.colorScheme.onBackgroundNeutralDefault, size = Size.FIX(24.dp)
         ),
+        innerPadding = MenuItemDefaults.innerPadding.copy(start = 16.dp),
         titleLayoutDirection = LayoutDirection.Ltr,
         onItemClick = { showCardsBottomSheet = true })
 
