@@ -19,9 +19,8 @@ class ProfileViewModel @Inject constructor(
         when (action) {
             ProfileViewActions.ClearAlert -> setState { it.copy(loading = false) }
             ProfileViewActions.LogoutAccount -> handleLogoutAccount()
-            ProfileViewActions.NavigateToThemeScreen -> {
-                postEvent(ProfileViewEvents.NavigateToThemeScreen)
-            }
+            ProfileViewActions.NavigateToThemeScreen -> postEvent(ProfileViewEvents.NavigateToThemeScreen)
+            ProfileViewActions.NavigateToUpdate -> postEvent(ProfileViewEvents.NavigateToUpdate)
         }
     }
 
