@@ -124,27 +124,13 @@ class ProfileRepositoryImpl @Inject constructor() : ProfileRepository {
     override suspend fun checkUpdate(): Flow<Result<VersionEntity>> = flow {
         emit(Result.Loading)
         delay(2000)
-        emit(
-            Result.Success(
-                VersionEntity(
-                    version = "1.0.0",
-                    updated = false
-                )
-            )
-        )
+        emit(Result.Success(mockVersionEntities[1].copy(updated = false)))
     }
 
     override suspend fun updateVersion(): Flow<Result<VersionEntity>> = flow {
         emit(Result.Loading)
         delay(2000)
-        emit(
-            Result.Success(
-                VersionEntity(
-                    version = "1.0.1",
-                    updated = true
-                )
-            )
-        )
+        emit(Result.Success(mockVersionEntities.first()))
     }
 
     override suspend fun fetchVersions(): Flow<Result<List<VersionEntity>>> = flow {

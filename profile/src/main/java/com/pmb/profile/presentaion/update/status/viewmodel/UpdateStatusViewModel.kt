@@ -25,6 +25,10 @@ class UpdateStatusViewModel @Inject constructor(
         when (action) {
             UpdateStatusViewActions.ClearAlert -> setState { it.copy(alert = null) }
             UpdateStatusViewActions.UpdateClicked -> handleUpdateVersionClicked()
+            UpdateStatusViewActions.LatestVersion -> postEvent(UpdateStatusViewEvents.NavigateToUpdateHistory)
+            UpdateStatusViewActions.ShowNewChanges -> viewState.value.versionEntity?.let {
+                postEvent(UpdateStatusViewEvents.NavigateToDetail(it))
+            }
         }
     }
 
@@ -55,8 +59,7 @@ class UpdateStatusViewModel @Inject constructor(
                     is Result.Success -> {
                         setState {
                             it.copy(
-                                loading = false,
-                                versionEntity = result.data
+                                loading = false, versionEntity = result.data
                             )
                         }
                     }
@@ -93,8 +96,7 @@ class UpdateStatusViewModel @Inject constructor(
                     is Result.Success -> {
                         setState {
                             it.copy(
-                                loading = false,
-                                versionEntity = result.data
+                                loading = false, versionEntity = result.data
                             )
                         }
                     }

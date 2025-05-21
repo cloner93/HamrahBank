@@ -5,15 +5,18 @@ import com.pmb.core.platform.AlertModelState
 import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.platform.Result
 import com.pmb.profile.domain.entity.VersionEntity
+import com.pmb.profile.domain.use_case.FetchVersionsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class LatestVersionsViewModel @Inject constructor() :
-    BaseViewModel<LatestVersionsViewActions, LatestVersionsViewState, LatestVersionsViewEvents>(
-        LatestVersionsViewState()
-    ) {
+class LatestVersionsViewModel @Inject constructor(
+    private val fetchVersionUseCase: FetchVersionsUseCase,
+) : BaseViewModel<LatestVersionsViewActions, LatestVersionsViewState, LatestVersionsViewEvents>(
+    LatestVersionsViewState()
+) {
+
     init {
         fetchLatestVersions()
     }
@@ -34,13 +37,13 @@ class LatestVersionsViewModel @Inject constructor() :
 
     private fun fetchLatestVersions() {
         viewModelScope.launch {
-            checkUpdateUseCase.invoke(Unit).collect { result ->
+            fetchVersionUseCase.invoke(Unit).collect { result ->
                 when (result) {
-                    is com.pmb.core.platform.Result.Error -> {
+                    is Result.Error -> {
                         setState {
                             it.copy(
                                 loading = false,
-                                alert = AlertModelState.SnackBar(
+                                alertState = AlertModelState.SnackBar(
                                     message = result.message,
                                     onActionPerformed = {
                                         setState { it.copy(loading = false) }
@@ -52,7 +55,7 @@ class LatestVersionsViewModel @Inject constructor() :
                         }
                     }
 
-                    com.pmb.core.platform.Result.Loading -> {
+                    Result.Loading -> {
                         setState { it.copy(loading = true) }
                     }
 
@@ -60,7 +63,7 @@ class LatestVersionsViewModel @Inject constructor() :
                         setState {
                             it.copy(
                                 loading = false,
-                                versionEntity = result.data
+                                versionEntities = result.data
                             )
                         }
                     }

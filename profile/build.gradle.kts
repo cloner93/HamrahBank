@@ -48,6 +48,7 @@ dependencies {
     implementation(project(":core"))
     implementation(project(":ballon"))
     implementation(project(":navigation"))
+    implementation(project(":calender"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
