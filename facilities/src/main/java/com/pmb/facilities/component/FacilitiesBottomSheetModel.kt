@@ -72,7 +72,8 @@ fun ChooseSimTypeBottomSheet(
                             .clickable { onItemClickListener(item) }
                             .padding(vertical = 12.dp, horizontal = 12.dp),
                         text = item,
-                        textAlign = TextAlign.Right
+                        textAlign = TextAlign.Right,
+                        color = AppTheme.colorScheme.onBackgroundNeutralDefault
                     )
                     Spacer(modifier = Modifier.size(8.dp))
                 }

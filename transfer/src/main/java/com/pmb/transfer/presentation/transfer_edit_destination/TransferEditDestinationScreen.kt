@@ -1,6 +1,5 @@
 package com.pmb.transfer.presentation.transfer_edit_destination
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -13,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.pmb.ballon.component.AlertComponent
+import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.ClickableIcon
@@ -50,34 +50,39 @@ fun TransferEditDestinationScreen(
         }
     }
 
-    Column(modifier = Modifier.fillMaxSize()) {
-        AppTopBar(
-            title = stringResource(R.string.edit_recent_destinations),
-            startIcon = ClickableIcon(
-                icon = IconType.ImageVector(Icons.Default.Close),
-                onClick = { navigationManager.navigateBack() })
-        )
 
-        LazyColumn(modifier = Modifier.fillMaxSize()) {
-            items(viewState.transactionClientBanks.size) { index ->
-                val item = viewState.transactionClientBanks[index]
-                ClientBankInfoTypeRow(
-                    info = item,
-                    endIcon = ClickableIcon(
-                        icon = IconType.Painter(painterResource(if (item.favorite) com.pmb.ballon.R.drawable.ic_pin_filled else com.pmb.ballon.R.drawable.ic_pin)),
-                        tint = if (item.favorite) AppTheme.colorScheme.onBackgroundNeutralCTA else AppTheme.colorScheme.onBackgroundNeutralSubdued,
-                        onClick = {
-                            viewModel.handle(
-                                TransferEditDestinationViewActions.ChangeFavoriteStatus(
-                                    newStatus = !item.favorite,
-                                    item = item
+    AppContent(
+        topBar = {
+            AppTopBar(
+                title = stringResource(R.string.edit_recent_destinations),
+                startIcon = ClickableIcon(
+                    icon = IconType.ImageVector(Icons.Default.Close),
+                    onClick = { navigationManager.navigateBack() })
+            )
+        },
+        scrollState = null,
+        content = {
+            LazyColumn(modifier = Modifier.fillMaxSize()) {
+                items(viewState.transactionClientBanks.size) { index ->
+                    val item = viewState.transactionClientBanks[index]
+                    ClientBankInfoTypeRow(
+                        info = item,
+                        endIcon = ClickableIcon(
+                            icon = IconType.Painter(painterResource(if (item.favorite) com.pmb.ballon.R.drawable.ic_pin_filled else com.pmb.ballon.R.drawable.ic_pin)),
+                            tint = if (item.favorite) AppTheme.colorScheme.onBackgroundNeutralCTA else AppTheme.colorScheme.onBackgroundNeutralSubdued,
+                            onClick = {
+                                viewModel.handle(
+                                    TransferEditDestinationViewActions.ChangeFavoriteStatus(
+                                        newStatus = !item.favorite,
+                                        item = item
+                                    )
                                 )
-                            )
-                        }),
-                )
+                            }),
+                    )
+                }
             }
         }
-    }
+    )
 
     if (viewState.loading) AppLoading()
     viewState.alertState?.let { AlertComponent(it) }

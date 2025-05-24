@@ -10,6 +10,7 @@ import androidx.compose.ui.unit.dp
 import com.pmb.ballon.component.base.AppIcon
 import com.pmb.ballon.component.base.ButtonMediumText
 import com.pmb.ballon.component.base.IconType
+import com.pmb.ballon.models.IconStyle
 import com.pmb.ballon.ui.theme.AppTheme
 
 @Composable
@@ -30,10 +31,14 @@ fun ExtendFAB(
             onClick = onClick
         ) {
             Row {
-                AppIcon(icon = icon)
+                AppIcon(
+                    icon = icon,
+                    style = IconStyle(tint = AppTheme.colorScheme.onForegroundNeutralDefault)
+                )
                 // Toggle the visibility of the content with animation.
                 ButtonMediumText(
                     modifier = Modifier.padding(start = 8.dp, top = 2.dp),
+                    color = AppTheme.colorScheme.onForegroundNeutralDefault,
                     text = text
                 )
             }

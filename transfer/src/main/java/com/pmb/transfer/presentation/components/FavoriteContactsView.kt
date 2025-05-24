@@ -35,20 +35,21 @@ fun FavoriteContactsView(
             onClick = onEditClick
         )
 
-        if (items.isEmpty())
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 40.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                BodySmallText(text = stringResource(R.string.msg_favorite_destination_empty))
+        if (items.isEmpty()) Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 40.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            BodySmallText(
+                text = stringResource(R.string.msg_favorite_destination_empty),
+                color = AppTheme.colorScheme.onBackgroundNeutralSubdued
+            )
+        }
+        else LazyRow {
+            items(items.size) { index ->
+                ContactRow(item = items[index], onClick = onClick)
             }
-        else
-            LazyRow {
-                items(items.size) { index ->
-                    ContactRow(item = items[index], onClick = onClick)
-                }
-            }
+        }
     }
 }

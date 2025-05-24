@@ -117,7 +117,10 @@ fun TransferConfirmScreen(
             ClientBankProfileInfo(item = account, profileSize = 64.dp, iconSize = 32.dp)
         }
         Spacer(modifier = Modifier.size(24.dp))
-        BodySmallText(text = stringResource(R.string.transfer_confirm))
+        BodySmallText(
+            text = stringResource(R.string.transfer_price),
+            color = AppTheme.colorScheme.onBackgroundNeutralSubdued
+        )
         amount?.let {
             SentencesWithSuffix(
                 sentence = it.toDouble().toCurrency(),

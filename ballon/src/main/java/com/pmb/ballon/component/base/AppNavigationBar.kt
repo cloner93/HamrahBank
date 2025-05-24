@@ -85,8 +85,14 @@ fun AppBottomBar(tabBarItems: List<BottomNavItem>, selectedItem: (BottomNavItem)
                     )
                 },
                 label = {
-                    if (selectedTabIndex == index) ButtonXSmallText(text = stringResource(tabBarItem.title))
-                    else CaptionText(text = stringResource(tabBarItem.title))
+                    if (selectedTabIndex == index) ButtonXSmallText(
+                        text = stringResource(tabBarItem.title),
+                        color = AppTheme.colorScheme.onBackgroundNeutralDefault
+                    )
+                    else CaptionText(
+                        text = stringResource(tabBarItem.title),
+                        color = AppTheme.colorScheme.onBackgroundNeutralSubdued
+                    )
                 },
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = AppTheme.colorScheme.onBackgroundNeutralDefault,

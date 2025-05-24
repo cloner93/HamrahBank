@@ -28,9 +28,7 @@ import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.core.utils.toCurrency
 import com.pmb.facilities.R
 import com.pmb.facilities.bill.presentation.BillSharedState
-import com.pmb.facilities.component.PriceWithTaxColumnComponent
 import com.pmb.navigation.manager.LocalNavigationManager
-import com.pmb.navigation.moduleScreen.ChargeScreens
 
 @Composable
 fun BillConfirmScreen(
@@ -64,9 +62,9 @@ fun BillConfirmScreen(
         }
     ) {
         TextImage(
-            image = sharedState.value.billIdEntity?.billImage ?:R.drawable.ic_irancell,
+            image = sharedState.value.billIdEntity?.billImage ?: R.drawable.ic_irancell,
             imageStyle = ImageStyle(size = Size.FIX(48.dp)),
-            text = sharedState.value.billIdEntity?.billTitle ?:"",
+            text = sharedState.value.billIdEntity?.billTitle ?: "",
             spacer = 0.dp,
             textStyle = TextStyle(
                 color = AppTheme.colorScheme.onBackgroundNeutralDefault,
@@ -80,7 +78,7 @@ fun BillConfirmScreen(
             color = AppTheme.colorScheme.onBackgroundNeutralDefault
         )
         CaptionText(
-            text =sharedState.value.billIdEntity?.billPriceTitle?:"",
+            text = sharedState.value.billIdEntity?.billPriceTitle ?: "",
             color = AppTheme.colorScheme.onBackgroundNeutralSubdued
         )
         Spacer(Modifier.size(40.dp))

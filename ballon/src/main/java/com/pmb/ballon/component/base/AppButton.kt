@@ -121,7 +121,10 @@ fun AppOutlineButton(
         enabled = enable,
         onClick = onClick
     ) {
-        ButtonLargeText(text = title)
+        ButtonLargeText(
+            text = title,
+            color = AppTheme.colorScheme.onBackgroundNeutralDefault,
+        )
     }
 }
 
@@ -140,7 +143,10 @@ fun AppTextButton(
         enabled = enable,
         onClick = onClick
     ) {
-        ButtonLargeText(text = title)
+        ButtonLargeText(
+            text = title,
+            color = AppTheme.colorScheme.onBackgroundNeutralDefault,
+        )
     }
 }
 

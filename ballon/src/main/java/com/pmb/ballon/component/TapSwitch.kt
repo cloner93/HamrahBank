@@ -1,5 +1,6 @@
 package com.pmb.ballon.component
 
+import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
@@ -37,6 +38,7 @@ import com.pmb.ballon.component.base.ButtonSmallText
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.ballon.ui.theme.HamrahBankTheme
 
+@SuppressLint("UnusedBoxWithConstraintsScope")
 @Composable
 fun DynamicTabSelector(
     modifier: Modifier = Modifier,

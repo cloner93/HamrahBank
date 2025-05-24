@@ -38,6 +38,7 @@ import com.pmb.ballon.component.base.AppTextButton
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.component.base.ChipWithIcon
+import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.manager.NavigationManager
 import com.pmb.navigation.moduleScreen.AuthScreens
@@ -110,6 +111,7 @@ fun FirstLoginConfirmScreen(
         Spacer(modifier = Modifier.size(24.dp))
         BodyMediumText(
             text = stringResource(R.string.msg_first_login_confirm_header),
+            color = AppTheme.colorScheme.onBackgroundPrimarySubdued,
             textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.size(32.dp))

@@ -22,10 +22,17 @@ import com.pmb.ballon.component.base.AppBottomSheet
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppOutlineButton
 import com.pmb.ballon.component.base.Headline5Text
+import com.pmb.ballon.ui.theme.AppTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SimpleConfirmBottomSheet(message: String, rejectButton: String, confirmButton: String, onDismiss: () -> Unit, onConfirm: () -> Unit) {
+fun SimpleConfirmBottomSheet(
+    message: String,
+    rejectButton: String,
+    confirmButton: String,
+    onDismiss: () -> Unit,
+    onConfirm: () -> Unit
+) {
     var isVisible by remember { mutableStateOf(true) }
     AppBottomSheet(
         isVisible = isVisible,
@@ -39,6 +46,7 @@ fun SimpleConfirmBottomSheet(message: String, rejectButton: String, confirmButto
                 Headline5Text(
                     modifier = Modifier.fillMaxWidth(),
                     text = message,
+                    color = AppTheme.colorScheme.onBackgroundNeutralDefault,
                     textAlign = TextAlign.Center
                 )
                 Spacer(modifier = Modifier.height(24.dp))

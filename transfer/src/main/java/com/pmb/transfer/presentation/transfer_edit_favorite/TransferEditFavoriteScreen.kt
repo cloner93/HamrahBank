@@ -1,6 +1,5 @@
 package com.pmb.transfer.presentation.transfer_edit_favorite
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -15,6 +14,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.pmb.ballon.component.AlertComponent
+import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.ClickableIcon
@@ -52,32 +52,36 @@ fun TransferEditFavoriteScreen(
         }
     }
 
-    Column(modifier = Modifier.fillMaxSize()) {
-        AppTopBar(
-            title = stringResource(R.string.edit_favorites),
-            startIcon = ClickableIcon(
-                icon = IconType.ImageVector(Icons.Default.Close),
-                onClick = { navigationManager.navigateBack() })
-        )
-
-        viewState.accountsFavorite?.let { items ->
-            LazyColumn(modifier = Modifier.fillMaxSize()) {
-                items(items.size) { index ->
-                    val item = items[index]
-                    ClientBankInfoTypeRow(
-                        info = item,
-                        endIcon = ClickableIcon(
-                            icon = IconType.ImageVector(Icons.Default.Close),
-                            tint = AppTheme.colorScheme.onBackgroundNeutralSubdued,
-                            onClick = {
-                                selectedItem = item
-                                showConfirmDeleteBottomSheet = true
-                            }),
-                    )
+    AppContent(
+        topBar = {
+            AppTopBar(
+                title = stringResource(R.string.edit_favorites),
+                startIcon = ClickableIcon(
+                    icon = IconType.ImageVector(Icons.Default.Close),
+                    onClick = { navigationManager.navigateBack() })
+            )
+        },
+        scrollState = null,
+        content = {
+            viewState.accountsFavorite?.let { items ->
+                LazyColumn(modifier = Modifier.fillMaxSize()) {
+                    items(items.size) { index ->
+                        val item = items[index]
+                        ClientBankInfoTypeRow(
+                            info = item,
+                            endIcon = ClickableIcon(
+                                icon = IconType.ImageVector(Icons.Default.Close),
+                                tint = AppTheme.colorScheme.onBackgroundNeutralSubdued,
+                                onClick = {
+                                    selectedItem = item
+                                    showConfirmDeleteBottomSheet = true
+                                }),
+                        )
+                    }
                 }
             }
         }
-    }
+    )
 
     if (showConfirmDeleteBottomSheet && selectedItem != null)
         selectedItem?.let { removeItem ->

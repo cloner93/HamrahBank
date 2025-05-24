@@ -152,7 +152,8 @@ fun DestinationInputScreen(
                                     BankIdentifierNumberType.ACCOUNT -> R.string.account
                                 }
                             )
-                        )
+                        ),
+                        color = AppTheme.colorScheme.onBackgroundNeutralSubdued
                     )
                     Spacer(modifier = Modifier.height(12.dp))
                 }

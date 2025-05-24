@@ -13,7 +13,35 @@ class ThemeScreenViewModel @Inject constructor(
 //    private val getThemeUseCase: GetThemeUseCase,
 ) : BaseViewModel<ThemeScreenViewActions, ThemeScreenViewState, ThemeScreenViewEvents>(initialState) {
     override fun handle(action: ThemeScreenViewActions) {
-//        TODO("Not yet implemented")
+        when (action) {
+            ThemeScreenViewActions.SelectSystemTheme -> updateTheme(ThemeMode.SYSTEM)
+            ThemeScreenViewActions.SelectLightTheme -> updateTheme(ThemeMode.LIGHT)
+            ThemeScreenViewActions.SelectDarkTheme -> updateTheme(ThemeMode.DARK)
+        }
+    }
+
+    private fun getTheme() {
+        viewModelScope.launch {
+            getThemeUseCase.invoke(Unit).collect {
+                when (it) {
+                    is Result.Error -> Unit
+                    Result.Loading -> Unit
+                    is Result.Success<ThemeMode> -> setState { it.copy(themeMode = it.themeMode) }
+                }
+            }
+        }
+    }
+
+    private fun updateTheme(mode: ThemeMode) {
+        viewModelScope.launch {
+            updateThemeUseCase.invoke(mode).collect {
+                when (it) {
+                    is Result.Error -> Unit
+                    Result.Loading -> Unit
+                    is Result.Success<ThemeMode> -> setState { it.copy(themeMode = it.themeMode) }
+                }
+            }
+        }
     }
 }
 
@@ -22,7 +50,12 @@ sealed interface ThemeScreenViewEvents : BaseViewEvent {
     data class ShowError(val message: String) : ThemeScreenViewEvents
 }
 
-sealed interface ThemeScreenViewActions : BaseViewAction
+sealed interface ThemeScreenViewActions : BaseViewAction {
+    object SelectSystemTheme : ThemeScreenViewActions
+    object SelectLightTheme : ThemeScreenViewActions
+    object SelectDarkTheme : ThemeScreenViewActions
+}
+
 data class ThemeScreenViewState(
-    val isLoading: Boolean = false,
+    val isLoading: Boolean = false, val themeMode: ThemeMode = ThemeMode.LIGHT
 ) : BaseViewState

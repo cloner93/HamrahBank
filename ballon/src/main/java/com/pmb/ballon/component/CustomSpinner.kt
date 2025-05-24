@@ -16,10 +16,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.pmb.ballon.component.base.AppBaseTextField
 import com.pmb.ballon.component.base.BodyMediumText
+import com.pmb.ballon.ui.theme.AppTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -63,7 +63,7 @@ fun CustomSpinner(
 
         ExposedDropdownMenu(
             expanded = expanded,
-            containerColor = Color.White,
+            containerColor = AppTheme.colorScheme.background1Neutral,
             onDismissRequest = { expanded = false }
         ) {
             options?.forEach { option ->
@@ -72,6 +72,7 @@ fun CustomSpinner(
                         BodyMediumText(
                             modifier = Modifier.padding(bottom = 6.dp),
                             text = option,
+                            color = AppTheme.colorScheme.foregroundNeutralDefault
                         )
                     },
                     onClick = {
@@ -136,7 +137,7 @@ fun CustomSearchSpinner(
 
         ExposedDropdownMenu(
             expanded = expanded,
-            containerColor = Color.White,
+            containerColor = AppTheme.colorScheme.background1Neutral,
             onDismissRequest = { expanded = false }
         ) {
             filteredOptions?.forEach { option ->
@@ -145,6 +146,7 @@ fun CustomSearchSpinner(
                         BodyMediumText(
                             modifier = Modifier.padding(bottom = 6.dp),
                             text = option,
+                            color = AppTheme.colorScheme.foregroundNeutralDefault
                         )
                     },
                     onClick = {

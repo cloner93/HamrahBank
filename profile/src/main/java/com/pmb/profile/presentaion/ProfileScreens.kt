@@ -28,6 +28,7 @@ import com.pmb.profile.presentaion.personal_infos.select_job.viewmodel.SelectJob
 import com.pmb.profile.presentaion.profile.ProfileScreen
 import com.pmb.profile.presentaion.profile.viewModel.ProfileViewModel
 import com.pmb.profile.presentaion.themeScreen.ThemeScreen
+import com.pmb.profile.presentaion.themeScreen.viewmodel.ThemeScreenViewModel
 import com.pmb.profile.presentaion.update.detail.viewmodel.DetailVersionViewModel
 import com.pmb.profile.presentaion.update.latest.LatestVersionsScreen
 import com.pmb.profile.presentaion.update.latest.viewmodel.LatestVersionsViewModel
@@ -43,7 +44,7 @@ fun NavGraphBuilder.profileScreensHandle() {
 
     composable(route = ProfileScreens.ThemeScreen.route) {
         ThemeScreen(
-//            viewModel = hiltViewModel<ProfileViewModel>()
+            viewModel = hiltViewModel<ThemeScreenViewModel>()
         )
     }
 

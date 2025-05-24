@@ -12,10 +12,8 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -30,9 +28,11 @@ import com.pmb.ballon.ui.theme.HamrahBankTheme
 import com.pmb.core.platform.ThemeMode
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.profile.R
+import com.pmb.profile.presentaion.themeScreen.viewmodel.ThemeScreenViewActions
+import com.pmb.profile.presentaion.themeScreen.viewmodel.ThemeScreenViewModel
 
 @Composable
-fun ThemeScreen() {
+fun ThemeScreen(viewModel: ThemeScreenViewModel) {
     /**
     TODO checkList ThemeScreen.kt
      *
@@ -40,11 +40,8 @@ fun ThemeScreen() {
      * - store theme in dataStore.
      */
 
-    var theme by remember { mutableStateOf(ThemeMode.SYSTEM) }
-
     val navigationManager = LocalNavigationManager.current
-
-
+    val viewState by viewModel.viewState.collectAsState()
 
     AppContent(
         modifier = Modifier
@@ -82,7 +79,7 @@ fun ThemeScreen() {
                 ) {
                     Column(
                         modifier = Modifier.clickable {
-                            theme = ThemeMode.LIGHT
+                            viewModel.handle(ThemeScreenViewActions.SelectLightTheme)
                         }
                     ) {
                         Image(
@@ -93,11 +90,11 @@ fun ThemeScreen() {
                             modifier = Modifier
                                 .padding(vertical = 12.dp, horizontal = 8.dp),
                             title = "روشن",
-                            isChecked = theme == ThemeMode.LIGHT
+                            isChecked = viewState.themeMode == ThemeMode.LIGHT
                         ) { }
                     }
                     Column(modifier = Modifier.clickable {
-                        theme = ThemeMode.DARK
+                        viewModel.handle(ThemeScreenViewActions.SelectDarkTheme)
                     }) {
                         Image(
                             painter = painterResource(id = R.drawable.ic_dark_theme),
@@ -108,7 +105,7 @@ fun ThemeScreen() {
                             modifier = Modifier
                                 .padding(vertical = 12.dp, horizontal = 8.dp),
                             title = "تیره",
-                            isChecked = theme == ThemeMode.DARK
+                            isChecked = viewState.themeMode == ThemeMode.DARK
                         ) { }
                     }
                 }
@@ -121,10 +118,9 @@ fun ThemeScreen() {
                 RoundedCornerCheckboxComponent(
                     modifier = Modifier.padding(vertical = 12.dp, horizontal = 8.dp),
                     title = "مطابق دستگاه",
-                    isChecked = theme == ThemeMode.SYSTEM
+                    isChecked = viewState.themeMode == ThemeMode.SYSTEM
                 ) {
-                    theme = ThemeMode.SYSTEM
-
+                    viewModel.handle(ThemeScreenViewActions.SelectSystemTheme)
                 }
             }
         }
@@ -136,7 +132,7 @@ fun ThemeScreen() {
 @Composable
 private fun ThemeScreenPreview() {
     HamrahBankTheme {
-        ThemeScreen()
+//        ThemeScreen()
     }
 
 }
