@@ -1,6 +1,7 @@
 package com.pmb.auth.presentation.first_login
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -30,6 +31,7 @@ import com.pmb.ballon.component.base.AppSingleTextField
 import com.pmb.ballon.component.base.AppTextButton
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.text_field.AppPasswordTextField
+import com.pmb.ballon.models.AccountSampleModel
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.manager.NavigationManager
 import com.pmb.navigation.moduleScreen.AuthScreens
@@ -57,29 +59,34 @@ fun FirstLoginScreen(viewModel: FirstLoginViewModel) {
         }
     }
 
-    AppContent(
-        modifier = Modifier.padding(horizontal = 24.dp),
-        topBar = {
-            AppTopBar(
-                title = stringResource(com.pmb.auth.R.string.login_to_hamrah_bank),
-                onBack = { navigationManager.navigateBack() })
-        },
-        horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally,
-        footer = {
-            AppOutlineButton(
-                modifier = Modifier
-                    .padding(horizontal = 24.dp)
-                    .fillMaxWidth(),
-                title = stringResource(com.pmb.auth.R.string.hamrah_bank_activate),
-                onClick = {
-                    navigationManager.navigate(AuthScreens.Activation)
-                })
-        }
-    ) {
+    AppContent(modifier = Modifier.padding(horizontal = 24.dp), topBar = {
+        AppTopBar(
+            title = stringResource(com.pmb.auth.R.string.login_to_hamrah_bank),
+            onBack = { navigationManager.navigateBack() })
+    }, horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally, footer = {
+        AppOutlineButton(
+            modifier = Modifier
+                .padding(horizontal = 24.dp)
+                .fillMaxWidth(),
+            title = stringResource(com.pmb.auth.R.string.hamrah_bank_activate),
+            onClick = {
+                navigationManager.navigate(AuthScreens.Activation)
+            })
+    }) {
         Spacer(modifier = Modifier.size(24.dp))
-
         Image(
-            modifier = Modifier.size(56.dp),
+            modifier = Modifier
+                .size(56.dp)
+                .clickable {
+                    AccountSampleModel().let {
+                        phoneNumber = it.mobileNumber
+                        username = it.userName
+                        password = it.passWord
+                        isMobile = true
+                        isUsername = true
+                        isPassword = true
+                    }
+                },
             painter = painterResource(R.drawable.img_mellat_logo),
             contentDescription = "mellat logo"
         )

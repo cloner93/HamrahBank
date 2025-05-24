@@ -4,6 +4,7 @@ import com.pmb.core.platform.BaseViewAction
 import com.pmb.core.platform.BaseViewEvent
 import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.platform.BaseViewState
+import com.pmb.core.platform.ThemeMode
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -20,28 +21,9 @@ class ThemeScreenViewModel @Inject constructor(
         }
     }
 
-    private fun getTheme() {
-        viewModelScope.launch {
-            getThemeUseCase.invoke(Unit).collect {
-                when (it) {
-                    is Result.Error -> Unit
-                    Result.Loading -> Unit
-                    is Result.Success<ThemeMode> -> setState { it.copy(themeMode = it.themeMode) }
-                }
-            }
-        }
-    }
 
     private fun updateTheme(mode: ThemeMode) {
-        viewModelScope.launch {
-            updateThemeUseCase.invoke(mode).collect {
-                when (it) {
-                    is Result.Error -> Unit
-                    Result.Loading -> Unit
-                    is Result.Success<ThemeMode> -> setState { it.copy(themeMode = it.themeMode) }
-                }
-            }
-        }
+        setState { it.copy(themeMode = it.themeMode) }
     }
 }
 
