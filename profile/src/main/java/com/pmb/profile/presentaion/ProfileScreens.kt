@@ -25,8 +25,8 @@ import com.pmb.profile.presentaion.personal_infos.personal_info.PersonalInfoScre
 import com.pmb.profile.presentaion.personal_infos.personal_info.viewmodel.PersonalInfoViewModel
 import com.pmb.profile.presentaion.personal_infos.select_job.SelectJobScreen
 import com.pmb.profile.presentaion.personal_infos.select_job.viewmodel.SelectJobViewModel
-import com.pmb.profile.presentaion.privacyAndSecurity.ChangePasswordScreen
 import com.pmb.profile.presentaion.privacyAndSecurity.PrivacySecurityScreen
+import com.pmb.profile.presentaion.privacyAndSecurity.changePassword.ChangePasswordScreen
 import com.pmb.profile.presentaion.profile.ProfileScreen
 import com.pmb.profile.presentaion.profile.viewModel.ProfileViewModel
 import com.pmb.profile.presentaion.themeScreen.ThemeScreen

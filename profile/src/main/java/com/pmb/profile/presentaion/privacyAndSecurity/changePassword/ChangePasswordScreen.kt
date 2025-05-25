@@ -1,4 +1,4 @@
-package com.pmb.profile.presentaion.privacyAndSecurity
+package com.pmb.profile.presentaion.privacyAndSecurity.changePassword
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -6,9 +6,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.pmb.ballon.component.annotation.AppPreview
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppContent
@@ -20,8 +24,25 @@ import com.pmb.navigation.manager.LocalNavigationManager
 
 @Composable
 fun ChangePasswordScreen() {
+    val viewModel = hiltViewModel<ChangePasswordScreenViewmodel>()
+    val viewState by viewModel.viewState.collectAsState()
 
     val navigationManager = LocalNavigationManager.current
+
+    LaunchedEffect(Unit) {
+        viewModel.viewEvent.collect { event ->
+            when (event) {
+                is ChangePasswordScreenViewEvents.ShowError -> {
+
+                }
+
+                ChangePasswordScreenViewEvents.NavigateBack -> {
+                    navigationManager.navigateBack()
+                }
+            }
+        }
+    }
+
     AppContent(
         modifier = Modifier
             .padding(horizontal = 16.dp),
@@ -42,48 +63,43 @@ fun ChangePasswordScreen() {
             ) {
                 AppButton(
                     modifier = Modifier.fillMaxWidth(),
-                    enable = false, // TODO:
+                    enable = viewState.isAllPasswordOk,
                     title = "ادامه",
                     onClick = {
-//                        viewModel.handle(DepositStatementViewActions.Apply)
+                        // todo: change password
+                        navigationManager.navigateBack()
                     })
             }
         }
     ) {
 
         AppPasswordTextField(
-            value = "",
+            value = viewState.oldPassword,
             label = "رمز عبور فعلی",
-            onValidate = {
-//                isPassword = it.isValid
-            },
             onValueChange = {
-//                password = it
+                viewModel.handle(ChangePasswordScreenViewActions.SetOldPassword(it))
             })
 
         Spacer(modifier = Modifier.height(24.dp))
 
         AppPasswordTextField(
-            value = "",
+            value = viewState.newPassword,
             label = "رمز عبور جدید",
             conditionMessage = true,
             onValidate = {
-//                isPassword = it.isValid
+                viewModel.handle(ChangePasswordScreenViewActions.SetNewPasswordValid(it.isValid))
             },
             onValueChange = {
-//                password = it
+                viewModel.handle(ChangePasswordScreenViewActions.SetNewPassword(it))
             })
 
         Spacer(modifier = Modifier.height(24.dp))
 
         AppPasswordTextField(
-            value = "",
+            value = viewState.renewPassword,
             label = "تکرار رمز عبور جدید",
-            onValidate = {
-//                isPassword = it.isValid
-            },
             onValueChange = {
-//                password = it
+                viewModel.handle(ChangePasswordScreenViewActions.SetRenewPassword(it))
             })
     }
 }
