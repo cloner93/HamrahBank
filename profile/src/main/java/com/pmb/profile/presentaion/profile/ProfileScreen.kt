@@ -131,7 +131,7 @@ fun ProfileScreen(viewModel: ProfileViewModel) {
                     endIconStyle = IconStyle(tint = AppTheme.colorScheme.foregroundNeutralRest),
                     clickable = true,
                     onItemClick = {
-
+                        navigationManager.navigate(ProfileScreens.PrivacyAndSecurity.Graph)
                     })
 
                 MenuItem(
