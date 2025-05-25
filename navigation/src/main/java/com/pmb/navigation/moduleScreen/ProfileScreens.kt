@@ -20,6 +20,14 @@ sealed class ProfileScreens(route: String, arguments: Map<String, String> = empt
         data object ChangeEducation : PersonalInfo(route = "profile_change_education")
     }
 
+    sealed class Update(route: String) : ProfileScreens(route) {
+        data object Graph : PersonalInfo(route = "profile_update_graph")
+
+        data object Status : PersonalInfo(route = "profile_update_status")
+        data object Latest : PersonalInfo(route = "profile_update_latest")
+        data object Detail : PersonalInfo(route = "profile_update_detail")
+    }
+
 
     companion object {
         fun fromRoute(route: String?): ProfileScreens? = when (route) {

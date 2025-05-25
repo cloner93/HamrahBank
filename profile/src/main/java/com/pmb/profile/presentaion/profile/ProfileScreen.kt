@@ -24,7 +24,6 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.MenuItem
 import com.pmb.ballon.component.TextImage
@@ -44,7 +43,7 @@ import com.pmb.profile.presentaion.profile.viewModel.ProfileViewModel
 
 
 @Composable
-fun ProfileScreen(viewModel : ProfileViewModel) {
+fun ProfileScreen(viewModel: ProfileViewModel) {
     val viewState by viewModel.viewState.collectAsState()
 
     val navigationManager = LocalNavigationManager.current
@@ -58,6 +57,10 @@ fun ProfileScreen(viewModel : ProfileViewModel) {
 
                 ProfileViewEvents.NavigateToThemeScreen -> {
                     navigationManager.navigate(ProfileScreens.ThemeScreen)
+                }
+
+                ProfileViewEvents.NavigateToUpdate -> {
+                    navigationManager.navigate(ProfileScreens.Update.Graph)
                 }
             }
         }
@@ -151,7 +154,7 @@ fun ProfileScreen(viewModel : ProfileViewModel) {
                     endIconStyle = IconStyle(tint = AppTheme.colorScheme.foregroundNeutralRest),
                     clickable = true,
                     onItemClick = {
-
+                        viewModel.handle(ProfileViewActions.NavigateToUpdate)
                     })
             }
         }

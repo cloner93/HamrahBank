@@ -28,6 +28,12 @@ import com.pmb.profile.presentaion.personal_infos.select_job.viewmodel.SelectJob
 import com.pmb.profile.presentaion.profile.ProfileScreen
 import com.pmb.profile.presentaion.profile.viewModel.ProfileViewModel
 import com.pmb.profile.presentaion.themeScreen.ThemeScreen
+import com.pmb.profile.presentaion.update.detail.viewmodel.DetailVersionViewModel
+import com.pmb.profile.presentaion.update.latest.LatestVersionsScreen
+import com.pmb.profile.presentaion.update.latest.viewmodel.LatestVersionsViewModel
+import com.pmb.profile.presentaion.update.status.UpdateStatusScreen
+import com.pmb.profile.presentaion.update.status.viewmodel.UpdateStatusViewModel
+import com.pmb.profile.presentaion.update.viewmodel.DetailVersionScreen
 
 
 fun NavGraphBuilder.profileScreensHandle() {
@@ -170,6 +176,44 @@ fun NavGraphBuilder.profileScreensHandle() {
                     sharedViewModel.updateState { copy(educationEntity = it) }
                 }
             )
+        }
+    }
+
+    navigation(
+        route = ProfileScreens.Update.Graph.route,
+        startDestination = ProfileScreens.Update.Status.route
+    ) {
+        composable(route = ProfileScreens.Update.Status.route) {
+            val sharedViewModel =
+                it.navigationManager.retrieveSharedViewModel<DetailVersionViewModel>(
+                    screen = ProfileScreens.Update.Graph, navBackStackEntry = it
+                )
+            UpdateStatusScreen(
+                viewModel = hiltViewModel<UpdateStatusViewModel>(),
+                result = {
+                    sharedViewModel.setVersion(it)
+                }
+            )
+        }
+        composable(route = ProfileScreens.Update.Latest.route) {
+            val sharedViewModel =
+                it.navigationManager.retrieveSharedViewModel<DetailVersionViewModel>(
+                    screen = ProfileScreens.Update.Graph, navBackStackEntry = it
+                )
+            LatestVersionsScreen(
+                viewModel = hiltViewModel<LatestVersionsViewModel>(),
+                result = {
+                    sharedViewModel.setVersion(it)
+                }
+            )
+        }
+
+        composable(route = ProfileScreens.Update.Detail.route) {
+            val sharedViewModel =
+                it.navigationManager.retrieveSharedViewModel<DetailVersionViewModel>(
+                    screen = ProfileScreens.Update.Graph, navBackStackEntry = it
+                )
+            DetailVersionScreen(viewModel = sharedViewModel)
         }
     }
 }
