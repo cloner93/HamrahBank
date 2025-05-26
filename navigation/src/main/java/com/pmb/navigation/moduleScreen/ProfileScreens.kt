@@ -20,6 +20,15 @@ sealed class ProfileScreens(route: String, arguments: Map<String, String> = empt
         data object ChangeEducation : PersonalInfo(route = "profile_change_education")
     }
 
+    sealed class PrivacyAndSecurity(route: String) : ProfileScreens(route) {
+        data object Graph : PrivacyAndSecurity(route = "profile_privacy_and_security_graph")
+
+        data object PrivacySecurityScreen : PrivacyAndSecurity(route = "profile_privacy_security")
+        data object ChangePasswordScreen : PrivacyAndSecurity(route = "profile_change_password")
+        data object UserAuthenticationScreen :
+            PrivacyAndSecurity(route = "profile_user_authentication")
+    }
+
     sealed class Update(route: String) : ProfileScreens(route) {
         data object Graph : PersonalInfo(route = "profile_update_graph")
 
@@ -27,7 +36,6 @@ sealed class ProfileScreens(route: String, arguments: Map<String, String> = empt
         data object Latest : PersonalInfo(route = "profile_update_latest")
         data object Detail : PersonalInfo(route = "profile_update_detail")
     }
-
 
     companion object {
         fun fromRoute(route: String?): ProfileScreens? = when (route) {
