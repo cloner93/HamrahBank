@@ -24,11 +24,7 @@ import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.ClickableIcon
 import com.pmb.ballon.component.base.IconType
 import com.pmb.ballon.models.MenuSheetModel
-import com.pmb.ballon.models.RowType
-import com.pmb.ballon.models.TextStyle
 import com.pmb.ballon.ui.theme.AppTheme
-import com.pmb.ballon.ui.theme.AppTypography
-import com.pmb.ballon.ui.theme.lightColors
 import com.pmb.core.utils.Convert
 import com.pmb.core.utils.shareText
 import com.pmb.core.utils.toCurrency
@@ -36,41 +32,32 @@ import com.pmb.facilities.R
 import com.pmb.facilities.component.ChargeReceiptHeader
 import com.pmb.receipt.component.ReceiptComponent
 import com.pmb.receipt.component.ReceiptSaveOrShareComponent
-import kotlinx.coroutines.flow.MutableStateFlow
+import com.pmb.receipt.model.RowData
+import com.pmb.receipt.model.mapToRowType
 
 @Composable
 fun ChargeReceiptScreen() {
     val context = LocalContext.current
-    val rowTypes = listOf(
-        RowType.PaymentRow(
+    val rows = listOf(
+        RowData.Payment(
             title = "مبلغ",
             amount = 10000000.0.toCurrency(),
             currency = "ریال",
-            textStyle = titleStyle(),
-            amountStyle = amountStyle(),
-            currencyStyle = currencyStyle(),
         ),
-        RowType.TwoTextRow(
+        RowData.TwoText(
             title = "زمان",
             subtitle = Convert.timestampToPersianDate(1744455441),
-            textStyle = titleStyle(),
-            subtitleStyle = subtitleStyle(),
         ),
-        RowType.TwoTextRow(
+        RowData.TwoText(
             title = "کارت مبدأ",
-            subtitle =
-                "۶۰۳۷۶۹۱۹۰۱۲۳۴۵۶۷",
-            textStyle = titleStyle(),
-            subtitleStyle = subtitleStyle(),
-            subtitleLayoutDirection = LayoutDirection.Ltr
+            subtitle = "۶۰۳۷۶۹۱۹۰۱۲۳۴۵۶۷",
         ),
-        RowType.TwoTextRow(
+        RowData.TwoText(
             title = "شماره پیگیری",
             subtitle = "13710828",
-            textStyle = titleStyle(),
-            subtitleStyle = subtitleStyle(),
         )
     )
+
     var shareReceipt by remember { mutableStateOf(false) }
     var downloadReceipt by remember { mutableStateOf(false) }
     var showShareBottomSheet by remember { mutableStateOf(false) }
@@ -101,7 +88,7 @@ fun ChargeReceiptScreen() {
                 modifier = Modifier
                     .background(color = AppTheme.colorScheme.background1Neutral)
                     .padding(16.dp),
-                rowTypes = rowTypes,
+                rowTypes = rows.map { it.mapToRowType() },
                 headerContent = {
                     ChargeReceiptHeader(
                         image = R.drawable.ic_irancell,
@@ -110,33 +97,6 @@ fun ChargeReceiptScreen() {
                     )
                 })
         })
-//    if (shareReceipt || downloadReceipt) {
-//        ComposeToBitmap(
-//            modifier = Modifier,
-//            onBitmapReady = { bitmap ->
-//                if (shareReceipt)
-//                    shareImage(context, getImageUri(context, saveBitmapToCache(context, bitmap)))
-//                else if (downloadReceipt) saveBitmapToGallery(context, bitmap)
-//                shareReceipt = false
-//                downloadReceipt = false
-//            },
-//            content = {
-//                val configuration = LocalConfiguration.current
-//                val screenWidthDp = configuration.screenWidthDp.dp
-//
-//                ReceiptComponent(
-//                    modifier = Modifier
-//                        .width(screenWidthDp)
-//                        .background(color = AppTheme.colorScheme.background1Neutral)
-//                        .padding(16.dp),
-//                    rowTypes = viewState.rowTypes,
-//                    captureMode = true,
-//                    headerContent = {
-//                        ReceiptHeaderComponent(viewState)
-//                    })
-//            }
-//        )
-//    }
 
     if (showShareBottomSheet) {
         MenuBottomSheet(
@@ -168,28 +128,6 @@ fun ChargeReceiptScreen() {
         )
     }
 }
-
-private val _colors = MutableStateFlow(lightColors())
-
-private fun titleStyle() = TextStyle(
-    color = _colors.value.onBackgroundNeutralSubdued,
-    typography = AppTypography.bodySmall,
-)
-
-private fun amountStyle() = TextStyle(
-    color = _colors.value.onBackgroundNeutralDefault,
-    typography = AppTypography.headline3,
-)
-
-private fun currencyStyle() = TextStyle(
-    color = _colors.value.onBackgroundNeutralDefault,
-    typography = AppTypography.bodySmall,
-)
-
-private fun subtitleStyle() = TextStyle(
-    color = _colors.value.onBackgroundNeutralDefault,
-    typography = AppTypography.bodySmall,
-)
 
 @Preview
 @Composable
