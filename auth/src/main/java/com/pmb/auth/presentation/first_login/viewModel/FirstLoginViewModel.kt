@@ -17,17 +17,20 @@ class FirstLoginViewModel @Inject constructor(
     override fun handle(action: FirstLoginViewActions) {
         when (action) {
             FirstLoginViewActions.ClearAlert -> setState { it.copy(loading = false) }
-            is FirstLoginViewActions.FirstLoginStepConfirm -> handleFirstLoginStepConfirm(action)
+            is FirstLoginViewActions.FirstLoginStepConfirm -> handleFirstLoginStepConfirm()
+            is FirstLoginViewActions.UpdatePassword -> setState { it.copy(password = action.value) }
+            is FirstLoginViewActions.UpdatePhoneNumber -> setState { it.copy(phoneNumber = action.value) }
+            is FirstLoginViewActions.UpdateUsername -> setState { it.copy(username = action.value) }
         }
     }
 
-    private fun handleFirstLoginStepConfirm(action: FirstLoginViewActions.FirstLoginStepConfirm) {
+    private fun handleFirstLoginStepConfirm() {
         viewModelScope.launch {
             firstLoginUseCase.invoke(
                 FirstLoginStepRequest(
-                    mobileNumber = action.mobileNumber,
-                    userName = action.userName,
-                    password = action.password
+                    mobileNumber = viewState.value.phoneNumber,
+                    userName = viewState.value.username,
+                    password = viewState.value.password
                 )
             ).collect { result ->
                 when (result) {

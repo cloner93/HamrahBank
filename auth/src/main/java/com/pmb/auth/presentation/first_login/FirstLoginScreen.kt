@@ -10,9 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -39,13 +36,6 @@ import com.pmb.navigation.moduleScreen.AuthScreens
 @Composable
 fun FirstLoginScreen(viewModel: FirstLoginViewModel) {
     val navigationManager: NavigationManager = LocalNavigationManager.current
-    var phoneNumber by remember { mutableStateOf("") }
-    var username by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var isMobile by remember { mutableStateOf(false) }
-    var isUsername by remember { mutableStateOf(false) }
-    var isPassword by remember { mutableStateOf(false) }
-
     val viewState by viewModel.viewState.collectAsState()
 
     // Handle one-time events such as navigation or showing toasts
@@ -79,12 +69,9 @@ fun FirstLoginScreen(viewModel: FirstLoginViewModel) {
                 .size(56.dp)
                 .clickable {
                     AccountSampleModel().let {
-                        phoneNumber = it.mobileNumber
-                        username = it.userName
-                        password = it.passWord
-                        isMobile = true
-                        isUsername = true
-                        isPassword = true
+                        viewModel.handle(FirstLoginViewActions.UpdatePhoneNumber(it.mobileNumber))
+                        viewModel.handle(FirstLoginViewActions.UpdateUsername(it.userName))
+                        viewModel.handle(FirstLoginViewActions.UpdatePassword(it.passWord))
                     }
                 },
             painter = painterResource(R.drawable.img_mellat_logo),
@@ -94,21 +81,21 @@ fun FirstLoginScreen(viewModel: FirstLoginViewModel) {
         Spacer(modifier = Modifier.size(32.dp))
 
         AppMobileTextField(
-            value = phoneNumber,
+            value = viewState.phoneNumber,
             label = stringResource(com.pmb.auth.R.string.phone_number),
-            onValidate = { isMobile = it },
-            onValueChange = { phoneNumber = it })
+            onValueChange = {
+                viewModel.handle(FirstLoginViewActions.UpdatePhoneNumber(it))
+            })
 
         Spacer(modifier = Modifier.size(24.dp))
 
 
         AppSingleTextField(
             modifier = Modifier.fillMaxWidth(),
-            value = username,
+            value = viewState.username,
             label = stringResource(com.pmb.auth.R.string.username),
             onValueChange = {
-                username = it
-                isUsername = it.length >= 6
+                viewModel.handle(FirstLoginViewActions.UpdateUsername(it))
             },
         )
 
@@ -116,11 +103,10 @@ fun FirstLoginScreen(viewModel: FirstLoginViewModel) {
 
         AppPasswordTextField(
             modifier = Modifier.fillMaxWidth(),
-            value = password,
+            value = viewState.password,
             label = stringResource(com.pmb.auth.R.string.password),
             onValueChange = {
-                password = it
-                isPassword = it.length >= 6
+                viewModel.handle(FirstLoginViewActions.UpdatePassword(it))
             })
 
         Spacer(modifier = Modifier.size(32.dp))
@@ -128,13 +114,9 @@ fun FirstLoginScreen(viewModel: FirstLoginViewModel) {
         AppButton(
             modifier = Modifier.fillMaxWidth(),
             title = stringResource(com.pmb.auth.R.string._continue),
-            enable = isMobile && isPassword && isUsername,
+            enable = viewState.enableButton,
             onClick = {
-                viewModel.handle(
-                    FirstLoginViewActions.FirstLoginStepConfirm(
-                        userName = username, mobileNumber = phoneNumber, password = password
-                    )
-                )
+                viewModel.handle(FirstLoginViewActions.FirstLoginStepConfirm)
             })
 
         Spacer(modifier = Modifier.size(8.dp))
@@ -146,10 +128,6 @@ fun FirstLoginScreen(viewModel: FirstLoginViewModel) {
                 navigationManager.navigate(AuthScreens.ForgetPassword)
             })
     }
-    if (viewState.loading) {
-        AppLoading()
-    }
-    if (viewState.alertModelState != null) {
-        AlertComponent(viewState.alertModelState!!)
-    }
+    if (viewState.loading) AppLoading()
+    viewState.alertModelState?.let { AlertComponent(it) }
 }

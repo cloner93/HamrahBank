@@ -52,7 +52,6 @@ fun ProfileScreen(viewModel: ProfileViewModel) {
         viewModel.viewEvent.collect { event ->
             when (event) {
                 ProfileViewEvents.LogoutAccountSucceed -> {
-
                 }
 
                 ProfileViewEvents.NavigateToThemeScreen -> {
@@ -237,7 +236,7 @@ fun ProfileScreen(viewModel: ProfileViewModel) {
                     endIconStyle = IconStyle(tint = AppTheme.colorScheme.foregroundNeutralRest),
                     clickable = true,
                     onItemClick = {
-                        viewModel.handle(ProfileViewActions.LogoutAccount)
+//                        viewModel.handle(ProfileViewActions.LogoutAccount)
                     })
             }
         }
