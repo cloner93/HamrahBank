@@ -3,6 +3,7 @@ package com.pmb.account.di
 import com.pmb.account.presentation.balance.viewmodel.BalanceViewState
 import com.pmb.account.presentation.cards.viewmodel.CardsViewState
 import com.pmb.account.presentation.deposits.viewmodel.DepositsViewState
+import com.pmb.account.presentation.transactionReceipt.viewmodel.TransactionReceiptViewState
 import com.pmb.account.presentation.transactions.filterScreen.viewmodel.TransactionsFilterViewState
 import com.pmb.account.presentation.transactions.search.viewmodel.TransactionSearchViewState
 import com.pmb.account.presentation.transactions.statement.viewmodel.DepositStatementViewState
@@ -45,4 +46,10 @@ object StateModule {
     @Provides
     @Singleton
     fun provideCardsViewState(): CardsViewState = CardsViewState()
+
+    @Provides
+    @Singleton
+    fun provideTransactionReceiptViewState(): TransactionReceiptViewState =
+        TransactionReceiptViewState()
+
 }

@@ -11,7 +11,7 @@ sealed interface DepositsViewActions : BaseViewAction {
     class CloseShareBottomSheet(str: String?) : DepositsViewActions
 
     object NavigateToTransactionScreen : DepositsViewActions
-    object NavigateToTransactionDetailScreen : DepositsViewActions
+    class NavigateToTransactionDetailScreen(val transactionId: String) : DepositsViewActions
 
     object ShowDepositMoreActionBottomSheet : DepositsViewActions
     object CloseDepositMoreActionBottomSheet : DepositsViewActions

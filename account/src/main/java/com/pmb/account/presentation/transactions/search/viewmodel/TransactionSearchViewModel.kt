@@ -24,6 +24,11 @@ class TransactionSearchViewModel @Inject constructor(
 
     init {
         search()
+        setState {
+            it.copy(
+                depositId = depositId
+            )
+        }
     }
 
     override fun handle(action: TransactionSearchViewActions) {
@@ -40,6 +45,15 @@ class TransactionSearchViewModel @Inject constructor(
 
             TransactionSearchViewActions.NavigateBack -> {
                 postEvent(TransactionSearchViewEvents.NavigateBack)
+            }
+
+            is TransactionSearchViewActions.NavigateToTransactionInfoScreen -> {
+                postEvent(
+                    TransactionSearchViewEvents.NavigateToTransactionInfoScreen(
+                        action.depositId,
+                        action.transactionId
+                    )
+                )
             }
         }
     }
@@ -65,17 +79,22 @@ class TransactionSearchViewModel @Inject constructor(
 
 sealed interface TransactionSearchViewEvents : BaseViewEvent {
     object NavigateBack : TransactionSearchViewEvents
+    class NavigateToTransactionInfoScreen(val depositId: String, val transactionId: String) :
+        TransactionSearchViewEvents
 }
 
 sealed interface TransactionSearchViewActions : BaseViewAction {
     data class SearchTransactions(val value: String) : TransactionSearchViewActions
     object NavigateBack : TransactionSearchViewActions
+    class NavigateToTransactionInfoScreen(val depositId: String, val transactionId: String) :
+        TransactionSearchViewActions
 
 }
 
 data class TransactionSearchViewState(
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
+    val depositId: String? = null,
     val query: String = "",
     val transactionList: List<TransactionModel> = emptyList(),
 ) : BaseViewState

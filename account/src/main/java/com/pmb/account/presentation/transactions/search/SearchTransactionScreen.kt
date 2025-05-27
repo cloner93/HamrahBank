@@ -31,6 +31,7 @@ import com.pmb.ballon.component.base.IconType
 import com.pmb.ballon.models.IconStyle
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.navigation.manager.LocalNavigationManager
+import com.pmb.navigation.moduleScreen.AccountScreens
 
 @Composable
 fun TransactionSearchScreen() {
@@ -42,6 +43,15 @@ fun TransactionSearchScreen() {
             when (event) {
                 TransactionSearchViewEvents.NavigateBack -> {
                     navigationManager.navigateBack()
+                }
+
+                is TransactionSearchViewEvents.NavigateToTransactionInfoScreen -> {
+                    navigationManager.navigateWithString(
+                        AccountScreens.TransactionReceipt.createRoute(
+                            event.depositId,
+                            event.transactionId
+                        )
+                    )
                 }
             }
         }
@@ -86,10 +96,14 @@ fun TransactionSearchScreen() {
             ) {
                 items(viewState.transactionList.size) { item ->
                     TransactionRow(viewState.transactionList[item]) {
-//                    onTransactionItemClick()
+                        viewModel.handle(
+                            TransactionSearchViewActions.NavigateToTransactionInfoScreen(
+                                viewState.depositId ?: "",
+                                viewState.transactionList[item].transactionId
+                            )
+                        )
                     }
                 }
             }
-
     }
 }

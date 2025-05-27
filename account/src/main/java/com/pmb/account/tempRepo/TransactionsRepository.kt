@@ -9,6 +9,7 @@ class TransactionsRepository @Inject constructor() {
         return when (depositId) {
             "123456" -> listOf(
                 TransactionModel(
+                    "0",
                     TransactionType.RECEIVE,
                     "واریز حقوق",
                     1_000_000.0,
@@ -16,6 +17,7 @@ class TransactionsRepository @Inject constructor() {
                     "امروز ساعت ۱۰:۳۰"
                 ),
                 TransactionModel(
+                    "1",
                     TransactionType.RECEIVE,
                     "واریز حقوق",
                     5_000_000.0,
@@ -23,6 +25,7 @@ class TransactionsRepository @Inject constructor() {
                     "امروز ساعت ۱۰:۳۰"
                 ),
                 TransactionModel(
+                    "2",
                     TransactionType.RECEIVE,
                     "واریز حقوق",
                     9_000_000.0,
@@ -30,6 +33,7 @@ class TransactionsRepository @Inject constructor() {
                     "امروز ساعت ۱۰:۳۰"
                 ),
                 TransactionModel(
+                    "3",
                     TransactionType.TRANSFER,
                     "انتقال به حساب دیگر",
                     3_500_000.0,
@@ -37,6 +41,7 @@ class TransactionsRepository @Inject constructor() {
                     "۳ روز پیش ساعت ۱۴:۱۵"
                 ),
                 TransactionModel(
+                    "4",
                     TransactionType.TRANSFER,
                     "انتقال به حساب دیگر",
                     500_000.0,
@@ -44,6 +49,7 @@ class TransactionsRepository @Inject constructor() {
                     "۳ روز پیش ساعت ۱۴:۱۵"
                 ),
                 TransactionModel(
+                    "5",
                     TransactionType.TRANSFER,
                     "انتقال به حساب دیگر",
                     900_000.0,
@@ -54,6 +60,7 @@ class TransactionsRepository @Inject constructor() {
 
             "97974632" -> listOf(
                 TransactionModel(
+                    "0",
                     TransactionType.RECEIVE,
                     "سود سپرده بلندمدت",
                     12_500_000.0,
@@ -61,6 +68,7 @@ class TransactionsRepository @Inject constructor() {
                     "هفته گذشته"
                 ),
                 TransactionModel(
+                    "1",
                     TransactionType.WITHDRAWAL,
                     "برداشت برای سرمایه‌گذاری",
                     50_000_000.0,
@@ -68,6 +76,7 @@ class TransactionsRepository @Inject constructor() {
                     "۲ هفته پیش"
                 ),
                 TransactionModel(
+                    "2",
                     TransactionType.TRANSFER,
                     "انتقال از حساب دیگر",
                     30_000_000.0,
@@ -78,6 +87,7 @@ class TransactionsRepository @Inject constructor() {
 
             "82768947" -> listOf(
                 TransactionModel(
+                    "0",
                     TransactionType.RECEIVE,
                     "واریز شریک",
                     5_000_000.0,
@@ -85,6 +95,7 @@ class TransactionsRepository @Inject constructor() {
                     "امروز ساعت ۰۹:۰۰"
                 ),
                 TransactionModel(
+                    "1",
                     TransactionType.WITHDRAWAL,
                     "برداشت نقدی",
                     1_500_000.0,
@@ -92,6 +103,7 @@ class TransactionsRepository @Inject constructor() {
                     "دیروز ساعت ۱۷:۳۰"
                 ),
                 TransactionModel(
+                    "2",
                     TransactionType.TRANSFER,
                     "پرداخت اجاره",
                     8_000_000.0,
@@ -100,165 +112,10 @@ class TransactionsRepository @Inject constructor() {
                 )
             )
 
-            "23879" -> listOf(
-                TransactionModel(
-                    TransactionType.RECEIVE,
-                    "دریافت حواله ارزی",
-                    500.0,
-                    "$",
-                    "دیروز ساعت ۱۶:۴۵"
-                ),
-                TransactionModel(
-                    TransactionType.WITHDRAWAL,
-                    "پرداخت اینترنتی",
-                    120.0,
-                    "$",
-                    "امروز ساعت ۲۰:۱۰"
-                ),
-                TransactionModel(
-                    TransactionType.TRANSFER,
-                    "انتقال به حساب داخلی",
-                    200.0,
-                    "$",
-                    "هفته گذشته"
-                )
-            )
-
-            "746384" -> listOf(
-                TransactionModel(
-                    TransactionType.RECEIVE,
-                    "واریز نقدی",
-                    4_000_000.0,
-                    "ریال",
-                    "دیروز"
-                ),
-                TransactionModel(
-                    TransactionType.WITHDRAWAL,
-                    "برداشت برای خرید",
-                    2_500_000.0,
-                    "ریال",
-                    "۲ روز پیش"
-                ),
-                TransactionModel(
-                    TransactionType.TRANSFER,
-                    "انتقال به کارت",
-                    1_000_000.0,
-                    "ریال",
-                    "۳ روز پیش"
-                )
-            )
-
-            "920384" -> listOf(
-                TransactionModel(
-                    TransactionType.RECEIVE,
-                    "هدیه خانواده",
-                    3_000_000.0,
-                    "ریال",
-                    "هفته پیش"
-                ),
-                TransactionModel(
-                    TransactionType.WITHDRAWAL,
-                    "پرداخت شهریه",
-                    1_800_000.0,
-                    "ریال",
-                    "۱۰ روز پیش"
-                ),
-                TransactionModel(
-                    TransactionType.TRANSFER,
-                    "انتقال به حساب والدین",
-                    500_000.0,
-                    "ریال",
-                    "۱۲ روز پیش"
-                )
-            )
-
-            "348291" -> listOf(
-                TransactionModel(
-                    TransactionType.RECEIVE,
-                    "درآمد کسب‌وکار",
-                    120_000_000.0,
-                    "ریال",
-                    "امروز ساعت ۱۲:۴۵"
-                ),
-                TransactionModel(
-                    TransactionType.WITHDRAWAL,
-                    "پرداخت مالیات",
-                    40_000_000.0,
-                    "ریال",
-                    "۳ روز پیش"
-                ),
-                TransactionModel(
-                    TransactionType.TRANSFER,
-                    "انتقال به حساب شرکت",
-                    70_000_000.0,
-                    "ریال",
-                    "هفته گذشته"
-                )
-            )
-
-            "736452" -> listOf(
-                TransactionModel(
-                    TransactionType.RECEIVE,
-                    "دریافت ارز از خارج",
-                    2_000.0,
-                    "$",
-                    "امروز ساعت ۱۵:۲۰"
-                ),
-                TransactionModel(TransactionType.WITHDRAWAL, "پرداخت اقساط", 1_200.0, "$", "دیروز"),
-                TransactionModel(
-                    TransactionType.TRANSFER,
-                    "انتقال به حساب داخلی",
-                    500.0,
-                    "$",
-                    "۴ روز پیش"
-                )
-            )
-
-            "572839" -> listOf(
-                TransactionModel(
-                    TransactionType.RECEIVE,
-                    "واریز خانوادگی",
-                    6_000_000.0,
-                    "ریال",
-                    "هفته گذشته"
-                ),
-                TransactionModel(
-                    TransactionType.WITHDRAWAL,
-                    "برداشت ماهانه",
-                    2_000_000.0,
-                    "ریال",
-                    "۱۰ روز پیش"
-                ),
-                TransactionModel(
-                    TransactionType.TRANSFER,
-                    "انتقال به حساب فرزند",
-                    1_500_000.0,
-                    "ریال",
-                    "دیروز"
-                )
-            )
-
-            "827364" -> listOf(
-                TransactionModel(TransactionType.RECEIVE, "درآمد ارزی", 1_500.0, "€", "دیروز"),
-                TransactionModel(
-                    TransactionType.WITHDRAWAL,
-                    "خرید اینترنتی",
-                    250.0,
-                    "€",
-                    "۵ روز پیش"
-                ),
-                TransactionModel(
-                    TransactionType.TRANSFER,
-                    "انتقال به حساب ارزی دیگر",
-                    750.0,
-                    "€",
-                    "۲ هفته پیش"
-                )
-            )
-
             else -> emptyList()
         }
     }
+
     suspend fun searchTransactionsInDeposit(
         depositId: String,
         query: String
@@ -269,5 +126,12 @@ class TransactionsRepository @Inject constructor() {
                     transaction.amount.toString().contains(query, ignoreCase = true) ||
                     transaction.date.contains(query, ignoreCase = true)
         }
+    }
+
+    suspend fun getTransactionById(depositId: String?, transactionId: String?): TransactionModel? {
+        if (depositId == null) return null
+        if (transactionId == null) return null
+        return getTransactionsForDeposit(depositId)
+            .find { it.transactionId == transactionId }
     }
 }

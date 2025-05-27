@@ -42,8 +42,8 @@ class TransactionsViewModel @Inject constructor(
                 postEvent(TransactionsViewEvents.NavigateToTransactionFilterScreen)
             }
 
-            TransactionsViewActions.NavigateToTransactionInfoScreen -> {
-                postEvent(TransactionsViewEvents.NavigateToTransactionInfoScreen)
+            is TransactionsViewActions.NavigateToTransactionInfoScreen -> {
+                postEvent(TransactionsViewEvents.NavigateToTransactionInfoScreen(action.transactionId))
             }
 
             TransactionsViewActions.NavigateToTransactionSearchScreen -> {
@@ -181,7 +181,7 @@ class TransactionsViewModel @Inject constructor(
 sealed interface TransactionsViewEvents : BaseViewEvent {
     object NavigateBack : TransactionsViewEvents
     object NavigateToTransactionSearchScreen : TransactionsViewEvents
-    object NavigateToTransactionInfoScreen : TransactionsViewEvents
+    class NavigateToTransactionInfoScreen(val transactionId: String) : TransactionsViewEvents
     object NavigateToTransactionFilterScreen : TransactionsViewEvents
     object NavigateToDepositStatementScreen : TransactionsViewEvents
     data class ShowError(val message: String) : TransactionsViewEvents
@@ -196,7 +196,7 @@ sealed interface TransactionsViewActions : BaseViewAction {
     object NavigateBack : TransactionsViewActions
     object NavigateToTransactionFilterScreen : TransactionsViewActions
     object NavigateToDepositStatementScreen : TransactionsViewActions
-    object NavigateToTransactionInfoScreen : TransactionsViewActions
+    class NavigateToTransactionInfoScreen(val transactionId: String) : TransactionsViewActions
     class RemoveFilterFromList(val item: TransactionFilter) : TransactionsViewActions
     class UpdateFilterList(val data: TransactionFilter) : TransactionsViewActions
     class CloseDepositListBottomSheet(val model: DepositModel?) : TransactionsViewActions

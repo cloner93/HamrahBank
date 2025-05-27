@@ -7,6 +7,7 @@ import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import com.pmb.account.presentation.account.AccountScreen
 import com.pmb.account.presentation.balance.BalanceScreen
+import com.pmb.account.presentation.transactionReceipt.TransactionsReceiptScreen
 import com.pmb.account.presentation.transactions.TransactionsScreen
 import com.pmb.account.presentation.transactions.filterScreen.TransactionFilterScreen
 import com.pmb.account.presentation.transactions.search.TransactionSearchScreen
@@ -38,5 +39,18 @@ fun NavGraphBuilder.accountScreensHandle() {
         arguments = listOf(navArgument("depositId") { type = NavType.StringType })
     ) {
         TransactionSearchScreen()
+    }
+
+    composable(
+        route = AccountScreens.TransactionReceipt.route,
+        deepLinks = listOf(navDeepLink {
+            uriPattern = "myapp://transactionReceipt/{depositId}/{transactionId}"
+        }),
+        arguments = listOf(
+            navArgument("depositId") { type = NavType.StringType },
+            navArgument("transactionId") { type = NavType.StringType }
+        )
+    ) {
+        TransactionsReceiptScreen()
     }
 }
