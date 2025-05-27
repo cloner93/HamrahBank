@@ -79,7 +79,7 @@ fun ThemeScreen(viewModel: ThemeScreenViewModel) {
                 ) {
                     Column(
                         modifier = Modifier.clickable {
-                            viewModel.handle(ThemeScreenViewActions.SelectLightTheme)
+                            viewModel.handle(ThemeScreenViewActions.SelectTheme(ThemeMode.LIGHT))
                         }
                     ) {
                         Image(
@@ -94,7 +94,7 @@ fun ThemeScreen(viewModel: ThemeScreenViewModel) {
                         ) { }
                     }
                     Column(modifier = Modifier.clickable {
-                        viewModel.handle(ThemeScreenViewActions.SelectDarkTheme)
+                        viewModel.handle(ThemeScreenViewActions.SelectTheme(ThemeMode.DARK))
                     }) {
                         Image(
                             painter = painterResource(id = R.drawable.ic_dark_theme),
@@ -120,7 +120,7 @@ fun ThemeScreen(viewModel: ThemeScreenViewModel) {
                     title = "مطابق دستگاه",
                     isChecked = viewState.themeMode == ThemeMode.SYSTEM
                 ) {
-                    viewModel.handle(ThemeScreenViewActions.SelectSystemTheme)
+                    viewModel.handle(ThemeScreenViewActions.SelectTheme(ThemeMode.SYSTEM))
                 }
             }
         }

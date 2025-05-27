@@ -1,7 +1,7 @@
-package com.pmb.mobile.domain.theme.usecae
+package com.pmb.domain.theme.usecae
 
 import com.pmb.core.platform.ThemeMode
-import com.pmb.mobile.domain.theme.repository.ThemeRepository
+import com.pmb.domain.theme.repository.ThemeRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 

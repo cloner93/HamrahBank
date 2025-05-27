@@ -1,11 +1,11 @@
-package com.pmb.mobile.data.theme
+package com.pmb.domain.theme.theme
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.pmb.core.platform.ThemeMode
-import com.pmb.mobile.domain.theme.repository.ThemeRepository
+import com.pmb.domain.theme.repository.ThemeRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
