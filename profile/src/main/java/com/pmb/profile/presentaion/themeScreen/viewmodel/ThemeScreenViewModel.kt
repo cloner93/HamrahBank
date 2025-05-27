@@ -1,29 +1,55 @@
 package com.pmb.profile.presentaion.themeScreen.viewmodel
 
+import androidx.lifecycle.viewModelScope
 import com.pmb.core.platform.BaseViewAction
 import com.pmb.core.platform.BaseViewEvent
 import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.platform.BaseViewState
 import com.pmb.core.platform.ThemeMode
+import com.pmb.domain.theme.usecae.GetThemeModeUseCase
+import com.pmb.domain.theme.usecae.SaveThemeModeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ThemeScreenViewModel @Inject constructor(
     initialState: ThemeScreenViewState,
-//    private val getThemeUseCase: GetThemeUseCase,
-) : BaseViewModel<ThemeScreenViewActions, ThemeScreenViewState, ThemeScreenViewEvents>(initialState) {
+    private val getThemeUseCase: GetThemeModeUseCase,
+    private val saveThemeUseCase: SaveThemeModeUseCase
+) :
+    BaseViewModel<ThemeScreenViewActions, ThemeScreenViewState, ThemeScreenViewEvents>(initialState) {
+
+    init {
+        loadTheme()
+    }
+
     override fun handle(action: ThemeScreenViewActions) {
         when (action) {
-            ThemeScreenViewActions.SelectSystemTheme -> updateTheme(ThemeMode.SYSTEM)
-            ThemeScreenViewActions.SelectLightTheme -> updateTheme(ThemeMode.LIGHT)
-            ThemeScreenViewActions.SelectDarkTheme -> updateTheme(ThemeMode.DARK)
+            is ThemeScreenViewActions.SelectTheme -> {
+                setState { it.copy(themeMode = action.mode) }
+                saveSelectedTheme(action.mode)
+
+            }
         }
     }
 
+    private fun loadTheme() {
+        viewModelScope.launch {
+            getThemeUseCase().collect { theme ->
+                setState {
+                    it.copy(
+                        themeMode = theme
+                    )
+                }
+            }
+        }
+    }
 
-    private fun updateTheme(mode: ThemeMode) {
-        setState { it.copy(themeMode = it.themeMode) }
+    private fun saveSelectedTheme(mode: ThemeMode) {
+        viewModelScope.launch {
+            saveThemeUseCase.invoke(mode)
+        }
     }
 }
 
@@ -33,11 +59,11 @@ sealed interface ThemeScreenViewEvents : BaseViewEvent {
 }
 
 sealed interface ThemeScreenViewActions : BaseViewAction {
-    object SelectSystemTheme : ThemeScreenViewActions
-    object SelectLightTheme : ThemeScreenViewActions
-    object SelectDarkTheme : ThemeScreenViewActions
+    class SelectTheme(val mode: ThemeMode) : ThemeScreenViewActions
+
 }
 
 data class ThemeScreenViewState(
-    val isLoading: Boolean = false, val themeMode: ThemeMode = ThemeMode.LIGHT
+    val isLoading: Boolean = false,
+    val themeMode: ThemeMode = ThemeMode.SYSTEM
 ) : BaseViewState

@@ -47,7 +47,7 @@ class DepositsViewModel @Inject constructor(
             }
 
             is DepositsViewActions.NavigateToTransactionDetailScreen -> {
-                postEvent(NavigateToTransactionDetails("placeholder_id"))
+                postEvent(NavigateToTransactionDetails(action.transactionId))
             }
 
             is DepositsViewActions.ShowDepositMoreActionBottomSheet -> {

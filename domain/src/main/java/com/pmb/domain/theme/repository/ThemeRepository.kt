@@ -1,4 +1,4 @@
-package com.pmb.mobile.domain.theme.repository
+package com.pmb.domain.theme.repository
 
 import com.pmb.core.platform.ThemeMode
 import kotlinx.coroutines.flow.Flow

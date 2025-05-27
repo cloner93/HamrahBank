@@ -1,6 +1,5 @@
 package com.pmb.account.presentation.deposits
 
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -83,29 +82,25 @@ fun DepositsScreen() {
             }
         )
     )
-    val context = LocalContext.current
+    LocalContext.current
 
     LaunchedEffect(Unit) {
         viewModel.viewEvent.collect { event ->
             when (event) {
-                is DepositsViewEvents.AmountVisibilityChanged -> {
-                    Toast.makeText(context, "TODO ->$event", Toast.LENGTH_LONG).show()
-
-                }
-
                 is DepositsViewEvents.DepositSelectionChanged -> {
-//                    Toast.makeText(context, "TODO ->$event", Toast.LENGTH_LONG).show()
 
                 }
 
                 is DepositsViewEvents.NavigateBack -> {
-                    Toast.makeText(context, "TODO ->$event", Toast.LENGTH_LONG).show()
-
                 }
 
                 is DepositsViewEvents.NavigateToTransactionDetails -> {
-                    Toast.makeText(context, "TODO ->$event", Toast.LENGTH_LONG).show()
-
+                    navigationManager.navigateWithString(
+                        AccountScreens.TransactionReceipt.createRoute(
+                            viewState.selectedDeposit?.depositNumber ?: "",
+                            event.transactionId
+                        )
+                    )
                 }
 
                 is DepositsViewEvents.NavigateToTransactionsList -> {
@@ -113,17 +108,13 @@ fun DepositsScreen() {
                 }
 
                 is DepositsViewEvents.RefreshCompleted -> {
-                    Toast.makeText(context, "TODO ->$event", Toast.LENGTH_LONG).show()
-
                 }
 
                 is DepositsViewEvents.ShowError -> {
-                    Toast.makeText(context, "TODO ->$event", Toast.LENGTH_LONG).show()
 
                 }
 
                 is DepositsViewEvents.ShowToast -> {
-                    Toast.makeText(context, "TODO ->$event", Toast.LENGTH_LONG).show()
 
                 }
 
@@ -153,7 +144,7 @@ fun DepositsScreen() {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 25.dp)
+//                .padding(top = 25.dp)
                 .height(92.dp)
                 .padding(horizontal = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -232,8 +223,15 @@ fun DepositsScreen() {
             LazyColumn {
                 items(viewState.transactions.size) { item ->
                     Spacer(modifier = Modifier.height(12.dp))
-                    TransactionRow(viewState.transactions[item], viewState.isAmountVisible) {
-                        viewModel.handle(DepositsViewActions.NavigateToTransactionDetailScreen)
+                    TransactionRow(
+                        viewState.transactions[item],
+                        viewState.isAmountVisible
+                    ) { transactionId ->
+                        viewModel.handle(
+                            DepositsViewActions.NavigateToTransactionDetailScreen(
+                                transactionId
+                            )
+                        )
                     }
                     Spacer(modifier = Modifier.height(12.dp))
                 }

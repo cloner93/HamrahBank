@@ -1,7 +1,7 @@
-package com.pmb.mobile.di
+package com.pmb.domain.theme.di
 
-import com.pmb.mobile.data.theme.ThemeRepositoryImpl
-import com.pmb.mobile.domain.theme.repository.ThemeRepository
+import com.pmb.domain.theme.repository.ThemeRepository
+import com.pmb.domain.theme.theme.ThemeRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

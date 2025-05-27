@@ -134,8 +134,13 @@ fun TransactionsScreen() {
                     navigationManager.navigate(AccountScreens.TransactionsFilter)
                 }
 
-                TransactionsViewEvents.NavigateToTransactionInfoScreen -> {
-
+                is TransactionsViewEvents.NavigateToTransactionInfoScreen -> {
+                    navigationManager.navigateWithString(
+                        AccountScreens.TransactionReceipt.createRoute(
+                            viewState.selectedDeposit?.depositNumber ?: "",
+                            event.transactionId
+                        )
+                    )
                 }
 
                 TransactionsViewEvents.NavigateToTransactionSearchScreen -> {
@@ -220,8 +225,12 @@ fun TransactionsScreen() {
                         viewModel.handle(TransactionsViewActions.RemoveFilterFromList(it))
                     }, onStatementClick = {
                         viewModel.handle(TransactionsViewActions.NavigateToDepositStatementScreen)
-                    }) {
-                    viewModel.handle(TransactionsViewActions.NavigateToTransactionInfoScreen)
+                    }) { transactionId ->
+                    viewModel.handle(
+                        TransactionsViewActions.NavigateToTransactionInfoScreen(
+                            transactionId
+                        )
+                    )
                 }
             }
 
@@ -313,7 +322,7 @@ private fun AllTransactionsSection(
     onFilterClick: () -> Unit = {},
     onFilterItemClick: (TransactionFilter) -> Unit = {},
     onStatementClick: () -> Unit = {},
-    onTransactionItemClick: () -> Unit = {},
+    onTransactionItemClick: (transactionId: String) -> Unit = {},
 ) {
     StatementAndFilters(transactionFilter = transactionFilter, onFilterClick = {
         onFilterClick()
@@ -327,7 +336,8 @@ private fun AllTransactionsSection(
     ) {
         items(transactionList.size) { item ->
             TransactionRow(transactionList[item]) {
-                onTransactionItemClick()
+                val transactionId = transactionList.get(item).transactionId
+                onTransactionItemClick(transactionId)
             }
         }
     }
@@ -699,10 +709,18 @@ fun TransactionRow(item: TransactionModel, onClick: () -> Unit = {}) {
 private fun AllTransactionsSectionFiledPreview() {
     val transactionList = listOf<TransactionModel>(
         TransactionModel(
-            TransactionType.RECEIVE, "واریز حقوق", 1_000_000.0, "ریال", "امروز ساعت ۱۰:۳۰"
+            "0",
+            TransactionType.RECEIVE,
+            "واریز حقوق",
+            1_000_000.0,
+            "ریال", "امروز ساعت ۱۰:۳۰"
         ),
         TransactionModel(
-            TransactionType.TRANSFER, "انتقال", 1_000_000.0, "ریال", "امروز ساعت ۱۰:۳۰"
+            "1",
+            TransactionType.TRANSFER,
+            "انتقال",
+            1_000_000.0,
+            "ریال", "امروز ساعت ۱۰:۳۰"
         ),
 
         )

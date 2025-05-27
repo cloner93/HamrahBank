@@ -11,5 +11,4 @@ sealed interface DepositsViewEvents : BaseViewEvent {
     object RefreshCompleted : DepositsViewEvents
     object NavigateToTransactionsList : DepositsViewEvents
     object NavigateToBalanceScreen : DepositsViewEvents
-    data class AmountVisibilityChanged(val isVisible: Boolean) : DepositsViewEvents
 }

@@ -97,6 +97,7 @@ dependencies {
     implementation(project(":core"))
     implementation(project(":navigation"))
     implementation(project(":ballon"))
+    implementation(project(":domain"))
     implementation(project(":auth"))
     implementation(project(":home"))
     implementation(project(":transfer"))
@@ -108,9 +109,6 @@ dependencies {
     implementation(libs.android.hilt)
     kapt(libs.android.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
-
-    // temporary store them in datastore - move it to data layer
-    implementation(libs.dataStore)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

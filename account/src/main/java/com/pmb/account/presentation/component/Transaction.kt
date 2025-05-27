@@ -34,6 +34,7 @@ enum class TransactionType {
 
 
 data class TransactionModel(
+    val transactionId: String,
     val type: TransactionType,
     val title: String,
     val amount: Double,
@@ -42,13 +43,17 @@ data class TransactionModel(
 )
 
 @Composable
-fun TransactionRow(item: TransactionModel, isAmountVisible: Boolean, onClick: () -> Unit = {}) {
+fun TransactionRow(
+    item: TransactionModel,
+    isAmountVisible: Boolean,
+    onClick: (transactionId: String) -> Unit = {}
+) {
     Row(
         modifier = Modifier
             .background(color = AppTheme.colorScheme.background1Neutral)
             .height(48.dp)
             .clickable {
-                onClick()
+                onClick(item.transactionId)
             },
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -100,6 +105,7 @@ fun TransactionRow(item: TransactionModel, isAmountVisible: Boolean, onClick: ()
 private fun TransactionRowPreview() {
     HamrahBankTheme {
         val d = TransactionModel(
+            "0",
             TransactionType.RECEIVE,
             "واریز حقوق",
             1_000_000.0,

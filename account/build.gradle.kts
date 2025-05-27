@@ -50,6 +50,7 @@ dependencies {
     implementation(project(":core"))
     implementation(project(":ballon"))
     implementation(project(":navigation"))
+    implementation(project(":snapui:receipt"))
     implementation(project(":calender"))
 
     implementation(libs.androidx.ui.test.android)
