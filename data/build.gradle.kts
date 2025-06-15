@@ -3,12 +3,10 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.android.hilt)
     alias(libs.plugins.kotlin.kapt)
-    alias(libs.plugins.compose.compiler)
-    kotlin("plugin.serialization") version "2.1.21"
 }
 
 android {
-    namespace = "com.pmb.domain"
+    namespace = "com.pmb.data"
     compileSdk = 34
 
     defaultConfig {
@@ -29,19 +27,15 @@ android {
 }
 
 dependencies {
+    implementation(project(":network"))
+    implementation(project(":domain"))
     implementation(project(":core"))
 
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.ktor.serialization.kotlinx.json)
-
-
-    // DI > Hilt
     api(libs.android.hilt)
     kapt(libs.android.hilt.compiler)
-    api(libs.hilt.navigation.compose)
+    implementation(libs.ktor.client.core)
 
-    // temporary store them in datastore - move it to data layer
+    // todo: temporary store them in datastore - move it to data layer
     implementation(libs.dataStore)
 
 }

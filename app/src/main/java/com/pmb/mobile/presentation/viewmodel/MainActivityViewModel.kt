@@ -6,7 +6,7 @@ import com.pmb.core.platform.BaseViewEvent
 import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.platform.BaseViewState
 import com.pmb.core.platform.ThemeMode
-import com.pmb.domain.theme.usecae.GetThemeModeUseCase
+import com.pmb.domain.usecae.theme.GetThemeModeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

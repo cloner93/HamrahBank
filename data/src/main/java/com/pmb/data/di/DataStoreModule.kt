@@ -1,4 +1,4 @@
-package com.pmb.domain.theme.di
+package com.pmb.data.di
 
 import android.content.Context
 import androidx.datastore.core.DataStore
