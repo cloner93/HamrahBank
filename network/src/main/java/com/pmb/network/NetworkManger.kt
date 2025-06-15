@@ -6,6 +6,7 @@ import com.pmb.core.network.safeRequestCall
 import com.pmb.core.platform.Result
 import com.pmb.network.dto.MobileApiRequest
 import com.pmb.network.dto.RequestMetaData
+import com.pmb.network.plugin.installErrorHandler
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.android.Android
@@ -31,7 +32,7 @@ class NetworkManger @Inject constructor(
 ) {
     val client: HttpClient = HttpClient(Android) {
         defaultRequest {
-            host = "192.168.0.3:8080"
+            host = "172.20.140.242:9080/api/v1"
             url {
                 protocol = URLProtocol.HTTP
             }
@@ -58,49 +59,6 @@ class NetworkManger @Inject constructor(
             level = LogLevel.ALL
         }
 
-        /*install(Auth) {
-            bearer {
-                loadTokens {
-                    val session = userSession.get()
-                    BearerTokens(
-                        session?.accessToken.orEmpty(),
-                        session?.refreshToken.orEmpty()
-                    )
-                }
-
-                refreshTokens {
-                    val refreshToken = userSession.get()?.refreshToken.orEmpty()
-                    *//* val newTokens: TokenInfo = client.submitForm(
-                         url = "http://0.0.0.0:8080/refresh",
-                         formParameters = Parameters.build {
-                             append("grant_type", "refresh_token")
-                             append("client_id", "clientId")
-                             append("refresh_token", refreshToken)
-                         }
-                     ) {
-                         markAsRefreshTokenRequest()
-                     }.body()*//*
-                    val newTokens: TokenResponse = client.post("http://0.0.0.0:8080/refresh") {
-                        contentType(ContentType.Application.Json)
-                        setBody(RefreshRequest(refresh_token = refreshToken))
-                    }.body()
-
-                    userSession.connect(
-                        SessionData(
-                            accessToken = newTokens.access_token,
-                            refreshToken = newTokens.refresh_token.orEmpty(),
-                        )
-                    )
-
-                    BearerTokens(newTokens.access_token, newTokens.refresh_token.orEmpty())
-                }
-
-                sendWithoutRequest { request ->
-                    request.url.host.contains("0.0.0.0")
-                }
-            }
-        }*/
-
         install(ContentNegotiation) {
             json(Json {
                 ignoreUnknownKeys = true
@@ -113,7 +71,7 @@ class NetworkManger @Inject constructor(
             socketTimeoutMillis = 20_000
         }
 
-        expectSuccess = true
+        installErrorHandler()
     }
 
     inline fun <reified T, reified R> request(
