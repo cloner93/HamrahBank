@@ -1,5 +1,10 @@
 package com.pmb.core.platform
 
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
+
 sealed class Result<out T> {
 
     data class Success<out T>(val data: T) : Result<T>()
@@ -67,4 +72,15 @@ sealed class Result<out T> {
         is Error -> throw exception ?: IllegalStateException(message ?: "An unknown error occurred")
         is Loading -> throw IllegalStateException("Cannot retrieve data in Loading state")
     }
+
+    fun <T> Flow<T>.asResult(): Flow<Result<T>> = map<T, Result<T>> { Success(it) }
+        .onStart { emit(Loading) }
+        .catch {
+            emit(
+                Error(
+                    message = it.message ?: "Unknown error",
+                    exception = it
+                )
+            )
+        }
 }

@@ -46,12 +46,16 @@ class LoginViewModel @Inject constructor(
                         }
                     }
 
-                    Result.Loading -> setState { it.copy(loading = true) }
-                    is Result.Success -> {
+                    Result.Loading -> {
+                        setState { it.copy(loading = true) }
+                    }
+
+                    is Result.Success<*> -> {
                         setState { it.copy(loading = false) }
                         postEvent(LoginViewEvents.LoginSuccess)
                     }
                 }
+
             }
 
         }

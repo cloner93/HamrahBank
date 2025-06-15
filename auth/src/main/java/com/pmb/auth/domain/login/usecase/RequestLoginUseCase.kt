@@ -1,19 +1,18 @@
 package com.pmb.auth.domain.login.usecase
 
-import com.pmb.auth.domain.login.entity.UserEntity
-import com.pmb.auth.domain.login.repository.LoginRepository
 import com.pmb.core.platform.BaseUseCase
 import com.pmb.core.platform.Result
+import com.pmb.domain.model.dto.LoginResponse
+import com.pmb.domain.repository.auth.login.LoginRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 class RequestLoginUseCase @Inject constructor(
     private val loginRepository: LoginRepository
-) : BaseUseCase<RequestLoginParams, UserEntity>() {
+) : BaseUseCase<RequestLoginParams, LoginResponse>() {
 
-    override suspend fun execute(params: RequestLoginParams): Flow<Result<UserEntity>> {
-        // Call the login function from the repository and return the first result
+    override suspend fun execute(params: RequestLoginParams): Flow<Result<LoginResponse>> {
+        // this is temp
         return loginRepository.login(params.username, params.password)
     }
 }
