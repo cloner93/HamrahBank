@@ -98,6 +98,7 @@ dependencies {
     implementation(project(":navigation"))
     implementation(project(":ballon"))
     implementation(project(":domain"))
+    implementation(project(":data"))
     implementation(project(":auth"))
     implementation(project(":home"))
     implementation(project(":transfer"))
