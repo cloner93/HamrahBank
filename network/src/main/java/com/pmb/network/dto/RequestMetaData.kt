@@ -8,7 +8,7 @@ import kotlinx.serialization.Serializable
 data class RequestMetaData(
     val initialVec: String,
     val imei: String,
-    val osType: Short,
-    val osVersion: Short,
+    val osType: Int,
+    val osVersion: Int,
     val deviceName: String
 )

@@ -7,5 +7,5 @@ import kotlinx.serialization.Serializable
 data class MobileApiResponse<T>(
     val status: Int = 0,
     val metaData: ResponseMetaData?,
-    var data: T
+    var data: T? = null
 )

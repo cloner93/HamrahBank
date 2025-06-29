@@ -11,8 +11,12 @@ import javax.inject.Inject
 class LoginRepositoryImpl @Inject constructor(
     private val client: NetworkManger
 ) : LoginRepository {
-    override fun login(username: String, password: String): Flow<Result<LoginResponse>> {
-        val req = LoginRequest(username = username, password = password)
+    override fun login(
+        customerId: String,
+        username: String,
+        password: String
+    ): Flow<Result<LoginResponse>> {
+        val req = LoginRequest(customerId = customerId, username = username, password = password)
 
         return client.request(endpoint = "login", data = req)
     }

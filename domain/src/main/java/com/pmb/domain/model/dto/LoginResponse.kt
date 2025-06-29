@@ -1,15 +1,11 @@
 package com.pmb.domain.model.dto
 
-import kotlinx.serialization.SerialName
+import android.annotation.SuppressLint
 import kotlinx.serialization.Serializable
 
-
+@SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class LoginResponse(
-    @SerialName("access_token")
     val accessToken: String,
-//    @SerialName("expires_in")
-//    val expiresIn: Int,
-    @SerialName("refresh_token")
     val refreshToken: String? = null,
 )

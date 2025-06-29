@@ -5,5 +5,5 @@ import com.pmb.domain.model.dto.LoginResponse
 import kotlinx.coroutines.flow.Flow
 
 interface LoginRepository {
-    fun login(username: String, password: String): Flow<Result<LoginResponse>>
+    fun login(customerId: String, username: String, password: String): Flow<Result<LoginResponse>>
 }
