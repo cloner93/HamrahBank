@@ -1,8 +1,8 @@
 package com.pmb.network
 
 import android.annotation.SuppressLint
+import android.os.Build
 import android.util.Log
-import com.pmb.core.network.safeRequestCall
 import com.pmb.core.platform.Result
 import com.pmb.network.dto.MobileApiRequest
 import com.pmb.network.dto.RequestMetaData
@@ -25,27 +25,35 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.flow.Flow
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import java.security.SecureRandom
+import java.security.cert.X509Certificate
 import javax.inject.Inject
+import javax.net.ssl.HostnameVerifier
+import javax.net.ssl.SSLContext
+import javax.net.ssl.X509TrustManager
 
 class NetworkManger @Inject constructor(
     private val userSession: UserSessionImpl
 ) {
     val client: HttpClient = HttpClient(Android) {
         defaultRequest {
-            host = "172.20.140.242:9080/api/v1"
+            host = "172.20.140.242:8443/api/v1"
             url {
-                protocol = URLProtocol.HTTP
+                protocol = URLProtocol.HTTPS
             }
-            // we can add header for each request.
             headers {
-                append("Accept", "application/json")
                 append("Content-Type", "application/json")
             }
         }
 
+        // temp
         engine {
-            sslManager = {
-                it.sslSocketFactory = SslSettings.getSslContext()?.socketFactory
+            sslManager = { httpsURLConnection ->
+                httpsURLConnection.hostnameVerifier = HostnameVerifier { _, _ -> true }
+                httpsURLConnection.sslSocketFactory = SSLContext.getInstance("TLS")
+                    .apply {
+                        init(null, arrayOf(AllCertsTrustManager()), SecureRandom())
+                    }.socketFactory
             }
         }
 
@@ -85,8 +93,8 @@ class NetworkManger @Inject constructor(
                 initialVec = "",
                 imei = "12345",
                 osType = 7,
-                osVersion = 1,
-                deviceName = "google pixel 9 pro"
+                osVersion = Build.VERSION.RELEASE.toIntOrNull() ?: 1,
+                deviceName = "${Build.MANUFACTURER} ${Build.MODEL}"
             ),
             data = data,
         )
@@ -116,3 +124,20 @@ data class RefreshRequest(val refresh_token: String)
 data class TokenResponse(val access_token: String, val refresh_token: String)
 
 data class SessionData(var accessToken: String, var refreshToken: String)
+
+class AllCertsTrustManager : X509TrustManager {
+
+    override fun checkClientTrusted(
+        chain: Array<out X509Certificate>?,
+        authType: String?
+    ) {
+    }
+
+    override fun checkServerTrusted(
+        chain: Array<out X509Certificate>?,
+        authType: String?
+    ) {
+    }
+
+    override fun getAcceptedIssuers(): Array<X509Certificate> = arrayOf()
+}
