@@ -27,7 +27,9 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch {
             loginRequestLoginUseCase.invoke(
                 RequestLoginParams(
-                    username = action.username, password = action.password
+                    customerId = "09128987390",
+                    username = action.username,
+                    password = action.password
                 )
             ).collect { result ->
                 when (result) {
@@ -35,8 +37,8 @@ class LoginViewModel @Inject constructor(
                         setState {
                             it.copy(
                                 loading = false, alert = AlertModelState.Dialog(
-                                    title = "Login Failed",
-                                    description = "failed to login because ${result.message}",
+                                    title = "خطا در ورود به حساب",
+                                    description = result.message,
                                     positiveButtonTitle = "okay",
                                     onPositiveClick = {
                                         setState { state -> state.copy(alert = null) }

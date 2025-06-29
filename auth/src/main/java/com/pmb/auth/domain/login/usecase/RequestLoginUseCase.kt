@@ -13,8 +13,12 @@ class RequestLoginUseCase @Inject constructor(
 
     override suspend fun execute(params: RequestLoginParams): Flow<Result<LoginResponse>> {
         // this is temp
-        return loginRepository.login(params.username, params.password)
+        return loginRepository.login(params.customerId, params.username, params.password)
     }
 }
 
-data class RequestLoginParams(val username: String, val password: String)
+data class RequestLoginParams(
+    val customerId: String = "", // default value is temp
+    val username: String,
+    val password: String
+)
