@@ -33,6 +33,7 @@ import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.manager.NavigationManager
 import com.pmb.navigation.moduleScreen.AuthScreens
 
+//
 @Composable
 fun FirstLoginScreen(viewModel: FirstLoginViewModel) {
     val navigationManager: NavigationManager = LocalNavigationManager.current
@@ -43,7 +44,13 @@ fun FirstLoginScreen(viewModel: FirstLoginViewModel) {
         viewModel.viewEvent.collect { event ->
             when (event) {
                 FirsLoginViewEvents.FirstLoginStepSucceed -> {
-                    navigationManager.navigate(AuthScreens.FirstLoginConfirm)
+                    navigationManager.navigateWithString(
+                        AuthScreens.FirstLoginConfirm.createRoute(
+                            viewState.phoneNumber,
+                            viewState.username,
+                            viewState.password
+                        )
+                    )
                 }
             }
         }

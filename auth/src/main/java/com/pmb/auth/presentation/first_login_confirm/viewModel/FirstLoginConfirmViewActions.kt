@@ -7,6 +7,8 @@ sealed interface FirstLoginConfirmViewActions : BaseViewAction {
     data object ClearBottomSheet : FirstLoginConfirmViewActions
     data class ConfirmFirstLogin(
         val mobileNumber: String,
+        val userName: String,
+        val password: String,
         val otpCode: String
     ) : FirstLoginConfirmViewActions
 

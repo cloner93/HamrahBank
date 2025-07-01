@@ -80,7 +80,16 @@ fun NavGraphBuilder.authScreensHandle(
             viewModel = hiltViewModel<FirstLoginViewModel>()
         )
     }
-    composable(route = AuthScreens.FirstLoginConfirm.route) {
+    composable(
+        route = AuthScreens.FirstLoginConfirm.route,
+        deepLinks = listOf(navDeepLink {
+            uriPattern = "myapp://first_login_confirm/{mobileNumber}/{username}/{password}"
+        }),
+        arguments = listOf(
+            navArgument("mobileNumber") { type = NavType.StringType },
+            navArgument("username") { type = NavType.StringType },
+            navArgument("password") { type = NavType.StringType })
+    ) {
         FirstLoginConfirmScreen(
             viewModel = hiltViewModel<FirstLoginConfirmViewModel>(),
             comingType = comingType.value ?: ComingType.COMING_LOGIN
@@ -93,7 +102,7 @@ fun NavGraphBuilder.authScreensHandle(
     }
     composable(route = AuthScreens.Register.route) {
         val navigationManager = LocalNavigationManager.current
-        AccountOpeningScreen() {
+        AccountOpeningScreen {
             comingType = mutableStateOf(it)
             navigationManager.navigate(AuthScreens.RegisterNationalId)
         }

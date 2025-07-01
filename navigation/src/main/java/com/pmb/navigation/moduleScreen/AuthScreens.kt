@@ -6,7 +6,11 @@ sealed class AuthScreens(route: String, arguments: Map<String, String> = emptyMa
     Screen(baseRoute = route, arguments = arguments) {
     data object Auth : AuthScreens(route = "auth")
     data object FirstLogin : AuthScreens(route = "first_login")
-    data object FirstLoginConfirm : AuthScreens(route = "first_login_confirm")
+    data object FirstLoginConfirm :
+        AuthScreens(route = "first_login_confirm/{mobileNumber}/{username}/{password}") {
+        fun createRoute(mobileNumber: String, username: String, password: String) =
+            "first_login_confirm/$mobileNumber/$username/$password"
+    }
     data object Login : AuthScreens(route = "login")
     data object Register : AuthScreens(route = "register")
     data object ForgetPassword : AuthScreens(route = "forget_password")

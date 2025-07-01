@@ -65,8 +65,6 @@ fun FirstLoginConfirmScreen(
         }
     }
 
-
-    val phonenumber by remember { mutableStateOf(viewModel.getAccountModel().mobileNumber) }
     var otp by remember { mutableStateOf("") }
 
     val title =
@@ -116,7 +114,7 @@ fun FirstLoginConfirmScreen(
         )
         Spacer(modifier = Modifier.size(32.dp))
         ChipWithIcon(
-            value = phonenumber,
+            value = viewState.mobileNumber,
             startIcon = Icons.Default.Edit,
             clickable = {
                 if (comingType === ComingType.COMING_LOGIN)
@@ -139,7 +137,10 @@ fun FirstLoginConfirmScreen(
             onClick = {
                 viewModel.handle(
                     FirstLoginConfirmViewActions.ConfirmFirstLogin(
-                        mobileNumber = phonenumber, otpCode = otp
+                        mobileNumber = viewState.mobileNumber,
+                        userName = viewState.username,
+                        password = viewState.password,
+                        otpCode = otp
                     )
                 )
             })
@@ -151,9 +152,9 @@ fun FirstLoginConfirmScreen(
             onClick = {
                 viewModel.handle(
                     FirstLoginConfirmViewActions.ResendFirstLoginInfo(
-                        mobileNumber = phonenumber,
-                        userName = viewModel.getAccountModel().userName,
-                        password = viewModel.getAccountModel().passWord
+                        mobileNumber = viewState.mobileNumber,
+                        userName = viewState.username,
+                        password = viewState.password
                     )
                 )
             })

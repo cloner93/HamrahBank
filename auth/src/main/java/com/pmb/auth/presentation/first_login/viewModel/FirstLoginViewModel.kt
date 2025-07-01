@@ -1,11 +1,11 @@
 package com.pmb.auth.presentation.first_login.viewModel
 
 import androidx.lifecycle.viewModelScope
-import com.pmb.auth.domain.first_login.entity.FirstLoginStepRequest
-import com.pmb.auth.domain.first_login.useCase.FirstLoginUseCase
 import com.pmb.core.platform.AlertModelState
 import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.platform.Result
+import com.pmb.domain.usecae.auth.FirstLoginStepRequest
+import com.pmb.domain.usecae.auth.FirstLoginUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

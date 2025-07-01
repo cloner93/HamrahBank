@@ -1,12 +1,12 @@
 package com.pmb.auth.presentation.reentry.reentry_password.viewModel
 
 import androidx.lifecycle.viewModelScope
-import com.pmb.auth.domain.login.usecase.RequestLoginParams
-import com.pmb.auth.domain.login.usecase.RequestLoginUseCase
 import com.pmb.ballon.models.AccountSampleModel
 import com.pmb.core.platform.AlertModelState
 import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.platform.Result
+import com.pmb.domain.usecae.auth.RequestLoginParams
+import com.pmb.domain.usecae.auth.RequestLoginUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

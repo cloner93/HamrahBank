@@ -8,6 +8,9 @@ data class FirstLoginConfirmViewState(
     val alertModelState: AlertModelState? = null,
     val timerState: Map<TimerTypeId, TimerState>? = null,
     val isShowBottomSheet: Boolean = false,
+    val mobileNumber: String = "",
+    val username: String = "",
+    val password: String = ""
 ) : BaseViewState {
     fun calculateSecond(timerTypeId: TimerTypeId) =
         (((timerState?.get(timerTypeId)?.remainingTime ?: 0)) % 60).toString().padStart(2, '0')

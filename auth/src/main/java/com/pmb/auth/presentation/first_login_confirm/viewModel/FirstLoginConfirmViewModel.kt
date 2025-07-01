@@ -1,15 +1,15 @@
 package com.pmb.auth.presentation.first_login_confirm.viewModel
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.pmb.auth.domain.first_login.entity.FirstLoginStepRequest
-import com.pmb.auth.domain.first_login.useCase.FirstLoginUseCase
-import com.pmb.auth.domain.first_login_confirm.entity.SendOtpRequest
-import com.pmb.auth.domain.first_login_confirm.useCase.FirstLoginConfirmUseCase
 import com.pmb.auth.utils.startCountDown
-import com.pmb.ballon.models.AccountSampleModel
 import com.pmb.core.platform.AlertModelState
 import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.platform.Result
+import com.pmb.domain.model.SendOtpRequest
+import com.pmb.domain.usecae.auth.FirstLoginConfirmUseCase
+import com.pmb.domain.usecae.auth.FirstLoginStepRequest
+import com.pmb.domain.usecae.auth.FirstLoginUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -27,12 +27,16 @@ import javax.inject.Inject
 class FirstLoginConfirmViewModel @Inject constructor(
     initialState: FirstLoginConfirmViewState,
     private val firstLoginUseCase: FirstLoginUseCase,
-    private val firstLoginConfirmUseCase: FirstLoginConfirmUseCase
+    private val firstLoginConfirmUseCase: FirstLoginConfirmUseCase,
+    savedStateHandle: SavedStateHandle
 ) : BaseViewModel<FirstLoginConfirmViewActions, FirstLoginConfirmViewState, FirstLoginConfirmViewEvents>(
     initialState
 ) {
-    private val accountSampleModel = AccountSampleModel()
-    fun getAccountModel() = accountSampleModel
+    private val mobileNumber = savedStateHandle.get<String>("mobileNumber")
+    private val username = savedStateHandle.get<String>("username")
+    private val password = savedStateHandle.get<String>("password")
+
+
     private var timerDurationInterval: Long = 120000L
     private var otpTryingStack = 0
     override fun handle(action: FirstLoginConfirmViewActions) {
@@ -52,6 +56,8 @@ class FirstLoginConfirmViewModel @Inject constructor(
             firstLoginConfirmUseCase.invoke(
                 SendOtpRequest(
                     mobileNumber = action.mobileNumber,
+                    userName = action.userName,
+                    password = action.password,
                     otp = action.otpCode
                 )
             ).collect { result ->
@@ -215,7 +221,10 @@ class FirstLoginConfirmViewModel @Inject constructor(
                 timerState = mapOf(
                     (TimerTypeId.RESEND_TIMER to TimerState(remainingTime = timerDurationInterval)),
                     (TimerTypeId.LOCK_TIMER to TimerState())
-                )
+                ),
+                mobileNumber = mobileNumber!!,
+                username = username!!,
+                password = password!!
             )
         }
         startTimers()
