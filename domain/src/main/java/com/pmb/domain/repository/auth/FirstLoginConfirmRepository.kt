@@ -1,8 +1,8 @@
-package com.pmb.auth.domain.first_login_confirm.repository
+package com.pmb.domain.repository.auth
 
-import com.pmb.auth.domain.first_login_confirm.entity.SendOtpRequest
-import com.pmb.auth.domain.first_login_confirm.entity.SendOtpResponse
 import com.pmb.core.platform.Result
+import com.pmb.domain.model.SendOtpRequest
+import com.pmb.domain.model.SendOtpResponse
 import kotlinx.coroutines.flow.Flow
 
 interface FirstLoginConfirmRepository {

@@ -4,7 +4,7 @@ plugins {
     alias(libs.plugins.android.hilt)
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.compose.compiler)
-    kotlin("plugin.serialization") version "2.1.21"
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -33,7 +33,7 @@ dependencies {
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
-    implementation(libs.ktor.serialization.kotlinx.json)
+    implementation(libs.kotlinx.serialization.json)
 
 
     // DI > Hilt

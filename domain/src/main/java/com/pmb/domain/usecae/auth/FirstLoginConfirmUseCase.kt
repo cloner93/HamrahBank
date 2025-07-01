@@ -1,9 +1,9 @@
-package com.pmb.auth.domain.first_login_confirm.useCase
+package com.pmb.domain.usecae.auth
 
-import com.pmb.auth.domain.first_login_confirm.entity.SendOtpRequest
-import com.pmb.auth.domain.first_login_confirm.entity.SendOtpResponse
-import com.pmb.auth.domain.first_login_confirm.repository.FirstLoginConfirmRepository
 import com.pmb.core.platform.BaseUseCase
+import com.pmb.domain.model.SendOtpRequest
+import com.pmb.domain.model.SendOtpResponse
+import com.pmb.domain.repository.auth.FirstLoginConfirmRepository
 import javax.inject.Inject
 
 class FirstLoginConfirmUseCase @Inject constructor(

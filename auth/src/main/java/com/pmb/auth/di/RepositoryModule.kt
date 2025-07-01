@@ -9,10 +9,7 @@ import com.pmb.auth.data.ekyc.fee_details.FeeDetailsRepositoryImpl
 import com.pmb.auth.data.ekyc.open_account.OpenAccountRepositoryImpl
 import com.pmb.auth.data.ekyc.signature.SignatureRepositoryImpl
 import com.pmb.auth.data.ekyc.video_capture.CapturingVideoRepositoryImpl
-import com.pmb.auth.data.first_login.FirstLoginRepositoryImpl
-import com.pmb.auth.data.first_login_confirm.FirstLoginConfirmRepositoryImpl
 import com.pmb.auth.data.forget_password.ForgetPasswordRepositoryImpl
-import com.pmb.auth.data.login.LoginRepositoryImpl
 import com.pmb.auth.data.new_password.NewPasswordRepositoryImpl
 import com.pmb.auth.data.register.authentication_information.AuthenticationInformationRepositoryImpl
 import com.pmb.auth.data.register.check_postal_code.CheckPostalCodeRepositoryImpl
@@ -32,10 +29,7 @@ import com.pmb.auth.domain.ekyc.face_photo.repository.FacePhotoRepository
 import com.pmb.auth.domain.ekyc.fee_details.repository.FeeDetailsRepository
 import com.pmb.auth.domain.ekyc.open_account.repository.OpenAccountRepository
 import com.pmb.auth.domain.ekyc.signature.repository.SignatureRepository
-import com.pmb.auth.domain.first_login.repository.FirstLoginRepository
-import com.pmb.auth.domain.first_login_confirm.repository.FirstLoginConfirmRepository
 import com.pmb.auth.domain.forget_password.repository.ForgetPasswordRepository
-import com.pmb.auth.domain.login.repository.LoginRepository
 import com.pmb.auth.domain.new_password.repository.NewPasswordRepository
 import com.pmb.auth.domain.register.authentication_information.repository.AuthenticationInformationRepository
 import com.pmb.auth.domain.register.check_postal_code.repository.CheckPostalCodeRepository
@@ -56,17 +50,7 @@ import dagger.hilt.components.SingletonComponent
 abstract class RepositoryModule {
 
     @Binds
-    abstract fun bindLoginRepository(loginRepositoryImpl: LoginRepositoryImpl): LoginRepository
-
-    @Binds
     abstract fun bindForgetPasswordRepository(forgetPasswordRepositoryImpl: ForgetPasswordRepositoryImpl): ForgetPasswordRepository
-
-    @Binds
-    abstract fun bindFirstLoginRepository(firstLoginRepositoryImpl: FirstLoginRepositoryImpl): FirstLoginRepository
-
-    @Binds
-    abstract fun bindFirstLoginConfirm(firstLoginConfirmRepositoryImpl: FirstLoginConfirmRepositoryImpl): FirstLoginConfirmRepository
-
 
     @Binds
     abstract fun bindActivationUser(activateRepositoryImpl: ActivateRepositoryImpl): ActivateRepository
