@@ -1,4 +1,4 @@
-package com.pmb.network.dto
+package com.pmb.model
 
 import android.annotation.SuppressLint
 import kotlinx.serialization.Serializable

@@ -1,13 +1,11 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
-    alias(libs.plugins.android.hilt)
-    alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.kotlin.serialization)
 }
 
 android {
-    namespace = "com.pmb.network"
+    namespace = "com.pmb.model"
     compileSdk = 34
 
     defaultConfig {
@@ -17,25 +15,23 @@ android {
         consumerProguardFiles("consumer-rules.pro")
     }
 
+    buildTypes {
+        release {
+            isMinifyEnabled = false
+        }
+    }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_19
-        targetCompatibility = JavaVersion.VERSION_19
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = "19"
+        jvmTarget = "11"
     }
 }
 
 dependencies {
-    implementation(project(":core"))
-    implementation(project(":model"))
-    implementation(libs.android.hilt)
-    kapt(libs.android.hilt.compiler)
     implementation(libs.kotlinx.serialization.json)
 
-    implementation(libs.bundles.ktor)
-
     implementation(libs.androidx.core.ktx)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
+    implementation(libs.androidx.appcompat)
 }

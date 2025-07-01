@@ -1,7 +1,6 @@
 package com.pmb.network.di
 
 import com.pmb.network.NetworkManger
-import com.pmb.network.UserSessionImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,7 +13,5 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideNetworkManger(userSession: UserSessionImpl): NetworkManger {
-        return NetworkManger(userSession)
-    }
+    fun provideNetworkManger() = NetworkManger()
 }
