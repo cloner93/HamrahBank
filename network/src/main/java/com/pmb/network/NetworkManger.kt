@@ -43,6 +43,9 @@ class NetworkManger @Inject constructor(
             }
             headers {
                 append("Content-Type", "application/json")
+                append("appVer", "0.0.1")
+                append("Accept-Language", "fa;fa-IR")
+                append("osType", "7")
             }
         }
 
