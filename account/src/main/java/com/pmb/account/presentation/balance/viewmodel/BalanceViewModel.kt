@@ -3,12 +3,14 @@ package com.pmb.account.presentation.balance.viewmodel
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewModelScope
 import com.pmb.account.presentation.balance.DepositsChartModel
-import com.pmb.account.usecase.deposits.GetDepositsUseCase
 import com.pmb.account.utils.mapToDepositsChartModel
 import com.pmb.core.platform.BaseViewAction
 import com.pmb.core.platform.BaseViewEvent
 import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.platform.BaseViewState
+import com.pmb.core.platform.Result
+import com.pmb.domain.model.DepositModel
+import com.pmb.domain.usecae.deposit.GetUserDepositListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -16,7 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class BalanceViewModel @Inject constructor(
     initialState: BalanceViewState,
-    private val getDepositsUseCase: GetDepositsUseCase,
+    private val getDepositsUseCase: GetUserDepositListUseCase,
 ) : BaseViewModel<BalanceViewActions, BalanceViewState, BalanceViewEvents>(initialState) {
     override fun handle(action: BalanceViewActions) {
         when (action) {
@@ -31,29 +33,39 @@ class BalanceViewModel @Inject constructor(
 
     private fun loadDeposits() {
         viewModelScope.launch {
-            setState { it.copy(isLoading = true) }
 
-            try {
-                val listOfDeposits: List<DepositsChartModel> = getDepositsUseCase().mapToDepositsChartModel()
-                val balance = listOfDeposits.sumOf { deposit -> deposit.amount }
+            getDepositsUseCase.invoke(Unit)
+                .collect { result ->
+                    when (result) {
+                        is Result.Error -> {
+                            setState {
+                                it.copy(
+                                    errorMessage = result.message,
+                                    isLoading = false
+                                )
+                            }
+                            postEvent(BalanceViewEvents.ShowError(result.message))
+                        }
 
-                setState {
-                    it.copy(
-                        deposits = listOfDeposits,
-                        totalBalance = balance,
-                        isLoading = false
-                    )
+                        Result.Loading -> {
+                            setState { it.copy(isLoading = true) }
+                        }
+
+                        is Result.Success<*> -> {
+                            val listOfDeposits = (result.data as List<DepositModel>)
+                                .mapToDepositsChartModel()
+                            val balance = listOfDeposits.sumOf { deposit -> deposit.amount }
+
+                            setState {
+                                it.copy(
+                                    deposits = listOfDeposits,
+                                    totalBalance = balance,
+                                    isLoading = false
+                                )
+                            }
+                        }
+                    }
                 }
-
-            } catch (e: Exception) {
-                setState {
-                    it.copy(
-                        errorMessage = e.message ?: "Failed to load deposits",
-                        isLoading = false
-                    )
-                }
-                postEvent(BalanceViewEvents.ShowError(e.message ?: "Failed to load deposits"))
-            }
         }
     }
 
@@ -68,7 +80,7 @@ sealed interface BalanceViewEvents : BaseViewEvent {
     data class ShowError(val message: String) : BalanceViewEvents
 }
 
-sealed interface BalanceViewActions : BaseViewAction {}
+sealed interface BalanceViewActions : BaseViewAction
 data class BalanceViewState(
     val isLoading: Boolean = false,
     val errorMessage: String? = null,

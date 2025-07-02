@@ -1,16 +1,17 @@
 package com.pmb.account.presentation.transactions.viewmodel
 
 import androidx.lifecycle.viewModelScope
-import com.pmb.account.presentation.component.DepositModel
 import com.pmb.account.presentation.component.TransactionModel
 import com.pmb.account.presentation.component.TransactionType
 import com.pmb.account.presentation.transactions.filterScreen.viewmodel.entity.TransactionFilter
-import com.pmb.account.usecase.deposits.GetDepositsUseCase
 import com.pmb.account.usecase.deposits.GetTransactionsUseCase
 import com.pmb.core.platform.BaseViewAction
 import com.pmb.core.platform.BaseViewEvent
 import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.platform.BaseViewState
+import com.pmb.core.platform.Result
+import com.pmb.domain.model.DepositModel
+import com.pmb.domain.usecae.deposit.GetUserDepositListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -18,7 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class TransactionsViewModel @Inject constructor(
     initialState: TransactionsViewState,
-    private val getDepositsUseCase: GetDepositsUseCase,
+    private val getDepositsUseCase: GetUserDepositListUseCase,
     private val getTransactionsUseCase: GetTransactionsUseCase
 ) : BaseViewModel<TransactionsViewActions, TransactionsViewState, TransactionsViewEvents>(
     initialState
@@ -84,31 +85,39 @@ class TransactionsViewModel @Inject constructor(
         viewModelScope.launch {
             setState { it.copy(isLoading = true) }
 
-            try {
-                val listOfDeposits: List<DepositModel> =
-                    getDepositsUseCase().mapIndexed { index, deposit ->
-                        deposit.copy(isSelected = index == 0)
+            getDepositsUseCase.invoke(Unit)
+                .collect { result ->
+                    when (result) {
+                        is Result.Error -> {
+                            setState {
+                                it.copy(
+                                    errorMessage = result.message,
+                                    isLoading = false
+                                )
+                            }
+                            postEvent(TransactionsViewEvents.ShowError(result.message))
+                        }
+
+                        Result.Loading -> {
+                            setState { it.copy(isLoading = true) }
+                        }
+
+                        is Result.Success<*> -> {
+
+                            val listOfDeposits: List<DepositModel> =
+                                (result.data as List<DepositModel>)
+                            val selectedDeposit = listOfDeposits.firstOrNull()
+
+                            setState {
+                                it.copy(
+                                    deposits = listOfDeposits,
+                                    selectedDeposit = selectedDeposit,
+                                    isLoading = false
+                                )
+                            }
+                        }
                     }
-                val selectedDeposit = listOfDeposits.firstOrNull()
-
-                setState {
-                    it.copy(
-                        deposits = listOfDeposits,
-                        selectedDeposit = selectedDeposit,
-                        isLoading = false
-                    )
                 }
-
-                loadTransactions(viewState.value.selectedDeposit?.depositNumber)
-            } catch (e: Exception) {
-                setState {
-                    it.copy(
-                        errorMessage = e.message ?: "Failed to load deposits",
-                        isLoading = false
-                    )
-                }
-                postEvent(TransactionsViewEvents.ShowError(e.message ?: "Failed to load deposits"))
-            }
         }
     }
 
