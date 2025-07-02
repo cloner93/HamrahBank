@@ -2,8 +2,8 @@ package com.pmb.account.utils
 
 import com.pmb.account.presentation.balance.DepositsChartModel
 import com.pmb.account.presentation.balance.viewmodel.generateColorByIndex
-import com.pmb.account.presentation.component.DepositModel
 import com.pmb.ballon.models.DepositBottomSheetModel
+import com.pmb.domain.model.DepositModel
 
 
 internal fun DepositBottomSheetModel.mapToDepositModel(): DepositModel {

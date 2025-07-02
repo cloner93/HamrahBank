@@ -5,7 +5,6 @@ import com.pmb.data.mapper.mapApiResult
 import com.pmb.domain.model.Card
 import com.pmb.domain.model.CardModel
 import com.pmb.domain.model.CardType
-import com.pmb.domain.model.LoginRequest
 import com.pmb.domain.repository.card.CardListRepository
 import com.pmb.network.NetworkManger
 import kotlinx.coroutines.flow.Flow
@@ -15,7 +14,7 @@ class CardLIstRepositoryImpl @Inject constructor(
     private val client: NetworkManger
 ) : CardListRepository {
     override fun getCardList(): Flow<Result<List<CardModel>>> {
-        return client.request<LoginRequest, List<Card>>(endpoint = "card/getUserCard")
+        return client.request<Unit, List<Card>>(endpoint = "card/getUserCard")
             .mapApiResult {
                 it.second.toDomain()
             }

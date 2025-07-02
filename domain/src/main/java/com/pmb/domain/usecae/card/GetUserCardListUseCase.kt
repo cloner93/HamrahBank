@@ -1,4 +1,4 @@
-package com.pmb.domain.usecae
+package com.pmb.domain.usecae.card
 
 import com.pmb.core.platform.BaseUseCase
 import com.pmb.core.platform.Result

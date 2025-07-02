@@ -4,7 +4,9 @@ import com.pmb.data.repository.auth.FirstLoginConfirmRepositoryImpl
 import com.pmb.data.repository.auth.LoginRepositoryImpl
 import com.pmb.data.repository.auth.RegisterRepositoryImpl
 import com.pmb.data.repository.card.CardLIstRepositoryImpl
+import com.pmb.data.repository.deposit.DepositRepositoryImpl
 import com.pmb.data.repository.theme.ThemeRepositoryImpl
+import com.pmb.domain.repository.DepositRepository
 import com.pmb.domain.repository.auth.FirstLoginConfirmRepository
 import com.pmb.domain.repository.auth.LoginRepository
 import com.pmb.domain.repository.auth.RegisterRepository
@@ -33,4 +35,7 @@ abstract class RepositoryModule {
 
     @Binds
     abstract fun bindCardListRepository(cardLIstRepository: CardLIstRepositoryImpl): CardListRepository
+
+    @Binds
+    abstract fun bindDepositListRepository(depositLIstRepository: DepositRepositoryImpl): DepositRepository
 }

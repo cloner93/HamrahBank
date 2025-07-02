@@ -1,7 +1,7 @@
 package com.pmb.account.presentation.deposits.viewmodel
 
-import com.pmb.account.presentation.component.DepositModel
 import com.pmb.core.platform.BaseViewAction
+import com.pmb.domain.model.DepositModel
 
 sealed interface DepositsViewActions : BaseViewAction {
     object ShowHelp : DepositsViewActions

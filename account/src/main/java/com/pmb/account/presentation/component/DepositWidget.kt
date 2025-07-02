@@ -37,17 +37,7 @@ import com.pmb.ballon.models.Size
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.ballon.ui.theme.HamrahBankTheme
 import com.pmb.core.utils.toCurrency
-
-data class DepositModel(
-    val title: String,
-    val desc: String?,
-    val depositNumber: String,
-    val amount: Double,
-    val currency: String,
-    val ibanNumber: String,
-    val cardNumber: String,
-    var isSelected: Boolean = false
-)
+import com.pmb.domain.model.DepositModel
 
 @Composable
 fun DepositWidget(

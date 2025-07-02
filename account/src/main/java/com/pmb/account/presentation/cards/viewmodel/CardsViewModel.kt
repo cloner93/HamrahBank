@@ -7,7 +7,7 @@ import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.platform.BaseViewState
 import com.pmb.core.platform.Result
 import com.pmb.domain.model.CardModel
-import com.pmb.domain.usecae.GetUserCardListUseCase
+import com.pmb.domain.usecae.card.GetUserCardListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

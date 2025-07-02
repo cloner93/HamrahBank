@@ -44,6 +44,7 @@ import com.pmb.ballon.models.Size
 import com.pmb.ballon.models.TextStyle
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.ballon.ui.theme.HamrahBankTheme
+import com.pmb.domain.model.DepositModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -1,12 +1,13 @@
 package com.pmb.account.presentation.deposits.viewmodel
 
 import androidx.lifecycle.viewModelScope
-import com.pmb.account.presentation.component.DepositModel
 import com.pmb.account.presentation.deposits.viewmodel.DepositsViewEvents.NavigateToTransactionDetails
 import com.pmb.account.presentation.deposits.viewmodel.DepositsViewEvents.ShowToast
-import com.pmb.account.usecase.deposits.GetDepositsUseCase
 import com.pmb.account.usecase.deposits.GetTransactionsUseCase
 import com.pmb.core.platform.BaseViewModel
+import com.pmb.core.platform.Result
+import com.pmb.domain.model.DepositModel
+import com.pmb.domain.usecae.deposit.GetUserDepositListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -15,7 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class DepositsViewModel @Inject constructor(
     initialState: DepositsViewState,
-    private val getDepositsUseCase: GetDepositsUseCase,
+    private val getDepositsUseCase: GetUserDepositListUseCase,
     private val getTransactionsUseCase: GetTransactionsUseCase,
 
     ) : BaseViewModel<DepositsViewActions, DepositsViewState, DepositsViewEvents>(initialState) {
@@ -78,37 +79,45 @@ class DepositsViewModel @Inject constructor(
 
     private fun loadDeposits() {
         viewModelScope.launch {
-            setState { it.copy(isLoading = true) }
 
-            try {
-                val listOfDeposits: List<DepositModel> =
-                    getDepositsUseCase().mapIndexed { index, deposit ->
-                        deposit.copy(isSelected = index == 0)
+            getDepositsUseCase.invoke(Unit)
+                .collect { result ->
+                    when (result) {
+                        is Result.Error -> {
+                            setState {
+                                it.copy(
+                                    errorMessage = result.message,
+                                    isLoading = false
+                                )
+                            }
+                            postEvent(DepositsViewEvents.ShowError(result.message))
+                        }
+
+                        Result.Loading -> {
+                            setState { it.copy(isLoading = true) }
+                        }
+
+                        is Result.Success<*> -> {
+                            val listOfDeposits: List<DepositModel> =
+                                (result.data as List<DepositModel>).mapIndexed { index, deposit ->
+                                    deposit.copy(isSelected = index == 0)
+                                }
+                            val selectedDeposit = listOfDeposits.firstOrNull()
+                            val balance = listOfDeposits.sumOf { deposit -> deposit.amount }
+
+                            setState {
+                                it.copy(
+                                    deposits = listOfDeposits,
+                                    selectedDeposit = selectedDeposit,
+                                    totalBalance = balance,
+                                    isLoading = false
+                                )
+                            }
+                            //                // Load transactions for the selected deposit
+                            //                loadTransactions(viewState.value.selectedDeposit?.depositNumber)
+                        }
                     }
-                val selectedDeposit = listOfDeposits.firstOrNull()
-
-                val balance = listOfDeposits.sumOf { deposit -> deposit.amount }
-
-                setState {
-                    it.copy(
-                        deposits = listOfDeposits,
-                        selectedDeposit = selectedDeposit,
-                        totalBalance = balance,
-                        isLoading = false
-                    )
                 }
-
-                // Load transactions for the selected deposit
-                loadTransactions(viewState.value.selectedDeposit?.depositNumber)
-            } catch (e: Exception) {
-                setState {
-                    it.copy(
-                        errorMessage = e.message ?: "Failed to load deposits",
-                        isLoading = false
-                    )
-                }
-                postEvent(DepositsViewEvents.ShowError(e.message ?: "Failed to load deposits"))
-            }
         }
     }
 

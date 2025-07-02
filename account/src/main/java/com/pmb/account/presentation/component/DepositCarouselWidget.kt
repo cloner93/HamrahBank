@@ -11,6 +11,7 @@ import androidx.compose.ui.unit.dp
 import com.pmb.ballon.R
 import com.pmb.ballon.component.annotation.AppPreview
 import com.pmb.ballon.ui.theme.HamrahBankTheme
+import com.pmb.domain.model.DepositModel
 
 @Composable
 fun DepositCarouselWidget(

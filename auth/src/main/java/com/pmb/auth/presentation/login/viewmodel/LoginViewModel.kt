@@ -27,7 +27,7 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch {
             loginRequestLoginUseCase.invoke(
                 RequestLoginParams(
-                    customerId = "09128987390",
+                    customerId = "09137511005",
                     username = action.username,
                     password = action.password
                 )
