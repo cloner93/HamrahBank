@@ -6,6 +6,12 @@ import kotlinx.serialization.Serializable
 @SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class LoginResponse(
-    val accessToken: String,
-    val refreshToken: String? = null,
+    val isSuccess: Boolean,
+    val customerId: Long,
+    val desKey: String,
+    val passwordX: String,
+    val securePassword: String,
+    val userName: String,
+    val email: String?,
+    val imeiNo: String,
 )
