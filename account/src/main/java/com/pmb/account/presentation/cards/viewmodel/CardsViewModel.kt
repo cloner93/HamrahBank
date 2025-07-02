@@ -1,12 +1,13 @@
 package com.pmb.account.presentation.cards.viewmodel
 
 import androidx.lifecycle.viewModelScope
-import com.pmb.account.presentation.component.CardModel
-import com.pmb.account.usecase.deposits.GetCardsUseCase
 import com.pmb.core.platform.BaseViewAction
 import com.pmb.core.platform.BaseViewEvent
 import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.platform.BaseViewState
+import com.pmb.core.platform.Result
+import com.pmb.domain.model.CardModel
+import com.pmb.domain.usecae.GetUserCardListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -14,7 +15,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CardsViewModel @Inject constructor(
     initialState: CardsViewState,
-    private val getDepositsUseCase: GetCardsUseCase,
+    private val getUserCardLIstUseCase: GetUserCardListUseCase,
 ) : BaseViewModel<CardsViewActions, CardsViewState, CardsViewEvents>(
     initialState
 ) {
@@ -49,30 +50,33 @@ class CardsViewModel @Inject constructor(
 
     private fun loadCards() {
         viewModelScope.launch {
-            setState { it.copy(isLoading = true) }
-            try {
+            getUserCardLIstUseCase.invoke(Unit)
+                .collect { result ->
+                    when (result) {
+                        is Result.Error -> {
+                            setState {
+                                it.copy(
+                                    errorMessage = result.message,
+                                    isLoading = false
+                                )
+                            }
+                            postEvent(CardsViewEvents.ShowError(result.message))
+                        }
 
-                val listOfCards = getDepositsUseCase()
+                        Result.Loading -> {
+                            setState { it.copy(isLoading = true) }
+                        }
 
-                setState {
-                    it.copy(
-                        cards = listOfCards,
-                        isLoading = false
-                    )
+                        is Result.Success<*> -> {
+                            setState {
+                                it.copy(
+                                    cards = result.data as List<CardModel>,
+                                    isLoading = false
+                                )
+                            }
+                        }
+                    }
                 }
-
-            } catch (
-                e: Exception
-            ) {
-
-                setState {
-                    it.copy(
-                        errorMessage = e.message ?: "Failed to load deposits",
-                        isLoading = false
-                    )
-                }
-                postEvent(CardsViewEvents.ShowError(e.message ?: "Failed to load deposits"))
-            }
         }
     }
 }

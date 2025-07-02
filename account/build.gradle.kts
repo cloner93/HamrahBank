@@ -52,6 +52,7 @@ dependencies {
     implementation(project(":navigation"))
     implementation(project(":snapui:receipt"))
     implementation(project(":calender"))
+    implementation(project(":domain"))
 
     implementation(libs.androidx.ui.test.android)
     implementation(libs.android.hilt)
