@@ -99,12 +99,11 @@ dependencies {
     implementation(project(":ballon"))
     implementation(project(":domain"))
     implementation(project(":data"))
-    implementation(project(":auth"))
-    implementation(project(":home"))
-    implementation(project(":transfer"))
-    implementation(project(":account"))
-    implementation(project(":profile"))
-    implementation(project(":facilities"))
+    implementation(projects.feature.auth)
+    implementation(projects.feature.home)
+    implementation(projects.feature.transfer)
+    implementation(projects.feature.account)
+    implementation(projects.feature.profile)
 
     // DI > Hilt
     implementation(libs.android.hilt)
