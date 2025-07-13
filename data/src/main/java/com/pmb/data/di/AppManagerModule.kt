@@ -6,6 +6,8 @@ import com.pmb.data.appManager.auth.AuthService
 import com.pmb.data.appManager.auth.AuthServiceImpl
 import com.pmb.data.appManager.card.CardService
 import com.pmb.data.appManager.card.CardServiceImpl
+import com.pmb.data.appManager.deposit.DepositService
+import com.pmb.data.appManager.deposit.DepositServiceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -23,4 +25,7 @@ abstract class AppManagerModule {
 
     @Binds
     abstract fun bindCardService(cardService: CardServiceImpl): CardService
+
+    @Binds
+    abstract fun bindDepositService(depositServiceImpl: DepositServiceImpl): DepositService
 }

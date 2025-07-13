@@ -1,0 +1,19 @@
+package com.pmb.data.appManager.deposit
+
+import com.pmb.core.platform.Result
+import com.pmb.domain.model.Deposit
+import com.pmb.domain.model.LoginRequest
+import com.pmb.model.SuccessData
+import com.pmb.network.NetworkManger
+import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
+
+class DepositServiceImpl @Inject constructor(
+    private val client: NetworkManger
+) : DepositService {
+    override fun getDepositList(): Flow<Result<SuccessData<List<Deposit>>>> {
+        return client.request<LoginRequest, List<Deposit>>(endpoint = "account/getUserAccounts")
+
+    }
+
+}
