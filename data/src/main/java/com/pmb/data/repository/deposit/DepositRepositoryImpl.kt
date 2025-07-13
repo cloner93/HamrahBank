@@ -1,31 +1,20 @@
+package com.pmb.data.repository.deposit
+
+import com.pmb.core.platform.Result
+import com.pmb.data.mapper.depositService.toDomain
+import com.pmb.data.mapper.mapApiResult
+import com.pmb.data.serviceProvider.remote.RemoteServiceProvider
+import com.pmb.domain.model.DepositModel
+import com.pmb.domain.repository.deposit.DepositsRepository
+import jakarta.inject.Inject
+import kotlinx.coroutines.flow.Flow
 
 class DepositRepositoryImpl @Inject constructor(
-    private val client: NetworkManger
-) : DepositRepository {
+    private val remoteServiceProvider: RemoteServiceProvider
+) : DepositsRepository {
     override fun getDepositList(): Flow<Result<List<DepositModel>>> {
-        return client.request<LoginRequest, List<Deposit>>(endpoint = "account/getUserAccounts")
-            .mapApiResult {
-                it.second.toDomain()
-            }
+        return remoteServiceProvider.getDepositService().getDepositList().mapApiResult {
+            it.second.toDomain()
+        }
     }
-}
-
-private fun List<Deposit>.toDomain(): List<DepositModel> {
-    val listOfDeposit = mutableListOf<DepositModel>()
-    this.forEach {
-        listOfDeposit.add(
-            DepositModel(
-                title = it.accountTypeDescription ?: "N/A",
-                desc = null,
-                categoryCode = it.categoryCode,
-                depositNumber = it.accountNumber.toString(),
-                amount = it.balance.toDouble(),
-                currency = "ریال",
-                ibanNumber = it.shebaNo.toString(),
-                cardNumber = ""
-            )
-        )
-    }
-
-    return listOfDeposit
 }

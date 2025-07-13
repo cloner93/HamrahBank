@@ -2,18 +2,13 @@ package com.pmb.data.di
 
 import com.pmb.data.repository.auth.AuthRepositoryImpl
 import com.pmb.data.repository.card.CardsRepositoryImpl
-import com.pmb.data.repository.deposit.DepositsRepositoryImpl
+import com.pmb.data.repository.deposit.DepositRepositoryImpl
 import com.pmb.data.repository.theme.ThemeRepositoryImpl
 import com.pmb.data.repository.transaction.TransactionsByCountRepositoryImpl
 import com.pmb.data.repository.transaction.TransactionsByDateRepositoryImpl
-import com.pmb.domain.repository.DepositRepository
-import com.pmb.domain.repository.auth.FirstLoginConfirmRepository
-import com.pmb.domain.repository.auth.LoginRepository
-import com.pmb.domain.repository.auth.RegisterRepository
-import com.pmb.domain.repository.card.CardListRepository
-import com.pmb.domain.repository.DepositsRepository
 import com.pmb.domain.repository.auth.AuthRepository
 import com.pmb.domain.repository.card.CardsRepository
+import com.pmb.domain.repository.deposit.DepositsRepository
 import com.pmb.domain.repository.theme.ThemeRepository
 import com.pmb.domain.repository.transactions.TransactionsByCountRepository
 import com.pmb.domain.repository.transactions.TransactionsByDateRepository
@@ -36,10 +31,7 @@ abstract class RepositoryModule {
     abstract fun bindCardsRepository(cardsRepository: CardsRepositoryImpl): CardsRepository
 
     @Binds
-    abstract fun bindDepositsRepository(depositsRepositoryImpl: DepositsRepositoryImpl): DepositsRepository
-
-    @Binds
-    abstract fun bindDepositListRepository(depositLIstRepository: DepositRepositoryImpl): DepositRepository
+    abstract fun bindDepositListRepository(depositLIstRepository: DepositRepositoryImpl): DepositsRepository
 
     @Binds
     abstract fun bindTransactionsByCountRepository(transactionsByCountRepository: TransactionsByCountRepositoryImpl): TransactionsByCountRepository
