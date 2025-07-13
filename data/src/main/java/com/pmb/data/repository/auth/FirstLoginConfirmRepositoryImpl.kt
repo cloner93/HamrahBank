@@ -2,6 +2,8 @@ package com.pmb.data.repository.auth
 
 import com.pmb.core.platform.Result
 import com.pmb.data.appManager.AppManager
+import com.pmb.data.mapper.authService.toDomain
+import com.pmb.data.mapper.mapApiResult
 import com.pmb.domain.model.SendOtpRequest
 import com.pmb.domain.model.SendOtpResponse
 import com.pmb.domain.repository.auth.FirstLoginConfirmRepository
@@ -12,6 +14,8 @@ class FirstLoginConfirmRepositoryImpl @Inject constructor(
     private val appManager: AppManager
 ) : FirstLoginConfirmRepository {
     override suspend fun sendOtp(sendOtpRequest: SendOtpRequest): Flow<Result<SendOtpResponse>> {
-        return appManager.getAuthService().sendOtp(sendOtpRequest)
+        return appManager.getAuthService().sendOtp(sendOtpRequest).mapApiResult {
+            it.second.toDomain()
+        }
     }
 }

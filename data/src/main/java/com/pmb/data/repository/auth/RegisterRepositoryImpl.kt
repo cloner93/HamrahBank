@@ -2,6 +2,8 @@ package com.pmb.data.repository.auth
 
 import com.pmb.core.platform.Result
 import com.pmb.data.appManager.AppManager
+import com.pmb.data.mapper.authService.toDomain
+import com.pmb.data.mapper.mapApiResult
 import com.pmb.domain.repository.auth.RegisterRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -16,5 +18,8 @@ class RegisterRepositoryImpl @Inject constructor(
     ): Flow<Result<Boolean>> {
         return appManager.getAuthService()
             .register(customerId = customerId, username = username, password = password)
+            .mapApiResult { /*metaData, data ->*/
+                it.first.toDomain()
+            }
     }
 }

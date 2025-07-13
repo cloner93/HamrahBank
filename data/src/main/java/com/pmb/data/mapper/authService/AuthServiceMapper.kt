@@ -29,7 +29,7 @@ fun RegisterVerifyResponse.toDomain(): SendOtpResponse {
     )
 }
 
-fun RegisterVerifyResponse.mapToLoginResponse(): LoginResponse {
+fun LoginResponse.mapToLoginResponse(): LoginResponse {
     return LoginResponse(
         isSuccess = true,
         customerId = this.customerId,
@@ -38,7 +38,7 @@ fun RegisterVerifyResponse.mapToLoginResponse(): LoginResponse {
         securePassword = this.securePassword,
         userName = this.userName,
         email = this.email,
-        imeiNo = this.imeiNO
+        imeiNo = this.imeiNo
     )
 }
 
