@@ -1,8 +1,8 @@
 package com.pmb.account.presentation.deposits.viewmodel
 
-import com.pmb.account.presentation.component.TransactionModel
 import com.pmb.core.platform.BaseViewState
 import com.pmb.domain.model.DepositModel
+import com.pmb.domain.model.TransactionModel
 
 
 data class DepositsViewState(

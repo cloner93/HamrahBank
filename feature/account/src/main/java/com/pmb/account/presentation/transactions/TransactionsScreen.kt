@@ -52,8 +52,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.pmb.account.R
 import com.pmb.account.presentation.component.CustomAppTopBar
-import com.pmb.account.presentation.component.TransactionModel
-import com.pmb.account.presentation.component.TransactionType
 import com.pmb.account.presentation.transactions.filterScreen.DateType
 import com.pmb.account.presentation.transactions.filterScreen.viewmodel.entity.TransactionFilter
 import com.pmb.account.presentation.transactions.viewmodel.TransactionsViewActions
@@ -84,6 +82,8 @@ import com.pmb.ballon.ui.theme.AppTypography
 import com.pmb.ballon.ui.theme.HamrahBankTheme
 import com.pmb.core.utils.CollectAsEffect
 import com.pmb.core.utils.toCurrency
+import com.pmb.domain.model.TransactionModel
+import com.pmb.domain.model.TransactionType
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.moduleScreen.AccountScreens
 
@@ -676,6 +676,7 @@ fun TransactionRow(item: TransactionModel, onClick: () -> Unit = {}) {
                 TransactionType.TRANSFER -> R.drawable.ic_transfer
                 TransactionType.RECEIVE -> R.drawable.ic_receive
                 TransactionType.FEE -> R.drawable.ic_transfer
+                TransactionType.UNKNOWN -> R.drawable.ic_unknown
             }, style = ImageStyle(size = Size.FIX(42.dp))
         )
         Spacer(modifier = Modifier.width(13.dp))

@@ -2,12 +2,12 @@ package com.pmb.account.presentation.transactions.search.viewmodel
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.pmb.account.presentation.component.TransactionModel
 import com.pmb.account.usecase.deposits.TransactionSearchUseCase
 import com.pmb.core.platform.BaseViewAction
 import com.pmb.core.platform.BaseViewEvent
 import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.platform.BaseViewState
+import com.pmb.domain.model.TransactionModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
