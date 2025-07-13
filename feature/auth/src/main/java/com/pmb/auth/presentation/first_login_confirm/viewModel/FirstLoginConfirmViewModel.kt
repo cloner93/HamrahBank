@@ -32,9 +32,9 @@ class FirstLoginConfirmViewModel @Inject constructor(
 ) : BaseViewModel<FirstLoginConfirmViewActions, FirstLoginConfirmViewState, FirstLoginConfirmViewEvents>(
     initialState
 ) {
-    private val mobileNumber = savedStateHandle.get<String>("mobileNumber")
-    private val username = savedStateHandle.get<String>("username")
-    private val password = savedStateHandle.get<String>("password")
+//    private val mobileNumber = savedStateHandle.get<String>("mobileNumber")
+//    private val username = savedStateHandle.get<String>("username")
+//    private val password = savedStateHandle.get<String>("password")
 
 
     private var timerDurationInterval: Long = 120000L
@@ -78,12 +78,11 @@ class FirstLoginConfirmViewModel @Inject constructor(
 
                             it.copy(
                                 loading = false,
-                                alertModelState = if (otpTryingStack < 4) AlertModelState.SnackBar(
-                                    message = result.message,
-                                    onActionPerformed = {
-                                        setState { state -> state.copy(alertModelState = null) }
-                                    },
-                                    onDismissed = {
+                                alertModelState = if (otpTryingStack < 4) AlertModelState.Dialog(
+                                    title = "خطا",
+                                    description = " ${result.message}",
+                                    positiveButtonTitle = "تایید",
+                                    onPositiveClick = {
                                         setState { state -> state.copy(alertModelState = null) }
                                     }
                                 ) else null,
@@ -130,12 +129,11 @@ class FirstLoginConfirmViewModel @Inject constructor(
                         setState {
                             it.copy(
                                 loading = false,
-                                alertModelState = AlertModelState.SnackBar(
-                                    message = result.message,
-                                    onActionPerformed = {
-                                        setState { state -> state.copy(alertModelState = null) }
-                                    },
-                                    onDismissed = {
+                                alertModelState = AlertModelState.Dialog(
+                                    title = "خطا",
+                                    description = " ${result.message}",
+                                    positiveButtonTitle = "تایید",
+                                    onPositiveClick = {
                                         setState { state -> state.copy(alertModelState = null) }
                                     }
                                 )
@@ -222,9 +220,9 @@ class FirstLoginConfirmViewModel @Inject constructor(
                     (TimerTypeId.RESEND_TIMER to TimerState(remainingTime = timerDurationInterval)),
                     (TimerTypeId.LOCK_TIMER to TimerState())
                 ),
-                mobileNumber = mobileNumber!!,
-                username = username!!,
-                password = password!!
+//                mobileNumber = mobileNumber!!,
+//                username = username!!,
+//                password = password!!
             )
         }
         startTimers()

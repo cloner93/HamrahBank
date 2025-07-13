@@ -44,21 +44,12 @@ class ActivationTaxDetailsViewModel @Inject constructor(
                         setState {
                             it.copy(
                                 isLoading = false,
-                                alertModelState = AlertModelState.SnackBar(
-                                    message = result.message,
-                                    onActionPerformed = {
-                                        setState {
-                                            it.copy(
-                                                isLoading = false
-                                            )
-                                        }
-                                    },
-                                    onDismissed = {
-                                        setState {
-                                            it.copy(
-                                                isLoading = false
-                                            )
-                                        }
+                                alertModelState = AlertModelState.Dialog(
+                                    title = "خطا",
+                                    description = " ${result.message}",
+                                    positiveButtonTitle = "تایید",
+                                    onPositiveClick = {
+                                        setState { state -> state.copy(alertModelState = null) }
                                     }
                                 )
                             )
@@ -92,21 +83,12 @@ class ActivationTaxDetailsViewModel @Inject constructor(
                         setState {
                             it.copy(
                                 isLoading = false,
-                                alertModelState = AlertModelState.SnackBar(
-                                    message = result.message,
-                                    onActionPerformed = {
-                                        setState {
-                                            it.copy(
-                                                isLoading = false
-                                            )
-                                        }
-                                    },
-                                    onDismissed = {
-                                        setState {
-                                            it.copy(
-                                                isLoading = false
-                                            )
-                                        }
+                                alertModelState = AlertModelState.Dialog(
+                                    title = "خطا",
+                                    description = " ${result.message}",
+                                    positiveButtonTitle = "تایید",
+                                    onPositiveClick = {
+                                        setState { state -> state.copy(alertModelState = null) }
                                     }
                                 )
                             )

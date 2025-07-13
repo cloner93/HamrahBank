@@ -43,12 +43,11 @@ class RegisterNationalIdViewModel @Inject constructor(
                         setState {
                             it.copy(
                                 isLoading = false,
-                                alertModelState = AlertModelState.SnackBar(
-                                    message = result.message,
-                                    onActionPerformed = {
-                                        setState { state -> state.copy(alertModelState = null) }
-                                    },
-                                    onDismissed = {
+                                alertModelState = AlertModelState.Dialog(
+                                    title = "خطا",
+                                    description = " ${result.message}",
+                                    positiveButtonTitle = "تایید",
+                                    onPositiveClick = {
                                         setState { state -> state.copy(alertModelState = null) }
                                     }
                                 )

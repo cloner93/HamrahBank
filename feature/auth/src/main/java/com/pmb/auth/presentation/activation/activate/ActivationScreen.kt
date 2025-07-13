@@ -45,6 +45,7 @@ import com.pmb.ballon.component.base.IconType
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.manager.NavigationManager
+import com.pmb.navigation.moduleScreen.ActivationScreens
 import com.pmb.navigation.moduleScreen.AuthScreens
 
 @Composable
@@ -67,7 +68,7 @@ fun ActivationScreen(viewModel: ActivationViewModel) {
         viewModel.viewEvent.collect { event ->
             when (event) {
                 ActivationViewEvents.ActiveUserSucceed -> {
-                    navigationManager.navigate(AuthScreens.ActivationTaxDetailsScreen)
+                    navigationManager.navigate(ActivationScreens.ActivationTaxDetailsScreen)
                 }
             }
         }
@@ -186,5 +187,6 @@ fun ActivationScreen(viewModel: ActivationViewModel) {
         }
     }
 }
+
 
 

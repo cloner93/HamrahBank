@@ -57,12 +57,11 @@ class NewPassWordViewModel @Inject constructor(
                         setState {
                             it.copy(
                                 loading = false,
-                                alertModelState = AlertModelState.SnackBar(
-                                    message = result.message,
-                                    onDismissed = {
-                                        setState { state -> state.copy(alertModelState = null) }
-                                    },
-                                    onActionPerformed = {
+                                alertModelState = AlertModelState.Dialog(
+                                    title = "خطا",
+                                    description = " ${result.message}",
+                                    positiveButtonTitle = "تایید",
+                                    onPositiveClick = {
                                         setState { state -> state.copy(alertModelState = null) }
                                     }
                                 )

@@ -29,7 +29,7 @@ import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.manager.NavigationManager
-import com.pmb.navigation.moduleScreen.AuthScreens
+import com.pmb.navigation.moduleScreen.RegisterScreens
 
 @Composable
 fun CheckPostalCodeScreen(
@@ -47,7 +47,7 @@ fun CheckPostalCodeScreen(
         viewModel.viewEvent.collect { event ->
             when (event) {
                 CheckPostalCodeViewEvents.CheckAddressSucceed -> {
-                    navigationManager.navigate(AuthScreens.DepositInformation)
+                    navigationManager.navigate(RegisterScreens.DepositInformation)
                 }
 
                 is CheckPostalCodeViewEvents.CheckPostalCode -> {

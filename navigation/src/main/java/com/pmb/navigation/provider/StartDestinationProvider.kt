@@ -9,6 +9,6 @@ interface NavigationStartDestinationProvider {
 
 object DefaultStartDestinationProvider : NavigationStartDestinationProvider {
     override fun getStartDestination(): Screen {
-        return AuthScreens.Login
+        return AuthScreens.AuthGraph
     }
 }

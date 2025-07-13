@@ -4,13 +4,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -21,14 +20,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.pmb.auth.AuthSharedViewState
 import com.pmb.auth.R
+import com.pmb.auth.presentation.component.ChipWithIcon
 import com.pmb.auth.presentation.component.ShowInvalidLoginBottomSheet
 import com.pmb.auth.presentation.first_login_confirm.viewModel.FirstLoginConfirmViewActions
 import com.pmb.auth.presentation.first_login_confirm.viewModel.FirstLoginConfirmViewEvents
 import com.pmb.auth.presentation.first_login_confirm.viewModel.FirstLoginConfirmViewModel
 import com.pmb.auth.presentation.first_login_confirm.viewModel.TimerStatus
 import com.pmb.auth.presentation.first_login_confirm.viewModel.TimerTypeId
-import com.pmb.auth.utils.ComingType
 import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppContent
@@ -37,20 +37,19 @@ import com.pmb.ballon.component.base.AppNumberTextField
 import com.pmb.ballon.component.base.AppTextButton
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.BodyMediumText
-import com.pmb.ballon.component.base.ChipWithIcon
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.manager.NavigationManager
-import com.pmb.navigation.moduleScreen.AuthScreens
 import com.pmb.navigation.moduleScreen.HomeScreens
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FirstLoginConfirmScreen(
     viewModel: FirstLoginConfirmViewModel,
-    comingType: ComingType = ComingType.COMING_LOGIN
-) {
+    sharedState: State<AuthSharedViewState>,
+
+    ) {
+
     val navigationManager: NavigationManager = LocalNavigationManager.current
     val viewState by viewModel.viewState.collectAsState()
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -87,10 +86,7 @@ fun FirstLoginConfirmScreen(
             when (event) {
                 FirstLoginConfirmViewEvents.FirstLoginConfirmSucceed -> {
 
-                    if (comingType === ComingType.COMING_LOGIN)
-                        navigationManager.navigate(HomeScreens.Home)
-                    else
-                        navigationManager.navigate(AuthScreens.AuthenticationInformation)
+                    navigationManager.navigate(HomeScreens.Home)
                 }
             }
         }
@@ -114,14 +110,12 @@ fun FirstLoginConfirmScreen(
         )
         Spacer(modifier = Modifier.size(32.dp))
         ChipWithIcon(
-            value = viewState.mobileNumber,
-            startIcon = Icons.Default.Edit,
+            value = sharedState.value.phoneNumber,
+            icon = com.pmb.ballon.R.drawable.ic_edit,
             clickable = {
-                if (comingType === ComingType.COMING_LOGIN)
-                    navigationManager.navigateBack()
-                else
-                    navigationManager.navigateAndClearStack(AuthScreens.Register)
+                navigationManager.navigateBack()
             })
+
         Spacer(modifier = Modifier.size(32.dp))
         AppNumberTextField(
             modifier = Modifier.fillMaxWidth(),
@@ -137,9 +131,9 @@ fun FirstLoginConfirmScreen(
             onClick = {
                 viewModel.handle(
                     FirstLoginConfirmViewActions.ConfirmFirstLogin(
-                        mobileNumber = viewState.mobileNumber,
-                        userName = viewState.username,
-                        password = viewState.password,
+                        mobileNumber = sharedState.value.phoneNumber,
+                        userName = sharedState.value.userName,
+                        password = sharedState.value.password,
                         otpCode = otp
                     )
                 )
@@ -152,9 +146,9 @@ fun FirstLoginConfirmScreen(
             onClick = {
                 viewModel.handle(
                     FirstLoginConfirmViewActions.ResendFirstLoginInfo(
-                        mobileNumber = viewState.mobileNumber,
-                        userName = viewState.username,
-                        password = viewState.password
+                        mobileNumber = sharedState.value.phoneNumber,
+                        userName = sharedState.value.userName,
+                        password = sharedState.value.password
                     )
                 )
             })

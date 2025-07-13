@@ -62,9 +62,9 @@ class CardInformationConfirmViewModel @Inject constructor(
                         setState {
                             it.copy(
                                 isLoading = false, alertModelState = AlertModelState.Dialog(
-                                    title = "Card Information",
-                                    description = "failed to send card information because ${result.message}",
-                                    positiveButtonTitle = "okay",
+                                    title = "خطا",
+                                    description = " ${result.message}",
+                                    positiveButtonTitle = "تایید",
                                     onPositiveClick = {
                                         setState { state -> state.copy(alertModelState = null) }
                                     }
@@ -100,9 +100,9 @@ class CardInformationConfirmViewModel @Inject constructor(
                         setState {
                             it.copy(
                                 isLoading = false, alertModelState = AlertModelState.Dialog(
-                                    title = "Card Information",
-                                    description = "failed to get card information because ${result.message}",
-                                    positiveButtonTitle = "okay",
+                                    title = "خطا",
+                                    description = " ${result.message}",
+                                    positiveButtonTitle = "تایید",
                                     onPositiveClick = {
                                         setState { state -> state.copy(alertModelState = null) }
                                     }

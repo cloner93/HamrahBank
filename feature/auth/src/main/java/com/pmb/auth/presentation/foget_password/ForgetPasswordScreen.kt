@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -14,12 +15,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.pmb.auth.AuthActionType
+import com.pmb.auth.AuthSharedViewState
 import com.pmb.auth.R
 import com.pmb.auth.presentation.component.ShowChangedNewPasswordBottomSheet
 import com.pmb.auth.presentation.foget_password.viewmodel.ForgetPasswordViewActions
 import com.pmb.auth.presentation.foget_password.viewmodel.ForgetPasswordViewEvents
 import com.pmb.auth.presentation.foget_password.viewmodel.ForgetPasswordViewModel
-import com.pmb.auth.utils.ComingType
 import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppContent
@@ -28,7 +30,6 @@ import com.pmb.ballon.component.base.AppMobileTextField
 import com.pmb.ballon.component.base.AppNationalIdTextField
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.text_field.AppPasswordTextField
-import com.pmb.core.utils.CollectAsEffect
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.manager.NavigationManager
 import com.pmb.navigation.moduleScreen.AuthScreens
@@ -36,7 +37,9 @@ import com.pmb.navigation.moduleScreen.AuthScreens
 @Composable
 fun ForgetPasswordScreen(
     viewModel: ForgetPasswordViewModel,
-    onAuthenticationCallback: (ComingType) -> Unit
+    sharedState: State<AuthSharedViewState>,
+    updatePasswordChangedState: (Boolean) -> Unit,
+    updateSharedState: (AuthActionType) -> Unit
 ) {
     val navigationManager: NavigationManager = LocalNavigationManager.current
     var showBottomSheet by remember { mutableStateOf(false) }
@@ -55,22 +58,21 @@ fun ForgetPasswordScreen(
     LaunchedEffect(Unit) {
         viewModel.viewEvent.collect { event ->
             when (event) {
-                ForgetPasswordViewEvents.ResetPasswordSuccess -> onAuthenticationCallback.invoke(
-                    ComingType.COMING_PASSWORD
-                )
+                ForgetPasswordViewEvents.ResetPasswordSuccess -> {
+                    updateSharedState.invoke(
+                        AuthActionType.FORGET_PASSWORD
+                    )
+                    navigationManager.navigate(AuthScreens.ChooseAuthenticationType)
+                }
             }
         }
     }
-    navigationManager.getCurrentScreenFlowData<ComingType?>(
-        "authentication",
-        null
-    )?.CollectAsEffect {
-        it.takeIf {
-            it != null
-        }?.also {
+    LaunchedEffect(Unit) {
+        if (sharedState.value.isPasswordChanged) {
             showBottomSheet = true
         }
     }
+
     AppContent(
         modifier = Modifier.padding(24.dp),
         topBar = {
@@ -136,7 +138,7 @@ fun ForgetPasswordScreen(
         })
 
     if (showBottomSheet) ShowChangedNewPasswordBottomSheet(onDismiss = {
-        showBottomSheet = false
+        updatePasswordChangedState(false)
         navigationManager.navigate(AuthScreens.Auth)
     })
     if (viewState.loading) {

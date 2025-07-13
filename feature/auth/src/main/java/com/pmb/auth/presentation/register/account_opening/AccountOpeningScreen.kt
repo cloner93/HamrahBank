@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -15,8 +17,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.pmb.auth.R
-import com.pmb.auth.utils.ComingType
+import com.pmb.auth.presentation.register.RegisterSharedViewState
+import com.pmb.auth.presentation.register.account_opening.viewModel.OpeningAccountViewActions
+import com.pmb.auth.presentation.register.account_opening.viewModel.OpeningAccountViewEvents
+import com.pmb.auth.presentation.register.account_opening.viewModel.OpeningAccountViewModel
+import com.pmb.auth.presentation.register.account_opening.viewModel.OpeningAccountViewState
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppButtonIcon
 import com.pmb.ballon.component.base.AppClickableReadOnlyTextField
@@ -30,20 +37,29 @@ import com.pmb.calender.Jdn
 import com.pmb.calender.utils.Calendar
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.manager.NavigationManager
+import com.pmb.navigation.moduleScreen.RegisterScreens
 
 @Composable
 fun AccountOpeningScreen(
-    onNavigationCallBack: (ComingType) -> Unit
+    viewModel: OpeningAccountViewModel,
+    sharedState: State<RegisterSharedViewState>,
+    updateState: (OpeningAccountViewState) -> Unit
 ) {
+    val viewState by viewModel.viewState.collectAsStateWithLifecycle()
     val navigationManager: NavigationManager = LocalNavigationManager.current
-    var phoneNumber by remember { mutableStateOf("09128353268") }
-    var nationalId by remember { mutableStateOf("0012345678") }
-    var birthday by remember { mutableStateOf(Jdn(Calendar.SHAMSI, 1371, 8, 28).toPersianDate()) }
 
-    var showBirthdayPicker by remember { mutableStateOf(false) }
     var isMobile by remember { mutableStateOf(false) }
     var isNationalId by remember { mutableStateOf(false) }
-
+    LaunchedEffect(Unit) {
+        viewModel.viewEvent.collect { event ->
+            when (event) {
+                OpeningAccountViewEvents.SendOpeningAccountViewSucceed -> {
+                    updateState.invoke(viewState)
+                    navigationManager.navigate(RegisterScreens.RegisterNationalId)
+                }
+            }
+        }
+    }
 
     AppContent(
         modifier = Modifier.padding(horizontal = 16.dp),
@@ -58,11 +74,16 @@ fun AccountOpeningScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 16.dp, end = 16.dp, top = 16.dp),
-                enable = true,
+                enable = !viewState.phoneNumber.isNullOrEmpty() && !viewState.nationalId.isNullOrEmpty() && viewState.birthDay != null,
                 title = stringResource(R.string._continue),
                 onClick = {
-                    onNavigationCallBack(ComingType.COMING_REGISTER)
-
+                    viewModel.handle(
+                        OpeningAccountViewActions.SendOpeningAccountData(
+                            viewState.phoneNumber ?: "",
+                            viewState.nationalId ?: "",
+                            viewState.birthDay?.let { "${it.dayOfMonth}/${it.month}/${it.year}" }
+                                ?: run { "" })
+                    )
                 })
         },
         horizontalAlignment = Alignment.CenterHorizontally
@@ -75,43 +96,52 @@ fun AccountOpeningScreen(
         )
         Spacer(modifier = Modifier.size(32.dp))
         AppMobileTextField(
-            value = phoneNumber,
+            value = viewState.phoneNumber ?: "",
             label = stringResource(R.string.mobile_number),
             onValidate = { isMobile = it },
-            onValueChange = { phoneNumber = it })
+            onValueChange = { viewModel.handle(OpeningAccountViewActions.SetPhoneNumber(it)) })
         Spacer(modifier = Modifier.size(24.dp))
         AppNationalIdTextField(
-            value = nationalId,
+            value = viewState.nationalId ?: "",
             label = stringResource(R.string.national_id),
             onValidate = { isNationalId = it },
-            onValueChange = { nationalId = it })
+            onValueChange = { viewModel.handle(OpeningAccountViewActions.SetNationalId(it)) })
         Spacer(modifier = Modifier.size(24.dp))
         AppClickableReadOnlyTextField(
 //            value = birthday.toPersianDate(),
-            value = "${birthday.dayOfMonth}/${birthday.month}/${birthday.year}", // TODO: fix it
+            value = viewState.birthDay?.let { "${it.dayOfMonth}/${it.month}/${it.year}" }
+                ?: run { "" }, // TODO: fix it
             label = stringResource(R.string.birthday),
             trailingIcon = {
                 AppButtonIcon(
                     icon = IconType.Painter(painterResource(com.pmb.ballon.R.drawable.ic_calendar_month)),
                     onClick = {
-                        showBirthdayPicker = true
+                        viewModel.handle(OpeningAccountViewActions.ShowBottomSheet(true))
                     }
                 )
             },
             onClick = {
-                println("clicked on birthday")
-                showBirthdayPicker = true
+                viewModel.handle(OpeningAccountViewActions.ShowBottomSheet(true))
             })
     }
 
-    if (showBirthdayPicker) {
+    if (viewState.isShowingBottomSheet) {
         ShowPersianDatePickerBottomSheet(
             title = stringResource(R.string.birthday),
-            defaultDate = Jdn(birthday.toJdn()),
-            onDismiss = { showBirthdayPicker = false },
+            defaultDate = Jdn(viewState.birthDay.toJdn()),
+            onDismiss = { viewModel.handle(OpeningAccountViewActions.ShowBottomSheet(false)) },
             onChangeValue = { year, month, day ->
-                birthday = Jdn(Calendar.SHAMSI, 1371, 8, 28).toPersianDate()
-                showBirthdayPicker = false
+                viewModel.handle(
+                    OpeningAccountViewActions.SetBirthday(
+                        Jdn(
+                            Calendar.SHAMSI,
+                            year.toInt(),
+                            month.toInt(),
+                            day.toInt()
+                        ).toPersianDate()
+                    )
+                )
+                viewModel.handle(OpeningAccountViewActions.ShowBottomSheet(false))
             },
         )
     }

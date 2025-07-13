@@ -45,9 +45,9 @@ class CardInfoViewModel @Inject constructor(
                         setState {
                             it.copy(
                                 isLoading = false, alertModelState = AlertModelState.Dialog(
-                                    title = "Login Failed",
-                                    description = "failed to login because ${result.message}",
-                                    positiveButtonTitle = "okay",
+                                    title = "خطا",
+                                    description = " ${result.message}",
+                                    positiveButtonTitle = "تایید",
                                     onPositiveClick = {
                                         setState { state -> state.copy(alertModelState = null) }
                                     }

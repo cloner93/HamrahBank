@@ -11,9 +11,6 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -22,7 +19,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.pmb.auth.R
 import com.pmb.auth.presentation.ekyc.authentication_confirm.viewModel.AuthenticationConfirmStepViewModel
-import com.pmb.auth.utils.ComingType
 import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppImage
@@ -34,7 +30,6 @@ import com.pmb.ballon.component.base.ClickableIcon
 import com.pmb.ballon.component.base.Headline3Text
 import com.pmb.ballon.component.base.IconType
 import com.pmb.ballon.ui.theme.AppTheme
-import com.pmb.core.utils.CollectAsEffect
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.manager.NavigationManager
 import com.pmb.navigation.moduleScreen.AuthScreens
@@ -44,18 +39,8 @@ fun AuthenticationConfirmScreen(
     viewModel: AuthenticationConfirmStepViewModel,
 ) {
     val navigationManager: NavigationManager = LocalNavigationManager.current
-    var comingType by remember { mutableStateOf<ComingType>(ComingType.COMING_PASSWORD) }
     val viewState by viewModel.viewState.collectAsState()
-    navigationManager.getCurrentScreenFlowData<ComingType?>(
-        "authentication",
-        null
-    )?.CollectAsEffect {
-        it.takeIf {
-            it != null
-        }?.also {
-            comingType = it
-        }
-    }
+
     AppContent(
         modifier = Modifier.padding(horizontal = 16.dp),
         topBar = {
@@ -64,7 +49,7 @@ fun AuthenticationConfirmScreen(
                 requiredHeight = false,
                 startIcon = ClickableIcon(
                     icon = IconType.ImageVector(Icons.Default.Close),
-                    onClick = { navigationManager.navigate(AuthScreens.Auth) })
+                    onClick = { navigationManager.navigateAndClearStack(AuthScreens.Auth) })
             )
         },
         footer = {
@@ -85,16 +70,12 @@ fun AuthenticationConfirmScreen(
                     Headline3Text(
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.Center,
-                        text = if (comingType == ComingType.COMING_ACTIVATION) stringResource(R.string.check_activation_data) else stringResource(
-                            R.string.check_authentication_data
-                        ),
+                        text = stringResource(R.string.check_activation_data),
                         color = AppTheme.colorScheme.strokeNeutral2Active
                     )
                     Spacer(modifier = Modifier.size(8.dp))
                     BodyMediumText(
-                        text = if (comingType == ComingType.COMING_ACTIVATION) stringResource(R.string.result_activation_info) else stringResource(
-                            R.string.result_authentication_info
-                        ),
+                        text = stringResource(R.string.result_activation_info),
                         color = AppTheme.colorScheme.onBackgroundPrimarySubdued,
                         textAlign = TextAlign.Center
                     )
@@ -114,5 +95,3 @@ fun AuthenticationConfirmScreen(
         AlertComponent(viewState.alertModelState!!)
     }
 }
-
-

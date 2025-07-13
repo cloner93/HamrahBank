@@ -80,8 +80,7 @@ fun ShowMellatSignatureBottomSheet(onDismiss: () -> Unit) {
                 Spacer(modifier = Modifier.size(32.dp))
                 BodyLargeText(
                     text = stringResource(R.string.mellat_signature_desc),
-                    textAlign = TextAlign.Center,
-                    color = AppTheme.colorScheme.onBackgroundNeutralDefault
+                    textAlign = TextAlign.Center
                 )
                 Spacer(modifier = Modifier.size(24.dp))
                 AppButton(

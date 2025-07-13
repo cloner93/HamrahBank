@@ -26,7 +26,6 @@ import com.pmb.auth.R
 import com.pmb.auth.presentation.activation.activation_tax_details.viewModel.ActivationTaxDetailsViewActions
 import com.pmb.auth.presentation.activation.activation_tax_details.viewModel.ActivationTaxDetailsViewEvents
 import com.pmb.auth.presentation.activation.activation_tax_details.viewModel.ActivationTaxDetailsViewModel
-import com.pmb.auth.utils.ComingType
 import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppContent
@@ -38,11 +37,11 @@ import com.pmb.ballon.component.base.CaptionText
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.manager.NavigationManager
+import com.pmb.navigation.moduleScreen.AuthScreens
 
 @Composable
 fun ActivationTaxDetailsScreen(
     viewModel: ActivationTaxDetailsViewModel,
-    onAuthenticationCallback: (ComingType) -> Unit
 ) {
     val navigationManager: NavigationManager = LocalNavigationManager.current
     val viewState by viewModel.viewState.collectAsState()
@@ -53,7 +52,7 @@ fun ActivationTaxDetailsScreen(
         viewModel.viewEvent.collect { event ->
             when (event) {
                 ActivationTaxDetailsViewEvents.ConfirmTaxDetails -> {
-                    onAuthenticationCallback.invoke(ComingType.COMING_ACTIVATION)
+                    navigationManager.navigate(AuthScreens.ChooseAuthenticationType)
                 }
             }
         }

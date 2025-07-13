@@ -31,11 +31,15 @@ import com.pmb.ballon.component.text_field.AppPasswordTextField
 import com.pmb.ballon.models.AccountSampleModel
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.manager.NavigationManager
+import com.pmb.navigation.moduleScreen.ActivationScreens
 import com.pmb.navigation.moduleScreen.AuthScreens
 
 //
 @Composable
-fun FirstLoginScreen(viewModel: FirstLoginViewModel) {
+fun FirstLoginScreen(
+    viewModel: FirstLoginViewModel,
+    updateShareState: (String, String, String) -> Unit
+) {
     val navigationManager: NavigationManager = LocalNavigationManager.current
     val viewState by viewModel.viewState.collectAsState()
 
@@ -44,13 +48,16 @@ fun FirstLoginScreen(viewModel: FirstLoginViewModel) {
         viewModel.viewEvent.collect { event ->
             when (event) {
                 FirsLoginViewEvents.FirstLoginStepSucceed -> {
-                    navigationManager.navigateWithString(
-                        AuthScreens.FirstLoginConfirm.createRoute(
-                            viewState.phoneNumber,
-                            viewState.username,
-                            viewState.password
-                        )
-                    )
+                    updateShareState.invoke(viewState.username, viewState.phoneNumber, viewState.password)
+                    navigationManager.navigate(AuthScreens.FirstLoginConfirm)
+
+//                    navigationManager.navigateWithString(
+//                        AuthScreens.FirstLoginConfirm.createRoute(
+//                            viewState.phoneNumber,
+//                            viewState.username,
+//                            viewState.password
+//                        )
+//                    )
                 }
             }
         }
@@ -67,7 +74,7 @@ fun FirstLoginScreen(viewModel: FirstLoginViewModel) {
                 .fillMaxWidth(),
             title = stringResource(com.pmb.auth.R.string.hamrah_bank_activate),
             onClick = {
-                navigationManager.navigate(AuthScreens.Activation)
+                navigationManager.navigate(ActivationScreens.Activation)
             })
     }) {
         Spacer(modifier = Modifier.size(24.dp))

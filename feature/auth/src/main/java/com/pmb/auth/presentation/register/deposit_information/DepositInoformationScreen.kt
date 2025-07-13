@@ -46,7 +46,7 @@ import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.core.utils.CollectAsEffect
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.manager.NavigationManager
-import com.pmb.navigation.moduleScreen.AuthScreens
+import com.pmb.navigation.moduleScreen.RegisterScreens
 
 @Composable
 fun DepositInformationScreen(
@@ -66,7 +66,7 @@ fun DepositInformationScreen(
         viewModel.viewEvent.collect { event ->
             when (event) {
                 DepositInformationViewEvents.SendDepositInformationSucceeded -> {
-                    navigationManager.navigate(AuthScreens.Signature)
+                    navigationManager.navigate(RegisterScreens.Signature)
                 }
             }
         }
@@ -199,7 +199,7 @@ fun DepositInformationScreen(
                     onClick = {
                         if (viewState.sendDepositInformationParams?.branchCity != null)
                             navigationManager.navigateWithString(
-                                AuthScreens.SearchOpeningBranch.createRoute(
+                                RegisterScreens.SearchOpeningBranch.createRoute(
                                     viewState.sendDepositInformationParams?.branchCity ?: -1,
                                     viewState.branchCity?.branchCity?.findLast {
                                         it.id == (viewState.sendDepositInformationParams?.branchCity

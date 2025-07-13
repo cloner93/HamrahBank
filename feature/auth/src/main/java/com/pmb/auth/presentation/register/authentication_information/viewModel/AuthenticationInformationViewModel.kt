@@ -214,9 +214,9 @@ class AuthenticationInformationViewModel @Inject constructor(
                         setState {
                             it.copy(
                                 isLoading = false, alertModelState = AlertModelState.Dialog(
-                                    title = "Authentication Information Failed",
-                                    description = "failed to send authentication information because ${result.message}",
-                                    positiveButtonTitle = "okay",
+                                    title = "خطا",
+                                    description = " ${result.message}",
+                                    positiveButtonTitle = "تایید",
                                     onPositiveClick = {
                                         setState { state -> state.copy(alertModelState = null) }
                                     }
@@ -255,9 +255,9 @@ class AuthenticationInformationViewModel @Inject constructor(
                         setState {
                             it.copy(
                                 isLoading = false, alertModelState = AlertModelState.Dialog(
-                                    title = "Authentication Information Failed",
-                                    description = "failed to get authentication information because ${result.message}",
-                                    positiveButtonTitle = "okay",
+                                    title = "خطا",
+                                    description = " ${result.message}",
+                                    positiveButtonTitle = "تایید",
                                     onPositiveClick = {
                                         setState { state -> state.copy(alertModelState = null) }
                                     }

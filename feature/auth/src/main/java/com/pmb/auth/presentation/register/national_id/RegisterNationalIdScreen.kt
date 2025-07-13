@@ -22,7 +22,6 @@ import com.pmb.auth.R
 import com.pmb.auth.presentation.register.national_id.viewModel.RegisterNationalIdViewActions
 import com.pmb.auth.presentation.register.national_id.viewModel.RegisterNationalIdViewEvents
 import com.pmb.auth.presentation.register.national_id.viewModel.RegisterNationalIdViewModel
-import com.pmb.auth.utils.ComingType
 import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppContent
@@ -34,13 +33,12 @@ import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.manager.NavigationManager
-import com.pmb.navigation.moduleScreen.AuthScreens
+import com.pmb.navigation.moduleScreen.RegisterScreens
 
 
 @Composable
 fun RegisterNationalIdScreen(
     viewModel: RegisterNationalIdViewModel,
-    comingType: ComingType = ComingType.COMING_REGISTER
 ) {
     val navigationManager: NavigationManager = LocalNavigationManager.current
     val viewState by viewModel.viewState.collectAsState()
@@ -51,11 +49,7 @@ fun RegisterNationalIdScreen(
         viewModel.viewEvent.collect { event ->
             when (event) {
                 RegisterNationalIdViewEvents.RegisterNationalSucceed -> {
-                    if (comingType == ComingType.COMING_REGISTER) {
-                        navigationManager.navigate(AuthScreens.FirstLoginConfirm)
-                    }else{
-                        navigationManager.navigate(AuthScreens.Authentication)
-                    }
+                    navigationManager.navigate(RegisterScreens.RegisterConfirm)
                 }
             }
         }
@@ -69,9 +63,10 @@ fun RegisterNationalIdScreen(
         },
         horizontalAlignment = Alignment.CenterHorizontally,
         footer = {
-            AppButton(modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp, top = 16.dp),
+            AppButton(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp, end = 16.dp, top = 16.dp),
                 enable = nationalSerialId.isNotEmpty() && !viewState.isLoading,
                 title = stringResource(R.string._continue),
                 onClick = {

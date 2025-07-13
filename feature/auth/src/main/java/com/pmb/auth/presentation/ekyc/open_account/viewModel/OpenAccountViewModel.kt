@@ -50,18 +50,14 @@ class OpenAccountViewModel @Inject constructor(
                         setState {
                             it.copy(
                                 loading = false,
-                                alertModelState = AlertModelState.SnackBar(
-                                    message = result.message,
-                                    onDismissed = {
-                                        setState {
-                                            it.copy(alertModelState = null)
-                                        }
-                                    },
-                                    onActionPerformed = {
-                                        setState {
-                                            it.copy(alertModelState = null)
-                                        }
-                                    })
+                                alertModelState =AlertModelState.Dialog(
+                                    title = "خطا",
+                                    description = " ${result.message}",
+                                    positiveButtonTitle = "تایید",
+                                    onPositiveClick = {
+                                        setState { state -> state.copy(alertModelState = null) }
+                                    }
+                                )
                             )
                         }
                     }

@@ -69,9 +69,9 @@ class JobInformationViewModel @Inject constructor(
                         setState {
                             it.copy(
                                 isLoading = false, alertModelState = AlertModelState.Dialog(
-                                    title = "Job Information Failed",
-                                    description = "failed to get annual prediction because ${result.message}",
-                                    positiveButtonTitle = "okay",
+                                    title = "خطا",
+                                    description = " ${result.message}",
+                                    positiveButtonTitle = "تایید",
                                     onPositiveClick = {
                                         setState { state -> state.copy(alertModelState = null) }
                                     }
@@ -114,9 +114,9 @@ class JobInformationViewModel @Inject constructor(
                         setState {
                             it.copy(
                                 isLoading = false, alertModelState = AlertModelState.Dialog(
-                                    title = "Job Information Failed",
-                                    description = "failed to send job information because ${result.message}",
-                                    positiveButtonTitle = "okay",
+                                    title = "خطا",
+                                    description = " ${result.message}",
+                                    positiveButtonTitle = "تایید",
                                     onPositiveClick = {
                                         setState { state -> state.copy(alertModelState = null) }
                                     }

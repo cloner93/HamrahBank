@@ -33,7 +33,7 @@ import com.pmb.ballon.component.base.IconType
 import com.pmb.ballon.component.datePicker.ShowPersianDatePickerBottomSheet
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.manager.NavigationManager
-import com.pmb.navigation.moduleScreen.AuthScreens
+import com.pmb.navigation.moduleScreen.RegisterScreens
 
 @Composable
 fun AuthenticationInformationScreen(
@@ -51,7 +51,7 @@ fun AuthenticationInformationScreen(
         viewModel.viewEvent.collect { event ->
             when (event) {
                 AuthenticationInformationViewEvents.SendAuthenticationInformationViewSucceed -> {
-                    navigationManager.navigate(AuthScreens.JobInformation)
+                    navigationManager.navigate(RegisterScreens.JobInformation)
                 }
             }
         }

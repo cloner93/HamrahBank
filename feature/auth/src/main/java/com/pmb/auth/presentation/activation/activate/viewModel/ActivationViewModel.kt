@@ -46,21 +46,12 @@ class ActivationViewModel @Inject constructor(
                         setState {
                             it.copy(
                                 loading = false,
-                                alertModelState = AlertModelState.SnackBar(
-                                    message = result.message,
-                                    onActionPerformed = {
-                                        setState {
-                                            it.copy(
-                                                loading = false
-                                            )
-                                        }
-                                    },
-                                    onDismissed = {
-                                        setState {
-                                            it.copy(
-                                                loading = false
-                                            )
-                                        }
+                                alertModelState = AlertModelState.Dialog(
+                                    title = "خطا",
+                                    description = " ${result.message}",
+                                    positiveButtonTitle = "تایید",
+                                    onPositiveClick = {
+                                        setState { state -> state.copy(alertModelState = null) }
                                     }
                                 )
                             )

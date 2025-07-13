@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -30,6 +31,7 @@ import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.manager.NavigationManager
 import com.pmb.navigation.moduleScreen.AuthScreens
+import com.pmb.navigation.moduleScreen.RegisterScreens
 
 @Composable
 fun IntroScreen(
@@ -41,24 +43,20 @@ fun IntroScreen(
             .fillMaxSize()
             .background(
                 brush = Brush.linearGradient(
-                    colors = listOf(
-                        AppTheme.colorScheme.background2Primary,
-                        AppTheme.colorScheme.onForegroundNeutralDefault
-                    ),
+                    colors = listOf(Color(0xFFFBE7EB), Color.White),
                     start = Offset(0f, 0f),
                     end = Offset(1000f, 2000f)
                 )
             ),
         contentAlignment = Alignment.Center
     ) {
-        val color = AppTheme.colorScheme.onForegroundNeutralDefault
         Canvas(
             modifier = Modifier
                 .fillMaxSize()
                 .alpha(0.45f)
         ) {
             drawCircle(
-                color = color ,
+                color = Color.White,
                 radius = 418.dp.toPx(),
                 center = Offset(46.dp.toPx() + 418.dp.toPx(), (-256).dp.toPx() + 418.dp.toPx())
             )
@@ -99,7 +97,7 @@ fun IntroScreen(
                     modifier = Modifier.fillMaxWidth(),
                     title = stringResource(R.string.account_opening),
                     onClick = {
-                        navigationManager.navigate(AuthScreens.Preparation)
+                        navigationManager.navigate(RegisterScreens.Preparation)
                     }
                 )
 
@@ -108,4 +106,3 @@ fun IntroScreen(
         }
     }
 }
-

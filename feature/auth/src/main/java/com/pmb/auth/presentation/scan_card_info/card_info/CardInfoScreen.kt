@@ -21,7 +21,6 @@ import androidx.compose.ui.unit.dp
 import com.pmb.auth.R
 import com.pmb.auth.presentation.scan_card_info.card_info.viewModel.CardInfoViewEvents
 import com.pmb.auth.presentation.scan_card_info.card_info.viewModel.CardInfoViewModel
-import com.pmb.auth.utils.ComingType
 import com.pmb.ballon.component.DynamicPassCardInputField
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppButtonWithIcon
@@ -32,13 +31,11 @@ import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.manager.NavigationManager
-import com.pmb.navigation.moduleScreen.AuthScreens
 import com.pmb.navigation.moduleScreen.HomeScreens
 
 @Composable
 fun CardInfoScreen(
     viewModel: CardInfoViewModel,
-    comingType: ComingType
 ) {
     val navigationManager: NavigationManager = LocalNavigationManager.current
     val viewState by viewModel.viewState.collectAsState()
@@ -80,19 +77,19 @@ fun CardInfoScreen(
                 enable = !viewState.isLoading && isCard && isPass2 && isCvv2,
                 title = stringResource(R.string._continue),
                 onClick = {
-                    if (comingType == ComingType.COMING_PASSWORD) {
-                        navigationManager.navigateAndClearStack(AuthScreens.ForgetPassword)
-                        navigationManager.setCurrentScreenData<ComingType>(
-                            "authentication",
-                            comingType
-                        )
-                    } else {
-                        navigationManager.navigateAndClearStack(AuthScreens.AuthenticationConfirmStep)
-                        navigationManager.setCurrentScreenData<ComingType>(
-                            "authentication",
-                            comingType
-                        )
-                    }
+//                    if (comingType == ComingType.COMING_PASSWORD) {
+//                        navigationManager.navigateAndClearStack(AuthScreens.ForgetPassword)
+//                        navigationManager.setCurrentScreenData<ComingType>(
+//                            "authentication",
+//                            comingType
+//                        )
+//                    } else {
+//                        navigationManager.navigateAndClearStack(AuthScreens.AuthenticationConfirmStep)
+//                        navigationManager.setCurrentScreenData<ComingType>(
+//                            "authentication",
+//                            comingType
+//                        )
+//                    }
                 })
         }
     ) {

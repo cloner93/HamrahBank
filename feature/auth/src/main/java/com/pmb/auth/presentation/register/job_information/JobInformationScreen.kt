@@ -33,7 +33,7 @@ import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.core.utils.CollectAsEffect
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.manager.NavigationManager
-import com.pmb.navigation.moduleScreen.AuthScreens
+import com.pmb.navigation.moduleScreen.RegisterScreens
 
 @Composable
 fun JobInformationScreen(
@@ -59,7 +59,7 @@ fun JobInformationScreen(
         viewModel.viewEvent.collect { event ->
             when (event) {
                 JobInformationViewEvents.SendJobInformationSucceed -> {
-                    navigationManager.navigate(AuthScreens.CheckPostalCode)
+                    navigationManager.navigate(RegisterScreens.CheckPostalCode)
                 }
             }
         }
@@ -95,7 +95,7 @@ fun JobInformationScreen(
         viewState.data?.let {
             AppClickableReadOnlyTextField(
                 onClick = {
-                    navigationManager.navigate(AuthScreens.SelectJobInformation)
+                    navigationManager.navigate(RegisterScreens.SelectJobInformation)
                 },
                 value = viewState.jobInformation?.jobInformation ?: "",
                 label = "انتخاب شغل",

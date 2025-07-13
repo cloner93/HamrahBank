@@ -37,13 +37,14 @@ class ForgetPasswordViewModel @Inject constructor(
                         setState {
                             it.copy(
                                 loading = false,
-                                alert = AlertModelState.SnackBar(message = result.message,
-                                    onActionPerformed = {
+                                alert = AlertModelState.Dialog(
+                                    title = "خطا",
+                                    description = " ${result.message}",
+                                    positiveButtonTitle = "تایید",
+                                    onPositiveClick = {
                                         setState { state -> state.copy(alert = null) }
-                                    },
-                                    onDismissed = {
-                                        setState { state -> state.copy(alert = null) }
-                                    })
+                                    }
+                                )
                             )
                         }
                     }
