@@ -1,8 +1,6 @@
 package com.pmb.account.presentation.transactions.viewmodel
 
 import androidx.lifecycle.viewModelScope
-import com.pmb.account.presentation.component.TransactionModel
-import com.pmb.account.presentation.component.TransactionType
 import com.pmb.account.presentation.transactions.filterScreen.viewmodel.entity.TransactionFilter
 import com.pmb.account.usecase.deposits.GetTransactionsUseCase
 import com.pmb.core.platform.BaseViewAction
@@ -11,6 +9,8 @@ import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.platform.BaseViewState
 import com.pmb.core.platform.Result
 import com.pmb.domain.model.DepositModel
+import com.pmb.domain.model.TransactionModel
+import com.pmb.domain.model.TransactionType
 import com.pmb.domain.usecae.deposit.GetUserDepositListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch

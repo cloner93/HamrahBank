@@ -2,13 +2,13 @@ package com.pmb.account.presentation.transactionReceipt.viewmodel
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.pmb.account.presentation.component.TransactionModel
 import com.pmb.account.usecase.deposits.GetTransactionByIdUseCase
 import com.pmb.core.platform.BaseViewAction
 import com.pmb.core.platform.BaseViewEvent
 import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.platform.BaseViewState
 import com.pmb.core.utils.toCurrency
+import com.pmb.domain.model.TransactionModel
 import com.pmb.receipt.model.RowData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch

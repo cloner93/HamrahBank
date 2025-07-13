@@ -14,6 +14,7 @@ internal fun DepositBottomSheetModel.mapToDepositModel(): DepositModel {
         amount = this.amount,
         currency = this.currency,
         ibanNumber = this.ibanNumber,
+        categoryCode = this.categoryCode,
         cardNumber = this.cardNumber
     )
 }

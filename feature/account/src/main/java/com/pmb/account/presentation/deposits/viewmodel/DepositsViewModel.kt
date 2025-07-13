@@ -3,11 +3,12 @@ package com.pmb.account.presentation.deposits.viewmodel
 import androidx.lifecycle.viewModelScope
 import com.pmb.account.presentation.deposits.viewmodel.DepositsViewEvents.NavigateToTransactionDetails
 import com.pmb.account.presentation.deposits.viewmodel.DepositsViewEvents.ShowToast
-import com.pmb.account.usecase.deposits.GetTransactionsUseCase
 import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.platform.Result
 import com.pmb.domain.model.DepositModel
+import com.pmb.domain.model.TransactionModel
 import com.pmb.domain.usecae.deposit.GetUserDepositListUseCase
+import com.pmb.domain.usecae.transactions.TransactionsByCountUsaCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -17,7 +18,7 @@ import javax.inject.Inject
 class DepositsViewModel @Inject constructor(
     initialState: DepositsViewState,
     private val getDepositsUseCase: GetUserDepositListUseCase,
-    private val getTransactionsUseCase: GetTransactionsUseCase,
+    private val getTransactionsUseCase: TransactionsByCountUsaCase,
 
     ) : BaseViewModel<DepositsViewActions, DepositsViewState, DepositsViewEvents>(initialState) {
 
@@ -67,7 +68,7 @@ class DepositsViewModel @Inject constructor(
                 setState { it.copy(showDepositListBottomSheet = false) }
 
                 if (action.model != null) {
-                    selectDeposit(action.model.depositNumber)
+                    selectDeposit(action.model)
                 }
             }
 
@@ -113,48 +114,62 @@ class DepositsViewModel @Inject constructor(
                                     isLoading = false
                                 )
                             }
-                            //                // Load transactions for the selected deposit
-                            //                loadTransactions(viewState.value.selectedDeposit?.depositNumber)
+
+                            viewState.value.selectedDeposit?.let {
+                                loadTransactions(
+                                    it
+                                )
+                            }
                         }
                     }
                 }
         }
     }
 
-    private fun loadTransactions(depositId: String?) {
-        if (depositId == null) return
-
+    private fun loadTransactions(deposit: DepositModel) {
         viewModelScope.launch {
-            setState { it.copy(isLoading = true) }
+            getTransactionsUseCase.invoke(deposit).collect { result ->
+                when (result) {
+                    is Result.Error -> {
+                        setState {
+                            it.copy(
+                                errorMessage = result.message,
+                                isLoading = false
+                            )
+                        }
+                        postEvent(DepositsViewEvents.ShowError(result.message))
 
-            try {
-                val transactions = getTransactionsUseCase(depositId)
-                setState {
-                    it.copy(
-                        transactions = transactions,
-                        isLoading = false
-                    )
+                    }//
+
+                    Result.Loading -> {
+                        setState { it.copy(isLoading = true) }
+                    }
+
+                    is Result.Success<*> -> {
+                        val listOfTransactions: List<TransactionModel> =
+                            result.data as List<TransactionModel>
+
+                        setState {
+                            it.copy(
+                                transactions = listOfTransactions,
+                                isLoading = false
+                            )
+                        }
+                    }
                 }
-            } catch (e: Exception) {
-                setState {
-                    it.copy(
-                        errorMessage = e.message ?: "Failed to load transactions",
-                        isLoading = false
-                    )
-                }
-                postEvent(DepositsViewEvents.ShowError(e.message ?: "Failed to load transactions"))
             }
         }
     }
 
-    fun selectDeposit(depositNumber: String) {
-        val selectedDeposit = viewState.value.deposits.find { it.depositNumber == depositNumber }
+    fun selectDeposit(deposit: DepositModel) {
+        val selectedDeposit =
+            viewState.value.deposits.find { it.depositNumber == deposit.depositNumber }
 
         setState {
             it.copy(
                 deposits = viewState.value.deposits
                     .map {
-                        if (it.depositNumber == depositNumber) {
+                        if (it.depositNumber == deposit.depositNumber) {
                             it.copy(isSelected = true)
                         } else {
                             it.copy(isSelected = false)
@@ -165,8 +180,8 @@ class DepositsViewModel @Inject constructor(
         }
 
         setState { it.copy(selectedDeposit = selectedDeposit) }
-        postEvent(DepositsViewEvents.DepositSelectionChanged(depositNumber))
-        loadTransactions(depositNumber)
+        postEvent(DepositsViewEvents.DepositSelectionChanged(deposit.depositNumber))
+        loadTransactions(deposit)
     }
 
     /*  fun hideAllBottomSheets() {

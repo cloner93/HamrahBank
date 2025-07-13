@@ -23,24 +23,8 @@ import com.pmb.ballon.models.Size
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.ballon.ui.theme.HamrahBankTheme
 import com.pmb.core.utils.toCurrency
-
-enum class TransactionType {
-    DEPOSIT,
-    WITHDRAWAL,
-    TRANSFER,
-    RECEIVE,
-    FEE
-}
-
-
-data class TransactionModel(
-    val transactionId: String,
-    val type: TransactionType,
-    val title: String,
-    val amount: Double,
-    val currency: String,
-    val date: String
-)
+import com.pmb.domain.model.TransactionModel
+import com.pmb.domain.model.TransactionType
 
 @Composable
 fun TransactionRow(
@@ -64,6 +48,7 @@ fun TransactionRow(
                 TransactionType.TRANSFER -> R.drawable.ic_transfer
                 TransactionType.RECEIVE -> R.drawable.ic_receive
                 TransactionType.FEE -> R.drawable.ic_transfer
+                TransactionType.UNKNOWN -> R.drawable.ic_unknown
             },
             style = ImageStyle(size = Size.FIX(42.dp))
         )

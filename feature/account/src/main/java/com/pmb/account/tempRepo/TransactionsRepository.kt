@@ -1,7 +1,7 @@
 package com.pmb.account.tempRepo
 
-import com.pmb.account.presentation.component.TransactionModel
-import com.pmb.account.presentation.component.TransactionType
+import com.pmb.domain.model.TransactionModel
+import com.pmb.domain.model.TransactionType
 import javax.inject.Inject
 
 class TransactionsRepository @Inject constructor() {
