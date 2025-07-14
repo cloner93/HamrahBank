@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.pmb.auth.AuthActionType
 import com.pmb.auth.R
 import com.pmb.auth.presentation.activation.activation_tax_details.viewModel.ActivationTaxDetailsViewActions
 import com.pmb.auth.presentation.activation.activation_tax_details.viewModel.ActivationTaxDetailsViewEvents
@@ -42,6 +43,7 @@ import com.pmb.navigation.moduleScreen.AuthScreens
 @Composable
 fun ActivationTaxDetailsScreen(
     viewModel: ActivationTaxDetailsViewModel,
+    updateSharedState: (AuthActionType) -> Unit
 ) {
     val navigationManager: NavigationManager = LocalNavigationManager.current
     val viewState by viewModel.viewState.collectAsState()
@@ -52,6 +54,9 @@ fun ActivationTaxDetailsScreen(
         viewModel.viewEvent.collect { event ->
             when (event) {
                 ActivationTaxDetailsViewEvents.ConfirmTaxDetails -> {
+                    updateSharedState.invoke(
+                        AuthActionType.ACTIVATION
+                    )
                     navigationManager.navigate(AuthScreens.ChooseAuthenticationType)
                 }
             }

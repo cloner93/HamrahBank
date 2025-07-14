@@ -79,11 +79,6 @@ fun AuthenticationConfirmScreen(
                         color = AppTheme.colorScheme.onBackgroundPrimarySubdued,
                         textAlign = TextAlign.Center
                     )
-                    Spacer(modifier = Modifier.size(32.dp))
-                    BodyLargeText(
-                        text = stringResource(R.string.interception_number, 12345),
-                        color = AppTheme.colorScheme.onBackgroundNeutralDefault
-                    )
 
                 }
             }

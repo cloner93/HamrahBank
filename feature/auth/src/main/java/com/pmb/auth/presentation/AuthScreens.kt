@@ -6,9 +6,11 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.pmb.auth.AuthSharedViewModel
+import com.pmb.auth.presentation.activation.activationScreenHandler
 import com.pmb.auth.presentation.activation.choose_authentication_type.ActivationAuthenticationTypeScreen
 import com.pmb.auth.presentation.ekyc.authentication_confirm.AuthenticationConfirmScreen
 import com.pmb.auth.presentation.ekyc.authentication_confirm.viewModel.AuthenticationConfirmStepViewModel
+import com.pmb.auth.presentation.ekyc.ekycScreenHandler
 import com.pmb.auth.presentation.ekyc.open_account.OpenAccountScreen
 import com.pmb.auth.presentation.ekyc.open_account.viewModel.OpenAccountViewModel
 import com.pmb.auth.presentation.first_login.FirstLoginScreen
@@ -25,6 +27,8 @@ import com.pmb.auth.presentation.reentry.reentry_face_detection.ReentryFaceDetec
 import com.pmb.auth.presentation.reentry.reentry_face_detection.viewModel.ReentryFaceDetectionViewModel
 import com.pmb.auth.presentation.reentry.reentry_password.ReentryPasswordScreen
 import com.pmb.auth.presentation.reentry.reentry_password.viewModel.ReentryPasswordViewModel
+import com.pmb.auth.presentation.register.registerScreenHandler
+import com.pmb.auth.presentation.scan_card_info.cardScreenHandler
 import com.pmb.navigation.manager.navigationManager
 import com.pmb.navigation.moduleScreen.AuthScreens
 
@@ -137,8 +141,18 @@ fun NavGraphBuilder.authScreensHandle(
         }
 
         composable(route = AuthScreens.ChooseAuthenticationType.route) {
+            val sharedViewModel =
+                it.navigationManager.retrieveSharedViewModel<AuthSharedViewModel>(
+                    screen = AuthScreens.AuthGraph, navBackStackEntry = it
+                )
+            val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
             ActivationAuthenticationTypeScreen(
+                sharedState
             )
         }
     }
+    cardScreenHandler()
+    registerScreenHandler()
+    ekycScreenHandler()
+    activationScreenHandler()
 }

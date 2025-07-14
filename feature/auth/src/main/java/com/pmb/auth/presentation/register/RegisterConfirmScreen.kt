@@ -123,6 +123,9 @@ fun RegisterConfirmScreen(
             enable = otp.length >= 6,
             title = stringResource(R.string.login),
             onClick = {
+//                FirstLoginConfirmViewEvents.FirstLoginConfirmSucceed -> {
+                navigationManager.navigate(RegisterScreens.AuthenticationInformation)
+//            }
 //                viewModel.handle(
 //                    FirstLoginConfirmViewActions.ConfirmFirstLogin(
 //                        mobileNumber = sharedState.value.phoneNumber, otpCode = otp

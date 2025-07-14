@@ -149,7 +149,7 @@ fun NavGraphBuilder.registerScreenHandler() {
                 viewModel = hiltViewModel<RegisterCapturingVideoViewModel>()
             )
         }
-        composable(route = AuthScreens.AuthenticationConfirmStep.route) {
+        composable(route = RegisterScreens.RegisterConfirmStep.route) {
             RegisterConfirmStepScreen(
                 viewModel = hiltViewModel<RegisterConfirmStepViewModel>(),
             )
