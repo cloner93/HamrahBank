@@ -184,8 +184,6 @@ class SignatureViewModel @Inject constructor(
             permissionDispatcher.initialize(multiplePermissionLauncher = action.managedActivityResultLauncher)
             permissionDispatcher.requestMultiplePermission(
                 permissions = arrayOf(
-                    Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
                 ),
                 onPermissionGranted = {
                     setState { state ->

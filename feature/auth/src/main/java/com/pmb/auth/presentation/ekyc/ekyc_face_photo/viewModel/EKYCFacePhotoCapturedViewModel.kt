@@ -183,8 +183,6 @@ class EKYCFacePhotoCapturedViewModel @Inject constructor(
             permissionDispatcher.initialize(multiplePermissionLauncher = action.managedActivityResultLauncher)
             permissionDispatcher.requestMultiplePermission(
                 permissions = arrayOf(
-                    android.Manifest.permission.READ_EXTERNAL_STORAGE,
-                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
                     android.Manifest.permission.RECORD_AUDIO,
                 ),
                 onPermissionGranted = {

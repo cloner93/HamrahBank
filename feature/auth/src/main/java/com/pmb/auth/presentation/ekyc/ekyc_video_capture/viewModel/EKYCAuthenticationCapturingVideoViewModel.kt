@@ -91,7 +91,6 @@ class EKYCAuthenticationCapturingVideoViewModel @Inject constructor(
                                 alertModelState = null,
                                 timerState = null,
                                 hasCameraPermission = false,
-                                hasFilePermissions = false,
                                 isCameraReady = false,
                                 isFrontCamera = false,
                                 isCapturingVideo = false,
@@ -172,7 +171,7 @@ class EKYCAuthenticationCapturingVideoViewModel @Inject constructor(
                 onPermissionGranted = {
                     setState { state ->
                         Log.i("per", "You have permission for using camera")
-                        state.copy(hasAudioPermissions = true, hasCameraPermission = true, hasFilePermissions = true)
+                        state.copy(hasAudioPermissions = true, hasCameraPermission = true)
                     }
                 },
                 onPermissionDenied = {
@@ -186,26 +185,23 @@ class EKYCAuthenticationCapturingVideoViewModel @Inject constructor(
     }
 
     private fun requestFilePermission(action: VideoViewActions.RequestFilePermission) {
-        viewModelScope.launch {
-            permissionDispatcher.initialize(multiplePermissionLauncher = action.managedActivityResultLauncher)
-            permissionDispatcher.requestMultiplePermission(
-                permissions = arrayOf(
-                    android.Manifest.permission.READ_EXTERNAL_STORAGE,
-                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
-//                    android.Manifest.permission.RECORD_AUDIO
-                ),
-                onPermissionGranted = {
-                    setState { state ->
-                        state.copy(hasFilePermissions = true)
-                    }
-                },
-                onPermissionDenied = { deniedPermissions ->
-                    setState { state ->
-                        state.copy(cameraHasError = "You don't have ${deniedPermissions} for using file explorer")
-                    }
-                }
-            )
-        }
+//        viewModelScope.launch {
+//            permissionDispatcher.initialize(multiplePermissionLauncher = action.managedActivityResultLauncher)
+//            permissionDispatcher.requestMultiplePermission(
+//                permissions = arrayOf(
+//                ),
+//                onPermissionGranted = {
+//                    setState { state ->
+//                        state.copy(hasFilePermissions = true)
+//                    }
+//                },
+//                onPermissionDenied = { deniedPermissions ->
+//                    setState { state ->
+//                        state.copy(cameraHasError = "You don't have ${deniedPermissions} for using file explorer")
+//                    }
+//                }
+//            )
+//        }
     }
 
     private fun previewCamera(action: VideoViewActions.PreviewCamera) {

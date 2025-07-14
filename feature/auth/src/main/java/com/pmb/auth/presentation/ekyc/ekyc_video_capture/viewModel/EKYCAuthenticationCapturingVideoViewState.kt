@@ -10,7 +10,7 @@ data class EKYCAuthenticationCapturingVideoViewState(
     val alertModelState: AlertModelState?=null,
     val timerState: Map<TimerTypeId, TimerState>? = null,
     override val hasCameraPermission: Boolean = false,
-    override val hasFilePermissions: Boolean = false,
+//    override val hasFilePermissions: Boolean = false,
     override val hasAudioPermissions: Boolean = false,
     override val isCameraReady: Boolean = false,
     override val isFrontCamera: Boolean = false,

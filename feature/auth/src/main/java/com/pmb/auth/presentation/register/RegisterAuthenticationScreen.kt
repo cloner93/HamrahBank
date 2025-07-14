@@ -27,6 +27,7 @@ import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.manager.NavigationManager
 import com.pmb.navigation.moduleScreen.EKYCScreens
+import com.pmb.navigation.moduleScreen.RegisterScreens
 
 @Composable
 fun RegisterAuthenticationScreen() {
@@ -50,7 +51,7 @@ fun RegisterAuthenticationScreen() {
                 enable = true,
                 title = stringResource(R.string.account_authentication),
                 onClick = {
-                    navigationManager.navigate(EKYCScreens.EKYCFacePhotoCapture)
+                    navigationManager.navigate(RegisterScreens.RegisterFacePhotoCapture)
                 })
         },
         horizontalAlignment = Alignment.CenterHorizontally,

@@ -6,6 +6,7 @@ import com.pmb.data.mapper.authService.toDomain
 import com.pmb.data.mapper.mapApiResult
 import com.pmb.domain.model.SendOtpRequest
 import com.pmb.domain.model.SendOtpResponse
+import com.pmb.domain.model.UserData
 import com.pmb.domain.repository.auth.FirstLoginConfirmRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -15,6 +16,15 @@ class FirstLoginConfirmRepositoryImpl @Inject constructor(
 ) : FirstLoginConfirmRepository {
     override suspend fun sendOtp(sendOtpRequest: SendOtpRequest): Flow<Result<SendOtpResponse>> {
         return appManager.getAuthService().sendOtp(sendOtpRequest).mapApiResult {
+            if (it.first?.statusMessage == "موفق") {
+                appManager.getDataStoreService().getUserDataStore().setUserData(
+                    UserData(
+                        sendOtpRequest.mobileNumber,
+                        sendOtpRequest.userName,
+                        sendOtpRequest.password
+                    )
+                )
+            }
             it.second.toDomain()
         }
     }

@@ -1,6 +1,7 @@
 package com.pmb.data.di
 
 import com.pmb.data.repository.auth.FirstLoginConfirmRepositoryImpl
+import com.pmb.data.repository.auth.GetUserDataStoreRepositoryImpl
 import com.pmb.data.repository.auth.LoginRepositoryImpl
 import com.pmb.data.repository.auth.RegisterRepositoryImpl
 import com.pmb.data.repository.card.CardLIstRepositoryImpl
@@ -8,6 +9,7 @@ import com.pmb.data.repository.deposit.DepositRepositoryImpl
 import com.pmb.data.repository.theme.ThemeRepositoryImpl
 import com.pmb.domain.repository.DepositRepository
 import com.pmb.domain.repository.auth.FirstLoginConfirmRepository
+import com.pmb.domain.repository.auth.GetUserDataStoreRepository
 import com.pmb.domain.repository.auth.LoginRepository
 import com.pmb.domain.repository.auth.RegisterRepository
 import com.pmb.domain.repository.card.CardListRepository
@@ -38,4 +40,7 @@ abstract class RepositoryModule {
 
     @Binds
     abstract fun bindDepositListRepository(depositLIstRepository: DepositRepositoryImpl): DepositRepository
+
+    @Binds
+    abstract fun bindGetUserDataRepository(getUserDataStoreRepository: GetUserDataStoreRepositoryImpl): GetUserDataStoreRepository
 }

@@ -82,9 +82,9 @@ fun SignatureScreen(
     LaunchedEffect(Unit) {
         viewModel.handle(PhotoViewActions.RequestCameraPermission(permissionLauncher))
     }
-    LaunchedEffect(viewState.hasCameraPermission) {
-        viewModel.handle(PhotoViewActions.RequestFilePermission(multiplePermissionLauncher))
-    }
+//    LaunchedEffect(viewState.hasCameraPermission) {
+//        viewModel.handle(PhotoViewActions.RequestFilePermission(multiplePermissionLauncher))
+//    }
     LaunchedEffect(Unit) {
         viewModel.viewEvent.collect { event ->
             when (event) {

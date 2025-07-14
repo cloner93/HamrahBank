@@ -21,13 +21,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.pmb.auth.R
+import com.pmb.auth.presentation.intro.viewModel.IntroViewModel
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppImage
 import com.pmb.ballon.component.base.AppOutlineButton
 import com.pmb.ballon.models.ImageStyle
 import com.pmb.ballon.models.Size
-import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.manager.NavigationManager
 import com.pmb.navigation.moduleScreen.AuthScreens
@@ -35,11 +36,12 @@ import com.pmb.navigation.moduleScreen.RegisterScreens
 
 @Composable
 fun IntroScreen(
-    modifier: Modifier = Modifier,
+    viewModel: IntroViewModel,
 ) {
     val navigationManager: NavigationManager = LocalNavigationManager.current
+    val viewState = viewModel.viewState.collectAsStateWithLifecycle()
     Box(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxSize()
             .background(
                 brush = Brush.linearGradient(
@@ -61,9 +63,9 @@ fun IntroScreen(
                 center = Offset(46.dp.toPx() + 418.dp.toPx(), (-256).dp.toPx() + 418.dp.toPx())
             )
         }
-        Column(modifier = modifier.matchParentSize()) {
+        Column(modifier = Modifier.matchParentSize()) {
             Column(
-                modifier = modifier
+                modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight()
                     .weight(1f),
@@ -80,7 +82,7 @@ fun IntroScreen(
                 )
             }
             Column(
-                modifier = modifier
+                modifier = Modifier
                     .fillMaxWidth()
                     .padding(24.dp)
             ) {
@@ -88,7 +90,13 @@ fun IntroScreen(
                 AppButton(
                     modifier = Modifier.fillMaxWidth(),
                     title = stringResource(R.string.login_to_hamrah_bank),
-                    onClick = { navigationManager.navigate(AuthScreens.FirstLogin) }
+                    onClick = {
+                        viewState.value.userData?.let {
+                            navigationManager.navigate(AuthScreens.Login)
+                        } ?: run {
+                            navigationManager.navigate(AuthScreens.FirstLogin)
+                        }
+                    }
                 )
 
                 Spacer(modifier = Modifier.size(8.dp))

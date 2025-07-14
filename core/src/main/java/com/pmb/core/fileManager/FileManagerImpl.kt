@@ -12,100 +12,173 @@ import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 
+//@Singleton
+//class FileManagerImpl @Inject constructor(
+//    @ApplicationContext val context: Context
+//) : FileManager {
+//    override fun writeFile(filePath: String, data: ByteArray): Boolean {
+//        return try {
+//            val file = File(filePath)
+//            file.parentFile?.let { parent ->
+//                if (!parent.exists()) {
+//                    if (!parent.mkdirs()) {
+//                        Log.e("FileManager", "Failed to create parent directories: ${parent.absolutePath}")
+//                        return false
+//                    }
+//                }
+//            }
+//            if (!file.exists()) {
+//                if (!file.createNewFile()) {
+//                    Log.e("FileManager", "Failed to create file: ${file.absolutePath}")
+//                    return false
+//                }
+//            }
+//            FileOutputStream(file).use { fos ->
+//                fos.write(data)
+//            }
+//
+//            Log.d("FileManager", "File written successfully at ${file.absolutePath}")
+//            true
+//        } catch (exception: Exception) {
+//            Log.e("FileManager", "Error writing file: ${exception.message}")
+//            false
+//        }
+//    }
+//
+//    override fun deleteFile(filePath: String): Boolean {
+//        return try {
+//            val file = File(filePath)
+//            file.delete()
+//        } catch (exception: Exception) {
+//            exception.printStackTrace()
+//            false
+//        }
+//    }
+//
+//    override fun replaceFile(originalFilePath: String, newFilePath: String): Boolean {
+//        return try {
+//            val originalFile = File(originalFilePath)
+//            val newFile = File(newFilePath)
+//
+//            Log.i("FileManager", "Replacing file. Original: $originalFilePath, New: $newFilePath")
+//
+//            if (!originalFile.exists()) {
+//                Log.e("FileManager", "Original file does not exist: $originalFilePath")
+//                return false
+//            }
+//
+//            if (!newFile.exists()) {
+//                Log.e("FileManager", "New file does not exist: $newFilePath")
+//                return false
+//            }
+//
+//            newFile.copyTo(originalFile, overwrite = true)
+//
+//            newFile.delete()
+//            true
+//        } catch (exception: Exception) {
+//            Log.e("FileManager", "Error replacing file: ${exception.message}", exception)
+//            false
+//        }
+//    }
+//
+//    override fun createTempFile(prefix: String, suffix: String): File {
+//        return File.createTempFile(prefix, suffix)
+//    }
+//
+//    override fun getOutputDirectory(): File {
+//        return context.externalCacheDir ?: context.cacheDir
+//    }
+//
+//    override fun createImageFile(): File {
+//        val timeStamp = SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS", Locale.US)
+//            .format(System.currentTimeMillis())
+//        val directory = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES) ?: context.filesDir
+//        return File(directory, "photo_$timeStamp.jpg")
+//    }
+//
+//    override fun createVideoFile(): File {
+//        val timeStamp = SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS", Locale.US)
+//            .format(System.currentTimeMillis())
+//        val directory = context.getExternalFilesDir(Environment.DIRECTORY_MOVIES) ?: context.filesDir
+//        return File(directory, "video_$timeStamp.mp4")
+//    }
+//
+//    override fun getFileUri(file: File): Uri {
+//        return Uri.fromFile(file)
+//    }
+//
+//}
+
 @Singleton
 class FileManagerImpl @Inject constructor(
-    @ApplicationContext val context: Context
+    @ApplicationContext private val context: Context
 ) : FileManager {
-    override fun writeFile(filePath: String, data: ByteArray): Boolean {
+
+    override fun writeFile(absolutePath: String, data: ByteArray): Boolean {
         return try {
-            val file = File(filePath)
+            val file = File(absolutePath)
             file.parentFile?.let { parent ->
-                if (!parent.exists()) {
-                    if (!parent.mkdirs()) {
-                        Log.e("FileManager", "Failed to create parent directories: ${parent.absolutePath}")
-                        return false
-                    }
-                }
-            }
-            if (!file.exists()) {
-                if (!file.createNewFile()) {
-                    Log.e("FileManager", "Failed to create file: ${file.absolutePath}")
+                if (!parent.exists() && !parent.mkdirs()) {
+                    Log.e("FileManager", "Failed to create parent directories: ${parent.absolutePath}")
                     return false
                 }
             }
-            FileOutputStream(file).use { fos ->
-                fos.write(data)
-            }
-
+            FileOutputStream(file).use { it.write(data) }
             Log.d("FileManager", "File written successfully at ${file.absolutePath}")
             true
-        } catch (exception: Exception) {
-            Log.e("FileManager", "Error writing file: ${exception.message}")
+        } catch (e: Exception) {
+            Log.e("FileManager", "Error writing file: ${e.message}", e)
             false
         }
     }
 
-    override fun deleteFile(filePath: String): Boolean {
+    override fun deleteFile(absolutePath: String): Boolean {
         return try {
-            val file = File(filePath)
-            file.delete()
-        } catch (exception: Exception) {
-            exception.printStackTrace()
+            File(absolutePath).delete()
+        } catch (e: Exception) {
+            e.printStackTrace()
             false
         }
     }
 
-    override fun replaceFile(originalFilePath: String, newFilePath: String): Boolean {
+    override fun replaceFile(originalAbsolutePath: String, newAbsolutePath: String): Boolean {
         return try {
-            val originalFile = File(originalFilePath)
-            val newFile = File(newFilePath)
+            val originalFile = File(originalAbsolutePath)
+            val newFile = File(newAbsolutePath)
 
-            Log.i("FileManager", "Replacing file. Original: $originalFilePath, New: $newFilePath")
-
-            if (!originalFile.exists()) {
-                Log.e("FileManager", "Original file does not exist: $originalFilePath")
-                return false
-            }
-
-            if (!newFile.exists()) {
-                Log.e("FileManager", "New file does not exist: $newFilePath")
+            if (!originalFile.exists() || !newFile.exists()) {
+                Log.e("FileManager", "One or both files do not exist")
                 return false
             }
 
             newFile.copyTo(originalFile, overwrite = true)
-
             newFile.delete()
             true
-        } catch (exception: Exception) {
-            Log.e("FileManager", "Error replacing file: ${exception.message}", exception)
+        } catch (e: Exception) {
+            Log.e("FileManager", "Error replacing file: ${e.message}", e)
             false
         }
     }
 
     override fun createTempFile(prefix: String, suffix: String): File {
-        return File.createTempFile(prefix, suffix)
+        return File.createTempFile(prefix, suffix, context.cacheDir)
     }
 
-    override fun getOutputDirectory(): File {
-        return context.externalCacheDir ?: context.cacheDir
-    }
+    override fun getOutputDirectory(): File = context.cacheDir
 
     override fun createImageFile(): File {
-        val timeStamp = SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS", Locale.US)
-            .format(System.currentTimeMillis())
-        val directory = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES) ?: context.filesDir
-        return File(directory, "photo_$timeStamp.jpg")
+        val fileName = "photo_${timestamp()}.jpg"
+        return File(context.filesDir, fileName)
     }
 
     override fun createVideoFile(): File {
-        val timeStamp = SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS", Locale.US)
-            .format(System.currentTimeMillis())
-        val directory = context.getExternalFilesDir(Environment.DIRECTORY_MOVIES) ?: context.filesDir
-        return File(directory, "video_$timeStamp.mp4")
+        val fileName = "video_${timestamp()}.mp4"
+        return File(context.filesDir, fileName)
     }
 
-    override fun getFileUri(file: File): Uri {
-        return Uri.fromFile(file)
-    }
+    override fun getFileUri(file: File): Uri = Uri.fromFile(file)
 
+    private fun timestamp(): String =
+        SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS", Locale.US).format(System.currentTimeMillis())
 }

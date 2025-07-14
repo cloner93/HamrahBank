@@ -21,6 +21,7 @@ import com.pmb.auth.presentation.foget_password.ForgetPasswordAuthScreen
 import com.pmb.auth.presentation.foget_password.ForgetPasswordScreen
 import com.pmb.auth.presentation.foget_password.viewmodel.ForgetPasswordViewModel
 import com.pmb.auth.presentation.intro.IntroScreen
+import com.pmb.auth.presentation.intro.viewModel.IntroViewModel
 import com.pmb.auth.presentation.login.LoginScreen
 import com.pmb.auth.presentation.login.viewmodel.LoginViewModel
 import com.pmb.auth.presentation.reentry.reentry_face_detection.ReentryFaceDetectionScreen
@@ -40,7 +41,7 @@ fun NavGraphBuilder.authScreensHandle(
         startDestination = AuthScreens.Auth.route
     ) {
         composable(route = AuthScreens.Auth.route) {
-            IntroScreen()
+            IntroScreen(viewModel = hiltViewModel<IntroViewModel>())
         }
         composable(route = AuthScreens.FirstLogin.route) {
             val sharedViewModel =
