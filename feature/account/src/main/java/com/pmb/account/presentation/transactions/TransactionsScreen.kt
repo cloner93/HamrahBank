@@ -46,6 +46,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
@@ -62,6 +63,7 @@ import com.pmb.account.utils.mapToDepositModel
 import com.pmb.account.utils.toPersianDate
 import com.pmb.ballon.component.DepositBottomSheet
 import com.pmb.ballon.component.DynamicTabSelector
+import com.pmb.ballon.component.EmptyList
 import com.pmb.ballon.component.annotation.AppPreview
 import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppIcon
@@ -81,6 +83,7 @@ import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.ballon.ui.theme.AppTypography
 import com.pmb.ballon.ui.theme.HamrahBankTheme
 import com.pmb.core.utils.CollectAsEffect
+import com.pmb.core.utils.Convert
 import com.pmb.core.utils.toCurrency
 import com.pmb.domain.model.TransactionModel
 import com.pmb.domain.model.TransactionType
@@ -138,7 +141,7 @@ fun TransactionsScreen() {
                     navigationManager.navigateWithString(
                         AccountScreens.TransactionReceipt.createRoute(
                             viewState.selectedDeposit?.depositNumber ?: "",
-                            event.transactionId
+                            event.transaction
                         )
                     )
                 }
@@ -216,22 +219,28 @@ fun TransactionsScreen() {
 
         when (selectedOption.intValue) {
             0 -> {
-                AllTransactionsSection(
-                    transactionList = viewState.allTransactions,
-                    transactionFilter = viewState.transactionFilter,
-                    onFilterClick = {
-                        viewModel.handle(TransactionsViewActions.NavigateToTransactionFilterScreen)
-                    }, onFilterItemClick = {
-                        viewModel.handle(TransactionsViewActions.RemoveFilterFromList(it))
-                    }, onStatementClick = {
-                        viewModel.handle(TransactionsViewActions.NavigateToDepositStatementScreen)
-                    }) { transactionId ->
-                    viewModel.handle(
-                        TransactionsViewActions.NavigateToTransactionInfoScreen(
-                            transactionId
-                        )
+                if (viewState.allTransactions.isEmpty()) {
+                    EmptyList(
+                        iconType = IconType.Painter(painterResource(R.drawable.empty_list)),
+                        message = "تراکنشی یافت نشد!"
                     )
-                }
+                } else
+                    AllTransactionsSection(
+                        transactionList = viewState.allTransactions,
+                        transactionFilter = viewState.transactionFilter,
+                        onFilterClick = {
+                            viewModel.handle(TransactionsViewActions.NavigateToTransactionFilterScreen)
+                        }, onFilterItemClick = {
+                            viewModel.handle(TransactionsViewActions.RemoveFilterFromList(it))
+                        }, onStatementClick = {
+                            viewModel.handle(TransactionsViewActions.NavigateToDepositStatementScreen)
+                        }) { transactionId ->
+                        viewModel.handle(
+                            TransactionsViewActions.NavigateToTransactionInfoScreen(
+                                transactionId
+                            )
+                        )
+                    }
             }
 
             1 -> {
@@ -322,7 +331,7 @@ private fun AllTransactionsSection(
     onFilterClick: () -> Unit = {},
     onFilterItemClick: (TransactionFilter) -> Unit = {},
     onStatementClick: () -> Unit = {},
-    onTransactionItemClick: (transactionId: String) -> Unit = {},
+    onTransactionItemClick: (transaction: TransactionModel) -> Unit = {},
 ) {
     StatementAndFilters(transactionFilter = transactionFilter, onFilterClick = {
         onFilterClick()
@@ -336,8 +345,8 @@ private fun AllTransactionsSection(
     ) {
         items(transactionList.size) { item ->
             TransactionRow(transactionList[item]) {
-                val transactionId = transactionList.get(item).transactionId
-                onTransactionItemClick(transactionId)
+                val transaction = transactionList[item]
+                onTransactionItemClick(transaction)
             }
         }
     }
@@ -700,7 +709,10 @@ fun TransactionRow(item: TransactionModel, onClick: () -> Unit = {}) {
                     style = IconStyle(tint = AppTheme.colorScheme.foregroundNeutralRest)
                 )
             }
-            CaptionText(text = item.date, color = AppTheme.colorScheme.onBackgroundNeutralSubdued)
+            CaptionText(
+                text = Convert.formatPersianDate(item.date),
+                color = AppTheme.colorScheme.onBackgroundNeutralSubdued
+            )
         }
     }
 }
@@ -714,14 +726,14 @@ private fun AllTransactionsSectionFiledPreview() {
             TransactionType.RECEIVE,
             "واریز حقوق",
             1_000_000.0,
-            "ریال", "امروز ساعت ۱۰:۳۰"
+            "ریال", "14040426"
         ),
         TransactionModel(
             "1",
             TransactionType.TRANSFER,
             "انتقال",
             1_000_000.0,
-            "ریال", "امروز ساعت ۱۰:۳۰"
+            "ریال", "14040426"
         ),
 
         )
