@@ -9,16 +9,16 @@ object Convert {
     fun numberToWords(number: Double): String {
         if (number == 0.0) return "صفر"
 
-        val units = arrayOf(
+        arrayOf(
             "", "یک", "دو", "سه", "چهار", "پنج", "شش", "هفت", "هشت", "نه"
         )
-        val teens = arrayOf(
+        arrayOf(
             "ده", "یازده", "دوازده", "سیزده", "چهارده", "پانزده", "شانزده", "هفده", "هجده", "نوزده"
         )
-        val tens = arrayOf(
+        arrayOf(
             "", "", "بیست", "سی", "چهل", "پنجاه", "شصت", "هفتاد", "هشتاد", "نود"
         )
-        val hundreds = arrayOf(
+        arrayOf(
             "", "صد", "دویست", "سیصد", "چهارصد", "پانصد", "ششصد", "هفتصد", "هشتصد", "نهصد"
         )
         val thousands = arrayOf(
@@ -94,4 +94,9 @@ object Convert {
         // Format the date and return it
         return dateFormat.format(date)
     }
+
+    fun formatPersianDate(raw: String): String =
+        raw.chunked(2)
+            .joinToString("/")
+            .replaceFirst("/", "")
 }

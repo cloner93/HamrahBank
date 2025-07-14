@@ -11,6 +11,8 @@ import com.pmb.domain.usecae.deposit.GetUserDepositListUseCase
 import com.pmb.domain.usecae.transactions.TransactionsByCountUsaCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
+import java.net.URLEncoder
 import javax.inject.Inject
 
 
@@ -49,7 +51,13 @@ class DepositsViewModel @Inject constructor(
             }
 
             is DepositsViewActions.NavigateToTransactionDetailScreen -> {
-                postEvent(NavigateToTransactionDetails(action.transactionId))
+
+                // TODO: this is temporary.
+                val json = Json { ignoreUnknownKeys = true }
+                val transactionJson = json.encodeToString(action.transaction)
+                val e = URLEncoder.encode(transactionJson, "UTF-8")
+
+                postEvent(NavigateToTransactionDetails(e))
             }
 
             is DepositsViewActions.ShowDepositMoreActionBottomSheet -> {
@@ -134,12 +142,13 @@ class DepositsViewModel @Inject constructor(
                         setState {
                             it.copy(
                                 errorMessage = result.message,
-                                isLoading = false
+                                isLoading = false,
+                                transactions = listOf()
                             )
                         }
                         postEvent(DepositsViewEvents.ShowError(result.message))
 
-                    }//
+                    }
 
                     Result.Loading -> {
                         setState { it.copy(isLoading = true) }

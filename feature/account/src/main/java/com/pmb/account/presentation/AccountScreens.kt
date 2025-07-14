@@ -44,11 +44,11 @@ fun NavGraphBuilder.accountScreensHandle() {
     composable(
         route = AccountScreens.TransactionReceipt.route,
         deepLinks = listOf(navDeepLink {
-            uriPattern = "myapp://transactionReceipt/{depositId}/{transactionId}"
+            uriPattern = "myapp://transactionReceipt/{depositId}/{transactionJson}"
         }),
         arguments = listOf(
             navArgument("depositId") { type = NavType.StringType },
-            navArgument("transactionId") { type = NavType.StringType }
+            navArgument("transactionJson") { type = NavType.StringType }
         )
     ) {
         TransactionsReceiptScreen()

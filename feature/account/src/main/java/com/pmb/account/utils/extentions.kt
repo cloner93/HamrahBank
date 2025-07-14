@@ -31,7 +31,8 @@ internal fun List<DepositModel>.mapToDepositMenu(): List<DepositBottomSheetModel
             ibanNumber = item.ibanNumber,
             selected = item.isSelected,
             state = 1,
-            cardNumber = item.cardNumber
+            cardNumber = item.cardNumber,
+            categoryCode = item.categoryCode
         )
         list.add(deposit)
     }

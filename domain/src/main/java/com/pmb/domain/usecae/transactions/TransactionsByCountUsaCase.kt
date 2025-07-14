@@ -16,7 +16,7 @@ class TransactionsByCountUsaCase @Inject constructor(
         return repository.getTransactionsByCount(
             extAccNo = params.depositNumber.toLong(),
             categoryCode = params.categoryCode,
-            count = 1,
+            count = 10,
         )
     }
 }

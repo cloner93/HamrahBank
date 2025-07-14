@@ -154,6 +154,7 @@ private fun DepositItemPrev() {
         ibanNumber = "IR1234567890098765432112",
         cardNumber = "6219861920241234",
         state = 1,
+        categoryCode = 0
     )
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
         DepositRow(deposit)
@@ -173,6 +174,7 @@ private fun DepositItem2Prev() {
         ibanNumber = "IR1234567890098765432112",
         cardNumber = "6219861920241234",
         state = 1,
+        categoryCode = 0
     )
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
         DepositRow(deposit)
@@ -192,6 +194,7 @@ private fun DepositItemDisablePrev() {
         ibanNumber = "IR1234567890098765432112",
         cardNumber = "6219861920241234",
         state = 0,
+        categoryCode = 0
     )
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
         DepositRow(deposit)

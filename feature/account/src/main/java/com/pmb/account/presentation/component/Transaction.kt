@@ -22,6 +22,7 @@ import com.pmb.ballon.models.ImageStyle
 import com.pmb.ballon.models.Size
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.ballon.ui.theme.HamrahBankTheme
+import com.pmb.core.utils.Convert
 import com.pmb.core.utils.toCurrency
 import com.pmb.domain.model.TransactionModel
 import com.pmb.domain.model.TransactionType
@@ -30,14 +31,14 @@ import com.pmb.domain.model.TransactionType
 fun TransactionRow(
     item: TransactionModel,
     isAmountVisible: Boolean,
-    onClick: (transactionId: String) -> Unit = {}
+    onClick: (transaction: TransactionModel) -> Unit = {}
 ) {
     Row(
         modifier = Modifier
             .background(color = AppTheme.colorScheme.background1Neutral)
             .height(48.dp)
             .clickable {
-                onClick(item.transactionId)
+                onClick(item)
             },
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -80,7 +81,10 @@ fun TransactionRow(
                     )
                 }
             }
-            CaptionText(text = item.date, color = AppTheme.colorScheme.onBackgroundNeutralSubdued)
+            CaptionText(
+                text = Convert.formatPersianDate(item.date),
+                color = AppTheme.colorScheme.onBackgroundNeutralSubdued
+            )
         }
     }
 }

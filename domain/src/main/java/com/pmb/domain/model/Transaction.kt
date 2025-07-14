@@ -1,6 +1,9 @@
 package com.pmb.domain.model
 
+import android.annotation.SuppressLint
+import kotlinx.serialization.Serializable
 
+@Serializable
 enum class TransactionType {
     DEPOSIT,
     WITHDRAWAL,
@@ -10,7 +13,8 @@ enum class TransactionType {
     UNKNOWN
 }
 
-
+@SuppressLint("UnsafeOptInUsageError")
+@Serializable
 data class TransactionModel(
     val transactionId: String,
     val type: TransactionType = TransactionType.UNKNOWN,

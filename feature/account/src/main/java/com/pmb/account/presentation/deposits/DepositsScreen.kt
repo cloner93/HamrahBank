@@ -38,10 +38,12 @@ import com.pmb.account.presentation.deposits.viewmodel.DepositsViewModel
 import com.pmb.account.utils.mapToDepositMenu
 import com.pmb.account.utils.mapToDepositModel
 import com.pmb.ballon.component.DepositBottomSheet
+import com.pmb.ballon.component.EmptyList
 import com.pmb.ballon.component.MenuBottomSheet
 import com.pmb.ballon.component.MenuItem
 import com.pmb.ballon.component.MenuItemDefaults
 import com.pmb.ballon.component.base.AppButtonIcon
+import com.pmb.ballon.component.base.IconType
 import com.pmb.ballon.component.base.RoundedTopColumn
 import com.pmb.ballon.models.IconStyle
 import com.pmb.ballon.models.MenuSheetModel
@@ -98,7 +100,7 @@ fun DepositsScreen() {
                     navigationManager.navigateWithString(
                         AccountScreens.TransactionReceipt.createRoute(
                             viewState.selectedDeposit?.depositNumber ?: "",
-                            event.transactionId
+                            event.transaction
                         )
                     )
                 }
@@ -220,22 +222,28 @@ fun DepositsScreen() {
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            LazyColumn {
-                items(viewState.transactions.size) { item ->
-                    Spacer(modifier = Modifier.height(12.dp))
-                    TransactionRow(
-                        viewState.transactions[item],
-                        viewState.isAmountVisible
-                    ) { transactionId ->
-                        viewModel.handle(
-                            DepositsViewActions.NavigateToTransactionDetailScreen(
-                                transactionId
+            if (viewState.transactions.isEmpty()) {
+                EmptyList(
+                    iconType = IconType.Painter(painterResource(R.drawable.empty_list)),
+                    message = "تراکنشی یافت نشد!"
+                )
+            } else
+                LazyColumn {
+                    items(viewState.transactions.size) { item ->
+                        Spacer(modifier = Modifier.height(12.dp))
+                        TransactionRow(
+                            viewState.transactions[item],
+                            viewState.isAmountVisible
+                        ) { transaction ->
+                            viewModel.handle(
+                                DepositsViewActions.NavigateToTransactionDetailScreen(
+                                    transaction
+                                )
                             )
-                        )
+                        }
+                        Spacer(modifier = Modifier.height(12.dp))
                     }
-                    Spacer(modifier = Modifier.height(12.dp))
                 }
-            }
         }
     }
 
