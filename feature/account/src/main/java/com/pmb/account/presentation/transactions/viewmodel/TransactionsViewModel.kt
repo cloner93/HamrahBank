@@ -2,7 +2,6 @@ package com.pmb.account.presentation.transactions.viewmodel
 
 import androidx.lifecycle.viewModelScope
 import com.pmb.account.presentation.transactions.filterScreen.viewmodel.entity.TransactionFilter
-import com.pmb.account.usecase.deposits.GetTransactionsUseCase
 import com.pmb.core.platform.BaseViewAction
 import com.pmb.core.platform.BaseViewEvent
 import com.pmb.core.platform.BaseViewModel
@@ -12,15 +11,18 @@ import com.pmb.domain.model.DepositModel
 import com.pmb.domain.model.TransactionModel
 import com.pmb.domain.model.TransactionType
 import com.pmb.domain.usecae.deposit.GetUserDepositListUseCase
+import com.pmb.domain.usecae.transactions.TransactionsByCountUsaCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
+import java.net.URLEncoder
 import javax.inject.Inject
 
 @HiltViewModel
 class TransactionsViewModel @Inject constructor(
     initialState: TransactionsViewState,
     private val getDepositsUseCase: GetUserDepositListUseCase,
-    private val getTransactionsUseCase: GetTransactionsUseCase
+    private val getTransactionsUseCase: TransactionsByCountUsaCase
 ) : BaseViewModel<TransactionsViewActions, TransactionsViewState, TransactionsViewEvents>(
     initialState
 ) {
@@ -44,7 +46,13 @@ class TransactionsViewModel @Inject constructor(
             }
 
             is TransactionsViewActions.NavigateToTransactionInfoScreen -> {
-                postEvent(TransactionsViewEvents.NavigateToTransactionInfoScreen(action.transactionId))
+
+                // TODO: this is temporary.
+                val json = Json { ignoreUnknownKeys = true }
+                val transactionJson = json.encodeToString(action.transactionId)
+                val e = URLEncoder.encode(transactionJson, "UTF-8")
+
+                postEvent(TransactionsViewEvents.NavigateToTransactionInfoScreen(e))
             }
 
             TransactionsViewActions.NavigateToTransactionSearchScreen -> {
@@ -69,7 +77,7 @@ class TransactionsViewModel @Inject constructor(
                 setState { it.copy(showDepositListBottomSheet = false) }
 
                 if (action.model != null) {
-                    selectDeposit(action.model.depositNumber)
+                    selectDeposit(action.model)
                 }
             }
 
@@ -115,63 +123,76 @@ class TransactionsViewModel @Inject constructor(
                                     isLoading = false
                                 )
                             }
+
+                            viewState.value.selectedDeposit?.let {
+                                loadTransactions(
+                                    it
+                                )
+                            }
                         }
                     }
                 }
         }
     }
 
-    private fun loadTransactions(depositId: String?) {
-        if (depositId == null) return
-
+    private fun loadTransactions(deposit: DepositModel) {
         viewModelScope.launch {
-            setState { it.copy(isLoading = true) }
+            getTransactionsUseCase.invoke(deposit).collect { result ->
+                when (result) {
+                    is Result.Error -> {
+                        setState {
+                            it.copy(
+                                errorMessage = result.message,
+                                isLoading = false,
+                                allTransactions = listOf()
+                            )
+                        }
+                        postEvent(TransactionsViewEvents.ShowError(result.message))
 
-            try {
-                val allTransactions: List<TransactionModel> = getTransactionsUseCase(depositId)
+                    }
 
-                val sendTransactions: List<TransactionModel> =
-                    allTransactions.filter { it.type == TransactionType.TRANSFER }
-                val totalSendTransactions: Double = sendTransactions.sumOf { it.amount }
+                    Result.Loading -> {
+                        setState { it.copy(isLoading = true) }
+                    }
 
-                val receiveTransactions: List<TransactionModel> =
-                    allTransactions.filter { it.type == TransactionType.RECEIVE }
-                val totalReceiveTransactions: Double = receiveTransactions.sumOf { it.amount }
+                    is Result.Success<*> -> {
+                        val allTransactions: List<TransactionModel> =
+                            result.data as List<TransactionModel>
 
-                setState {
-                    it.copy(
-                        allTransactions = allTransactions,
-                        sendTransactions = sendTransactions,
-                        totalSendTransactions = totalSendTransactions,
-                        receiveTransactions = receiveTransactions,
-                        totalReceiveTransactions = totalReceiveTransactions,
-                        isLoading = false
-                    )
+                        val sendTransactions: List<TransactionModel> =
+                            allTransactions.filter { it.type == TransactionType.TRANSFER }
+                        val totalSendTransactions: Double = sendTransactions.sumOf { it.amount }
+
+                        val receiveTransactions: List<TransactionModel> =
+                            allTransactions.filter { it.type == TransactionType.RECEIVE }
+                        val totalReceiveTransactions: Double =
+                            receiveTransactions.sumOf { it.amount }
+
+                        setState {
+                            it.copy(
+                                allTransactions = allTransactions,
+                                sendTransactions = sendTransactions,
+                                totalSendTransactions = totalSendTransactions,
+                                receiveTransactions = receiveTransactions,
+                                totalReceiveTransactions = totalReceiveTransactions,
+                                isLoading = false
+                            )
+                        }
+                    }
                 }
-            } catch (e: Exception) {
-                setState {
-                    it.copy(
-                        errorMessage = e.message ?: "Failed to load transactions",
-                        isLoading = false
-                    )
-                }
-                postEvent(
-                    TransactionsViewEvents.ShowError(
-                        e.message ?: "Failed to load transactions"
-                    )
-                )
             }
         }
     }
 
-    fun selectDeposit(depositNumber: String) {
-        val selectedDeposit = viewState.value.deposits.find { it.depositNumber == depositNumber }
+    fun selectDeposit(deposit: DepositModel) {
+        val selectedDeposit =
+            viewState.value.deposits.find { it.depositNumber == deposit.depositNumber }
 
         setState {
             it.copy(
                 deposits = viewState.value.deposits
                     .map {
-                        if (it.depositNumber == depositNumber) {
+                        if (it.depositNumber == deposit.depositNumber) {
                             it.copy(isSelected = true)
                         } else {
                             it.copy(isSelected = false)
@@ -182,15 +203,15 @@ class TransactionsViewModel @Inject constructor(
         }
 
         setState { it.copy(selectedDeposit = selectedDeposit) }
-        postEvent(TransactionsViewEvents.DepositSelectionChanged(depositNumber))
-        loadTransactions(depositNumber)
+        postEvent(TransactionsViewEvents.DepositSelectionChanged(deposit.depositNumber))
+        loadTransactions(deposit)
     }
 }
 
 sealed interface TransactionsViewEvents : BaseViewEvent {
     object NavigateBack : TransactionsViewEvents
     object NavigateToTransactionSearchScreen : TransactionsViewEvents
-    class NavigateToTransactionInfoScreen(val transactionId: String) : TransactionsViewEvents
+    class NavigateToTransactionInfoScreen(val transaction: String) : TransactionsViewEvents
     object NavigateToTransactionFilterScreen : TransactionsViewEvents
     object NavigateToDepositStatementScreen : TransactionsViewEvents
     data class ShowError(val message: String) : TransactionsViewEvents
@@ -205,7 +226,8 @@ sealed interface TransactionsViewActions : BaseViewAction {
     object NavigateBack : TransactionsViewActions
     object NavigateToTransactionFilterScreen : TransactionsViewActions
     object NavigateToDepositStatementScreen : TransactionsViewActions
-    class NavigateToTransactionInfoScreen(val transactionId: String) : TransactionsViewActions
+    class NavigateToTransactionInfoScreen(val transactionId: TransactionModel) :
+        TransactionsViewActions
     class RemoveFilterFromList(val item: TransactionFilter) : TransactionsViewActions
     class UpdateFilterList(val data: TransactionFilter) : TransactionsViewActions
     class CloseDepositListBottomSheet(val model: DepositModel?) : TransactionsViewActions
