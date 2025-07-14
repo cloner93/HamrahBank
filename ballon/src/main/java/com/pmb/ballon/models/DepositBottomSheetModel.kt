@@ -7,7 +7,7 @@ data class DepositBottomSheetModel(
     var selected: Boolean = false,
     val state: Int,
     val depositNumber: String,
-    val categoryCode: Long = 0,
+    val categoryCode: Long,
     val currency: String,
     val ibanNumber: String,
     val cardNumber: String

@@ -13,9 +13,9 @@ sealed class AccountScreens(route: String, arguments: Map<String, String> = empt
         fun createRoute(depositId: String) = "transactionSearch/$depositId"
     }
     data object TransactionReceipt :
-        AccountScreens(route = "transactionReceipt/{depositId}/{transactionId}") {
-        fun createRoute(depositId: String, transactionId: String) =
-            "transactionReceipt/$depositId/$transactionId"
+        AccountScreens(route = "transactionReceipt/{depositId}/{transactionJson}") {
+        fun createRoute(depositId: String, transactionJson: String) =
+            "transactionReceipt/$depositId/$transactionJson"
     }
 
     companion object {
