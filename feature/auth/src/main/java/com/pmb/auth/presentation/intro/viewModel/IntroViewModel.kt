@@ -31,7 +31,7 @@ class IntroViewModel @Inject constructor(
 
     private fun getUserData() {
         viewModelScope.launch {
-            getUserDataUseCase.invoke().collectLatest { result ->
+            getUserDataUseCase.invoke(Unit).collectLatest { result ->
                 when (result) {
                     is Result.Success -> {
                         setState {
