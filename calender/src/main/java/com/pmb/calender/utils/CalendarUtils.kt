@@ -34,13 +34,3 @@ fun Date.toGregorianCalendar(forceLocalTime: Boolean = false): GregorianCalendar
     calendar.time = this
     return calendar
 }
-
-/*
-fun yearMonthNameOfDate(date: AbstractDate): List<String> {
-    return when (date) {
-        is PersianDate -> if (date.year > 1303) persianMonths else oldEraPersianMonths
-        is CivilDate -> gregorianMonths
-        is IslamicDate -> islamicMonths
-        else -> monthNameEmptyList
-    }
-}*/

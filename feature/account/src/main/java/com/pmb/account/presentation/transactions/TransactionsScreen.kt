@@ -82,6 +82,8 @@ import com.pmb.ballon.models.TextStyle
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.ballon.ui.theme.AppTypography
 import com.pmb.ballon.ui.theme.HamrahBankTheme
+import com.pmb.calender.generateShiftedMonthList
+import com.pmb.calender.monthName
 import com.pmb.core.utils.CollectAsEffect
 import com.pmb.core.utils.Convert
 import com.pmb.core.utils.toCurrency
@@ -183,7 +185,8 @@ fun TransactionsScreen() {
                     onClick = {
                         viewModel.handle(TransactionsViewActions.NavigateToTransactionSearchScreen)
                     }
-                ) else null, middleContent = {
+                ) else null,
+                middleContent = {
                     ChipWithIcon(
                         modifier = Modifier.border(
                             width = 1.dp,
@@ -277,7 +280,7 @@ fun ReceiveTransactionsSection(
         "واریز به کارت", "واریر به سپرده", "حواله", "سود ماهیانه"
     )
 
-    RowOfMonth(modifier = Modifier.padding(bottom = 32.dp), 0)
+    RowOfMonth(modifier = Modifier.padding(bottom = 32.dp))
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -363,7 +366,7 @@ private fun SendTransactionsSection(
         "حواله",
         "پرداخت قبض",
     )
-    RowOfMonth(modifier = Modifier.padding(bottom = 32.dp), 0)
+    RowOfMonth(modifier = Modifier.padding(bottom = 32.dp))
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -558,34 +561,16 @@ private fun StatementAndFilters(
 
 
 @Composable
-fun RowOfMonth(modifier: Modifier = Modifier, currentMonth: Int) {
-    val realMonth = listOf(
-        "فروردین" to 0,
-        "اردیبهشت" to 1,
-        "خرداد" to 2,
-        "تیر" to 3,
-        "مرداد" to 4,
-        "شهریور" to 5,
-        "مهر" to 6,
-        "آبان" to 7,
-        "آذر" to 8,
-        "دی" to 9,
-        "بهمن" to 10,
-        "اسفند" to 11,
-    )
+fun RowOfMonth(modifier: Modifier = Modifier) {
+    val list = generateShiftedMonthList()
 
-    val showMonth = run {
-        val shiftIndex = (currentMonth + 2) % realMonth.size
-        realMonth.drop(shiftIndex) + realMonth.take(shiftIndex)
-    }
-
-    var selectedMonth by remember { mutableIntStateOf(currentMonth) }
+    var selectedMonth by remember { mutableIntStateOf(list[10].first.month) }
     val listState = rememberLazyListState()
 
     LaunchedEffect(selectedMonth) {
-        val index = showMonth.indexOfFirst { it.second == selectedMonth }
+        val index = list.indexOfFirst { it.first.month == selectedMonth }
         if (index != -1) {
-            listState.animateScrollToItem(index, scrollOffset = (showMonth.size / 2) * -70)
+            listState.animateScrollToItem(index, scrollOffset = (list.size / 2) * -70)
         }
     }
     LazyRow(
@@ -594,14 +579,14 @@ fun RowOfMonth(modifier: Modifier = Modifier, currentMonth: Int) {
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         contentPadding = PaddingValues(horizontal = 16.dp)
     ) {
-        itemsIndexed(showMonth) { _, month ->
-            val isSelected = month.second == selectedMonth
+        itemsIndexed(list) { _, month ->
+            val isSelected = month.first.month == selectedMonth
             MonthItem(
-                month = month.first,
+                month = month.first.monthName(),
                 isSelected = isSelected,
-                onClick = { selectedMonth = month.second },
-                year = "1404",
-                isEnabled = showMonth.last() != month
+                onClick = { selectedMonth = month.first.month },
+                year = month.first.year.toString(),
+                isEnabled = list.last() != month
             )
         }
     }
