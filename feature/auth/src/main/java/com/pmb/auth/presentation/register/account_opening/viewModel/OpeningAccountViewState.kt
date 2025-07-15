@@ -11,6 +11,6 @@ data class OpeningAccountViewState(
     val alertModelState: AlertModelState? = null,
     val phoneNumber: String? = null,
     val nationalId: String? = null,
-    val birthDay: PersianDate = Jdn(Calendar.SHAMSI, 1403, 8, 28).toPersianDate(),
+    val birthDay: PersianDate = Jdn.today().toPersianDate(),
     val isShowingBottomSheet: Boolean = false,
 ) : BaseViewState

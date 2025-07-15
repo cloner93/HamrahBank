@@ -31,6 +31,7 @@ import com.pmb.ballon.component.base.AppSingleTextField
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.IconType
 import com.pmb.ballon.component.datePicker.ShowPersianDatePickerBottomSheet
+import com.pmb.calender.Jdn
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.manager.NavigationManager
 import com.pmb.navigation.moduleScreen.RegisterScreens
@@ -168,7 +169,7 @@ fun AuthenticationInformationScreen(
         if (showBirthdayPicker) {
             ShowPersianDatePickerBottomSheet(
                 title = stringResource(R.string.birthday),
-//                defaultDate = viewState.sendAuthenticationInformationParam?.birthDate ?: "", // TODO: fix it.
+                defaultDate = Jdn.today(), // TODO: fix it.
                 onDismiss = { showBirthdayPicker = false },
                 onChangeValue = { year, month, day ->
                     viewModel.handle(AuthenticationInformationViewActions.SetIdentifyDay("$day/$month/$year"))
