@@ -1,10 +1,11 @@
-package com.pmb.data.appManager.persistence.user
+package com.pmb.data.serviceProvider.local.user
 
 import android.content.Context
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.pmb.domain.model.UserData
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -13,7 +14,7 @@ private val Context.dataStore by preferencesDataStore(name = "user_prefs")
 
 @Singleton
 class UserDataStoreImpl @Inject constructor(
-    private val context: Context
+    @ApplicationContext private val context: Context
 ) : UserDataStore {
 
     private val customerUserKey = stringPreferencesKey("customer_id")

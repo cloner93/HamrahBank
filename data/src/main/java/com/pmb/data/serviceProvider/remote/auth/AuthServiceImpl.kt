@@ -1,4 +1,4 @@
-package com.pmb.data.appManager.auth
+package com.pmb.data.serviceProvider.remote.auth
 
 import com.pmb.core.platform.Result
 import com.pmb.data.mapper.authService.toData

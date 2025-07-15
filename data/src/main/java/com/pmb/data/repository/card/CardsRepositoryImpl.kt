@@ -1,19 +1,19 @@
 package com.pmb.data.repository.card
 
 import com.pmb.core.platform.Result
-import com.pmb.data.appManager.AppManager
+import com.pmb.data.serviceProvider.remote.RemoteServiceProvider
 import com.pmb.data.mapper.cardService.toDomain
 import com.pmb.data.mapper.mapApiResult
 import com.pmb.domain.model.CardModel
-import com.pmb.domain.repository.card.CardListRepository
+import com.pmb.domain.repository.card.CardsRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class CardLIstRepositoryImpl @Inject constructor(
-    private val appManager: AppManager
-) : CardListRepository {
+class CardsRepositoryImpl @Inject constructor(
+    private val remoteServiceProvider: RemoteServiceProvider
+) : CardsRepository {
     override fun getCardList(): Flow<Result<List<CardModel>>> {
-        return appManager.getCardService().getCardList().mapApiResult {
+        return remoteServiceProvider.getCardService().getCardList().mapApiResult {
             it.second.toDomain()
         }
     }
