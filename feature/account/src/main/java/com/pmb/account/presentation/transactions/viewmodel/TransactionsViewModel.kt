@@ -9,9 +9,11 @@ import com.pmb.core.platform.BaseViewState
 import com.pmb.core.platform.Result
 import com.pmb.domain.model.DepositModel
 import com.pmb.domain.model.TransactionModel
+import com.pmb.domain.model.TransactionRequest
 import com.pmb.domain.model.TransactionType
 import com.pmb.domain.usecae.deposit.GetUserDepositListUseCase
 import com.pmb.domain.usecae.transactions.TransactionsByCountUsaCase
+import com.pmb.domain.usecae.transactions.TransactionsByDateUsaCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
@@ -22,7 +24,8 @@ import javax.inject.Inject
 class TransactionsViewModel @Inject constructor(
     initialState: TransactionsViewState,
     private val getDepositsUseCase: GetUserDepositListUseCase,
-    private val getTransactionsUseCase: TransactionsByCountUsaCase
+    private val getTransactionsUseCase: TransactionsByCountUsaCase,
+    private val getTransactionsByDateUsaCase: TransactionsByDateUsaCase
 ) : BaseViewModel<TransactionsViewActions, TransactionsViewState, TransactionsViewEvents>(
     initialState
 ) {
@@ -128,6 +131,9 @@ class TransactionsViewModel @Inject constructor(
                                 loadTransactions(
                                     it
                                 )
+                                loadTransactionByDate(
+                                    it
+                                )
                             }
                         }
                     }
@@ -137,7 +143,14 @@ class TransactionsViewModel @Inject constructor(
 
     private fun loadTransactions(deposit: DepositModel) {
         viewModelScope.launch {
-            getTransactionsUseCase.invoke(deposit).collect { result ->
+
+            getTransactionsUseCase.invoke(
+                TransactionRequest(
+                    extAccNo = deposit.depositNumber.toLong(),
+                    count = 10,
+                    categoryCode = deposit.categoryCode
+                )
+            ).collect { result ->
                 when (result) {
                     is Result.Error -> {
                         setState {
@@ -159,18 +172,62 @@ class TransactionsViewModel @Inject constructor(
                         val allTransactions: List<TransactionModel> =
                             result.data as List<TransactionModel>
 
+                        setState {
+                            it.copy(
+                                allTransactions = allTransactions,
+                                isLoading = false
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun loadTransactionByDate(deposit: DepositModel) {
+        viewModelScope.launch {
+
+            getTransactionsByDateUsaCase.invoke(
+                TransactionRequest(
+                    extAccNo = deposit.depositNumber.toLong(),
+                    categoryCode = deposit.categoryCode,
+                    fromDate = 14040324,
+                    toDate = 14040424
+                )
+            ).collect { result ->
+                when (result) {
+                    is Result.Error -> {
+                        setState {
+                            it.copy(
+                                errorMessage = result.message,
+                                isLoading = false,
+                                sendTransactions = listOf(),
+                                receiveTransactions = listOf()
+                            )
+                        }
+                        postEvent(TransactionsViewEvents.ShowError(result.message))
+
+                    }
+
+                    Result.Loading -> {
+                        setState { it.copy(isLoading = true) }
+                    }
+
+                    is Result.Success<*> -> {
+                        val allTransactionsByDate: List<TransactionModel> =
+                            result.data as List<TransactionModel>
+
                         val sendTransactions: List<TransactionModel> =
-                            allTransactions.filter { it.type == TransactionType.TRANSFER }
+                            allTransactionsByDate.filter { it.type == TransactionType.TRANSFER }
                         val totalSendTransactions: Double = sendTransactions.sumOf { it.amount }
 
                         val receiveTransactions: List<TransactionModel> =
-                            allTransactions.filter { it.type == TransactionType.RECEIVE }
+                            allTransactionsByDate.filter { it.type == TransactionType.RECEIVE }
                         val totalReceiveTransactions: Double =
                             receiveTransactions.sumOf { it.amount }
 
                         setState {
                             it.copy(
-                                allTransactions = allTransactions,
                                 sendTransactions = sendTransactions,
                                 totalSendTransactions = totalSendTransactions,
                                 receiveTransactions = receiveTransactions,
@@ -205,6 +262,7 @@ class TransactionsViewModel @Inject constructor(
         setState { it.copy(selectedDeposit = selectedDeposit) }
         postEvent(TransactionsViewEvents.DepositSelectionChanged(deposit.depositNumber))
         loadTransactions(deposit)
+        loadTransactionByDate(deposit)
     }
 }
 
@@ -228,6 +286,7 @@ sealed interface TransactionsViewActions : BaseViewAction {
     object NavigateToDepositStatementScreen : TransactionsViewActions
     class NavigateToTransactionInfoScreen(val transactionId: TransactionModel) :
         TransactionsViewActions
+
     class RemoveFilterFromList(val item: TransactionFilter) : TransactionsViewActions
     class UpdateFilterList(val data: TransactionFilter) : TransactionsViewActions
     class CloseDepositListBottomSheet(val model: DepositModel?) : TransactionsViewActions

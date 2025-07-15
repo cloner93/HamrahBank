@@ -7,6 +7,7 @@ import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.platform.Result
 import com.pmb.domain.model.DepositModel
 import com.pmb.domain.model.TransactionModel
+import com.pmb.domain.model.TransactionRequest
 import com.pmb.domain.usecae.deposit.GetUserDepositListUseCase
 import com.pmb.domain.usecae.transactions.TransactionsByCountUsaCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -136,7 +137,13 @@ class DepositsViewModel @Inject constructor(
 
     private fun loadTransactions(deposit: DepositModel) {
         viewModelScope.launch {
-            getTransactionsUseCase.invoke(deposit).collect { result ->
+            getTransactionsUseCase.invoke(
+                TransactionRequest(
+                    extAccNo = deposit.depositNumber.toLong(),
+                    count = 10,
+                    categoryCode = deposit.categoryCode
+                )
+            ).collect { result ->
                 when (result) {
                     is Result.Error -> {
                         setState {
