@@ -27,6 +27,9 @@ import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.ballon.ui.theme.HamrahBankTheme
 import com.pmb.calender.Jdn
 import com.pmb.calender.utils.Calendar
+import com.pmb.calender.utils.PERSIAN_DIGITS
+import com.pmb.calender.utils.persianCalendarMonthsInDariOrPersianOldEra
+import com.pmb.calender.utils.persianCalendarMonthsInPersian
 import io.github.persiancalendar.calendar.AbstractDate
 
 @Composable
@@ -158,18 +161,6 @@ fun formatNumber(number: String, digits: CharArray): String {
     return number.map { digits.getOrNull(Character.getNumericValue(it)) ?: it }
         .joinToString("")
 }
-
-val PERSIAN_DIGITS = charArrayOf('۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹')
-
-private val persianCalendarMonthsInPersian = listOf(
-    "فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد",
-    "شهریور", "مهر", "آبان", "آذر", "دی",
-    "بهمن", "اسفند"
-)
-val persianCalendarMonthsInDariOrPersianOldEra = listOf(
-    "حمل", "ثور", "جوزا", "سرطان", "اسد", "سنبله",
-    "میزان", "عقرب", "قوس", "جدی", "دلو", "حوت"
-)
 
 @AppPreview
 @Composable
