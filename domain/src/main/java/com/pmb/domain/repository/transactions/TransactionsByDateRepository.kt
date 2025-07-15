@@ -5,8 +5,8 @@ import com.pmb.domain.model.TransactionModel
 import com.pmb.domain.model.TransactionRequest
 import kotlinx.coroutines.flow.Flow
 
-interface TransactionsByCountRepository {
-    fun getTransactionsByCount(
+interface TransactionsByDateRepository {
+    fun getTransactionsByDate(
         transactionRequest: TransactionRequest
     ): Flow<Result<List<TransactionModel>>>
 }

@@ -7,6 +7,7 @@ import com.pmb.data.repository.card.CardLIstRepositoryImpl
 import com.pmb.data.repository.deposit.DepositRepositoryImpl
 import com.pmb.data.repository.theme.ThemeRepositoryImpl
 import com.pmb.data.repository.transaction.TransactionsByCountRepositoryImpl
+import com.pmb.data.repository.transaction.TransactionsByDateRepositoryImpl
 import com.pmb.domain.repository.DepositRepository
 import com.pmb.domain.repository.auth.FirstLoginConfirmRepository
 import com.pmb.domain.repository.auth.LoginRepository
@@ -14,6 +15,7 @@ import com.pmb.domain.repository.auth.RegisterRepository
 import com.pmb.domain.repository.card.CardListRepository
 import com.pmb.domain.repository.theme.ThemeRepository
 import com.pmb.domain.repository.transactions.TransactionsByCountRepository
+import com.pmb.domain.repository.transactions.TransactionsByDateRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -43,4 +45,7 @@ abstract class RepositoryModule {
 
     @Binds
     abstract fun bindTransactionsByCountRepository(transactionsByCountRepository: TransactionsByCountRepositoryImpl): TransactionsByCountRepository
+
+    @Binds
+    abstract fun bindTransactionsByDateRepository(transactionsByDateRepository: TransactionsByDateRepositoryImpl): TransactionsByDateRepository
 }
