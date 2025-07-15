@@ -13,6 +13,7 @@ sealed class AuthScreens(route: String, arguments: Map<String, String> = emptyMa
             "first_login_confirm/$mobileNumber/$username/$password"
     }
     data object Login : AuthScreens(route = "login")
+
     data object ForgetPassword : AuthScreens(route = "forget_password")
     data object ForgetPasswordAuth : AuthScreens(route = "forget_password_auth")
     data object AuthenticationConfirmStep : AuthScreens(route = "authentication_confirm_step")
@@ -70,7 +71,7 @@ sealed class RegisterScreens(route: String, arguments: Map<String, String> = emp
     data object Signature : RegisterScreens(route = "signature")
     data object AuthenticationSelectServices :
         RegisterScreens(route = "authentication_select_services")
-
+    data object RegisterChooseCard : RegisterScreens(route = "register_choose_card")
     data object RegisterAuthentication : RegisterScreens(route = "register_authentication")
     data object RegisterFacePhotoCapture : RegisterScreens(route = "register_face_photo_capture")
     data object RegisterVideo : RegisterScreens(route = "register_video")

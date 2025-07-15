@@ -17,6 +17,7 @@ import com.pmb.auth.presentation.register.authentication_select_services.Authent
 import com.pmb.auth.presentation.register.authentication_select_services.viewModel.AuthenticationSelectServicesViewModel
 import com.pmb.auth.presentation.register.check_postal_code.CheckPostalCodeScreen
 import com.pmb.auth.presentation.register.check_postal_code.viewModel.CheckPostalCodeViewModel
+import com.pmb.auth.presentation.register.choose_card.ChooseCardScreen
 import com.pmb.auth.presentation.register.deposit_information.DepositInformationScreen
 import com.pmb.auth.presentation.register.deposit_information.viewModel.DepositInformationViewModel
 import com.pmb.auth.presentation.register.fee_details.FeeDetailsScreen
@@ -158,6 +159,9 @@ fun NavGraphBuilder.registerScreenHandler() {
             FeeDetailsScreen(
                 viewModel = hiltViewModel<FeeDetailsViewModel>()
             )
+        }
+        composable (route = RegisterScreens.RegisterChooseCard.route){
+            ChooseCardScreen()
         }
     }
 }

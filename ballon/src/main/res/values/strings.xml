@@ -45,4 +45,7 @@
     <string name="shamsi_calendar_short">Persian</string>
     <string name="islamic_calendar_short">Islamic</string>
     <string name="gregorian_calendar_short">Gregorian</string>
+    <string name="front_of_card">جلوی کارت</string>
+    <string name="back_side_of_card">پشت کارت</string>
+    <string name="choose_card">انتخاب کارت</string>
 </resources>

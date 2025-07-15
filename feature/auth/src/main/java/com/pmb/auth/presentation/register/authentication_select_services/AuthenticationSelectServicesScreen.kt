@@ -43,7 +43,7 @@ fun AuthenticationSelectServicesScreen(
         viewModel.viewEvent.collect { event ->
             when (event) {
                 AuthenticationSelectServicesViewEvent.SelectServicesSucceed -> {
-                    navigationManager.navigate(RegisterScreens.RegisterAuthentication)
+                    navigationManager.navigate(RegisterScreens.RegisterChooseCard)
                 }
             }
         }
