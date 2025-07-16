@@ -38,4 +38,9 @@ interface ProfileRepository {
     suspend fun checkUpdate(): Flow<Result<VersionEntity>>
     suspend fun updateVersion(): Flow<Result<VersionEntity>>
     suspend fun fetchVersions(): Flow<Result<List<VersionEntity>>>
+    suspend fun changePassword(
+        userId: String,
+        oldPassword: String,
+        newPassword: String
+    ): Flow<Result<PersonalInfoEntity>>
 }

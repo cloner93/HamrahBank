@@ -1,6 +1,11 @@
 package com.pmb.profile.data.profile.repository
 
 import com.pmb.core.platform.Result
+import com.pmb.data.model.AnyModel
+import com.pmb.data.serviceProvider.local.LocalServiceProvider
+import com.pmb.network.NetworkManger
+import com.pmb.profile.data.model.ChangePasswordRequest
+import com.pmb.profile.data.model.ChangeUsernameRequest
 import com.pmb.profile.domain.entity.AddressEntity
 import com.pmb.profile.domain.entity.EducationEntity
 import com.pmb.profile.domain.entity.JobEntity
@@ -14,7 +19,16 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class ProfileRepositoryImpl @Inject constructor() : ProfileRepository {
+private object Endpoints {
+    const val CHANGE_USERNAME = "profile/changeUser"
+    const val CHANGE_PASSWORD = "profile/changePass"
+}
+
+@Suppress("MISSING_DEPENDENCY_CLASS_IN_EXPRESSION_TYPE")
+class ProfileRepositoryImpl @Inject constructor(
+    private val client: NetworkManger,
+    private val local: LocalServiceProvider
+) : ProfileRepository {
     override suspend fun logOut(): Flow<Result<String>> = flow {
         emit(Result.Loading)
         delay(2000)
@@ -30,13 +44,14 @@ class ProfileRepositoryImpl @Inject constructor() : ProfileRepository {
 
     override suspend fun changeUsername(
         userId: Long, username: String
-    ): Flow<Result<PersonalInfoEntity>> = flow {
-        emit(Result.Loading)
-        delay(2000)
-        emit(
-            Result.Success(
-                mockPersonalInfoEntity.copy(username = username)
-            )
+    ): Flow<Result<PersonalInfoEntity>> {
+        val req = ChangeUsernameRequest(
+            newUserName = username,
+            oldUserName = local.getUserDataStore().getUserData()?.username ?: ""
+        )
+        return client.request<ChangeUsernameRequest, AnyModel>(
+            endpoint = Endpoints.CHANGE_USERNAME,
+            data = req
         )
     }
 
@@ -137,6 +152,22 @@ class ProfileRepositoryImpl @Inject constructor() : ProfileRepository {
         emit(Result.Loading)
         delay(2000)
         emit(Result.Success(mockVersionEntities))
+    }
+
+    override suspend fun changePassword(
+        userId: String,
+        oldPassword: String,
+        newPassword: String
+    ): Flow<Result<PersonalInfoEntity>> {
+        val req = ChangePasswordRequest(
+            oldPassWord = oldPassword,
+            newPassword = newPassword,
+            customerId = userId.toLong()
+        )
+        return client.request<ChangePasswordRequest, AnyModel>(
+            endpoint = Endpoints.CHANGE_PASSWORD,
+            data = req
+        )
     }
 }
 

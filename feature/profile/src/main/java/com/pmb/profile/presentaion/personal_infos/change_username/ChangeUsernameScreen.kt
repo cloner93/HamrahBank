@@ -21,7 +21,6 @@ import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.profile.R
-import com.pmb.profile.domain.entity.PersonalInfoEntity
 import com.pmb.profile.presentaion.personal_infos.PersonalInfoSharedState
 import com.pmb.profile.presentaion.personal_infos.change_username.viewmodel.ChangeUsernameViewActions
 import com.pmb.profile.presentaion.personal_infos.change_username.viewmodel.ChangeUsernameViewEvents
@@ -32,7 +31,7 @@ import com.pmb.profile.presentaion.personal_infos.change_username.viewmodel.Chan
 fun ChangeUsernameScreen(
     viewModel: ChangeUsernameViewModel,
     sharedState: PersonalInfoSharedState,
-    result: (personalInfoEntity: PersonalInfoEntity) -> Unit
+    result: (username: String) -> Unit
 ) {
     val navigationManager = LocalNavigationManager.current
     val viewState by viewModel.viewState.collectAsState()
@@ -45,7 +44,7 @@ fun ChangeUsernameScreen(
         viewModel.viewEvent.collect { event ->
             when (event) {
                 is ChangeUsernameViewEvents.NavigateBackToPersonalInfo -> {
-                    result.invoke(event.personalInfoEntity)
+                    result.invoke(event.newUsername)
                     navigationManager.navigateBack()
                 }
             }
