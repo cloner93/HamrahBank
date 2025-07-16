@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class DepositsViewModel @Inject constructor(
+open class DepositsViewModel @Inject constructor(
     initialState: DepositsViewState,
     private val getDepositsUseCase: GetUserDepositListUseCase,
     private val getTransactionsUseCase: TransactionsByCountUsaCase,
