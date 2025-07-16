@@ -1,4 +1,4 @@
-package com.pmb.data.appManager.persistence.user
+package com.pmb.data.serviceProvider.local.user
 
 import com.pmb.domain.model.UserData
 

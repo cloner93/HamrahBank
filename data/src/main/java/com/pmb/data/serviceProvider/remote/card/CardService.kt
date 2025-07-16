@@ -1,4 +1,4 @@
-package com.pmb.data.appManager.card
+package com.pmb.data.serviceProvider.remote.card
 
 import com.pmb.core.platform.Result
 import com.pmb.domain.model.Card
