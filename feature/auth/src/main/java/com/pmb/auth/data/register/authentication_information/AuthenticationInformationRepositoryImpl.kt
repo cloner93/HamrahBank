@@ -16,7 +16,6 @@ class AuthenticationInformationRepositoryImpl @Inject constructor() :
     override suspend fun getAuthenticationInformation(): Flow<Result<GetAuthenticationEntity>> =
         flow {
             emit(Result.Loading)
-            delay(2000)
             val cities = listOf(
                 City(id = 0, city = "آبادان"),
                 City(id = 0, city = "اصفهان"),
@@ -58,7 +57,6 @@ class AuthenticationInformationRepositoryImpl @Inject constructor() :
     override suspend fun sendAuthenticationInformation(authenticationInformationParam: SendAuthenticationInformationParam): Flow<Result<Boolean>> =
         flow {
             emit(Result.Loading)
-            delay(2000)
             emit(Result.Success(true))
         }
 

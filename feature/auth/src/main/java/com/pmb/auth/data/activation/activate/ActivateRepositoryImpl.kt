@@ -15,7 +15,6 @@ class ActivateRepositoryImpl @Inject constructor() : ActivateRepository {
         flow {
             val accountSampleModel = AccountSampleModel()
             emit(Result.Loading)
-            delay(2000)
             activateParams.takeIf {
                 it.mobileNumber == accountSampleModel.mobileNumber
             }

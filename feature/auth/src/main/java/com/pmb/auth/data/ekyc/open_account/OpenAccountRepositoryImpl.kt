@@ -11,7 +11,6 @@ import javax.inject.Inject
 class OpenAccountRepositoryImpl @Inject constructor() : OpenAccountRepository {
     override fun openAccount(): Flow<Result<OpenAccountEntity>> = flow {
         emit(Result.Loading)
-        delay(2000)
         emit(Result.Success(OpenAccountEntity(isSuccess = true)))
     }
 }

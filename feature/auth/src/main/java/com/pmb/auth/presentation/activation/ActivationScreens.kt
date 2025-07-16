@@ -13,6 +13,7 @@ import com.pmb.auth.presentation.activation.activation_tax_details.viewModel.Act
 import com.pmb.navigation.manager.navigationManager
 import com.pmb.navigation.moduleScreen.ActivationScreens
 import com.pmb.navigation.moduleScreen.AuthScreens
+import com.pmb.navigation.moduleScreen.SharedAuthAndActivationScopeGraph
 
 fun NavGraphBuilder.activationScreenHandler() {
     navigation(
@@ -26,7 +27,7 @@ fun NavGraphBuilder.activationScreenHandler() {
         composable(route = ActivationScreens.ActivationTaxDetailsScreen.route) {
             val sharedViewModel =
                 it.navigationManager.retrieveSharedViewModel<AuthSharedViewModel>(
-                    screen = AuthScreens.AuthGraph, navBackStackEntry = it
+                    screen = SharedAuthAndActivationScopeGraph, navBackStackEntry = it
                 )
             val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
             ActivationTaxDetailsScreen(

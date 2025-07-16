@@ -41,7 +41,7 @@ sealed class EKYCScreens(route: String, arguments: Map<String, String> = emptyMa
     data object EKYCFacePhotoCapture : EKYCScreens(route = "ekyc_face_photo_capture")
     data object EKYCVideoCapture : EKYCScreens(route = "ekyc_video_capture")
 }
-
+object SharedAuthAndActivationScopeGraph : Screen(baseRoute = "shared_auth_activation_scope_graph",arguments = emptyMap())
 sealed class CardScreens(route: String, arguments: Map<String, String> = emptyMap()) :
     Screen(baseRoute = route, arguments = arguments) {
     data object CardGraph : CardScreens("card_graph")

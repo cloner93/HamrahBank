@@ -13,7 +13,6 @@ class CardInfoRepositoryImpl @Inject constructor() : CardInfoRepository {
     override suspend fun sendCardInfo(cardInfoParams: CardInfoParams): Flow<Result<CardInfoEntity>> =
         flow {
             emit(Result.Loading)
-            delay(2000)
             emit(Result.Success(CardInfoEntity(isSuccess = true)))
         }
 }

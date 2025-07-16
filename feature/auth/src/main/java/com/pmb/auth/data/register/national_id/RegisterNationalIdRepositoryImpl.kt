@@ -13,7 +13,6 @@ class RegisterNationalIdRepositoryImpl @Inject constructor() : RegisterNationalI
     override suspend fun registerNationalId(params: RegisterNationalIdRequest): Flow<Result<RegisterNationalIdEntity>> =
         flow {
             emit(Result.Loading)
-            delay(2000)
             params.nationalSerialId.takeIf { it.isNotEmpty() }?.let {
                 emit(Result.Success(RegisterNationalIdEntity(isSuccess = true)))
             } ?: run {

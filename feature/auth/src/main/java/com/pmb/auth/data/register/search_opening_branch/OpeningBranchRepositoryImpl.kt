@@ -14,7 +14,6 @@ class OpeningBranchRepositoryImpl @Inject constructor() : OpeningBranchRepositor
     override suspend fun getOpeningBranch(params: OpeningBranchParams): Flow<Result<OpeningBranchEntity>> =
         flow {
             emit(Result.Loading)
-            delay(2000)
             if (params.id == 0 || params.id == 1 || params.id == 2) {
                 emit(
                     Result.Success(

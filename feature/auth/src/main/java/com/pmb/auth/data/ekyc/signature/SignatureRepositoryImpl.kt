@@ -13,7 +13,6 @@ class SignatureRepositoryImpl @Inject constructor() : SignatureRepository {
     override fun sendSignaturePhoto(signatureParams: SignatureParams): Flow<Result<SignatureEntity>> =
         flow {
             emit(Result.Loading)
-            delay(2000)
             signatureParams.uri.takeIf { !it.isNullOrEmpty() }?.let {
                 emit(Result.Success(SignatureEntity(isSuccess = true)))
             } ?: run {

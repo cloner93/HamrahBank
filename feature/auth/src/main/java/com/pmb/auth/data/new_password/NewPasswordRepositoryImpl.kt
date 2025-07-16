@@ -15,7 +15,6 @@ class NewPasswordRepositoryImpl @Inject constructor() : NewPasswordRepository {
         flow {
             val accountSampleModel = AccountSampleModel()
             emit(Result.Loading)
-            delay(2000)
             newPasswordParams.takeIf {
                 it.userName == accountSampleModel.userName
                         && it.passWord == accountSampleModel.passWord

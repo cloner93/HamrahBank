@@ -50,14 +50,6 @@ fun FirstLoginScreen(
                 FirsLoginViewEvents.FirstLoginStepSucceed -> {
                     updateShareState.invoke(viewState.username, viewState.phoneNumber, viewState.password)
                     navigationManager.navigate(AuthScreens.FirstLoginConfirm)
-
-//                    navigationManager.navigateWithString(
-//                        AuthScreens.FirstLoginConfirm.createRoute(
-//                            viewState.phoneNumber,
-//                            viewState.username,
-//                            viewState.password
-//                        )
-//                    )
                 }
             }
         }

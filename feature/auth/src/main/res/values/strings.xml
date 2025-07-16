@@ -4,6 +4,7 @@
     <string name="login_to_hamrah_bank">ورود به همراه بانک</string>
     <string name="mellat_bank">بانک ملت</string>
     <string name="username">نام کاربری</string>
+    <string name="username_with_hint">نام کاربری (شماره تلفن همراه برای اولین ورود)</string>
     <string name="password">رمز عبور</string>
     <string name="login">ورود</string>
     <string name="forget_password">فراموشی رمز عبور</string>

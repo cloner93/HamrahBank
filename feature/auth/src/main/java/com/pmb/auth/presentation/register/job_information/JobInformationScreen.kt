@@ -31,6 +31,7 @@ import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.core.utils.CollectAsEffect
+import com.pmb.core.utils.toCurrency
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.manager.NavigationManager
 import com.pmb.navigation.moduleScreen.RegisterScreens
@@ -110,14 +111,14 @@ fun JobInformationScreen(
             CustomSpinner(
                 modifier = Modifier
                     .fillMaxWidth(),
-                options = viewState.data?.annualIncomingPrediction?.map { it.income },
+                options = viewState.data?.annualIncomingPrediction?.map { it.income.toCurrency() },
                 labelString = "پیش بینی درآمد سالیانه",
                 displayText = viewState.data?.annualIncomingPrediction?.findLast {
                     it.id == (annualIncome?.id ?: -1)
-                }?.income ?: "",
+                }?.income?.toCurrency() ?: "",
                 isEnabled = true
             ) { type ->
-                viewState.data?.annualIncomingPrediction?.findLast { it.income == type }?.let {
+                viewState.data?.annualIncomingPrediction?.findLast { it.income == type.replace(",","") }?.let {
                     annualIncome = it
                 }
             }

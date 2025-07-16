@@ -11,6 +11,6 @@ data class OpeningAccountViewState(
     val alertModelState: AlertModelState? = null,
     val phoneNumber: String? = null,
     val nationalId: String? = null,
-    val birthDay: PersianDate = Jdn.today().toPersianDate(),
+    val birthDay: PersianDate ?=null,
     val isShowingBottomSheet: Boolean = false,
 ) : BaseViewState

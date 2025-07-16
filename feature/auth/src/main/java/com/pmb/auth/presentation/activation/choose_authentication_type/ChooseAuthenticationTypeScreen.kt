@@ -87,7 +87,7 @@ fun ActivationAuthenticationTypeScreen(
             title = stringResource(R.string.bank_card),
             icon = com.pmb.ballon.R.drawable.ic_arrow_left,
             colors = buttonColors(
-                containerColor = Color.White
+                containerColor = AppTheme.colorScheme.background1Neutral
             ),
             textStyle = TextStyle.defaultButton(
                 color = AppTheme.colorScheme.onBackgroundPrimaryActive,
@@ -103,7 +103,7 @@ fun ActivationAuthenticationTypeScreen(
             title = stringResource(R.string.visual_authentication),
             icon = com.pmb.ballon.R.drawable.ic_arrow_left,
             colors = buttonColors(
-                containerColor = Color.White
+                containerColor = AppTheme.colorScheme.background1Neutral
             ),
             textStyle = TextStyle.defaultButton(
                 color = AppTheme.colorScheme.onBackgroundPrimaryActive,
@@ -119,7 +119,7 @@ fun ActivationAuthenticationTypeScreen(
             title = stringResource(R.string.mellat_signature_app),
             icon = com.pmb.ballon.R.drawable.ic_arrow_left,
             colors = buttonColors(
-                containerColor = Color.White
+                containerColor = AppTheme.colorScheme.background1Neutral
             ),
             textStyle = TextStyle.defaultButton(
                 color = AppTheme.colorScheme.onBackgroundPrimaryActive,

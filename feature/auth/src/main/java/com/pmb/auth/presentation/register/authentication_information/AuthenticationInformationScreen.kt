@@ -172,7 +172,7 @@ fun AuthenticationInformationScreen(
                 defaultDate = Jdn.today(), // TODO: fix it.
                 onDismiss = { showBirthdayPicker = false },
                 onChangeValue = { year, month, day ->
-                    viewModel.handle(AuthenticationInformationViewActions.SetIdentifyDay("$day/$month/$year"))
+                    viewModel.handle(AuthenticationInformationViewActions.SetIdentifyDay("$year/$month/$day"))
                     showBirthdayPicker = false
                 },
             )

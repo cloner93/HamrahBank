@@ -11,7 +11,6 @@ class ActivationTaxDetailsRepositoryImpl @Inject constructor() : ActivationTaxDe
     override suspend fun sendActivationTaxDetailsData(accountNumber: String): Flow<Result<Boolean>> =
         flow {
             emit(Result.Loading)
-            delay(2000)
             emit(Result.Success(true))
         }
 }

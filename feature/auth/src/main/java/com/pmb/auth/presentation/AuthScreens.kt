@@ -1,9 +1,11 @@
 package com.pmb.auth.presentation
 
+import androidx.compose.ui.graphics.BlendMode
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigation
 import androidx.navigation.navigation
 import com.pmb.auth.AuthSharedViewModel
 import com.pmb.auth.presentation.activation.activationScreenHandler
@@ -32,6 +34,8 @@ import com.pmb.auth.presentation.register.registerScreenHandler
 import com.pmb.auth.presentation.scan_card_info.cardScreenHandler
 import com.pmb.navigation.manager.navigationManager
 import com.pmb.navigation.moduleScreen.AuthScreens
+import com.pmb.navigation.moduleScreen.SharedAuthAndActivationScopeGraph
+import com.pmb.navigation.screen.Screen
 
 
 fun NavGraphBuilder.authScreensHandle(
@@ -94,7 +98,7 @@ fun NavGraphBuilder.authScreensHandle(
         composable(route = AuthScreens.ForgetPassword.route) {
             val sharedViewModel =
                 it.navigationManager.retrieveSharedViewModel<AuthSharedViewModel>(
-                    screen = AuthScreens.AuthGraph, navBackStackEntry = it
+                    screen = SharedAuthAndActivationScopeGraph, navBackStackEntry = it
                 )
             val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
             ForgetPasswordScreen(
@@ -144,7 +148,7 @@ fun NavGraphBuilder.authScreensHandle(
         composable(route = AuthScreens.ChooseAuthenticationType.route) {
             val sharedViewModel =
                 it.navigationManager.retrieveSharedViewModel<AuthSharedViewModel>(
-                    screen = AuthScreens.AuthGraph, navBackStackEntry = it
+                    screen = SharedAuthAndActivationScopeGraph, navBackStackEntry = it
                 )
             val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
             ActivationAuthenticationTypeScreen(

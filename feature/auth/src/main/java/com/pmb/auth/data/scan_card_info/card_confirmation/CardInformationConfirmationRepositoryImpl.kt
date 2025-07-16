@@ -12,7 +12,6 @@ class CardInformationConfirmationRepositoryImpl @Inject constructor() :
     CardInformationConfirmationRepository {
     override fun getCardInformationData(): Flow<Result<CardInformationConfirmationEntity>> = flow {
         emit(Result.Loading)
-        delay(2000)
         emit(
             Result.Success(
                 CardInformationConfirmationEntity(
@@ -28,7 +27,6 @@ class CardInformationConfirmationRepositoryImpl @Inject constructor() :
 
     override fun sendCardInformationConfirmation(): Flow<Result<Boolean>> = flow {
         emit(Result.Loading)
-        delay(2000)
         emit(
             Result.Success(
                 true

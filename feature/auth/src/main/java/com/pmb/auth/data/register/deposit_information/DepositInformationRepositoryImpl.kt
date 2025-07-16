@@ -18,7 +18,6 @@ import javax.inject.Inject
 class DepositInformationRepositoryImpl @Inject constructor() : DepositInformationRepository {
     override suspend fun getDepositInformation(): Flow<Result<DepositInformationEntity>> = flow {
         emit(Result.Loading)
-        delay(2000)
         val depositType = listOf(
             DepositType(id = 0, type = "سپرده کوتاه مدت "),
             DepositType(id = 1, type = "سپرده کوتاه مدت قرض الحسنه"),
@@ -44,7 +43,6 @@ class DepositInformationRepositoryImpl @Inject constructor() : DepositInformatio
     override suspend fun getBranchCity(params: BranchCityParams): Flow<Result<BranchCityEntity>> =
         flow {
             emit(Result.Loading)
-            delay(2000)
             if (params.id == 0 || params.id == 1 || params.id == 2) {
 
 
@@ -95,7 +93,6 @@ class DepositInformationRepositoryImpl @Inject constructor() : DepositInformatio
     override suspend fun sendDepositInformation(params: SendDepositInformationParams): Flow<Result<SendDepositInformationEntity>> =
         flow {
             emit(Result.Loading)
-            delay(2000)
             emit(
                 Result.Success(
                     SendDepositInformationEntity(

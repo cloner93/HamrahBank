@@ -94,7 +94,7 @@ fun ActivationTaxDetailsScreen(
             Spacer(modifier = Modifier.size(20.dp))
             Column(
                 modifier = Modifier
-                    .background(Color.White, RoundedCornerShape(12.dp))
+                    .background(AppTheme.colorScheme.background1Neutral, RoundedCornerShape(12.dp))
                     .padding(horizontal = 10.dp)
             ) {
                 feeDetailsEntity.entityList.forEachIndexed { index, feeDetail ->
@@ -109,7 +109,7 @@ fun ActivationTaxDetailsScreen(
                         Spacer(modifier = Modifier.weight(1f))
                         BodyMediumText(
                             text = feeDetail.getSeparatedPrice(),
-                            color = AppTheme.colorScheme.onBackgroundNeutralActive
+                            color = AppTheme.colorScheme.onBackgroundNeutralDefault
                         )
                         Spacer(modifier = Modifier.size(4.dp))
                         CaptionText(
@@ -128,7 +128,7 @@ fun ActivationTaxDetailsScreen(
             Spacer(modifier = Modifier.size(10.dp))
             Column(
                 modifier = Modifier
-                    .background(Color.White, RoundedCornerShape(12.dp))
+                    .background(AppTheme.colorScheme.background1Neutral, RoundedCornerShape(12.dp))
                     .padding(horizontal = 10.dp)
             ) {
                 Row(
@@ -137,7 +137,7 @@ fun ActivationTaxDetailsScreen(
                 ) {
                     BodyMediumText(
                         text = stringResource(R.string.total),
-                        color = AppTheme.colorScheme.onBackgroundNeutralSubdued
+                        color = AppTheme.colorScheme.foregroundNeutralDefault
                     )
                     Spacer(modifier = Modifier.weight(1f))
                     BodyMediumText(
