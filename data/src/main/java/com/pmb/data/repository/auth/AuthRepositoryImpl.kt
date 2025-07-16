@@ -51,4 +51,18 @@ class AuthRepositoryImpl @Inject constructor(
                 it.first.toDomain()
             }
     }
+
+    override fun generateCode(
+        nationalCode: String,
+        mobileNo: String,
+        birthDate: String
+    ): Flow<Result<Boolean>> {
+        return remoteServiceProvider.getAuthService().generateCode(
+            nationalCode = nationalCode,
+            mobileNo = mobileNo,
+            birthDate = birthDate
+        ).mapApiResult {
+            it.first.toDomain()
+        }
+    }
 }

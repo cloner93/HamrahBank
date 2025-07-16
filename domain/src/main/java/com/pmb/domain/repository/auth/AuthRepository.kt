@@ -10,4 +10,5 @@ interface AuthRepository {
     suspend fun sendOtp(sendOtpRequest: SendOtpRequest): Flow<Result<SendOtpResponse>>
     fun login(customerId: String, username: String, password: String): Flow<Result<LoginResponse>>
     fun register(customerId: String, username: String, password: String): Flow<Result<Boolean>>
+    fun generateCode(nationalCode:String,mobileNo:String,birthDate:String): Flow<Result<Boolean>>
 }

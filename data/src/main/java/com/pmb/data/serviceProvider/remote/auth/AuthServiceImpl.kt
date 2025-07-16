@@ -7,6 +7,8 @@ import com.pmb.domain.model.LoginResponse
 import com.pmb.domain.model.RegisterRequest
 import com.pmb.domain.model.RegisterVerifyResponse
 import com.pmb.domain.model.SendOtpRequest
+import com.pmb.domain.model.openAccount.GenerateCodeRequest
+import com.pmb.domain.model.openAccount.GenerateCodeResponse
 import com.pmb.model.SuccessData
 import com.pmb.network.NetworkManger
 import kotlinx.coroutines.flow.Flow
@@ -44,6 +46,17 @@ class AuthServiceImpl @Inject constructor(
             vcode = 0
         )
         return client.request<RegisterRequest, Boolean>("register", req)
+    }
+
+    override fun generateCode(
+        nationalCode: String,
+        mobileNo: String,
+        birthDate: String
+    ): Flow<Result<SuccessData<GenerateCodeResponse>>> {
+        val req = GenerateCodeRequest(nationalCode = nationalCode, mobileNo = mobileNo,
+            birthDate = birthDate
+        )
+        return client.request<GenerateCodeRequest,GenerateCodeResponse>("openAccount/generateCode",req)
     }
 
 }
