@@ -2,7 +2,6 @@ package com.pmb.data.repository.auth
 
 import com.pmb.core.platform.Result
 import com.pmb.data.appManager.AppManager
-import com.pmb.data.mapper.authService.mapToLoginResponse
 import com.pmb.data.mapper.mapApiResult
 import com.pmb.domain.model.LoginResponse
 import com.pmb.domain.repository.auth.LoginRepository
@@ -20,7 +19,7 @@ class LoginRepositoryImpl @Inject constructor(
         return appManager.getAuthService()
             .login(customerId = customerId, username = username, password = password)
             .mapApiResult {
-                it.second.mapToLoginResponse()
+                it.second
             }
     }
 }

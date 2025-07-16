@@ -112,7 +112,7 @@ fun LoginScreen(viewModel: LoginViewModel) {
                 com.pmb.auth.R.string.login
             ),
             icon = if (password.isEmpty()) com.pmb.ballon.R.drawable.ic_face_id else null,
-            enable = false
+            enable = true
         ) {
             if (password.isEmpty())
                 navigationManager.navigate(AuthScreens.ReentryFaceDetection)
