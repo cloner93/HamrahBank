@@ -1,6 +1,5 @@
 package com.pmb.auth.presentation.component
 
-import android.net.Uri
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -34,9 +33,9 @@ import com.pmb.ballon.ui.theme.AppTheme
 @Composable
 fun UploadDocumentsSection(
     modifier: Modifier = Modifier,
-    images: List<Uri>,
+    images: String?,
     onAddClicked: () -> Unit,
-    onRemoveImage: (Uri) -> Unit
+    onRemoveImage: () -> Unit
 ) {
     Column(modifier = modifier.padding(16.dp)) {
         Text(
@@ -47,45 +46,36 @@ fun UploadDocumentsSection(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        val rows = images.chunked(2).toMutableList()
-
-        // Append one row for the "add" item
-        if (images.size % 2 == 0) {
-            rows.add(listOf()) // new row for "add"
-        }
-
         Column {
-            rows.forEachIndexed { rowIndex, rowImages ->
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    rowImages.forEach { uri ->
-                        PreviewRoundedImageComponent(
-                            modifier = Modifier
-                                .size(156.dp)
-                                .clip(RoundedCornerShape(16.dp))
-                                .border(
-                                    1.dp,
-                                    AppTheme.colorScheme.strokeNeutral3Rest,
-                                    RoundedCornerShape(16.dp)
-                                ), fileUrl = ""
-                        ) {
-                            onRemoveImage(uri)
-                        }
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                images.takeIf { !it.isNullOrEmpty() }?.let { uri ->
+                    PreviewRoundedImageComponent(
+                        modifier = Modifier
+                            .size(156.dp)
+                            .clip(RoundedCornerShape(16.dp))
+                            .border(
+                                1.dp,
+                                AppTheme.colorScheme.strokeNeutral3Rest,
+                                RoundedCornerShape(16.dp)
+                            ), fileUrl = uri
+                    ) {
+                        onRemoveImage()
                     }
-
-                    // Show add button only in last row
-                    if (rowIndex == rows.lastIndex && rowImages.size < 2) {
-                        AddDocumentItem(onClick = onAddClicked)
-                    }
+                } ?: run {
+                    AddDocumentItem(onClick = onAddClicked)
                 }
 
-                Spacer(modifier = Modifier.height(12.dp))
+
             }
+
+            Spacer(modifier = Modifier.height(12.dp))
         }
     }
 }
+
 
 
 @Composable

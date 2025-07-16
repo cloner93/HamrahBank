@@ -1,6 +1,8 @@
 package com.pmb.auth.presentation.register.job_information
 
 import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -51,8 +53,14 @@ fun JobInformationScreen(
     var annualIncome by remember {
         mutableStateOf<AnnualIncomingPrediction?>(null)
     }
+    var ur by remember { mutableStateOf<Uri?>(null) }
     var showShareBottomSheet by remember { mutableStateOf(false) }
-    val imageUris = remember { mutableStateListOf<Uri>() }
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success ->
+        if (success) {
+//            viewModel.file =
+            ur = viewModel.file
+        }
+    }
     navigationManager.getCurrentScreenFlowData<JobInformation?>(
         "jobInformation",
         null
@@ -136,12 +144,12 @@ fun JobInformationScreen(
                 }
             }
             UploadDocumentsSection(
-                images = imageUris,
+                images = ur?.path,
                 onAddClicked = {
                     showShareBottomSheet = true
                 },
                 onRemoveImage = {
-                    imageUris.remove(it)
+//                    imageUris.remove(it)
                 }
             )
         }
@@ -162,6 +170,8 @@ fun JobInformationScreen(
                     iconTint = { AppTheme.colorScheme.onBackgroundNeutralCTA },
                     showEndIcon = false,
                     onClicked = {
+                        viewModel.createFile()
+                        viewModel.file?.let { launcher.launch(it) }
                     }
                 ),
                 MenuSheetModel(

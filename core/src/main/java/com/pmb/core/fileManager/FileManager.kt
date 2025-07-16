@@ -12,4 +12,5 @@ interface FileManager {
     fun createImageFile(): File
     fun createVideoFile(): File
     fun getFileUri(file: File): Uri
+    fun createImageUri(): Uri
 }

@@ -1,14 +1,17 @@
 package com.pmb.auth.presentation.register.job_information.viewModel
 
+import android.net.Uri
 import androidx.lifecycle.viewModelScope
 import com.pmb.auth.domain.register.job_information.entity.JobInformationParam
 import com.pmb.auth.domain.register.job_information.useCase.GetAnnualIncomePrediction
 import com.pmb.auth.domain.register.job_information.useCase.SendJobInformationUseCase
+import com.pmb.core.fileManager.FileManager
 import com.pmb.core.platform.AlertModelState
 import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.platform.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.io.File
 import javax.inject.Inject
 
 
@@ -16,11 +19,13 @@ import javax.inject.Inject
 class JobInformationViewModel @Inject constructor(
     initialState: JobInformationViewState,
     private val getAnnualIncomePrediction: GetAnnualIncomePrediction,
-    private val sendJobInformationUseCase: SendJobInformationUseCase
+    private val sendJobInformationUseCase: SendJobInformationUseCase,
+    private val fileManager: FileManager
 ) :
     BaseViewModel<JobInformationViewActions, JobInformationViewState, JobInformationViewEvents>(
         initialState
     ) {
+    var file: Uri? = null
     override fun handle(action: JobInformationViewActions) {
         when (action) {
             is JobInformationViewActions.ClearAlert -> {
@@ -53,6 +58,12 @@ class JobInformationViewModel @Inject constructor(
         }
     }
 
+    fun createFile() {
+        file = fileManager.createImageUri()
+    }
+//    fun getUri(): Uri?{
+//        return file?.let { fileManager.getFileUri(it) }
+//    }
     private fun handleGetAnnualIncomePrediction() {
         viewModelScope.launch {
             getAnnualIncomePrediction.invoke(Unit).collect { result ->

@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import android.os.Environment
 import android.util.Log
+import androidx.core.content.FileProvider
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
 import java.io.FileOutputStream
@@ -177,6 +178,15 @@ class FileManagerImpl @Inject constructor(
         return File(context.filesDir, fileName)
     }
 
+   override fun createImageUri(): Uri {
+        val imageFile = createImageFileInCache(context)
+        val currentImageUri = FileProvider.getUriForFile(
+            context,
+            "${context.packageName}.provider",
+            imageFile
+        )
+        return currentImageUri
+    }
     override fun getFileUri(file: File): Uri = Uri.fromFile(file)
 
     private fun timestamp(): String =

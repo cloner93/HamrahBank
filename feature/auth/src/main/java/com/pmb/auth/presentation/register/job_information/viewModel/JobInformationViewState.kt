@@ -9,5 +9,6 @@ data class JobInformationViewState(
     val isLoading:Boolean = false,
     val alertModelState: AlertModelState?=null,
     val data : JobInformationEntity?=null,
-    val jobInformation: JobInformation?=null
+    val jobInformation: JobInformation?=null,
+
 ):BaseViewState
