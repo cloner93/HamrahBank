@@ -9,9 +9,5 @@ sealed interface OpeningAccountViewActions : BaseViewAction {
     data class SetNationalId(val nationalId: String) : OpeningAccountViewActions
     data class SetBirthday(val birthDay: PersianDate) : OpeningAccountViewActions
     data class ShowBottomSheet(val isVisible: Boolean) : OpeningAccountViewActions
-    data class SendOpeningAccountData(
-        val phoneNumber: String,
-        val nationalId: String,
-        val birthDay: String
-    ) : OpeningAccountViewActions
+    data object SendOpeningAccountData : OpeningAccountViewActions
 }

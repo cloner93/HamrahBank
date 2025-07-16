@@ -78,11 +78,7 @@ fun AccountOpeningScreen(
                 title = stringResource(R.string._continue),
                 onClick = {
                     viewModel.handle(
-                        OpeningAccountViewActions.SendOpeningAccountData(
-                            viewState.phoneNumber ?: "",
-                            viewState.nationalId ?: "",
-                            viewState.birthDay?.let { "${it.dayOfMonth}/${it.month}/${it.year}" }
-                                ?: run { "" })
+                        OpeningAccountViewActions.SendOpeningAccountData
                     )
                 })
         },
@@ -108,7 +104,8 @@ fun AccountOpeningScreen(
             onValueChange = { viewModel.handle(OpeningAccountViewActions.SetNationalId(it)) })
         Spacer(modifier = Modifier.size(24.dp))
         AppClickableReadOnlyTextField(
-            value = viewState.birthDay?.let { "${it.year}/${it.month}/${it.dayOfMonth}" } ?:run { stringResource(R.string.birthday) },
+            value = viewState.birthDay?.let { "${it.year}/${it.month}/${it.dayOfMonth}" }
+                ?: run { stringResource(R.string.birthday) },
             label = stringResource(R.string.birthday),
             trailingIcon = {
                 AppButtonIcon(
@@ -126,7 +123,7 @@ fun AccountOpeningScreen(
     if (viewState.isShowingBottomSheet) {
         ShowPersianDatePickerBottomSheet(
             title = stringResource(R.string.birthday),
-            defaultDate =viewState.birthDay?.let {  Jdn(it.toJdn())} ?:run{ Jdn.today()},
+            defaultDate = viewState.birthDay?.let { Jdn(it.toJdn()) } ?: run { Jdn.today() },
             onDismiss = { viewModel.handle(OpeningAccountViewActions.ShowBottomSheet(false)) },
             onChangeValue = { year, month, day ->
                 viewModel.handle(
