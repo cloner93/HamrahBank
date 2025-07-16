@@ -9,7 +9,7 @@ plugins {
 
 android {
     namespace = "com.pmb.domain"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 24

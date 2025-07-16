@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.BackdropValue
+import androidx.compose.material.rememberBackdropScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -13,9 +15,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.pmb.account.R
 import com.pmb.account.presentation.cards.CardsScreen
 import com.pmb.account.presentation.deposits.DepositsScreen
+import com.pmb.account.presentation.deposits.viewmodel.DepositsViewModel
 import com.pmb.ballon.component.DynamicTabSelector
 
 @Composable
@@ -23,10 +27,18 @@ fun AccountScreen() {
     val cards = stringResource(R.string.cards)
     val accounts = stringResource(R.string.accounts)
     val selectedOption = remember { mutableIntStateOf(0) }
-    val optionTexts = listOf(accounts, cards)
+    val optionTexts = listOf(accounts, accounts, cards)
     when (selectedOption.intValue) {
-        0 -> DepositsScreen()
-        1 -> CardsScreen()
+        0 -> DepositsScreen(
+            viewModel = hiltViewModel<DepositsViewModel>()
+        )
+
+        1 -> DepositsBackDropScreen(
+            viewModel = hiltViewModel<DepositsViewModel>(),
+            rememberBackdropScaffoldState(BackdropValue.Revealed)
+        )
+
+        2 -> CardsScreen()
     }
 
     Row(
