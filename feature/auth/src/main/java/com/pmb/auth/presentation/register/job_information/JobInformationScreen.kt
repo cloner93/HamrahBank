@@ -1,5 +1,6 @@
 package com.pmb.auth.presentation.register.job_information
 
+import android.net.Uri
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -11,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -20,16 +22,20 @@ import androidx.compose.ui.unit.dp
 import com.pmb.auth.R
 import com.pmb.auth.domain.register.job_information.entity.AnnualIncomingPrediction
 import com.pmb.auth.domain.register.select_job_information.entity.JobInformation
+import com.pmb.auth.presentation.component.UploadDocumentsSection
 import com.pmb.auth.presentation.register.job_information.viewModel.JobInformationViewActions
 import com.pmb.auth.presentation.register.job_information.viewModel.JobInformationViewEvents
 import com.pmb.auth.presentation.register.job_information.viewModel.JobInformationViewModel
 import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.CustomSpinner
+import com.pmb.ballon.component.MenuBottomSheet
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppClickableReadOnlyTextField
 import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.component.base.AppTopBar
+import com.pmb.ballon.models.MenuSheetModel
+import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.core.utils.CollectAsEffect
 import com.pmb.core.utils.toCurrency
 import com.pmb.navigation.manager.LocalNavigationManager
@@ -45,6 +51,8 @@ fun JobInformationScreen(
     var annualIncome by remember {
         mutableStateOf<AnnualIncomingPrediction?>(null)
     }
+    var showShareBottomSheet by remember { mutableStateOf(false) }
+    val imageUris = remember { mutableStateListOf<Uri>() }
     navigationManager.getCurrentScreenFlowData<JobInformation?>(
         "jobInformation",
         null
@@ -118,19 +126,24 @@ fun JobInformationScreen(
                 }?.income?.toCurrency() ?: "",
                 isEnabled = true
             ) { type ->
-                viewState.data?.annualIncomingPrediction?.findLast { it.income == type.replace(",","") }?.let {
+                viewState.data?.annualIncomingPrediction?.findLast {
+                    it.income == type.replace(
+                        ",",
+                        ""
+                    )
+                }?.let {
                     annualIncome = it
                 }
             }
-            AppButton(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp, top = 16.dp),
-                enable = false,
-                title = stringResource(R.string.upload_document),
-                onClick = {
-
-                })
+            UploadDocumentsSection(
+                images = imageUris,
+                onAddClicked = {
+                    showShareBottomSheet = true
+                },
+                onRemoveImage = {
+                    imageUris.remove(it)
+                }
+            )
         }
     }
     if (viewState.isLoading) {
@@ -138,5 +151,32 @@ fun JobInformationScreen(
     }
     if (viewState.alertModelState != null) {
         AlertComponent(viewState.alertModelState!!)
+    }
+    if (showShareBottomSheet) {
+        MenuBottomSheet(
+            title = stringResource(R.string.uploading_type),
+            items = listOf(
+                MenuSheetModel(
+                    title = stringResource(R.string.choose_from_existing_file),
+                    icon = com.pmb.ballon.R.drawable.ic_image,
+                    iconTint = { AppTheme.colorScheme.onBackgroundNeutralCTA },
+                    showEndIcon = false,
+                    onClicked = {
+                    }
+                ),
+                MenuSheetModel(
+                    title = stringResource(R.string.image_capturing),
+                    icon = com.pmb.ballon.R.drawable.ic_image_camera,
+                    iconTint = { AppTheme.colorScheme.onBackgroundNeutralCTA },
+                    showEndIcon = false,
+                    onClicked = {
+                    }
+                )
+
+            ),
+            onDismiss = {
+                showShareBottomSheet = false
+            }
+        )
     }
 }
