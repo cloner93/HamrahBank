@@ -19,16 +19,15 @@ import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BackdropScaffold
 import androidx.compose.material.BackdropScaffoldState
-import androidx.compose.material.BackdropValue
+import androidx.compose.material.Button
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.rememberBackdropScaffoldState
+import androidx.compose.material.Text
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,7 +40,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.compose.rememberNavController
+import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.pmb.account.R
 import com.pmb.account.presentation.component.DepositCarouselWidget
 import com.pmb.account.presentation.component.ShareDepositBottomSheet
@@ -50,7 +51,6 @@ import com.pmb.account.presentation.component.TransactionRow
 import com.pmb.account.presentation.deposits.viewmodel.DepositsViewActions
 import com.pmb.account.presentation.deposits.viewmodel.DepositsViewEvents
 import com.pmb.account.presentation.deposits.viewmodel.DepositsViewModel
-import com.pmb.account.presentation.deposits.viewmodel.DepositsViewState
 import com.pmb.account.utils.mapToDepositMenu
 import com.pmb.account.utils.mapToDepositModel
 import com.pmb.ballon.component.DepositBottomSheet
@@ -58,7 +58,6 @@ import com.pmb.ballon.component.EmptyList
 import com.pmb.ballon.component.MenuBottomSheet
 import com.pmb.ballon.component.MenuItem
 import com.pmb.ballon.component.MenuItemDefaults
-import com.pmb.ballon.component.annotation.AppPreview
 import com.pmb.ballon.component.base.AppButtonIcon
 import com.pmb.ballon.component.base.IconType
 import com.pmb.ballon.component.base.RoundedTopColumn
@@ -66,20 +65,9 @@ import com.pmb.ballon.models.IconStyle
 import com.pmb.ballon.models.MenuSheetModel
 import com.pmb.ballon.models.TextStyle
 import com.pmb.ballon.ui.theme.AppTheme
-import com.pmb.ballon.ui.theme.HamrahBankTheme
-import com.pmb.domain.model.DepositModel
 import com.pmb.domain.model.TransactionModel
-import com.pmb.domain.model.TransactionRequest
-import com.pmb.domain.model.TransactionType
-import com.pmb.domain.repository.deposit.DepositsRepository
-import com.pmb.domain.repository.transactions.TransactionsByCountRepository
-import com.pmb.domain.usecae.deposit.GetUserDepositListUseCase
-import com.pmb.domain.usecae.transactions.TransactionsByCountUsaCase
 import com.pmb.navigation.manager.LocalNavigationManager
-import com.pmb.navigation.manager.NavigationManager
 import com.pmb.navigation.moduleScreen.AccountScreens
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -157,6 +145,7 @@ fun DepositsBackDropScreen(viewModel: DepositsViewModel, backdropState: Backdrop
     }
 
     rememberCoroutineScope()
+
     BackdropScaffold(
         scaffoldState = backdropState,
         backLayerContent = {
@@ -279,28 +268,16 @@ fun DepositsBackDropScreen(viewModel: DepositsViewModel, backdropState: Backdrop
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                if (viewState.transactions.isEmpty()) {
-                    EmptyList(
-                        iconType = IconType.Painter(painterResource(R.drawable.empty_list)),
-                        message = "تراکنشی یافت نشد!"
+                TransactionLazyList(
+                    viewModel.transactionFlow.collectAsLazyPagingItems(),
+                    viewState.isAmountVisible,
+                ) { transaction ->
+                    viewModel.handle(
+                        DepositsViewActions.NavigateToTransactionDetailScreen(
+                            transaction
+                        )
                     )
-                } else
-                    LazyColumn {
-                        items(viewState.transactions.size) { item ->
-                            Spacer(modifier = Modifier.height(12.dp))
-                            TransactionRow(
-                                viewState.transactions[item],
-                                viewState.isAmountVisible
-                            ) { transaction ->
-                                viewModel.handle(
-                                    DepositsViewActions.NavigateToTransactionDetailScreen(
-                                        transaction
-                                    )
-                                )
-                            }
-                            Spacer(modifier = Modifier.height(12.dp))
-                        }
-                    }
+                }
             }
         },
         appBar = {
@@ -350,243 +327,101 @@ fun DepositsBackDropScreen(viewModel: DepositsViewModel, backdropState: Backdrop
 }
 
 @Composable
-fun rememberFakeNavigationManager(): NavigationManager {
-    val navController = rememberNavController()
-    return remember(navController) {
-        object : NavigationManager(navController) {
+fun TransactionLazyList(
+    transaction: LazyPagingItems<TransactionModel>,
+    amountVisible: Boolean,
+    onItemClick: (TransactionModel) -> Unit
+) {
+    val loadState = transaction.loadState
 
-        }
-    }
-}
-
-class MockDepositRepository : DepositsRepository {
-    override fun getDepositList(): Flow<com.pmb.core.platform.Result<List<DepositModel>>> {
-        return flow {
-            val list = buildList {
-                add(
-                    DepositModel(
-                        title = "title",
-                        desc = "desc",
-                        depositNumber = "1234",
-                        categoryCode = 1,
-                        amount = 1234.3,
-                        currency = "rial",
-                        ibanNumber = "",
-                        cardNumber = "",
-                        isSelected = false,
-                    )
-                )
+    when {
+        loadState.refresh is LoadState.Loading -> {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
             }
-            emit(com.pmb.core.platform.Result.Success(list))
         }
-    }
-}
 
-class MockTransactionsByCountRepository : TransactionsByCountRepository {
-    override fun getTransactionsByCount(transactionRequest: TransactionRequest): Flow<com.pmb.core.platform.Result<List<TransactionModel>>> {
-        return flow {
-            val list = buildList {
-                add(
-                    TransactionModel(
-                        transactionId = "12112",
-                        amount = 123412342134.1,
-                        date = "14040403"
+        loadState.refresh is LoadState.Error -> {
+            val error = loadState.refresh as LoadState.Error
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    EmptyList(
+                        modifier = Modifier.fillMaxSize(),
+                        iconType = IconType.Painter(painterResource(R.drawable.empty_list)),
+                        message = "خطا در بارگذاری بیشتر - ${error.error.message}"
                     )
-                )
-                add(
-                    TransactionModel(
-                        transactionId = "12112",
-                        amount = 134212.1,
-                        date = "14040403",
-                        title = "انتقال وچه",
-                        type = TransactionType.TRANSFER
-                    )
-                )
-                add(
-                    TransactionModel(
-                        transactionId = "12112",
-                        amount = 134212.1,
-                        date = "14040403",
-                        title = "شارژ حساب",
-                        type = TransactionType.RECEIVE
-                    )
-                )
-                add(
-                    TransactionModel(
-                        transactionId = "12112",
-                        amount = 123412342134.1,
-                        date = "14040403"
-                    )
-                )
-                add(
-                    TransactionModel(
-                        transactionId = "12112",
-                        amount = 134212.1,
-                        date = "14040403",
-                        title = "انتقال وچه",
-                        type = TransactionType.TRANSFER
-                    )
-                )
-                add(
-                    TransactionModel(
-                        transactionId = "12112",
-                        amount = 134212.1,
-                        date = "14040403",
-                        title = "شارژ حساب",
-                        type = TransactionType.RECEIVE
-                    )
-                )
-                add(
-                    TransactionModel(
-                        transactionId = "12112",
-                        amount = 123412342134.1,
-                        date = "14040403"
-                    )
-                )
-                add(
-                    TransactionModel(
-                        transactionId = "12112",
-                        amount = 134212.1,
-                        date = "14040403",
-                        title = "انتقال وچه",
-                        type = TransactionType.TRANSFER
-                    )
-                )
-                add(
-                    TransactionModel(
-                        transactionId = "12112",
-                        amount = 134212.1,
-                        date = "14040403",
-                        title = "شارژ حساب",
-                        type = TransactionType.RECEIVE
-                    )
-                )
-                add(
-                    TransactionModel(
-                        transactionId = "12112",
-                        amount = 134212.1,
-                        date = "14040403",
-                        title = "انتقال وچه",
-                        type = TransactionType.TRANSFER
-                    )
-                )
-                add(
-                    TransactionModel(
-                        transactionId = "12112",
-                        amount = 134212.1,
-                        date = "14040403",
-                        title = "شارژ حساب",
-                        type = TransactionType.RECEIVE
-                    )
-                )
-                add(
-                    TransactionModel(
-                        transactionId = "12112",
-                        amount = 123412342134.1,
-                        date = "14040403"
-                    )
-                )
-                add(
-                    TransactionModel(
-                        transactionId = "12112",
-                        amount = 134212.1,
-                        date = "14040403",
-                        title = "انتقال وچه",
-                        type = TransactionType.TRANSFER
-                    )
-                )
-                add(
-                    TransactionModel(
-                        transactionId = "12112",
-                        amount = 134212.1,
-                        date = "14040403",
-                        title = "شارژ حساب",
-                        type = TransactionType.RECEIVE
-                    )
-                )
-                add(
-                    TransactionModel(
-                        transactionId = "12112",
-                        amount = 123412342134.1,
-                        date = "14040403"
-                    )
-                )
-                add(
-                    TransactionModel(
-                        transactionId = "12112",
-                        amount = 134212.1,
-                        date = "14040403",
-                        title = "انتقال وچه",
-                        type = TransactionType.TRANSFER
-                    )
-                )
-                add(
-                    TransactionModel(
-                        transactionId = "12112",
-                        amount = 134212.1,
-                        date = "14040403",
-                        title = "شارژ حساب",
-                        type = TransactionType.RECEIVE
-                    )
-                )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Button(onClick = { transaction.retry() }) {
+                        Text("تلاش مجدد")
+                    }
+                }
             }
-            emit(com.pmb.core.platform.Result.Success(list))
         }
-    }
-}
 
-class PreviewDepositsViewModel(
-    initialState: DepositsViewState,
-    getDepositsUseCase: GetUserDepositListUseCase,
-    getTransactionsUseCase: TransactionsByCountUsaCase
-) : DepositsViewModel(initialState, getDepositsUseCase, getTransactionsUseCase)
-
-
-@Composable
-@AppPreview
-fun DepositsFullRevealedPreview() {
-    val fakeNavManager = rememberFakeNavigationManager()
-
-    CompositionLocalProvider(
-        LocalNavigationManager provides fakeNavManager
-    ) {
-        HamrahBankTheme {
-            val depositViewmodel = PreviewDepositsViewModel(
-                initialState = DepositsViewState(),
-                getDepositsUseCase = GetUserDepositListUseCase(MockDepositRepository()),
-                getTransactionsUseCase = TransactionsByCountUsaCase(
-                    MockTransactionsByCountRepository()
-                )
-            )
-            DepositsBackDropScreen(
-                depositViewmodel,
-                rememberBackdropScaffoldState(BackdropValue.Revealed)
+        transaction.itemCount == 0 -> {
+            EmptyList(
+                modifier = Modifier.fillMaxWidth(),
+                iconType = IconType.Painter(painterResource(R.drawable.empty_list)),
+                message = "تراکنشی یافت نشد!"
             )
         }
-    }
-}
 
-@Composable
-@AppPreview
-fun DepositsFullConcealedPreview() {
-    val fakeNavManager = rememberFakeNavigationManager()
+        else -> {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                items(transaction.itemCount) { index ->
+                    transaction[index]?.let { item ->
+                        Spacer(modifier = Modifier.height(8.dp))
+                        TransactionRow(
+                            item = item,
+                            isAmountVisible = amountVisible,
+                            onClick = { onItemClick(item) }
+                        )
+                    }
+                }
 
-    CompositionLocalProvider(
-        LocalNavigationManager provides fakeNavManager
-    ) {
-        HamrahBankTheme {
-            val depositViewmodel = PreviewDepositsViewModel(
-                initialState = DepositsViewState(),
-                getDepositsUseCase = GetUserDepositListUseCase(MockDepositRepository()),
-                getTransactionsUseCase = TransactionsByCountUsaCase(
-                    MockTransactionsByCountRepository()
-                )
-            )
+                if (loadState.append is LoadState.Loading) {
+                    item {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator()
+                        }
+                    }
+                }
 
-            DepositsBackDropScreen(
-                depositViewmodel,
-                rememberBackdropScaffoldState(BackdropValue.Concealed)
-            )
+                if (loadState.append is LoadState.Error) {
+                    val error = loadState.append as LoadState.Error
+                    item {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            EmptyList(
+                                modifier = Modifier.fillMaxSize(),
+                                iconType = IconType.Painter(painterResource(R.drawable.empty_list)),
+                                message = "خطا در بارگذاری بیشتر - ${error.error.message}"
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Button(onClick = { transaction.retry() }) {
+                                Text("تلاش مجدد")
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

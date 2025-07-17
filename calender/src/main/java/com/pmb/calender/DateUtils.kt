@@ -1,5 +1,6 @@
 package com.pmb.calender
 
+import com.pmb.calender.utils.Calendar
 import com.pmb.calender.utils.persianCalendarMonthsInPersian
 import io.github.persiancalendar.calendar.PersianDate
 
@@ -11,6 +12,8 @@ fun daysBetween(from: PersianDate, to: PersianDate): Int = Jdn(to) - Jdn(from)
 fun daysFromTodayTo(date: PersianDate): Int = Jdn(date) - Jdn(today())
 
 fun addDays(date: PersianDate, days: Int): PersianDate = (Jdn(date) + days).toPersianDate()
+fun PersianDate.addDay(day: Int) = (Jdn(this) + day).toPersianDate()
+
 fun subtractDays(date: PersianDate, days: Int): PersianDate =
     (Jdn(date) - days).toPersianDate()
 
@@ -37,3 +40,42 @@ fun generateShiftedMonthList(
     }
     return list
 }
+
+fun formatPersianDateForDisplay(date: String, time: String): String {
+
+    val year = date.substring(0, 4).toInt()
+    val month = date.substring(4, 6).toInt()
+    val day = date.substring(6, 8).toInt()
+
+    val transactionDate = Jdn(Calendar.SHAMSI, year, month, day).toPersianDate()
+
+    val now = today()
+    val yesterday = today().apply { addDay(-1) }
+
+    val hour = time.substring(0, 2).toInt()
+    val minute = time.substring(2, 4).toInt()
+    val second = time.substring(4, 6).toInt()
+
+    val timeStr = "ساعت $hour:$minute:$second"
+
+    return when {
+        transactionDate.year == now.year && transactionDate.month == now.month && transactionDate.dayOfMonth == now.dayOfMonth -> {
+            "امروز $timeStr"
+        }
+
+        transactionDate.year == yesterday.year && transactionDate.month == yesterday.month && transactionDate.dayOfMonth == yesterday.dayOfMonth -> {
+            "دیروز $timeStr"
+        }
+
+        transactionDate.year == now.year -> {
+            val monthName = transactionDate.monthName()
+            "${transactionDate.dayOfMonth} $monthName $timeStr"
+        }
+
+        else -> {
+            val monthName = transactionDate.monthName()
+            "${transactionDate.year} ${transactionDate.dayOfMonth} $monthName $timeStr"
+        }
+    }
+}
+

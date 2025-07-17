@@ -14,15 +14,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Button
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
-import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,10 +29,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.compose.rememberNavController
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -46,35 +41,21 @@ import com.pmb.account.presentation.component.TransactionRow
 import com.pmb.account.presentation.deposits.viewmodel.DepositsViewActions
 import com.pmb.account.presentation.deposits.viewmodel.DepositsViewEvents
 import com.pmb.account.presentation.deposits.viewmodel.DepositsViewModel
-import com.pmb.account.presentation.deposits.viewmodel.DepositsViewState
 import com.pmb.account.utils.mapToDepositMenu
 import com.pmb.account.utils.mapToDepositModel
 import com.pmb.ballon.component.DepositBottomSheet
 import com.pmb.ballon.component.MenuBottomSheet
 import com.pmb.ballon.component.MenuItem
 import com.pmb.ballon.component.MenuItemDefaults
-import com.pmb.ballon.component.annotation.AppPreview
 import com.pmb.ballon.component.base.AppButtonIcon
 import com.pmb.ballon.component.base.RoundedTopColumn
 import com.pmb.ballon.models.IconStyle
 import com.pmb.ballon.models.MenuSheetModel
 import com.pmb.ballon.models.TextStyle
 import com.pmb.ballon.ui.theme.AppTheme
-import com.pmb.ballon.ui.theme.HamrahBankTheme
-import com.pmb.core.platform.Result
-import com.pmb.domain.model.DepositModel
 import com.pmb.domain.model.TransactionModel
-import com.pmb.domain.model.TransactionRequest
-import com.pmb.domain.model.TransactionType
-import com.pmb.domain.repository.deposit.DepositsRepository
-import com.pmb.domain.repository.transactions.TransactionsByCountRepository
-import com.pmb.domain.usecae.deposit.GetUserDepositListUseCase
-import com.pmb.domain.usecae.transactions.TransactionsByCountUsaCase
 import com.pmb.navigation.manager.LocalNavigationManager
-import com.pmb.navigation.manager.NavigationManager
 import com.pmb.navigation.moduleScreen.AccountScreens
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 
 
 @SuppressLint("RememberReturnType", "StateFlowValueCalledInComposition")
@@ -248,7 +229,7 @@ fun DepositsScreen(viewModel: DepositsViewModel) {
             Spacer(modifier = Modifier.height(24.dp))
 
             TransactionLazyList(
-                viewState.transactionFlow.value.collectAsLazyPagingItems(),
+                viewModel.transactionFlow.collectAsLazyPagingItems(),
                 viewState.isAmountVisible,
             ) { transaction ->
                 viewModel.handle(
@@ -307,244 +288,90 @@ fun DepositsScreen(viewModel: DepositsViewModel) {
 fun TransactionLazyList(
     transaction: LazyPagingItems<TransactionModel>,
     amountVisible: Boolean,
-    function: (transaction: TransactionModel) -> Unit
+    onItemClick: (TransactionModel) -> Unit
 ) {
-    LazyColumn {
-        items(transaction.itemCount) { item ->
-            Row(
-                modifier = Modifier.padding(2.dp),
+    val loadState = transaction.loadState
+
+    when {
+        loadState.refresh is LoadState.Loading -> {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
             ) {
-                transaction[item]?.let {
-                    TransactionRow(
-                        it,
-                        amountVisible,
-                        { transaction ->
-                            function(transaction)
-                        }
-                    )
+                CircularProgressIndicator()
+            }
+        }
+
+        loadState.refresh is LoadState.Error -> {
+            val error = loadState.refresh as LoadState.Error
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text("خطا در دریافت اطلاعات: ${error.error.message}")
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Button(onClick = { transaction.retry() }) {
+                        Text("تلاش مجدد")
+                    }
                 }
             }
         }
 
-        when (transaction.loadState.append) {
-            is LoadState.Error -> {
-                item {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize(),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center,
-                    ) {
-                        AppButtonIcon(
-                            icon = painterResource(com.pmb.ballon.R.drawable.ic_help),
-                            onClick = {
-                                transaction.retry()
-                            }
-                        )
-                    }
-                }
+        transaction.itemCount == 0 -> {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text("تراکنشی یافت نشد.")
             }
-
-            LoadState.Loading -> {
-                item {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize(),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                    ) {
-                        CircularProgressIndicator(color = Color.Red)
-                    }
-                }
-            }
-
-            is LoadState.NotLoading -> {}
         }
-        when (transaction.loadState.refresh) {
-            is LoadState.Error -> {
-                item {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize(),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center,
-                    ) {
-                        Text(
-                            text = "We couldn't fetch popular movies. Please try again.",
-                            textAlign = TextAlign.Center
+
+        else -> {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                items(transaction.itemCount) { index ->
+                    transaction[index]?.let { item ->
+                        TransactionRow(
+                            item = item,
+                            isAmountVisible = amountVisible,
+                            onClick = { onItemClick(item) }
                         )
-                        TextButton(
-                            onClick = { transaction.retry() }
-                        ) {
-                            Text(
-                                text = "Retry again",
-                            )
-                        }
                     }
                 }
-            }
 
-            is LoadState.Loading -> {
-                item {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize(),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center,
-                    ) {
-                        Text(
+                if (loadState.append is LoadState.Loading) {
+                    item {
+                        Box(
                             modifier = Modifier
-                                .padding(8.dp),
-                            text = "Loading Popular Movies"
-                        )
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator()
+                        }
+                    }
+                }
 
-                        CircularProgressIndicator(color = Color.Red)
+                if (loadState.append is LoadState.Error) {
+                    val error = loadState.append as LoadState.Error
+                    item {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text("خطا در بارگذاری بیشتر: ${error.error.message}")
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Button(onClick = { transaction.retry() }) {
+                                Text("تلاش مجدد")
+                            }
+                        }
                     }
                 }
             }
-
-            else -> {}
-        }
-
-    }
-
-
-}
-
-@Composable
-fun rememberFakeNavigationManager(): NavigationManager {
-    val navController = rememberNavController()
-    return remember(navController) {
-        object : NavigationManager(navController) {
-
-        }
-    }
-}
-
-class MockDepositRepository : DepositsRepository {
-    override fun getDepositList(): Flow<Result<List<DepositModel>>> {
-        return flow {
-            val list = buildList {
-                add(
-                    DepositModel(
-                        title = "title",
-                        desc = "desc",
-                        depositNumber = "1234",
-                        categoryCode = 1,
-                        amount = 1234.3,
-                        currency = "rial",
-                        ibanNumber = "",
-                        cardNumber = "",
-                        isSelected = false,
-                    )
-                )
-            }
-            emit(Result.Success(list))
-        }
-    }
-}
-
-class MockDepositEmptyRepository : DepositsRepository {
-    override fun getDepositList(): Flow<Result<List<DepositModel>>> {
-        return flow {
-            emit(Result.Loading)
-        }
-    }
-}
-
-class MockTransactionsByCountRepository : TransactionsByCountRepository {
-    override fun getTransactionsByCount(transactionRequest: TransactionRequest): Flow<Result<List<TransactionModel>>> {
-        return flow {
-            val list = buildList {
-                add(
-                    TransactionModel(
-                        transactionId = "12112",
-                        amount = 123412342134.1,
-                        date = "14040403"
-                    )
-                )
-                add(
-                    TransactionModel(
-                        transactionId = "12112",
-                        amount = 134212.1,
-                        date = "14040403",
-                        title = "انتقال وچه",
-                        type = TransactionType.TRANSFER
-                    )
-                )
-                add(
-                    TransactionModel(
-                        transactionId = "12112",
-                        amount = 134212.1,
-                        date = "14040403",
-                        title = "شارژ حساب",
-                        type = TransactionType.RECEIVE
-                    )
-                )
-            }
-            emit(Result.Success(list))
-        }
-    }
-}
-
-class MockTransactionsByCountEmptyRepository : TransactionsByCountRepository {
-    override fun getTransactionsByCount(transactionRequest: TransactionRequest): Flow<Result<List<TransactionModel>>> {
-        return flow {
-
-            emit(Result.Loading)
-        }
-    }
-}
-
-class PreviewDepositsViewModel(
-    initialState: DepositsViewState,
-    getDepositsUseCase: GetUserDepositListUseCase,
-    getTransactionsUseCase: TransactionsByCountUsaCase
-) : DepositsViewModel(initialState, getDepositsUseCase, getTransactionsUseCase)
-
-@Composable
-@AppPreview
-@Preview(name = "Phone mini", widthDp = 360, heightDp = 540)
-@Preview(name = "Tablet", widthDp = 800, heightDp = 1280)
-fun DepositsEmptyPreview() {
-    val fakeNavManager = rememberFakeNavigationManager()
-
-    CompositionLocalProvider(
-        LocalNavigationManager provides fakeNavManager
-    ) {
-        HamrahBankTheme {
-            val depositViewmodel = PreviewDepositsViewModel(
-                initialState = DepositsViewState(),
-                getDepositsUseCase = GetUserDepositListUseCase(
-                    MockDepositEmptyRepository()
-                ),
-                getTransactionsUseCase = TransactionsByCountUsaCase(
-                    MockTransactionsByCountEmptyRepository()
-                )
-            )
-            DepositsScreen(depositViewmodel)
-        }
-    }
-}
-
-@Composable
-@AppPreview
-@Preview(name = "Phone mini", widthDp = 360, heightDp = 540)
-@Preview(name = "Tablet", widthDp = 800, heightDp = 1280)
-fun DepositsFullPreview() {
-    val fakeNavManager = rememberFakeNavigationManager()
-
-    CompositionLocalProvider(
-        LocalNavigationManager provides fakeNavManager
-    ) {
-        HamrahBankTheme {
-            val depositViewmodel = PreviewDepositsViewModel(
-                initialState = DepositsViewState(),
-                getDepositsUseCase = GetUserDepositListUseCase(MockDepositRepository()),
-                getTransactionsUseCase = TransactionsByCountUsaCase(
-                    MockTransactionsByCountRepository()
-                )
-            )
-            DepositsScreen(depositViewmodel)
         }
     }
 }

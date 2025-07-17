@@ -7,7 +7,6 @@ import com.pmb.core.platform.BaseViewAction
 import com.pmb.core.platform.BaseViewEvent
 import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.platform.BaseViewState
-import com.pmb.core.utils.Convert
 import com.pmb.core.utils.toCurrency
 import com.pmb.domain.model.TransactionModel
 import com.pmb.receipt.model.RowData
@@ -72,7 +71,7 @@ class TransactionReceiptViewModel @Inject constructor(
                 ),
                 RowData.TwoText(
                     title = "زمان",
-                    subtitle = Convert.formatPersianDate(date),
+                    subtitle = date,
                 ),
                 RowData.TwoText(
                     title = "روش پرداخت",

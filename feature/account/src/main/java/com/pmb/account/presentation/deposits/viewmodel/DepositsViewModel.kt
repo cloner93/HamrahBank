@@ -1,6 +1,8 @@
 package com.pmb.account.presentation.deposits.viewmodel
 
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.pmb.account.presentation.deposits.viewmodel.DepositsViewEvents.NavigateToTransactionDetails
 import com.pmb.account.presentation.deposits.viewmodel.DepositsViewEvents.ShowToast
 import com.pmb.core.platform.BaseViewModel
@@ -10,7 +12,12 @@ import com.pmb.domain.model.TransactionModel
 import com.pmb.domain.model.TransactionRequest
 import com.pmb.domain.usecae.deposit.GetUserDepositListUseCase
 import com.pmb.domain.usecae.transactions.TransactionsByCountUsaCase
+import com.pmb.domain.usecae.transactions.TransactionsByPagingUsaCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import java.net.URLEncoder
@@ -22,8 +29,13 @@ open class DepositsViewModel @Inject constructor(
     initialState: DepositsViewState,
     private val getDepositsUseCase: GetUserDepositListUseCase,
     private val getTransactionsUseCase: TransactionsByCountUsaCase,
+    private val getTransactionsPaging: TransactionsByPagingUsaCase,
 
     ) : BaseViewModel<DepositsViewActions, DepositsViewState, DepositsViewEvents>(initialState) {
+
+    private val _transactionFlow = MutableStateFlow<
+            PagingData<TransactionModel>>(PagingData.empty())
+    val transactionFlow: StateFlow<PagingData<TransactionModel>> = _transactionFlow
 
     init {
         loadDeposits()
@@ -136,46 +148,61 @@ open class DepositsViewModel @Inject constructor(
     }
 
     private fun loadTransactions(deposit: DepositModel) {
-        viewModelScope.launch {
-            getTransactionsUseCase.invoke(
-                TransactionRequest(
-                    extAccNo = deposit.depositNumber.toLong(),
-                    count = 10,
-                    categoryCode = deposit.categoryCode
-                )
-            ).collect { result ->
-                when (result) {
-                    is Result.Error -> {
-                        setState {
-                            it.copy(
-                                errorMessage = result.message,
-                                isLoading = false,
-                                transactions = listOf()
-                            )
-                        }
-                        postEvent(DepositsViewEvents.ShowError(result.message))
 
-                    }
+        getTransactionsPaging(
+            TransactionRequest(
+                extAccNo = deposit.depositNumber.toLong(),
+                count = 10,
+                categoryCode = deposit.categoryCode
+            )
+        ).cachedIn(viewModelScope)
+            .onEach { pagingData ->
+                _transactionFlow.value = pagingData
+            }.launchIn(viewModelScope)
 
-                    Result.Loading -> {
-                        setState { it.copy(isLoading = true) }
-                    }
-
-                    is Result.Success<*> -> {
-                        val listOfTransactions: List<TransactionModel> =
-                            result.data as List<TransactionModel>
-
-                        setState {
-                            it.copy(
-                                transactions = listOfTransactions,
-                                isLoading = false
-                            )
-                        }
-                    }
-                }
-            }
-        }
     }
+
+    /* private fun loadTransactions(deposit: DepositModel) {
+         viewModelScope.launch {
+             getTransactionsUseCase.invoke(
+                 TransactionRequest(
+                     extAccNo = deposit.depositNumber.toLong(),
+                     count = 10,
+                     categoryCode = deposit.categoryCode
+                 )
+             ).collect { result ->
+                 when (result) {
+                     is Result.Error -> {
+                         setState {
+                             it.copy(
+                                 errorMessage = result.message,
+                                 isLoading = false,
+                                 transactions = listOf()
+                             )
+                         }
+                         postEvent(DepositsViewEvents.ShowError(result.message))
+
+                     }
+
+                     Result.Loading -> {
+                         setState { it.copy(isLoading = true) }
+                     }
+
+                     is Result.Success<*> -> {
+                         val listOfTransactions: List<TransactionModel> =
+                             result.data as List<TransactionModel>
+
+                         setState {
+                             it.copy(
+                                 transactions = listOfTransactions,
+                                 isLoading = false
+                             )
+                         }
+                     }
+                 }
+             }
+         }
+     }*/
 
     fun selectDeposit(deposit: DepositModel) {
         val selectedDeposit =

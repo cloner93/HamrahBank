@@ -18,7 +18,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.pmb.account.R
 import com.pmb.account.presentation.cards.CardsScreen
-import com.pmb.account.presentation.deposits.DepositsScreen
 import com.pmb.account.presentation.deposits.viewmodel.DepositsViewModel
 import com.pmb.ballon.component.DynamicTabSelector
 
@@ -27,18 +26,14 @@ fun AccountScreen() {
     val cards = stringResource(R.string.cards)
     val accounts = stringResource(R.string.accounts)
     val selectedOption = remember { mutableIntStateOf(0) }
-    val optionTexts = listOf(accounts, accounts, cards)
+    val optionTexts = listOf(accounts, cards)
     when (selectedOption.intValue) {
-        0 -> DepositsScreen(
-            viewModel = hiltViewModel<DepositsViewModel>()
-        )
-
-        1 -> DepositsBackDropScreen(
+        0 -> DepositsBackDropScreen(
             viewModel = hiltViewModel<DepositsViewModel>(),
             rememberBackdropScaffoldState(BackdropValue.Revealed)
         )
 
-        2 -> CardsScreen()
+        1 -> CardsScreen()
     }
 
     Row(
