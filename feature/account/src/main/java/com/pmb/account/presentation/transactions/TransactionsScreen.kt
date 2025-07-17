@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -85,7 +86,6 @@ import com.pmb.ballon.ui.theme.HamrahBankTheme
 import com.pmb.calender.generateShiftedMonthList
 import com.pmb.calender.monthName
 import com.pmb.core.utils.CollectAsEffect
-import com.pmb.core.utils.Convert
 import com.pmb.core.utils.toCurrency
 import com.pmb.domain.model.TransactionModel
 import com.pmb.domain.model.TransactionType
@@ -224,6 +224,7 @@ fun TransactionsScreen() {
             0 -> {
                 if (viewState.allTransactions.isEmpty()) {
                     EmptyList(
+                        modifier = Modifier.fillMaxSize(),
                         iconType = IconType.Painter(painterResource(R.drawable.empty_list)),
                         message = "تراکنشی یافت نشد!"
                     )
@@ -695,7 +696,7 @@ fun TransactionRow(item: TransactionModel, onClick: () -> Unit = {}) {
                 )
             }
             CaptionText(
-                text = Convert.formatPersianDate(item.date),
+                text = item.date,
                 color = AppTheme.colorScheme.onBackgroundNeutralSubdued
             )
         }
@@ -706,22 +707,7 @@ fun TransactionRow(item: TransactionModel, onClick: () -> Unit = {}) {
 @Composable
 private fun AllTransactionsSectionFiledPreview() {
     val transactionList = listOf<TransactionModel>(
-        TransactionModel(
-            "0",
-            TransactionType.RECEIVE,
-            "واریز حقوق",
-            1_000_000.0,
-            "ریال", "14040426"
-        ),
-        TransactionModel(
-            "1",
-            TransactionType.TRANSFER,
-            "انتقال",
-            1_000_000.0,
-            "ریال", "14040426"
-        ),
-
-        )
+    )
     val transactionFilter = TransactionFilter(
         transactionType = com.pmb.account.presentation.transactions.filterScreen.TransactionType.RECEIVE,
         fromPrice = "1654",

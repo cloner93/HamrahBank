@@ -85,6 +85,7 @@ fun TransactionSearchScreen() {
     ) {
         if (viewState.transactionList.isEmpty()) {
             EmptyList(
+                modifier = Modifier.fillMaxSize(),
                 iconType = IconType.Painter(painterResource(R.drawable.empty_list)),
                 message = "تراکنشی یافت نشد!"
             )
