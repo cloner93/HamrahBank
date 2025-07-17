@@ -18,8 +18,9 @@ enum class TransactionType {
 data class TransactionModel(
     val transactionId: String,
     val type: TransactionType = TransactionType.UNKNOWN,
-    val title: String = "نامشخص",
+    val title: String,
     val amount: Double,
     val currency: String = "ریال",
+    val incCode: String? = null,
     val date: String
 )

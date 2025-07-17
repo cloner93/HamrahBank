@@ -22,7 +22,6 @@ import com.pmb.ballon.models.ImageStyle
 import com.pmb.ballon.models.Size
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.ballon.ui.theme.HamrahBankTheme
-import com.pmb.core.utils.Convert
 import com.pmb.core.utils.toCurrency
 import com.pmb.domain.model.TransactionModel
 import com.pmb.domain.model.TransactionType
@@ -82,7 +81,7 @@ fun TransactionRow(
                 }
             }
             CaptionText(
-                text = Convert.formatPersianDate(item.date),
+                text = item.date,
                 color = AppTheme.colorScheme.onBackgroundNeutralSubdued
             )
         }
@@ -93,14 +92,7 @@ fun TransactionRow(
 @Composable
 private fun TransactionRowPreview() {
     HamrahBankTheme {
-        val d = TransactionModel(
-            "0",
-            TransactionType.RECEIVE,
-            "واریز حقوق",
-            1_000_000.0,
-            "ریال",
-            "امروز ساعت ۱۰:۳۰"
-        )
-        TransactionRow(item = d, isAmountVisible = true) {}
+
+//        TransactionRow(item = d, isAmountVisible = true) {}
     }
 }
