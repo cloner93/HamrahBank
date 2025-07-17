@@ -31,6 +31,8 @@ dependencies {
     implementation(project(":domain"))
     implementation(project(":core"))
     implementation(project(":model"))
+    implementation(projects.calender)
+    implementation(libs.androidx.paging.common.android)
 
     api(libs.android.hilt)
     kapt(libs.android.hilt.compiler)
