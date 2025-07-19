@@ -11,7 +11,6 @@ import com.pmb.domain.model.DepositModel
 import com.pmb.domain.model.TransactionModel
 import com.pmb.domain.model.TransactionRequest
 import com.pmb.domain.usecae.deposit.GetUserDepositListUseCase
-import com.pmb.domain.usecae.transactions.TransactionsByCountUsaCase
 import com.pmb.domain.usecae.transactions.TransactionsByPagingUsaCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,11 +27,11 @@ import javax.inject.Inject
 open class DepositsViewModel @Inject constructor(
     initialState: DepositsViewState,
     private val getDepositsUseCase: GetUserDepositListUseCase,
-    private val getTransactionsUseCase: TransactionsByCountUsaCase,
     private val getTransactionsPaging: TransactionsByPagingUsaCase,
 
     ) : BaseViewModel<DepositsViewActions, DepositsViewState, DepositsViewEvents>(initialState) {
 
+    // we cont handle paging flow inside of ViewState.
     private val _transactionFlow = MutableStateFlow<
             PagingData<TransactionModel>>(PagingData.empty())
     val transactionFlow: StateFlow<PagingData<TransactionModel>> = _transactionFlow

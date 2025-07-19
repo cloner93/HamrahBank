@@ -1,59 +1,42 @@
 package com.pmb.account.presentation.transactions
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowForward
-import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.Tune
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.pmb.account.R
 import com.pmb.account.presentation.component.CustomAppTopBar
+import com.pmb.account.presentation.component.TransactionRow
 import com.pmb.account.presentation.transactions.filterScreen.DateType
 import com.pmb.account.presentation.transactions.filterScreen.viewmodel.entity.TransactionFilter
 import com.pmb.account.presentation.transactions.viewmodel.TransactionsViewActions
@@ -67,28 +50,16 @@ import com.pmb.ballon.component.DynamicTabSelector
 import com.pmb.ballon.component.EmptyList
 import com.pmb.ballon.component.annotation.AppPreview
 import com.pmb.ballon.component.base.AppContent
-import com.pmb.ballon.component.base.AppIcon
-import com.pmb.ballon.component.base.AppImage
-import com.pmb.ballon.component.base.BodySmallText
 import com.pmb.ballon.component.base.ButtonMediumText
-import com.pmb.ballon.component.base.CaptionText
 import com.pmb.ballon.component.base.ChipWithIcon
 import com.pmb.ballon.component.base.ClickableIcon
-import com.pmb.ballon.component.base.Headline6Text
 import com.pmb.ballon.component.base.IconType
 import com.pmb.ballon.models.IconStyle
-import com.pmb.ballon.models.ImageStyle
-import com.pmb.ballon.models.Size
-import com.pmb.ballon.models.TextStyle
 import com.pmb.ballon.ui.theme.AppTheme
-import com.pmb.ballon.ui.theme.AppTypography
 import com.pmb.ballon.ui.theme.HamrahBankTheme
-import com.pmb.calender.generateShiftedMonthList
-import com.pmb.calender.monthName
 import com.pmb.core.utils.CollectAsEffect
 import com.pmb.core.utils.toCurrency
 import com.pmb.domain.model.TransactionModel
-import com.pmb.domain.model.TransactionType
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.moduleScreen.AccountScreens
 
@@ -102,7 +73,6 @@ TODO checkList TransactionsScreen.kt
  * - apply paddings
  * - pass filter to filter screen if TransactionFilter nonNull
  */
-
 
 @Composable
 fun TransactionsScreen() {
@@ -274,61 +244,6 @@ fun TransactionsScreen() {
 }
 
 @Composable
-fun ReceiveTransactionsSection(
-    totalReceiveTransaction: Double, onTransactionClick: () -> Unit = {}
-) {
-    val tempList = listOf<String>(
-        "واریز به کارت", "واریر به سپرده", "حواله", "سود ماهیانه"
-    )
-
-    RowOfMonth(modifier = Modifier.padding(bottom = 32.dp))
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp),
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = AppTheme.colorScheme.background1Neutral),
-        border = BorderStroke(1.dp, Color(0xFFB8B8BC)),
-        elevation = CardDefaults.cardElevation(0.dp)
-    ) {
-
-        Column(
-            modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            BodySmallText(
-                modifier = Modifier.padding(vertical = 8.dp),
-                text = "مجموع دریافت ها",
-                color = AppTheme.colorScheme.onBackgroundNeutralSubdued
-            )
-            Row(
-                modifier = Modifier.padding(bottom = 16.dp)
-            ) {
-                Headline6Text(
-                    text = totalReceiveTransaction.toCurrency(),
-                    color = AppTheme.colorScheme.onBackgroundNeutralDefault
-                )
-
-                BodySmallText(
-                    text = "ریال", color = AppTheme.colorScheme.onBackgroundNeutralSubdued
-                )
-            }
-
-            LazyColumn(
-                contentPadding = PaddingValues(12.dp),
-                verticalArrangement = Arrangement.spacedBy(24.dp)
-            ) {
-                items(tempList.size) { item ->
-                    SingleRow(
-                        title = tempList[item], amount = 12300.0, onClick = onTransactionClick
-                    )
-                }
-            }
-
-        }
-    }
-}
-
-@Composable
 private fun AllTransactionsSection(
     transactionList: List<TransactionModel> = emptyList(),
     transactionFilter: TransactionFilter? = null,
@@ -353,95 +268,6 @@ private fun AllTransactionsSection(
                 onTransactionItemClick(transaction)
             }
         }
-    }
-}
-
-@Composable
-private fun SendTransactionsSection(
-    totalSentTransaction: Double, onTransactionClick: () -> Unit = {}
-) {
-    val tempList = listOf<String>(
-        "خرید اینترنتی",
-        "خرید از فروشگاه",
-        "کارت به کارت",
-        "حواله",
-        "پرداخت قبض",
-    )
-    RowOfMonth(modifier = Modifier.padding(bottom = 32.dp))
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp),
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = AppTheme.colorScheme.background1Neutral),
-        border = BorderStroke(1.dp, Color(0xFFB8B8BC)),
-        elevation = CardDefaults.cardElevation(0.dp)
-    ) {
-
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            BodySmallText(
-                modifier = Modifier.padding(vertical = 8.dp),
-                text = "مجموع برداشت ها",
-                color = AppTheme.colorScheme.onBackgroundNeutralSubdued
-            )
-            Row(
-                modifier = Modifier.padding(bottom = 16.dp)
-            ) {
-                Headline6Text(
-                    text = totalSentTransaction.toCurrency(),
-                    color = AppTheme.colorScheme.onBackgroundNeutralDefault
-                )
-
-                BodySmallText(
-                    text = "ریال", color = AppTheme.colorScheme.onBackgroundNeutralSubdued
-                )
-            }
-
-            LazyColumn(
-                contentPadding = PaddingValues(12.dp),
-                verticalArrangement = Arrangement.spacedBy(24.dp)
-            ) {
-                items(tempList.size) { item ->
-                    SingleRow(
-                        title = tempList[item], amount = 12300.0, onClick = onTransactionClick
-                    )
-                }
-            }
-
-        }
-    }
-}
-
-@Composable
-private fun SingleRow(
-    title: String,
-    amount: Double,
-    onClick: () -> Unit
-) {
-    Row(
-        modifier = Modifier.clickable { onClick },
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Headline6Text(
-            text = title,
-            color = AppTheme.colorScheme.foregroundNeutralDefault
-        )
-        Spacer(modifier = Modifier.weight(1f))
-        CaptionText(
-            text = amount.toCurrency(),
-            color = AppTheme.colorScheme.onBackgroundNeutralSubdued
-        )
-        CaptionText(
-            text = "ریال",
-            color = AppTheme.colorScheme.onBackgroundNeutralSubdued
-        )
-        AppIcon(
-            icon = Icons.Default.ChevronLeft,
-            style = IconStyle(tint = AppTheme.colorScheme.onBackgroundNeutralSubdued)
-        )
     }
 }
 
@@ -561,148 +387,6 @@ private fun StatementAndFilters(
 }
 
 
-@Composable
-fun RowOfMonth(modifier: Modifier = Modifier) {
-    val list = generateShiftedMonthList()
-
-    var selectedMonth by remember { mutableIntStateOf(list[10].first.month) }
-    val listState = rememberLazyListState()
-
-    LaunchedEffect(selectedMonth) {
-        val index = list.indexOfFirst { it.first.month == selectedMonth }
-        if (index != -1) {
-            listState.animateScrollToItem(index, scrollOffset = (list.size / 2) * -70)
-        }
-    }
-    LazyRow(
-        modifier = modifier.fillMaxWidth(),
-        state = listState,
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
-        contentPadding = PaddingValues(horizontal = 16.dp)
-    ) {
-        itemsIndexed(list) { _, month ->
-            val isSelected = month.first.month == selectedMonth
-            MonthItem(
-                month = month.first.monthName(),
-                isSelected = isSelected,
-                onClick = { selectedMonth = month.first.month },
-                year = month.first.year.toString(),
-                isEnabled = list.last() != month
-            )
-        }
-    }
-}
-
-@Composable
-fun MonthItem(
-    modifier: Modifier = Modifier,
-    year: String,
-    month: String,
-    isSelected: Boolean,
-    isEnabled: Boolean,
-    onClick: () -> Unit
-) {
-    Box(
-        modifier = modifier
-            .clip(RoundedCornerShape(8.dp))
-            .background(
-                if (isSelected) AppTheme.colorScheme.foregroundPrimaryDefault
-                else AppTheme.colorScheme.backgroundTintNeutralDefault
-            )
-            .clickable { if (isEnabled) onClick() }
-            .padding(
-                horizontal = 16.dp,
-                vertical = 8.dp
-            )) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            AppText(
-                title = year,
-                style = TextStyle(
-                    color = if (isSelected) AppTheme.colorScheme.onForegroundNeutralDefault
-                    else if (!isEnabled) AppTheme.colorScheme.foregroundNeutralRest
-                    else AppTheme.colorScheme.onBackgroundNeutralSubdued,
-                    typography = AppTheme.typography.caption,
-                ),
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            AppText(
-                title = month,
-                style = TextStyle(
-                    color = if (isSelected) AppTheme.colorScheme.onForegroundNeutralDefault
-                    else if (!isEnabled) AppTheme.colorScheme.foregroundNeutralRest
-                    else AppTheme.colorScheme.onBackgroundNeutralDefault,
-                    typography = if (isSelected) AppTheme.typography.buttonLarge
-                    else AppTheme.typography.buttonSmall,
-                ),
-            )
-
-        }
-    }
-}
-
-@Composable
-fun AppText(modifier: Modifier = Modifier, title: String, style: TextStyle? = null) {
-    val textColor = style?.color ?: Color.Unspecified
-    val typography = style?.typography ?: AppTypography.bodyLarge
-    Text(
-        modifier = modifier,
-        text = title,
-        color = textColor,
-        style = typography,
-        textAlign = style?.textAlign
-    )
-}
-
-@Composable
-fun TransactionRow(item: TransactionModel, onClick: () -> Unit = {}) {
-    Row(
-        modifier = Modifier
-            .height(48.dp)
-            .clickable {
-                onClick()
-            }, verticalAlignment = Alignment.CenterVertically
-    ) {
-        AppImage(
-            image = when (item.type) {
-                TransactionType.DEPOSIT -> R.drawable.ic_transfer
-                TransactionType.WITHDRAWAL -> R.drawable.ic_transfer
-                TransactionType.TRANSFER -> R.drawable.ic_transfer
-                TransactionType.RECEIVE -> R.drawable.ic_receive
-                TransactionType.FEE -> R.drawable.ic_transfer
-                TransactionType.UNKNOWN -> R.drawable.ic_unknown
-            }, style = ImageStyle(size = Size.FIX(42.dp))
-        )
-        Spacer(modifier = Modifier.width(13.dp))
-        Column(
-            modifier = Modifier.fillMaxHeight(), verticalArrangement = Arrangement.SpaceBetween
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Headline6Text(
-                    text = item.title, color = AppTheme.colorScheme.foregroundNeutralDefault
-                )
-                Spacer(modifier = Modifier.weight(1f))//Color/On Background/Neutral/Subdued
-                CaptionText(
-                    text = item.amount.toCurrency(),
-                    color = AppTheme.colorScheme.onBackgroundNeutralSubdued
-                )
-                CaptionText(
-                    text = item.currency, color = AppTheme.colorScheme.onBackgroundNeutralSubdued
-                )
-                AppIcon(
-                    icon = Icons.Default.ChevronLeft,
-                    style = IconStyle(tint = AppTheme.colorScheme.foregroundNeutralRest)
-                )
-            }
-            CaptionText(
-                text = item.date,
-                color = AppTheme.colorScheme.onBackgroundNeutralSubdued
-            )
-        }
-    }
-}
-
 @AppPreview
 @Composable
 private fun AllTransactionsSectionFiledPreview() {
@@ -716,15 +400,14 @@ private fun AllTransactionsSectionFiledPreview() {
         fromDate = null,
         toDate = null
     )
-
-    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
-        HamrahBankTheme {
-            Column {
-                AllTransactionsSection(
-                    transactionList = transactionList,
-                    transactionFilter = transactionFilter
-                )
-            }
+    HamrahBankTheme {
+        Column(
+            modifier = Modifier.background(color = AppTheme.colorScheme.background1Neutral)
+        ) {
+            AllTransactionsSection(
+                transactionList = transactionList,
+                transactionFilter = transactionFilter
+            )
         }
     }
 }
@@ -732,40 +415,14 @@ private fun AllTransactionsSectionFiledPreview() {
 @AppPreview
 @Composable
 private fun AllTransactionsSectionEmptyPreview() {
-
-    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
-        HamrahBankTheme {
-            Column {
-                AllTransactionsSection(
-                    transactionList = listOf<TransactionModel>(),
-                    transactionFilter = null
-                )
-            }
-        }
-    }
-}
-
-
-@AppPreview
-@Composable
-private fun SendTransactionsSectionPreview() {
-    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
-        HamrahBankTheme {
-            Column {
-                SendTransactionsSection(totalSentTransaction = 12000000.0)
-            }
-        }
-    }
-}
-
-@AppPreview
-@Composable
-private fun ReceiveTransactionsSectionPreview() {
-    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
-        HamrahBankTheme {
-            Column {
-                ReceiveTransactionsSection(totalReceiveTransaction = 1000000.0)
-            }
+    HamrahBankTheme {
+        Column(
+            modifier = Modifier.background(color = AppTheme.colorScheme.background1Neutral)
+        ) {
+            AllTransactionsSection(
+                transactionList = listOf<TransactionModel>(),
+                transactionFilter = null
+            )
         }
     }
 }

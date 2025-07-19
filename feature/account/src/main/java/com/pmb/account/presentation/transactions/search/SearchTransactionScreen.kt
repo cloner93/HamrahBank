@@ -19,7 +19,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.pmb.account.R
-import com.pmb.account.presentation.transactions.TransactionRow
+import com.pmb.account.presentation.component.TransactionRow
 import com.pmb.account.presentation.transactions.search.viewmodel.TransactionSearchViewActions
 import com.pmb.account.presentation.transactions.search.viewmodel.TransactionSearchViewEvents
 import com.pmb.account.presentation.transactions.search.viewmodel.TransactionSearchViewModel
