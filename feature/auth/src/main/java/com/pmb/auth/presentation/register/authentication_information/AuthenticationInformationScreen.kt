@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -16,6 +17,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.pmb.auth.R
+import com.pmb.auth.presentation.register.RegisterSharedViewState
 import com.pmb.auth.presentation.register.authentication_information.viewModel.AuthenticationInformationViewActions
 import com.pmb.auth.presentation.register.authentication_information.viewModel.AuthenticationInformationViewEvents
 import com.pmb.auth.presentation.register.authentication_information.viewModel.AuthenticationInformationViewModel
@@ -38,7 +40,8 @@ import com.pmb.navigation.moduleScreen.RegisterScreens
 
 @Composable
 fun AuthenticationInformationScreen(
-    viewModel: AuthenticationInformationViewModel
+    viewModel: AuthenticationInformationViewModel,
+    sharedState: State<RegisterSharedViewState>,
 ) {
     val navigationManager: NavigationManager = LocalNavigationManager.current
     val viewState by viewModel.viewState.collectAsState()

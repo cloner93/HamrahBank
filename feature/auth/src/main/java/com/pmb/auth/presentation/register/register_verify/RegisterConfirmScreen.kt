@@ -1,4 +1,4 @@
-package com.pmb.auth.presentation.register
+package com.pmb.auth.presentation.register.register_verify
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,11 +23,13 @@ import androidx.compose.ui.unit.dp
 import com.pmb.auth.R
 import com.pmb.auth.presentation.component.ChipWithIcon
 import com.pmb.auth.presentation.component.ShowInvalidLoginBottomSheet
-import com.pmb.auth.presentation.first_login_confirm.viewModel.FirstLoginConfirmViewActions
-import com.pmb.auth.presentation.first_login_confirm.viewModel.FirstLoginConfirmViewEvents
-import com.pmb.auth.presentation.first_login_confirm.viewModel.FirstLoginConfirmViewModel
 import com.pmb.auth.presentation.first_login_confirm.viewModel.TimerStatus
 import com.pmb.auth.presentation.first_login_confirm.viewModel.TimerTypeId
+import com.pmb.auth.presentation.register.RegisterSharedViewState
+import com.pmb.auth.presentation.register.register_verify.viewModel.RegisterConfirmViewActions
+import com.pmb.auth.presentation.register.register_verify.viewModel.RegisterConfirmViewEvents
+import com.pmb.auth.presentation.register.register_verify.viewModel.RegisterConfirmViewModel
+import com.pmb.auth.presentation.register.register_verify.viewModel.RegisterConfirmViewState
 import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppContent
@@ -44,8 +46,9 @@ import com.pmb.navigation.moduleScreen.RegisterScreens
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterConfirmScreen(
-    viewModel: FirstLoginConfirmViewModel,
-    sharedState: State<RegisterSharedViewState>
+    viewModel: RegisterConfirmViewModel,
+    sharedState: State<RegisterSharedViewState>,
+    updateState: (RegisterConfirmViewState) -> Unit
 ) {
     val navigationManager: NavigationManager = LocalNavigationManager.current
     val viewState by viewModel.viewState.collectAsState()
@@ -78,11 +81,11 @@ fun RegisterConfirmScreen(
             stringResource(R.string.re_send)
         }
 
-    // Handle one-time events such as navigation or showing toasts
     LaunchedEffect(Unit) {
         viewModel.viewEvent.collect { event ->
             when (event) {
-                FirstLoginConfirmViewEvents.FirstLoginConfirmSucceed -> {
+                RegisterConfirmViewEvents.ConfirmVerifySucceed -> {
+                    updateState.invoke(viewState)
                     navigationManager.navigate(RegisterScreens.AuthenticationInformation)
                 }
             }
@@ -125,14 +128,14 @@ fun RegisterConfirmScreen(
             enable = otp.isNotEmpty(),
             title = stringResource(R.string.login),
             onClick = {
-//                FirstLoginConfirmViewEvents.FirstLoginConfirmSucceed -> {
-                navigationManager.navigate(RegisterScreens.AuthenticationInformation)
-//            }
-//                viewModel.handle(
-//                    FirstLoginConfirmViewActions.ConfirmFirstLogin(
-//                        mobileNumber = sharedState.value.phoneNumber, otpCode = otp
-//                    )
-//                )
+                viewModel.handle(
+                    RegisterConfirmViewActions.ConfirmVerify(
+                        sharedState.value.phoneNumber,
+                        sharedState.value.nationalId,
+                        sharedState.value.serialId,
+                        otp.toInt()
+                    )
+                )
             })
         Spacer(modifier = Modifier.size(8.dp))
         AppTextButton(
@@ -140,16 +143,9 @@ fun RegisterConfirmScreen(
             enable = viewState.timerState?.get(TimerTypeId.RESEND_TIMER)?.timerStatus == TimerStatus.IS_FINISHED,
             title = title,
             onClick = {
-//                viewModel.handle(
-//                    FirstLoginConfirmViewActions.ResendFirstLoginInfo(
-//                        mobileNumber = sharedState.value.phoneNumber,
-//                        userName = viewModel.getAccountModel().userName,
-//                        password = viewModel.getAccountModel().passWord
-//                    )
-//                )
             })
     }
-    if (viewState.loading) {
+    if (viewState.isLoading) {
         AppLoading()
     }
     if (viewState.alertModelState != null) {
@@ -158,7 +154,7 @@ fun RegisterConfirmScreen(
     if (showBottomSheet) {
         ModalBottomSheet(
             onDismissRequest = {
-                viewModel.handle(FirstLoginConfirmViewActions.ClearBottomSheet)
+                viewModel.handle(RegisterConfirmViewActions.ClearBottomSheet)
                 showBottomSheet = false
                 navigationManager.navigateBack()
             },
@@ -177,7 +173,7 @@ fun RegisterConfirmScreen(
                     }",
                 onDismiss = {
                     viewModel.handle(
-                        FirstLoginConfirmViewActions.ClearBottomSheet
+                        RegisterConfirmViewActions.ClearBottomSheet
                     )
                     navigationManager.navigateBack()
                 })

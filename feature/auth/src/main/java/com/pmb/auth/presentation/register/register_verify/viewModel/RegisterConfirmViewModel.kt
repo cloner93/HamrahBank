@@ -1,14 +1,19 @@
-package com.pmb.auth.presentation.first_login_confirm.viewModel
+package com.pmb.auth.presentation.register.register_verify.viewModel
 
 import androidx.lifecycle.viewModelScope
+import com.pmb.auth.presentation.first_login_confirm.viewModel.TimerEvent
+import com.pmb.auth.presentation.first_login_confirm.viewModel.TimerState
+import com.pmb.auth.presentation.first_login_confirm.viewModel.TimerStatus
+import com.pmb.auth.presentation.first_login_confirm.viewModel.TimerTypeId
 import com.pmb.auth.utils.startCountDown
 import com.pmb.core.platform.AlertModelState
 import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.platform.Result
-import com.pmb.domain.model.SendOtpRequest
 import com.pmb.domain.usecae.auth.FirstLoginConfirmUseCase
 import com.pmb.domain.usecae.auth.FirstLoginStepRequest
 import com.pmb.domain.usecae.auth.FirstLoginUseCase
+import com.pmb.domain.usecae.auth.openAccount.AccountVerifyCodeUseCase
+import com.pmb.domain.usecae.auth.openAccount.VerifyCodeParams
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -23,43 +28,50 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class FirstLoginConfirmViewModel @Inject constructor(
-    initialState: FirstLoginConfirmViewState,
+class RegisterConfirmViewModel @Inject constructor(
     private val firstLoginUseCase: FirstLoginUseCase,
     private val firstLoginConfirmUseCase: FirstLoginConfirmUseCase,
-) : BaseViewModel<FirstLoginConfirmViewActions, FirstLoginConfirmViewState, FirstLoginConfirmViewEvents>(
-    initialState
-) {
+    private val verifyCodeUseCase: AccountVerifyCodeUseCase
+) :
+    BaseViewModel<RegisterConfirmViewActions, RegisterConfirmViewState, RegisterConfirmViewEvents>(
+        RegisterConfirmViewState()
+    ) {
     private var timerDurationInterval: Long = 120000L
     private var otpTryingStack = 0
-    override fun handle(action: FirstLoginConfirmViewActions) {
+    override fun handle(action: RegisterConfirmViewActions) {
         when (action) {
-            FirstLoginConfirmViewActions.ClearAlert -> setState { it.copy(loading = false) }
-            FirstLoginConfirmViewActions.ClearBottomSheet -> setState { it.copy(isShowBottomSheet = false) }
-            is FirstLoginConfirmViewActions.ConfirmFirstLogin -> handleConfirmFirstLogin(action)
-            is FirstLoginConfirmViewActions.ResendFirstLoginInfo -> handleResendFirstLoginInfo(
+            is RegisterConfirmViewActions.SetVerifyCode -> {
+                handleVerifyCode(action)
+            }
+
+            RegisterConfirmViewActions.ClearBottomSheet -> setState { it.copy(isShowBottomSheet = false) }
+            is RegisterConfirmViewActions.ConfirmVerify -> handleConfirmFirstLogin(action)
+            is RegisterConfirmViewActions.ResendVerifyInfo -> handleResendFirstLoginInfo(
                 action
             )
         }
     }
 
-    private fun handleConfirmFirstLogin(action: FirstLoginConfirmViewActions.ConfirmFirstLogin) {
+    private fun handleConfirmFirstLogin(action: RegisterConfirmViewActions.ConfirmVerify) {
         otpTryingStack++
         viewModelScope.launch {
-            firstLoginConfirmUseCase.invoke(
-                SendOtpRequest(
-                    mobileNumber = action.mobileNumber,
-                    userName = action.userName,
-                    password = action.password,
-                    otp = action.otpCode
+            verifyCodeUseCase.invoke(
+                VerifyCodeParams(
+                    mobileNo = action.mobileNumber,
+                    nationalCode = action.nationalCode,
+                    idSerial = action.serialId,
+                    verificationCode = action.otpCode
                 )
             ).collect { result ->
                 when (result) {
                     is Result.Success -> {
                         setState {
-                            it.copy(loading = false)
+                            it.copy(
+                                isLoading = false,
+                                verifyCodeResponse = result.data
+                            )
                         }
-                        postEvent(FirstLoginConfirmViewEvents.FirstLoginConfirmSucceed)
+                        postEvent(RegisterConfirmViewEvents.ConfirmVerifySucceed)
                     }
 
                     is Result.Error -> {
@@ -70,22 +82,25 @@ class FirstLoginConfirmViewModel @Inject constructor(
                         setState {
 
                             it.copy(
-                                loading = false,
-                                alertModelState = if (otpTryingStack < 4) AlertModelState.Dialog(
-                                    title = "خطا",
-                                    description = " ${result.message}",
-                                    positiveButtonTitle = "تایید",
-                                    onPositiveClick = {
-                                        setState { state -> state.copy(alertModelState = null) }
-                                    }
-                                ) else null,
-                                isShowBottomSheet = otpTryingStack >= 4
+                                isLoading = false,
+                                alertModelState =
+//                                    if (otpTryingStack < 4)
+                                    AlertModelState.Dialog(
+                                        title = "خطا",
+                                        description = " ${result.message}",
+                                        positiveButtonTitle = "تایید",
+                                        onPositiveClick = {
+                                            setState { state -> state.copy(alertModelState = null) }
+                                        }
+                                    )
+//                                else null,
+//                                isShowBottomSheet = otpTryingStack >= 4
                             )
                         }
                     }
 
                     is Result.Loading -> {
-                        setState { it.copy(loading = true) }
+                        setState { it.copy(isLoading = true) }
                     }
                 }
             }
@@ -93,7 +108,7 @@ class FirstLoginConfirmViewModel @Inject constructor(
         }
     }
 
-    private fun handleResendFirstLoginInfo(action: FirstLoginConfirmViewActions.ResendFirstLoginInfo) {
+    private fun handleResendFirstLoginInfo(action: RegisterConfirmViewActions.ResendVerifyInfo) {
         viewModelScope.launch {
             firstLoginUseCase.invoke(
                 FirstLoginStepRequest(
@@ -106,7 +121,7 @@ class FirstLoginConfirmViewModel @Inject constructor(
                     is Result.Success -> {
                         setState {
                             it.copy(
-                                loading = false,
+                                isLoading = false,
                             )
                         }
                         updateState(
@@ -121,7 +136,7 @@ class FirstLoginConfirmViewModel @Inject constructor(
                     is Result.Error -> {
                         setState {
                             it.copy(
-                                loading = false,
+                                isLoading = false,
                                 alertModelState = AlertModelState.Dialog(
                                     title = "خطا",
                                     description = " ${result.message}",
@@ -144,6 +159,14 @@ class FirstLoginConfirmViewModel @Inject constructor(
                     }
                 }
             }
+        }
+    }
+
+    private fun handleVerifyCode(code: RegisterConfirmViewActions.SetVerifyCode) {
+        setState {
+            it.copy(
+                verifyCode = code.verifyCode
+            )
         }
     }
 
@@ -228,5 +251,3 @@ class FirstLoginConfirmViewModel @Inject constructor(
         super.onCleared()
     }
 }
-
-

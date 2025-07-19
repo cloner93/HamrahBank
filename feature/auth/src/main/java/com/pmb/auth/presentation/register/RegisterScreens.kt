@@ -8,7 +8,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import androidx.navigation.navigation
-import com.pmb.auth.presentation.first_login_confirm.viewModel.FirstLoginConfirmViewModel
 import com.pmb.auth.presentation.register.account_opening.AccountOpeningScreen
 import com.pmb.auth.presentation.register.account_opening.viewModel.OpeningAccountViewModel
 import com.pmb.auth.presentation.register.authentication_information.AuthenticationInformationScreen
@@ -31,6 +30,8 @@ import com.pmb.auth.presentation.register.register_confirm.RegisterConfirmStepSc
 import com.pmb.auth.presentation.register.register_confirm.viewModel.RegisterConfirmStepViewModel
 import com.pmb.auth.presentation.register.register_face_photo.RegisterFacePhotoCaptureScreen
 import com.pmb.auth.presentation.register.register_face_photo.viewModel.RegisterFacePhotoCapturedViewModel
+import com.pmb.auth.presentation.register.register_verify.RegisterConfirmScreen
+import com.pmb.auth.presentation.register.register_verify.viewModel.RegisterConfirmViewModel
 import com.pmb.auth.presentation.register.register_video.RegisterVideoScreen
 import com.pmb.auth.presentation.register.register_video.viewModel.RegisterCapturingVideoViewModel
 import com.pmb.auth.presentation.register.search_opening_branch.SearchOpeningBranchScreen
@@ -40,7 +41,6 @@ import com.pmb.auth.presentation.register.select_job_information.viewModel.Selec
 import com.pmb.auth.presentation.register.signature.SignatureScreen
 import com.pmb.auth.presentation.register.signature.viewModel.SignatureViewModel
 import com.pmb.navigation.manager.navigationManager
-import com.pmb.navigation.moduleScreen.AuthScreens
 import com.pmb.navigation.moduleScreen.RegisterScreens
 
 fun NavGraphBuilder.registerScreenHandler() {
@@ -70,12 +70,32 @@ fun NavGraphBuilder.registerScreenHandler() {
                         )
                     }
                 }
+                childState.nationalId?.let { it1 ->
+                    sharedViewModel.updateState {
+                        sharedState.value.copy(
+                            nationalId = it1,
+                        )
+                    }
+                }
             }
         }
         composable(route = RegisterScreens.RegisterNationalId.route) {
+            val sharedViewModel =
+                it.navigationManager.retrieveSharedViewModel<RegisterSharedViewModel>(
+                    screen = RegisterScreens.RegisterGraph, navBackStackEntry = it
+                )
+            val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
             RegisterNationalIdScreen(
                 viewModel = hiltViewModel<RegisterNationalIdViewModel>(),
-            )
+            ) { childState ->
+                childState.nationalSerialId?.let { serial ->
+                    sharedViewModel.updateState {
+                        sharedState.value.copy(
+                            serialId = serial
+                        )
+                    }
+                }
+            }
         }
         composable(route = RegisterScreens.RegisterConfirm.route) {
             val sharedViewModel =
@@ -85,12 +105,18 @@ fun NavGraphBuilder.registerScreenHandler() {
             val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
             RegisterConfirmScreen(
                 sharedState = sharedState,
-                viewModel = hiltViewModel<FirstLoginConfirmViewModel>(),
-            )
+                viewModel = hiltViewModel<RegisterConfirmViewModel>(),
+            ) { childState ->
+                sharedViewModel.updateState {
+                    sharedState.value.copy(
+                        verifyCodeResponse = childState.verifyCodeResponse
+                    )
+                }
+            }
         }
         composable(route = RegisterScreens.AuthenticationInformation.route) {
             AuthenticationInformationScreen(
-                viewModel = hiltViewModel<AuthenticationInformationViewModel>()
+                viewModel = hiltViewModel<AuthenticationInformationViewModel>(),
             )
         }
         composable(route = RegisterScreens.JobInformation.route) {
@@ -160,7 +186,7 @@ fun NavGraphBuilder.registerScreenHandler() {
                 viewModel = hiltViewModel<FeeDetailsViewModel>()
             )
         }
-        composable (route = RegisterScreens.RegisterChooseCard.route){
+        composable(route = RegisterScreens.RegisterChooseCard.route) {
             ChooseCardScreen()
         }
     }
