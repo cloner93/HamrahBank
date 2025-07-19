@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.android.hilt)
     alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -27,7 +28,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":network"))
+    api(project(":network"))
     implementation(project(":domain"))
     implementation(project(":core"))
     implementation(project(":model"))
@@ -35,6 +36,7 @@ dependencies {
     api(libs.android.hilt)
     kapt(libs.android.hilt.compiler)
     implementation(libs.ktor.client.core)
+    implementation(libs.kotlinx.serialization.json)
 
     // todo: temporary store them in datastore - move it to data layer
     implementation(libs.dataStore)

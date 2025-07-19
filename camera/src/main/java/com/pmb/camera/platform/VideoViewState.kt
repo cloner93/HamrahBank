@@ -4,7 +4,7 @@ import com.pmb.core.platform.BaseViewState
 
 interface VideoViewState:BaseViewState {
     val hasCameraPermission: Boolean
-    val hasFilePermissions: Boolean
+//    val hasFilePermissions: Boolean
     val hasAudioPermissions: Boolean
     val isCameraReady: Boolean
     val isFrontCamera: Boolean

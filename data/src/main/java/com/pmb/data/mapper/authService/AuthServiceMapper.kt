@@ -1,6 +1,5 @@
 package com.pmb.data.mapper.authService
 
-import com.pmb.domain.model.LoginResponse
 import com.pmb.domain.model.RegisterRequest
 import com.pmb.domain.model.RegisterVerifyResponse
 import com.pmb.domain.model.SendOtpRequest
@@ -29,18 +28,6 @@ fun RegisterVerifyResponse.toDomain(): SendOtpResponse {
     )
 }
 
-fun LoginResponse.mapToLoginResponse(): LoginResponse {
-    return LoginResponse(
-        isSuccess = true,
-        customerId = this.customerId,
-        desKey = this.desKey,
-        passwordX = this.passwordX,
-        securePassword = this.securePassword,
-        userName = this.userName,
-        email = this.email,
-        imeiNo = this.imeiNo
-    )
-}
 
 fun ResponseMetaData?.toDomain(): Boolean {
 //    if (this)

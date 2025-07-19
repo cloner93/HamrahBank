@@ -3,4 +3,11 @@
     <cache-path
         name="images"
         path="images/" />
+    <files-path name="internal_files" path="." />
+    <files-path
+        name="my_files"
+        path="."/>
+    <cache-path
+        name="my_cache"
+        path="."/>
 </paths>

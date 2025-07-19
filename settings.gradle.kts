@@ -20,19 +20,23 @@ dependencyResolutionManagement {
     }
 }
 
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+
 rootProject.name = "HamrahBank"
 include(":app")
+
+include(":feature:auth")
+include(":feature:home")
+include(":feature:transfer")
+include(":feature:account")
+include(":feature:profile")
+include(":feature:facilities")
+
 include(":ballon")
-include(":profile")
 include(":core")
-include(":auth")
-include(":home")
-include(":account")
-include(":transfer")
 include(":camera")
 include(":compressor")
 include(":navigation")
-include(":facilities")
 include(":calender")
 include(":snapui")
 include(":snapui:receipt")
