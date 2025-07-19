@@ -12,7 +12,8 @@ import com.pmb.domain.model.SendOtpResponse
 import com.pmb.domain.model.UserData
 import com.pmb.domain.model.openAccount.AccountArchiveJobDocResponse
 import com.pmb.domain.model.openAccount.accountVerifyCode.VerifyCodeResponse
-import com.pmb.domain.model.openAccount.accountVerifyCode.accountType.FetchAccountTypeResponse
+import com.pmb.domain.model.openAccount.accountType.FetchAccountTypeResponse
+import com.pmb.domain.model.openAccount.cityName.FetchCityListResponse
 import com.pmb.domain.repository.auth.AuthRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -95,5 +96,10 @@ class AuthRepositoryImpl @Inject constructor(
                 nationalCode = nationalCode,
                 mobileNo = mobileNo
             ).mapApiResult { it.second }
+    }
+
+    override fun fetchCityList(stateCode: Int): Flow<Result<FetchCityListResponse>> {
+        return remoteServiceProvider.getAuthService().fetchCityList(stateCode)
+            .mapApiResult { it.second }
     }
 }

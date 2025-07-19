@@ -5,8 +5,9 @@ import com.pmb.domain.model.LoginResponse
 import com.pmb.domain.model.SendOtpRequest
 import com.pmb.domain.model.SendOtpResponse
 import com.pmb.domain.model.openAccount.AccountArchiveJobDocResponse
+import com.pmb.domain.model.openAccount.accountType.FetchAccountTypeResponse
 import com.pmb.domain.model.openAccount.accountVerifyCode.VerifyCodeResponse
-import com.pmb.domain.model.openAccount.accountVerifyCode.accountType.FetchAccountTypeResponse
+import com.pmb.domain.model.openAccount.cityName.FetchCityListResponse
 import kotlinx.coroutines.flow.Flow
 
 interface AuthRepository {
@@ -14,9 +15,7 @@ interface AuthRepository {
     fun login(customerId: String, username: String, password: String): Flow<Result<LoginResponse>>
     fun register(customerId: String, username: String, password: String): Flow<Result<Boolean>>
     fun generateCode(
-        nationalCode: String,
-        mobileNo: String,
-        birthDate: String
+        nationalCode: String, mobileNo: String, birthDate: String
     ): Flow<Result<Boolean>>
 
     fun verifyCode(
@@ -28,6 +27,9 @@ interface AuthRepository {
     ): Flow<Result<AccountArchiveJobDocResponse>>
 
     fun fetchAccountType(
-        customerType:Int,nationalCode: String,mobileNo: String
+        customerType: Int, nationalCode: String, mobileNo: String
     ): Flow<Result<FetchAccountTypeResponse>>
+
+    fun fetchCityList(stateCode: Int): Flow<Result<FetchCityListResponse>>
+
 }

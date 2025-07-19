@@ -1,4 +1,4 @@
-package com.pmb.domain.model.openAccount.accountVerifyCode.accountType
+package com.pmb.domain.model.openAccount.accountType
 
 import android.annotation.SuppressLint
 import kotlinx.serialization.Serializable

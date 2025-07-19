@@ -2,7 +2,7 @@ package com.pmb.domain.usecae.auth.openAccount
 
 import com.pmb.core.platform.BaseUseCase
 import com.pmb.core.platform.Result
-import com.pmb.domain.model.openAccount.accountVerifyCode.accountType.FetchAccountTypeResponse
+import com.pmb.domain.model.openAccount.accountType.FetchAccountTypeResponse
 import com.pmb.domain.repository.auth.AuthRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject

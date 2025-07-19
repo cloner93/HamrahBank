@@ -11,10 +11,12 @@ import com.pmb.domain.model.openAccount.AccountArchiveJobDocRequest
 import com.pmb.domain.model.openAccount.AccountArchiveJobDocResponse
 import com.pmb.domain.model.openAccount.GenerateCodeRequest
 import com.pmb.domain.model.openAccount.GenerateCodeResponse
+import com.pmb.domain.model.openAccount.accountType.FetchAccountTypeRequest
+import com.pmb.domain.model.openAccount.accountType.FetchAccountTypeResponse
 import com.pmb.domain.model.openAccount.accountVerifyCode.VerifyCodeRequest
 import com.pmb.domain.model.openAccount.accountVerifyCode.VerifyCodeResponse
-import com.pmb.domain.model.openAccount.accountVerifyCode.accountType.FetchAccountTypeRequest
-import com.pmb.domain.model.openAccount.accountVerifyCode.accountType.FetchAccountTypeResponse
+import com.pmb.domain.model.openAccount.cityName.FetchCityListRequest
+import com.pmb.domain.model.openAccount.cityName.FetchCityListResponse
 import com.pmb.model.SuccessData
 import com.pmb.network.NetworkManger
 import kotlinx.coroutines.flow.Flow
@@ -23,53 +25,42 @@ import javax.inject.Inject
 class AuthServiceImpl @Inject constructor(
     private val client: NetworkManger
 ) : AuthService {
-    override suspend fun sendOtp(sendOtpRequest: SendOtpRequest):
-            Flow<Result<SuccessData<RegisterVerifyResponse>>> {
+    override suspend fun sendOtp(sendOtpRequest: SendOtpRequest): Flow<Result<SuccessData<RegisterVerifyResponse>>> {
         return client.request<RegisterRequest, RegisterVerifyResponse>(
-            "verify",
-            sendOtpRequest.toData()
+            "verify", sendOtpRequest.toData()
         )
     }
 
     override fun login(
-        customerId: String,
-        username: String,
-        password: String
+        customerId: String, username: String, password: String
     ): Flow<Result<SuccessData<LoginResponse>>> {
         val req = LoginRequest(customerId = customerId, userName = username, password = password)
         return client.request<LoginRequest, LoginResponse>(endpoint = "login", data = req)
     }
 
     override fun register(
-        customerId: String,
-        username: String,
-        password: String
+        customerId: String, username: String, password: String
     ): Flow<Result<SuccessData<Boolean>>> {
         val req = RegisterRequest(
-            customerId = customerId,
-            userName = username,
-            password = password,
-            vcode = 0
+            customerId = customerId, userName = username, password = password, vcode = 0
         )
         return client.request<RegisterRequest, Boolean>("register", req)
     }
 
     override fun generateCode(
-        nationalCode: String,
-        mobileNo: String,
-        birthDate: String
+        nationalCode: String, mobileNo: String, birthDate: String
     ): Flow<Result<SuccessData<GenerateCodeResponse>>> {
-        val req = GenerateCodeRequest(nationalCode = nationalCode, mobileNo = mobileNo,
-            birthDate = birthDate
+        val req = GenerateCodeRequest(
+            nationalCode = nationalCode, mobileNo = mobileNo, birthDate = birthDate
         )
-        return client.request<GenerateCodeRequest,GenerateCodeResponse>("openAccount/generateCode",req)
+        return client.request<GenerateCodeRequest, GenerateCodeResponse>(
+            "openAccount/generateCode",
+            req
+        )
     }
 
     override fun accountVerifyCode(
-        verificationCode: Int,
-        nationalCode: String,
-        mobileNo: String,
-        idSerial: String
+        verificationCode: Int, nationalCode: String, mobileNo: String, idSerial: String
     ): Flow<Result<SuccessData<VerifyCodeResponse>>> {
         val req = VerifyCodeRequest(
             verificationCode = verificationCode,
@@ -77,31 +68,37 @@ class AuthServiceImpl @Inject constructor(
             mobileNo = mobileNo,
             idSerial = idSerial
         )
-        return client.request<VerifyCodeRequest,VerifyCodeResponse>("openAccount/accountVerifyCode",req)
+        return client.request<VerifyCodeRequest, VerifyCodeResponse>(
+            "openAccount/accountVerifyCode",
+            req
+        )
     }
 
     override fun accountArchiveJobDoc(
-        file: String,
-        nationalCode: String
+        file: String, nationalCode: String
     ): Flow<Result<SuccessData<AccountArchiveJobDocResponse>>> {
         val req = AccountArchiveJobDocRequest(file = file, nationalCode = nationalCode)
-        return client.request<AccountArchiveJobDocRequest,AccountArchiveJobDocResponse>(
-            "openAccount/accountArchiveJobDoc",req
+        return client.request<AccountArchiveJobDocRequest, AccountArchiveJobDocResponse>(
+            "openAccount/accountArchiveJobDoc", req
         )
     }
 
     override fun fetchAccountType(
-        customerType: Int,
-        nationalCode: String,
-        mobileNo: String
+        customerType: Int, nationalCode: String, mobileNo: String
     ): Flow<Result<SuccessData<FetchAccountTypeResponse>>> {
         val req = FetchAccountTypeRequest(
-            customerType = customerType,
-            nationalCode = nationalCode,
-            mobileNo = mobileNo
+            customerType = customerType, nationalCode = nationalCode, mobileNo = mobileNo
         )
-        return client.request<FetchAccountTypeRequest,FetchAccountTypeResponse>(
-            "openAccount/fetchAccountType",req
+        return client.request<FetchAccountTypeRequest, FetchAccountTypeResponse>(
+            "openAccount/fetchAccountType", req
+        )
+    }
+
+    override fun fetchCityList(stateCode: Int): Flow<Result<SuccessData<FetchCityListResponse>>> {
+        val req = FetchCityListRequest(stateCode = stateCode)
+        return client.request<FetchCityListRequest, FetchCityListResponse>(
+            "openAccount/fetchCityList",
+            req
         )
     }
 
