@@ -24,6 +24,7 @@ import com.pmb.auth.presentation.register.account_opening.viewModel.OpeningAccou
 import com.pmb.auth.presentation.register.account_opening.viewModel.OpeningAccountViewEvents
 import com.pmb.auth.presentation.register.account_opening.viewModel.OpeningAccountViewModel
 import com.pmb.auth.presentation.register.account_opening.viewModel.OpeningAccountViewState
+import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppButtonIcon
 import com.pmb.ballon.component.base.AppClickableReadOnlyTextField
@@ -140,5 +141,6 @@ fun AccountOpeningScreen(
             },
         )
     }
+    viewState.alertModelState?.let { AlertComponent(it) }
 }
 

@@ -57,7 +57,7 @@ class OpeningAccountViewModel @Inject constructor(
         viewModelScope.launch {
             generateCodeUseCase.invoke(
                 GenerateCodeParams(
-                    nationalCode = viewState.value.phoneNumber ?: "",
+                    nationalCode = viewState.value.nationalId ?: "",
                     mobileNo = viewState.value.phoneNumber ?: "",
                     birthDate = viewState.value.birthDay?.let { "${it.year}${it.month}${it.dayOfMonth}" }
                         ?: run { "" }
