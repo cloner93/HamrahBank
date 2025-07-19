@@ -30,7 +30,7 @@ class OpeningAccountViewModel @Inject constructor(
             }
 
             is OpeningAccountViewActions.SetBirthday -> {
-                handleSetBirthday(action.birthDay)
+                handleSetBirthday(action)
             }
 
             is OpeningAccountViewActions.SetNationalId -> {
@@ -59,8 +59,7 @@ class OpeningAccountViewModel @Inject constructor(
                 GenerateCodeParams(
                     nationalCode = viewState.value.nationalId ?: "",
                     mobileNo = viewState.value.phoneNumber ?: "",
-                    birthDate = viewState.value.birthDay?.let { "${it.year}${it.month}${it.dayOfMonth}" }
-                        ?: run { "" }
+                    birthDate = "${viewState.value.birthDateYear}${viewState.value.birthDateMonth}${viewState.value.birthDateDay}"
                 )
             ).collectLatest { result ->
                 when (result) {
@@ -125,10 +124,12 @@ class OpeningAccountViewModel @Inject constructor(
         }
     }
 
-    private fun handleSetBirthday(date: PersianDate) {
+    private fun handleSetBirthday(actions: OpeningAccountViewActions.SetBirthday) {
         setState {
             it.copy(
-                birthDay = date
+                birthDateDay = actions.birthDateDay,
+                birthDateYear = actions.birthDateYear,
+                birthDateMonth = actions.birthDateMonth,
             )
         }
     }

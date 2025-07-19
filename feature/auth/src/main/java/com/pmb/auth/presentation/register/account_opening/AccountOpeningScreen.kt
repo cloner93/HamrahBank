@@ -75,7 +75,7 @@ fun AccountOpeningScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 16.dp, end = 16.dp, top = 16.dp),
-                enable = !viewState.phoneNumber.isNullOrEmpty() && !viewState.nationalId.isNullOrEmpty() && viewState.birthDay != null,
+                enable = !viewState.phoneNumber.isNullOrEmpty() && !viewState.nationalId.isNullOrEmpty() && viewState.birthDateDay != null,
                 title = stringResource(R.string._continue),
                 onClick = {
                     viewModel.handle(
@@ -105,7 +105,7 @@ fun AccountOpeningScreen(
             onValueChange = { viewModel.handle(OpeningAccountViewActions.SetNationalId(it)) })
         Spacer(modifier = Modifier.size(24.dp))
         AppClickableReadOnlyTextField(
-            value = viewState.birthDay?.let { "${it.year}/${it.month}/${it.dayOfMonth}" }
+            value = viewState.birthDateYear?.let { "${it}/${viewState.birthDateMonth}/${viewState.birthDateDay}" }
                 ?: run { stringResource(R.string.birthday) },
             label = stringResource(R.string.birthday),
             trailingIcon = {
@@ -124,17 +124,19 @@ fun AccountOpeningScreen(
     if (viewState.isShowingBottomSheet) {
         ShowPersianDatePickerBottomSheet(
             title = stringResource(R.string.birthday),
-            defaultDate = viewState.birthDay?.let { Jdn(it.toJdn()) } ?: run { Jdn.today() },
+            defaultDate = viewState.birthDateYear?.let  { Jdn(
+                Calendar.SHAMSI,
+                it.toInt(),
+                viewState.birthDateMonth?.toInt() ?:1,
+                viewState.birthDateMonth?.toInt() ?:1
+            ) } ?: run { Jdn.today() },
             onDismiss = { viewModel.handle(OpeningAccountViewActions.ShowBottomSheet(false)) },
             onChangeValue = { year, month, day ->
                 viewModel.handle(
                     OpeningAccountViewActions.SetBirthday(
-                        Jdn(
-                            Calendar.SHAMSI,
-                            year.toInt(),
-                            month.toInt(),
-                            day.toInt()
-                        ).toPersianDate()
+                            year,
+                            month,
+                            day
                     )
                 )
                 viewModel.handle(OpeningAccountViewActions.ShowBottomSheet(false))
