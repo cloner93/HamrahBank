@@ -4,6 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.pmb.core.platform.AlertModelState
 import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.platform.Result
+import com.pmb.data.serviceProvider.local.LocalServiceProvider
 import com.pmb.profile.domain.use_case.ChangeUsernameUseCase
 import com.pmb.profile.presentaion.personal_infos.PersonalInfoSharedState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,9 +14,11 @@ import javax.inject.Inject
 @HiltViewModel
 class ChangeUsernameViewModel @Inject constructor(
     private val changeUsernameUseCase: ChangeUsernameUseCase,
-) :
-    BaseViewModel<ChangeUsernameViewActions, ChangeUsernameViewState, ChangeUsernameViewEvents>
-        (ChangeUsernameViewState()) {
+    private val localProvider: LocalServiceProvider
+) : BaseViewModel<ChangeUsernameViewActions, ChangeUsernameViewState, ChangeUsernameViewEvents>(
+    ChangeUsernameViewState()
+) {
+
     override fun handle(action: ChangeUsernameViewActions) {
         when (action) {
             is ChangeUsernameViewActions.UpdateShareState -> handleUpdateShareState(action.sharedState)
@@ -26,7 +29,11 @@ class ChangeUsernameViewModel @Inject constructor(
     }
 
     private fun handleUpdateShareState(sharedState: PersonalInfoSharedState) {
-        setState { it.copy(username = sharedState.username.orEmpty()) }
+        viewModelScope.launch {
+            localProvider.getUserDataStore().getUserData()?.username?.let { username ->
+                setState { it.copy(username = username) }
+            }
+        }
     }
 
     private fun updateUsername() {
@@ -34,8 +41,7 @@ class ChangeUsernameViewModel @Inject constructor(
         viewModelScope.launch {
             changeUsernameUseCase.invoke(
                 ChangeUsernameUseCase.Param(
-                    userId = 10L,
-                    username = username
+                    userId = 10L, username = username
                 )
             ).collect { result ->
                 when (result) {
@@ -51,8 +57,7 @@ class ChangeUsernameViewModel @Inject constructor(
                                     },
                                     onDismissed = {
                                         setState { it.copy(loading = false) }
-                                    }
-                                )
+                                    })
                             )
                         }
                     }
@@ -62,8 +67,12 @@ class ChangeUsernameViewModel @Inject constructor(
                     }
 
                     is Result.Success -> {
+                        localProvider.getUserDataStore().getUserData()?.copy(username = username)
+                            ?.let {
+                                localProvider.getUserDataStore().setUserData(userData = it)
+                            }
                         setState { it.copy(loading = false) }
-                        postEvent(ChangeUsernameViewEvents.NavigateBackToPersonalInfo(result.data))
+                        postEvent(ChangeUsernameViewEvents.NavigateBackToPersonalInfo(newUsername = username))
                     }
                 }
             }

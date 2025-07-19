@@ -1,6 +1,5 @@
 package com.pmb.profile.di
 
-import com.pmb.profile.presentaion.privacyAndSecurity.changePassword.ChangePasswordScreenViewState
 import com.pmb.profile.presentaion.profile.viewModel.ProfileViewState
 import com.pmb.profile.presentaion.themeScreen.viewmodel.ThemeScreenViewState
 import dagger.Module
@@ -19,9 +18,4 @@ object StateModule {
     @Provides
     @Singleton
     fun provideThemeScreenViewState(): ThemeScreenViewState = ThemeScreenViewState()
-
-    @Provides
-    @Singleton
-    fun provideChangePasswordScreenViewState(): ChangePasswordScreenViewState =
-        ChangePasswordScreenViewState()
 }

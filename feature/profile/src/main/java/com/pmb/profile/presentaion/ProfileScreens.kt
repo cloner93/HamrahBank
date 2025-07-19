@@ -85,9 +85,9 @@ fun NavGraphBuilder.profileScreensHandle() {
             ChangeUsernameScreen(
                 viewModel = hiltViewModel<ChangeUsernameViewModel>(),
                 sharedState = sharedState.value
-            ) { personalEntity ->
+            ) { newUsername ->
                 Log.d("sharedState", "RESULT in $route")
-                sharedViewModel.updateState { copy(username = personalEntity.username) }
+                sharedViewModel.updateState { copy(username = newUsername) }
             }
         }
         composable(route = ProfileScreens.PersonalInfo.ChangePhoneNumber.route) {
