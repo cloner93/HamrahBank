@@ -1,7 +1,6 @@
 package com.pmb.data.repository.auth
 
 import com.pmb.core.platform.Result
-import com.pmb.data.mapper.authService.mapToLoginResponse
 import com.pmb.data.mapper.authService.toDomain
 import com.pmb.data.mapper.mapApiResult
 import com.pmb.data.serviceProvider.local.LocalServiceProvider
@@ -13,6 +12,7 @@ import com.pmb.domain.model.UserData
 import com.pmb.domain.model.openAccount.accountVerifyCode.VerifyCodeResponse
 import com.pmb.domain.repository.auth.AuthRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
@@ -39,7 +39,7 @@ class AuthRepositoryImpl @Inject constructor(
     ): Flow<Result<LoginResponse>> {
         return remoteServiceProvider.getAuthService()
             .login(customerId = customerId, username = username, password = password).mapApiResult {
-                it.second.mapToLoginResponse()
+                it.second
             }
     }
 
