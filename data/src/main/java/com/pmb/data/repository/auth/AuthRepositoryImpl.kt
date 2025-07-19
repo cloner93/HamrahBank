@@ -10,6 +10,7 @@ import com.pmb.domain.model.LoginResponse
 import com.pmb.domain.model.SendOtpRequest
 import com.pmb.domain.model.SendOtpResponse
 import com.pmb.domain.model.UserData
+import com.pmb.domain.model.openAccount.accountVerifyCode.VerifyCodeResponse
 import com.pmb.domain.repository.auth.AuthRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -63,6 +64,22 @@ class AuthRepositoryImpl @Inject constructor(
             birthDate = birthDate
         ).mapApiResult {
             it.first.toDomain()
+        }
+    }
+
+    override fun verifyCode(
+        verificationCode: Int,
+        nationalCode: String,
+        mobileNo: String,
+        idSerial: String
+    ): Flow<Result<VerifyCodeResponse>> {
+        return remoteServiceProvider.getAuthService().accountVerifyCode(
+            verificationCode = verificationCode,
+            nationalCode = nationalCode,
+            mobileNo = mobileNo,
+            idSerial = idSerial
+        ).mapApiResult {
+            it.second
         }
     }
 }

@@ -5,6 +5,7 @@ import com.pmb.domain.model.LoginResponse
 import com.pmb.domain.model.RegisterVerifyResponse
 import com.pmb.domain.model.SendOtpRequest
 import com.pmb.domain.model.openAccount.GenerateCodeResponse
+import com.pmb.domain.model.openAccount.accountVerifyCode.VerifyCodeResponse
 import com.pmb.model.SuccessData
 import kotlinx.coroutines.flow.Flow
 
@@ -21,4 +22,8 @@ interface AuthService {
     fun generateCode(
         nationalCode: String, mobileNo: String, birthDate: String
     ): Flow<Result<SuccessData<GenerateCodeResponse>>>
+
+    fun accountVerifyCode(
+        verificationCode: Int, nationalCode: String, mobileNo: String, idSerial: String
+    ) : Flow<Result<SuccessData<VerifyCodeResponse>>>
 }

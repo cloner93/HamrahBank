@@ -4,6 +4,7 @@ import com.pmb.core.platform.Result
 import com.pmb.domain.model.LoginResponse
 import com.pmb.domain.model.SendOtpRequest
 import com.pmb.domain.model.SendOtpResponse
+import com.pmb.domain.model.openAccount.accountVerifyCode.VerifyCodeResponse
 import kotlinx.coroutines.flow.Flow
 
 interface AuthRepository {
@@ -11,4 +12,7 @@ interface AuthRepository {
     fun login(customerId: String, username: String, password: String): Flow<Result<LoginResponse>>
     fun register(customerId: String, username: String, password: String): Flow<Result<Boolean>>
     fun generateCode(nationalCode:String,mobileNo:String,birthDate:String): Flow<Result<Boolean>>
+    fun verifyCode(
+        verificationCode: Int, nationalCode: String, mobileNo: String, idSerial: String
+    ):Flow<Result<VerifyCodeResponse>>
 }
