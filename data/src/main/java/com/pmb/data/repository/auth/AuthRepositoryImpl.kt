@@ -12,6 +12,7 @@ import com.pmb.domain.model.SendOtpResponse
 import com.pmb.domain.model.UserData
 import com.pmb.domain.model.openAccount.AccountArchiveJobDocResponse
 import com.pmb.domain.model.openAccount.accountVerifyCode.VerifyCodeResponse
+import com.pmb.domain.model.openAccount.accountVerifyCode.accountType.FetchAccountTypeResponse
 import com.pmb.domain.repository.auth.AuthRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -81,7 +82,18 @@ class AuthRepositoryImpl @Inject constructor(
         file: String, nationalCode: String
     ): Flow<Result<AccountArchiveJobDocResponse>> {
         return remoteServiceProvider.getAuthService().accountArchiveJobDoc(
-            file, nationalCode
+            file = file, nationalCode = nationalCode
         ).mapApiResult { it.second }
+    }
+
+    override fun fetchAccountType(
+        customerType: Int, nationalCode: String, mobileNo: String
+    ): Flow<Result<FetchAccountTypeResponse>> {
+        return remoteServiceProvider.getAuthService()
+            .fetchAccountType(
+                customerType = customerType,
+                nationalCode = nationalCode,
+                mobileNo = mobileNo
+            ).mapApiResult { it.second }
     }
 }

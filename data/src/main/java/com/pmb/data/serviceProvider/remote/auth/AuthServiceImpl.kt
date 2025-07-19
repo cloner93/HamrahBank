@@ -13,6 +13,8 @@ import com.pmb.domain.model.openAccount.GenerateCodeRequest
 import com.pmb.domain.model.openAccount.GenerateCodeResponse
 import com.pmb.domain.model.openAccount.accountVerifyCode.VerifyCodeRequest
 import com.pmb.domain.model.openAccount.accountVerifyCode.VerifyCodeResponse
+import com.pmb.domain.model.openAccount.accountVerifyCode.accountType.FetchAccountTypeRequest
+import com.pmb.domain.model.openAccount.accountVerifyCode.accountType.FetchAccountTypeResponse
 import com.pmb.model.SuccessData
 import com.pmb.network.NetworkManger
 import kotlinx.coroutines.flow.Flow
@@ -85,6 +87,21 @@ class AuthServiceImpl @Inject constructor(
         val req = AccountArchiveJobDocRequest(file = file, nationalCode = nationalCode)
         return client.request<AccountArchiveJobDocRequest,AccountArchiveJobDocResponse>(
             "openAccount/accountArchiveJobDoc",req
+        )
+    }
+
+    override fun fetchAccountType(
+        customerType: Int,
+        nationalCode: String,
+        mobileNo: String
+    ): Flow<Result<SuccessData<FetchAccountTypeResponse>>> {
+        val req = FetchAccountTypeRequest(
+            customerType = customerType,
+            nationalCode = nationalCode,
+            mobileNo = mobileNo
+        )
+        return client.request<FetchAccountTypeRequest,FetchAccountTypeResponse>(
+            "openAccount/fetchAccountType",req
         )
     }
 

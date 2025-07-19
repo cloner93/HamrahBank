@@ -7,6 +7,8 @@ import com.pmb.domain.model.SendOtpRequest
 import com.pmb.domain.model.openAccount.AccountArchiveJobDocResponse
 import com.pmb.domain.model.openAccount.GenerateCodeResponse
 import com.pmb.domain.model.openAccount.accountVerifyCode.VerifyCodeResponse
+import com.pmb.domain.model.openAccount.accountVerifyCode.accountType.FetchAccountTypeRequest
+import com.pmb.domain.model.openAccount.accountVerifyCode.accountType.FetchAccountTypeResponse
 import com.pmb.model.SuccessData
 import kotlinx.coroutines.flow.Flow
 
@@ -32,4 +34,10 @@ interface AuthService {
         file: String,
         nationalCode: String
     ): Flow<Result<SuccessData<AccountArchiveJobDocResponse>>>
+
+    fun fetchAccountType(
+        customerType:Int,
+        nationalCode: String,
+        mobileNo: String
+    ) : Flow<Result<SuccessData<FetchAccountTypeResponse>>>
 }

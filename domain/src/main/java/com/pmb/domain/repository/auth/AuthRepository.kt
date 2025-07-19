@@ -6,6 +6,7 @@ import com.pmb.domain.model.SendOtpRequest
 import com.pmb.domain.model.SendOtpResponse
 import com.pmb.domain.model.openAccount.AccountArchiveJobDocResponse
 import com.pmb.domain.model.openAccount.accountVerifyCode.VerifyCodeResponse
+import com.pmb.domain.model.openAccount.accountVerifyCode.accountType.FetchAccountTypeResponse
 import kotlinx.coroutines.flow.Flow
 
 interface AuthRepository {
@@ -25,4 +26,8 @@ interface AuthRepository {
     fun accountArchiveJobDoc(
         file: String, nationalCode: String
     ): Flow<Result<AccountArchiveJobDocResponse>>
+
+    fun fetchAccountType(
+        customerType:Int,nationalCode: String,mobileNo: String
+    ): Flow<Result<FetchAccountTypeResponse>>
 }
