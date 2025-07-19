@@ -1,6 +1,5 @@
 package com.pmb.account.presentation.deposits
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -8,24 +7,37 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.BackdropScaffold
+import androidx.compose.material.BackdropScaffoldState
+import androidx.compose.material.BackdropValue
 import androidx.compose.material.Button
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.rememberBackdropScaffoldState
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -44,10 +56,12 @@ import com.pmb.account.presentation.deposits.viewmodel.DepositsViewModel
 import com.pmb.account.utils.mapToDepositMenu
 import com.pmb.account.utils.mapToDepositModel
 import com.pmb.ballon.component.DepositBottomSheet
+import com.pmb.ballon.component.EmptyList
 import com.pmb.ballon.component.MenuBottomSheet
 import com.pmb.ballon.component.MenuItem
 import com.pmb.ballon.component.MenuItemDefaults
 import com.pmb.ballon.component.base.AppButtonIcon
+import com.pmb.ballon.component.base.IconType
 import com.pmb.ballon.component.base.RoundedTopColumn
 import com.pmb.ballon.models.IconStyle
 import com.pmb.ballon.models.MenuSheetModel
@@ -57,12 +71,16 @@ import com.pmb.domain.model.TransactionModel
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.moduleScreen.AccountScreens
 
-
-@SuppressLint("RememberReturnType", "StateFlowValueCalledInComposition")
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DepositsScreen(viewModel: DepositsViewModel) {
+fun DepositsScreen(
+    viewModel: DepositsViewModel
+) {
     val viewState by viewModel.viewState.collectAsState()
     val navigationManager = LocalNavigationManager.current
+    val backdropState: BackdropScaffoldState =
+        rememberBackdropScaffoldState(BackdropValue.Revealed)
+
     val menuItems = listOf(
         MenuSheetModel(
             title = stringResource(R.string.select_for_main_deposit),
@@ -133,114 +151,146 @@ fun DepositsScreen(viewModel: DepositsViewModel) {
         }
     }
 
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(350.dp)
-            .background(
-                brush = Brush.verticalGradient(
-                    colors = listOf(
-                        Color(0xFFDF445F), Color(0xFFC11332)
-                    )
-                )
-            )
-    ) {
-        Image(painter = painterResource(R.drawable.bg_mellat_logo), contentDescription = null)
-    }
+    rememberCoroutineScope()
 
-    Column {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-//                .padding(top = 25.dp)
-                .height(92.dp)
-                .padding(horizontal = 8.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            AppButtonIcon(
-                icon = com.pmb.ballon.R.drawable.ic_help,
-                style = IconStyle(tint = AppTheme.colorScheme.onForegroundNeutralDefault),
-                onClick = {
-                    viewModel.handle(DepositsViewActions.ShowHelp)
-                })
-
-
-            AppButtonIcon(
-                icon = com.pmb.ballon.R.drawable.ic_coins,
-                style = IconStyle(tint = AppTheme.colorScheme.onForegroundNeutralDefault),
-                onClick = {
-                    viewModel.handle(DepositsViewActions.NavigateToBalanceScreen)
-                })
-        }
-
-        DepositCarouselWidget(
-            depositModel = viewState.selectedDeposit,
-            onMoreClick = { viewModel.handle(DepositsViewActions.ShowDepositMoreActionBottomSheet) },
-            onAmountVisibilityClick = { viewModel.handle(DepositsViewActions.SetAmountVisibility) },
-            onDepositListChipsClick = { viewModel.handle(DepositsViewActions.ShowDepositListBottomSheet) },
-            isAmountVisible = viewState.isAmountVisible
-        )
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        RoundedTopColumn(
-            modifier = Modifier.fillMaxSize()
-        ) {
-
-            MenuItem(
+    BackdropScaffold(
+        scaffoldState = backdropState,
+        backLayerContent = {
+            Box(
                 modifier = Modifier
-                    .clip(RoundedCornerShape(16.dp))
-                    .background(color = AppTheme.colorScheme.backgroundTintNeutralDefault),
-                title = stringResource(R.string.deposit_card_sheba),
-                horizontalDividerPadding = MenuItemDefaults.horizontalDividerPadding.copy(vertical = 0.dp),
-                startIcon = com.pmb.ballon.R.drawable.ic_racket,
-                titleStyle = TextStyle(
-                    color = AppTheme.colorScheme.foregroundNeutralDefault,
-                    typography = AppTheme.typography.buttonLarge
-                ),
-                startIconStyle = IconStyle(tint = AppTheme.colorScheme.onBackgroundNeutralSubdued),
-                clickable = false,
-                onItemClick = {
-                    viewModel.handle(DepositsViewActions.ShowShareBottomSheet)
-                })
-            Spacer(modifier = Modifier.height(12.dp))
-            MenuItem(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(16.dp))
-                    .background(
-                        color = AppTheme.colorScheme.backgroundTintNeutralDefault,
-                        shape = RoundedCornerShape(16.dp)
-                    ),
-                title = stringResource(R.string.transactions),
-                startIcon = com.pmb.ballon.R.drawable.ic_bar_chart_vertical,
-                endIcon = com.pmb.ballon.R.drawable.ic_arrow_left,
-                titleStyle = TextStyle(
-                    color = AppTheme.colorScheme.foregroundNeutralDefault,
-                    typography = AppTheme.typography.buttonLarge
-                ),
-                startIconStyle = IconStyle(tint = AppTheme.colorScheme.onBackgroundNeutralSubdued),
-                endIconStyle = IconStyle(tint = AppTheme.colorScheme.onBackgroundNeutralSubdued),
-                clickable = false,
-                onItemClick = {
-                    viewModel.handle(DepositsViewActions.NavigateToTransactionScreen)
-                })
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            TransactionLazyList(
-                viewModel.transactionFlow.collectAsLazyPagingItems(),
-                viewState.isAmountVisible,
-            ) { transaction ->
-                viewModel.handle(
-                    DepositsViewActions.NavigateToTransactionDetailScreen(
-                        transaction
+                    .fillMaxWidth()
+                    .height(LocalConfiguration.current.screenHeightDp.dp * 0.35f)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .matchParentSize()
+                        .background(
+                            brush = Brush.verticalGradient(
+                                colors = listOf(
+                                    Color(0xFFDF445F), Color(0xFFC11332)
+                                )
+                            )
+                        )
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.mellat_logo_line),
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize()
                     )
-                )
+                }
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(
+                            top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
+                        )
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(92.dp)
+                            .padding(horizontal = 8.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        AppButtonIcon(
+                            icon = com.pmb.ballon.R.drawable.ic_help,
+                            style = IconStyle(tint = AppTheme.colorScheme.onForegroundNeutralDefault),
+                            onClick = {
+                                viewModel.handle(DepositsViewActions.ShowHelp)
+                            })
+
+                        AppButtonIcon(
+                            icon = com.pmb.ballon.R.drawable.ic_coins,
+                            style = IconStyle(tint = AppTheme.colorScheme.onForegroundNeutralDefault),
+                            onClick = {
+                                viewModel.handle(DepositsViewActions.NavigateToBalanceScreen)
+                            })
+                    }
+
+                    DepositCarouselWidget(
+                        depositModel = viewState.selectedDeposit,
+                        onMoreClick = { viewModel.handle(DepositsViewActions.ShowDepositMoreActionBottomSheet) },
+                        onAmountVisibilityClick = { viewModel.handle(DepositsViewActions.SetAmountVisibility) },
+                        onDepositListChipsClick = { viewModel.handle(DepositsViewActions.ShowDepositListBottomSheet) },
+                        isAmountVisible = viewState.isAmountVisible
+                    )
+
+                    Spacer(modifier = Modifier.height(24.dp))
+                }
             }
+        },
+        backLayerBackgroundColor = Color(0xFFC11332),
+        frontLayerShape = MaterialTheme.shapes.large.copy(
+            topStart = CornerSize(20.dp),
+            topEnd = CornerSize(20.dp)
+        ),
+        frontLayerScrimColor = Color.Unspecified,
+        frontLayerContent = {
 
-        }
-    }
+            RoundedTopColumn(
+                modifier = Modifier.fillMaxSize()
+            ) {
+
+                MenuItem(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(16.dp))
+                        .background(color = AppTheme.colorScheme.backgroundTintNeutralDefault),
+                    title = stringResource(R.string.deposit_card_sheba),
+                    horizontalDividerPadding = MenuItemDefaults.horizontalDividerPadding.copy(
+                        vertical = 0.dp
+                    ),
+                    startIcon = com.pmb.ballon.R.drawable.ic_racket,
+                    titleStyle = TextStyle(
+                        color = AppTheme.colorScheme.foregroundNeutralDefault,
+                        typography = AppTheme.typography.buttonLarge
+                    ),
+                    startIconStyle = IconStyle(tint = AppTheme.colorScheme.onBackgroundNeutralSubdued),
+                    clickable = false,
+                    onItemClick = {
+                        viewModel.handle(DepositsViewActions.ShowShareBottomSheet)
+                    })
+                Spacer(modifier = Modifier.height(12.dp))
+                MenuItem(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(16.dp))
+                        .background(
+                            color = AppTheme.colorScheme.backgroundTintNeutralDefault,
+                            shape = RoundedCornerShape(16.dp)
+                        ),
+                    title = stringResource(R.string.transactions),
+                    startIcon = com.pmb.ballon.R.drawable.ic_bar_chart_vertical,
+                    endIcon = com.pmb.ballon.R.drawable.ic_arrow_left,
+                    titleStyle = TextStyle(
+                        color = AppTheme.colorScheme.foregroundNeutralDefault,
+                        typography = AppTheme.typography.buttonLarge
+                    ),
+                    startIconStyle = IconStyle(tint = AppTheme.colorScheme.onBackgroundNeutralSubdued),
+                    endIconStyle = IconStyle(tint = AppTheme.colorScheme.onBackgroundNeutralSubdued),
+                    clickable = false,
+                    onItemClick = {
+                        viewModel.handle(DepositsViewActions.NavigateToTransactionScreen)
+                    })
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                TransactionLazyList(
+                    viewModel.transactionFlow.collectAsLazyPagingItems(),
+                    viewState.isAmountVisible,
+                ) { transaction ->
+                    viewModel.handle(
+                        DepositsViewActions.NavigateToTransactionDetailScreen(
+                            transaction
+                        )
+                    )
+                }
+            }
+        },
+        appBar = {
+        },
+        peekHeight = 92.dp,
+    )
 
     if (viewState.showShareDepositInfoBottomSheet)
         ShareDepositBottomSheet(
@@ -281,7 +331,6 @@ fun DepositsScreen(viewModel: DepositsViewModel) {
                 )
             )
         }
-
 }
 
 @Composable
@@ -309,7 +358,11 @@ fun TransactionLazyList(
                 contentAlignment = Alignment.Center
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text("خطا در دریافت اطلاعات: ${error.error.message}")
+                    EmptyList(
+                        modifier = Modifier.fillMaxSize(),
+                        iconType = IconType.Painter(painterResource(R.drawable.empty_list)),
+                        message = "خطا در بارگذاری بیشتر - ${error.error.message}"
+                    )
                     Spacer(modifier = Modifier.height(8.dp))
                     Button(onClick = { transaction.retry() }) {
                         Text("تلاش مجدد")
@@ -319,12 +372,11 @@ fun TransactionLazyList(
         }
 
         transaction.itemCount == 0 -> {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text("تراکنشی یافت نشد.")
-            }
+            EmptyList(
+                modifier = Modifier.fillMaxWidth(),
+                iconType = IconType.Painter(painterResource(R.drawable.empty_list)),
+                message = "تراکنشی یافت نشد!"
+            )
         }
 
         else -> {
@@ -333,6 +385,7 @@ fun TransactionLazyList(
             ) {
                 items(transaction.itemCount) { index ->
                     transaction[index]?.let { item ->
+                        Spacer(modifier = Modifier.height(8.dp))
                         TransactionRow(
                             item = item,
                             isAmountVisible = amountVisible,
@@ -363,7 +416,11 @@ fun TransactionLazyList(
                                 .padding(16.dp),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Text("خطا در بارگذاری بیشتر: ${error.error.message}")
+                            EmptyList(
+                                modifier = Modifier.fillMaxSize(),
+                                iconType = IconType.Painter(painterResource(R.drawable.empty_list)),
+                                message = "خطا در بارگذاری بیشتر - ${error.error.message}"
+                            )
                             Spacer(modifier = Modifier.height(8.dp))
                             Button(onClick = { transaction.retry() }) {
                                 Text("تلاش مجدد")
