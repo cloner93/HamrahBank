@@ -1,7 +1,6 @@
 package com.pmb.data.repository.auth
 
 import com.pmb.core.platform.Result
-import com.pmb.data.mapper.authService.mapToLoginResponse
 import com.pmb.data.mapper.authService.toDomain
 import com.pmb.data.mapper.mapApiResult
 import com.pmb.data.serviceProvider.local.LocalServiceProvider
@@ -23,6 +22,10 @@ class AuthRepositoryImpl @Inject constructor(
     private val remoteServiceProvider: RemoteServiceProvider,
     private val localServiceProvider: LocalServiceProvider
 ) : AuthRepository {
+    override suspend fun getUserDataStore(): UserData? {
+        return localServiceProvider.getUserDataStore().getUserData()
+    }
+
     override suspend fun sendOtp(sendOtpRequest: SendOtpRequest): Flow<Result<SendOtpResponse>> {
         return remoteServiceProvider.getAuthService().sendOtp(sendOtpRequest).mapApiResult {
             if (it.first?.statusMessage == "موفق") {
@@ -43,7 +46,7 @@ class AuthRepositoryImpl @Inject constructor(
     ): Flow<Result<LoginResponse>> {
         return remoteServiceProvider.getAuthService()
             .login(customerId = customerId, username = username, password = password).mapApiResult {
-                it.second.mapToLoginResponse()
+                it.second
             }
     }
 
