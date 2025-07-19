@@ -7,6 +7,7 @@ import com.pmb.domain.model.SendOtpResponse
 import com.pmb.domain.model.openAccount.AccountArchiveJobDocResponse
 import com.pmb.domain.model.openAccount.accountType.FetchAccountTypeResponse
 import com.pmb.domain.model.openAccount.accountVerifyCode.VerifyCodeResponse
+import com.pmb.domain.model.openAccount.branchName.FetchBranchListResponse
 import com.pmb.domain.model.openAccount.cityName.FetchCityListResponse
 import kotlinx.coroutines.flow.Flow
 
@@ -31,5 +32,9 @@ interface AuthRepository {
     ): Flow<Result<FetchAccountTypeResponse>>
 
     fun fetchCityList(stateCode: Int): Flow<Result<FetchCityListResponse>>
+
+    fun fetchBranchList(
+        mergeStatus: Int, stateCode: Int, cityCode: Int, organizationType: String
+    ): Flow<Result<FetchBranchListResponse>>
 
 }

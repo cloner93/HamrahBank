@@ -15,6 +15,8 @@ import com.pmb.domain.model.openAccount.accountType.FetchAccountTypeRequest
 import com.pmb.domain.model.openAccount.accountType.FetchAccountTypeResponse
 import com.pmb.domain.model.openAccount.accountVerifyCode.VerifyCodeRequest
 import com.pmb.domain.model.openAccount.accountVerifyCode.VerifyCodeResponse
+import com.pmb.domain.model.openAccount.branchName.FetchBranchListRequest
+import com.pmb.domain.model.openAccount.branchName.FetchBranchListResponse
 import com.pmb.domain.model.openAccount.cityName.FetchCityListRequest
 import com.pmb.domain.model.openAccount.cityName.FetchCityListResponse
 import com.pmb.model.SuccessData
@@ -54,8 +56,7 @@ class AuthServiceImpl @Inject constructor(
             nationalCode = nationalCode, mobileNo = mobileNo, birthDate = birthDate
         )
         return client.request<GenerateCodeRequest, GenerateCodeResponse>(
-            "openAccount/generateCode",
-            req
+            "openAccount/generateCode", req
         )
     }
 
@@ -69,8 +70,7 @@ class AuthServiceImpl @Inject constructor(
             idSerial = idSerial
         )
         return client.request<VerifyCodeRequest, VerifyCodeResponse>(
-            "openAccount/accountVerifyCode",
-            req
+            "openAccount/accountVerifyCode", req
         )
     }
 
@@ -97,8 +97,21 @@ class AuthServiceImpl @Inject constructor(
     override fun fetchCityList(stateCode: Int): Flow<Result<SuccessData<FetchCityListResponse>>> {
         val req = FetchCityListRequest(stateCode = stateCode)
         return client.request<FetchCityListRequest, FetchCityListResponse>(
-            "openAccount/fetchCityList",
-            req
+            "openAccount/fetchCityList", req
+        )
+    }
+
+    override fun fetchBranchList(
+        mergeStatus: Int, stateCode: Int, cityCode: Int, organizationType: String
+    ): Flow<Result<SuccessData<FetchBranchListResponse>>> {
+        val req = FetchBranchListRequest(
+            mergeStatus = mergeStatus,
+            stateCode = stateCode,
+            cityCode = cityCode,
+            organizationType = organizationType
+        )
+        return client.request<FetchBranchListRequest, FetchBranchListResponse>(
+            "openAccount/fetchBranchList", req
         )
     }
 
