@@ -16,14 +16,21 @@ import com.pmb.domain.model.openAccount.branchName.FetchBranchListResponse
 import com.pmb.domain.model.openAccount.cityName.FetchCityListResponse
 import com.pmb.domain.repository.auth.AuthRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
     private val remoteServiceProvider: RemoteServiceProvider,
     private val localServiceProvider: LocalServiceProvider
 ) : AuthRepository {
-    override suspend fun getUserDataStore(): UserData? {
-        return localServiceProvider.getUserDataStore().getUserData()
+    override suspend fun getUserData(): Flow<Result<UserData?>> = flow {
+        emit(Result.Loading)
+        try {
+            val userData = localServiceProvider.getUserDataStore().getUserData()
+            emit(Result.Success(userData))
+        } catch (e: Exception) {
+            emit(Result.Error(message = e.message ?: "Unknown error", exception = e))
+        }
     }
 
     override suspend fun sendOtp(sendOtpRequest: SendOtpRequest): Flow<Result<SendOtpResponse>> {

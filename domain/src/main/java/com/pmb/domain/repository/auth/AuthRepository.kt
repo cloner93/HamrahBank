@@ -13,7 +13,7 @@ import com.pmb.domain.model.openAccount.cityName.FetchCityListResponse
 import kotlinx.coroutines.flow.Flow
 
 interface AuthRepository {
-    suspend fun getUserDataStore(): UserData?
+    suspend fun getUserData(): Flow<Result<UserData?>>
     suspend fun sendOtp(sendOtpRequest: SendOtpRequest): Flow<Result<SendOtpResponse>>
     fun login(customerId: String, username: String, password: String): Flow<Result<LoginResponse>>
     fun register(customerId: String, username: String, password: String): Flow<Result<Boolean>>
