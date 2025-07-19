@@ -1,5 +1,6 @@
 package com.pmb.auth.presentation.register.job_information
 
+import android.content.Intent
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -14,11 +15,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.pmb.auth.R
@@ -50,15 +51,43 @@ fun JobInformationScreen(
 ) {
     val navigationManager: NavigationManager = LocalNavigationManager.current
     val viewState by viewModel.viewState.collectAsState()
+    val context = LocalContext.current
+
     var annualIncome by remember {
         mutableStateOf<AnnualIncomingPrediction?>(null)
     }
-    var ur by remember { mutableStateOf<Uri?>(null) }
     var showShareBottomSheet by remember { mutableStateOf(false) }
-    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success ->
-        if (success) {
-//            viewModel.file =
-            ur = viewModel.file
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        viewModel.onSinglePermissionResult(isGranted)
+    }
+    val launcher =
+        rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success ->
+            if (!success) {
+                viewModel.handle(JobInformationViewActions.ClearPhoto)
+            } else {
+                viewModel.handle(JobInformationViewActions.TookPhoto)
+            }
+        }
+    val fileLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.OpenDocument()
+    ) { uri: Uri? ->
+        uri?.let {
+            try {
+                context.contentResolver.takePersistableUriPermission(
+                    it,
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION
+                )
+            } catch (e: SecurityException) {
+                e.printStackTrace()
+            }
+            viewModel.handle(JobInformationViewActions.GetFileFromStorage(it))
+        }
+    }
+    LaunchedEffect(viewState.hasCameraPermission) {
+        if (viewState.hasCameraPermission) {
+            viewState.fileUri?.let { launcher.launch(it) }
         }
     }
     navigationManager.getCurrentScreenFlowData<JobInformation?>(
@@ -144,12 +173,12 @@ fun JobInformationScreen(
                 }
             }
             UploadDocumentsSection(
-                images = ur?.path,
+                images = if (viewState.isTookPhoto) viewState.fileUri else null,
                 onAddClicked = {
                     showShareBottomSheet = true
                 },
                 onRemoveImage = {
-//                    imageUris.remove(it)
+                    viewModel.handle(JobInformationViewActions.ClearPhoto)
                 }
             )
         }
@@ -170,8 +199,7 @@ fun JobInformationScreen(
                     iconTint = { AppTheme.colorScheme.onBackgroundNeutralCTA },
                     showEndIcon = false,
                     onClicked = {
-                        viewModel.createFile()
-                        viewModel.file?.let { launcher.launch(it) }
+                        fileLauncher.launch(arrayOf("image/*", "application/pdf"))
                     }
                 ),
                 MenuSheetModel(
@@ -180,6 +208,11 @@ fun JobInformationScreen(
                     iconTint = { AppTheme.colorScheme.onBackgroundNeutralCTA },
                     showEndIcon = false,
                     onClicked = {
+                        viewModel.handle(
+                            JobInformationViewActions.RequestCameraPermission(
+                                permissionLauncher
+                            )
+                        )
                     }
                 )
 

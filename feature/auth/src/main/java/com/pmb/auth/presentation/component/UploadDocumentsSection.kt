@@ -1,5 +1,7 @@
 package com.pmb.auth.presentation.component
 
+import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -33,7 +35,7 @@ import com.pmb.ballon.ui.theme.AppTheme
 @Composable
 fun UploadDocumentsSection(
     modifier: Modifier = Modifier,
-    images: String?,
+    images: Uri?,
     onAddClicked: () -> Unit,
     onRemoveImage: () -> Unit
 ) {
@@ -51,7 +53,8 @@ fun UploadDocumentsSection(
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                images.takeIf { !it.isNullOrEmpty() }?.let { uri ->
+                images.takeIf { it !=null }?.let { uri ->
+                    Log.d("photo",images.toString())
                     PreviewRoundedImageComponent(
                         modifier = Modifier
                             .size(156.dp)

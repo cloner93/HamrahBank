@@ -12,5 +12,11 @@ interface FileManager {
     fun createImageFile(): File
     fun createVideoFile(): File
     fun getFileUri(file: File): Uri
-    fun createImageUri(): Uri
+    fun getFileUriFromProvider(file: File): Uri
+    fun deleteFileFromUri(uri: Uri?): Boolean
+    fun savePickedFileToInternalStorage(
+        uri: Uri,
+        fileName: String,
+        fileManager: FileManager
+    ): Boolean
 }
