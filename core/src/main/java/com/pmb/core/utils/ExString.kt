@@ -65,7 +65,7 @@ fun String.isPassword(): PasswordValidationResult {
         lowercase = lowercase,
         uppercase = uppercase,
         digit = digit,
-        specialChar = specialChar
+        specialChar = true
     )
 }
 
@@ -78,7 +78,7 @@ data class PasswordValidationResult(
     val lowercase: Boolean = false,
     val uppercase: Boolean = false,
     val digit: Boolean = false,
-    val specialChar: Boolean = false
+    private val specialChar: Boolean = true
 ) {
     val isValid: Boolean
         get() = minLen && lowercase && uppercase && digit && specialChar
