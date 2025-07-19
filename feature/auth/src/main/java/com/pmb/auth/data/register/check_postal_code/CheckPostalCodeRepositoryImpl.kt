@@ -15,7 +15,6 @@ class CheckPostalCodeRepositoryImpl @Inject constructor() : CheckPostalCodeRepos
     override fun checkPostalCode(params: CheckPostalCodeRequest): Flow<Result<CheckPostalCodeResponse>> =
         flow {
             emit(Result.Loading)
-            delay(2000)
             params.postalCode.takeIf { it.isNotEmpty() && it == "1234567890" }?.let {
                 emit(
                     Result.Success(
@@ -33,7 +32,6 @@ class CheckPostalCodeRepositoryImpl @Inject constructor() : CheckPostalCodeRepos
     override fun checkAddress(params: SendAddressRequest): Flow<Result<SendAddressResponse>> =
         flow {
             emit(Result.Loading)
-            delay(2000)
             params.postalCode.takeIf { it.isNotEmpty() }?.let {
                 emit(
                     Result.Success(

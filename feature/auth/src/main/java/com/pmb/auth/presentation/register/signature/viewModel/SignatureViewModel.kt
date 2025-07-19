@@ -33,7 +33,6 @@ class SignatureViewModel @Inject constructor(
                 requestCameraPermission(action)
             }
 
-            is PhotoViewActions.RequestFilePermission -> requestFilePermission(action)
             is PhotoViewActions.CapturePhoto -> takePhoto()
             is PhotoViewActions.ToggleCamera -> toggleCamera()
             is PhotoViewActions.PreviewCamera -> {
@@ -179,25 +178,6 @@ class SignatureViewModel @Inject constructor(
         }
     }
 
-    private fun requestFilePermission(action: PhotoViewActions.RequestFilePermission) {
-        viewModelScope.launch {
-            permissionDispatcher.initialize(multiplePermissionLauncher = action.managedActivityResultLauncher)
-            permissionDispatcher.requestMultiplePermission(
-                permissions = arrayOf(
-                ),
-                onPermissionGranted = {
-                    setState { state ->
-                        state.copy(hasFilePermissions = true)
-                    }
-                },
-                onPermissionDenied = { deniedPermissions ->
-                    setState { state ->
-                        state.copy(cameraHasError = "You don't have ${deniedPermissions} for using file explorer")
-                    }
-                }
-            )
-        }
-    }
 
     private fun previewCamera(action: PhotoViewActions.PreviewCamera) {
         setState { state ->

@@ -9,6 +9,8 @@ import com.pmb.domain.model.RegisterVerifyResponse
 import com.pmb.domain.model.SendOtpRequest
 import com.pmb.domain.model.openAccount.GenerateCodeRequest
 import com.pmb.domain.model.openAccount.GenerateCodeResponse
+import com.pmb.domain.model.openAccount.accountVerifyCode.VerifyCodeRequest
+import com.pmb.domain.model.openAccount.accountVerifyCode.VerifyCodeResponse
 import com.pmb.model.SuccessData
 import com.pmb.network.NetworkManger
 import kotlinx.coroutines.flow.Flow
@@ -57,6 +59,21 @@ class AuthServiceImpl @Inject constructor(
             birthDate = birthDate
         )
         return client.request<GenerateCodeRequest,GenerateCodeResponse>("openAccount/generateCode",req)
+    }
+
+    override fun accountVerifyCode(
+        verificationCode: Int,
+        nationalCode: String,
+        mobileNo: String,
+        idSerial: String
+    ): Flow<Result<SuccessData<VerifyCodeResponse>>> {
+        val req = VerifyCodeRequest(
+            verificationCode = verificationCode,
+            nationalCode = nationalCode,
+            mobileNo = mobileNo,
+            idSerial = idSerial
+        )
+        return client.request<VerifyCodeRequest,VerifyCodeResponse>("openAccount/accountVerifyCode",req)
     }
 
 }

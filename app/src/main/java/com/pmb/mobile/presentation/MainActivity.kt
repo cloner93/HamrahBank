@@ -22,9 +22,14 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.pmb.account.presentation.accountScreensHandle
+import com.pmb.auth.presentation.activation.activationScreenHandler
 import com.pmb.auth.presentation.authScreensHandle
+import com.pmb.auth.presentation.ekyc.ekycScreenHandler
+import com.pmb.auth.presentation.register.registerScreenHandler
+import com.pmb.auth.presentation.scan_card_info.cardScreenHandler
 import com.pmb.ballon.component.base.AppBottomBar
 import com.pmb.ballon.component.base.BottomNavItem
 import com.pmb.ballon.component.base.bottomNavItems
@@ -34,8 +39,10 @@ import com.pmb.mobile.presentation.viewmodel.MainActivityViewModel
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.manager.NavigationManager
 import com.pmb.navigation.moduleScreen.AccountScreens
+import com.pmb.navigation.moduleScreen.AuthScreens
 import com.pmb.navigation.moduleScreen.HomeScreens
 import com.pmb.navigation.moduleScreen.ProfileScreens
+import com.pmb.navigation.moduleScreen.SharedAuthAndActivationScopeGraph
 import com.pmb.navigation.moduleScreen.TransferScreens
 import com.pmb.profile.presentaion.profileScreensHandle
 import com.pmb.transfer.presentation.transferScreensHandle
@@ -86,7 +93,12 @@ fun AppNavHost(navController: NavHostController, innerPadding: PaddingValues) {
             popEnterTransition = { EnterTransition.None },
             popExitTransition = { ExitTransition.None }
         ) {
-            authScreensHandle()
+            navigation(
+                route = SharedAuthAndActivationScopeGraph.route,
+                startDestination = AuthScreens.AuthGraph.route // This makes AuthGraph the first thing seen within this shared scope
+            ) {
+                authScreensHandle()
+            }
             homeScreensHandle()
             transferScreensHandle()
             accountScreensHandle()

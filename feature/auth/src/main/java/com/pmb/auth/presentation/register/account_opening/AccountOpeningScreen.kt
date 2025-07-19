@@ -24,6 +24,7 @@ import com.pmb.auth.presentation.register.account_opening.viewModel.OpeningAccou
 import com.pmb.auth.presentation.register.account_opening.viewModel.OpeningAccountViewEvents
 import com.pmb.auth.presentation.register.account_opening.viewModel.OpeningAccountViewModel
 import com.pmb.auth.presentation.register.account_opening.viewModel.OpeningAccountViewState
+import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppButtonIcon
 import com.pmb.ballon.component.base.AppClickableReadOnlyTextField
@@ -74,15 +75,11 @@ fun AccountOpeningScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 16.dp, end = 16.dp, top = 16.dp),
-                enable = !viewState.phoneNumber.isNullOrEmpty() && !viewState.nationalId.isNullOrEmpty() && viewState.birthDay != null,
+                enable = !viewState.phoneNumber.isNullOrEmpty() && !viewState.nationalId.isNullOrEmpty() && viewState.birthDateDay != null,
                 title = stringResource(R.string._continue),
                 onClick = {
                     viewModel.handle(
-                        OpeningAccountViewActions.SendOpeningAccountData(
-                            viewState.phoneNumber ?: "",
-                            viewState.nationalId ?: "",
-                            viewState.birthDay?.let { "${it.dayOfMonth}/${it.month}/${it.year}" }
-                                ?: run { "" })
+                        OpeningAccountViewActions.SendOpeningAccountData
                     )
                 })
         },
@@ -108,9 +105,8 @@ fun AccountOpeningScreen(
             onValueChange = { viewModel.handle(OpeningAccountViewActions.SetNationalId(it)) })
         Spacer(modifier = Modifier.size(24.dp))
         AppClickableReadOnlyTextField(
-//            value = birthday.toPersianDate(),
-            value = viewState.birthDay?.let { "${it.dayOfMonth}/${it.month}/${it.year}" }
-                ?: run { "" }, // TODO: fix it
+            value = viewState.birthDateYear?.let { "${it}/${viewState.birthDateMonth}/${viewState.birthDateDay}" }
+                ?: run { stringResource(R.string.birthday) },
             label = stringResource(R.string.birthday),
             trailingIcon = {
                 AppButtonIcon(
@@ -128,22 +124,25 @@ fun AccountOpeningScreen(
     if (viewState.isShowingBottomSheet) {
         ShowPersianDatePickerBottomSheet(
             title = stringResource(R.string.birthday),
-            defaultDate = Jdn(viewState.birthDay.toJdn()),
+            defaultDate = viewState.birthDateYear?.let  { Jdn(
+                Calendar.SHAMSI,
+                it.toInt(),
+                viewState.birthDateMonth?.toInt() ?:1,
+                viewState.birthDateMonth?.toInt() ?:1
+            ) } ?: run { Jdn.today() },
             onDismiss = { viewModel.handle(OpeningAccountViewActions.ShowBottomSheet(false)) },
             onChangeValue = { year, month, day ->
                 viewModel.handle(
                     OpeningAccountViewActions.SetBirthday(
-                        Jdn(
-                            Calendar.SHAMSI,
-                            year.toInt(),
-                            month.toInt(),
-                            day.toInt()
-                        ).toPersianDate()
+                            year,
+                            month,
+                            day
                     )
                 )
                 viewModel.handle(OpeningAccountViewActions.ShowBottomSheet(false))
             },
         )
     }
+    viewState.alertModelState?.let { AlertComponent(it) }
 }
 

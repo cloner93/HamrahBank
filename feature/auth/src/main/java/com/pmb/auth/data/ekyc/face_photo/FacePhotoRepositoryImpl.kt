@@ -13,7 +13,6 @@ class FacePhotoRepositoryImpl @Inject constructor() : FacePhotoRepository {
     override fun sendPhotoOfCustomerFace(params: FacePhotoParams): Flow<Result<FacePhotoEntity>> =
         flow {
             emit(Result.Loading)
-            delay(2000)
             params.uri.takeIf { !it.isNullOrEmpty() }?.let {
                 emit(Result.Success(FacePhotoEntity(isSuccess = true)))
             } ?: run {

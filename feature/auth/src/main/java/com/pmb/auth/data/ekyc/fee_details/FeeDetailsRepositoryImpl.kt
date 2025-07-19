@@ -13,7 +13,6 @@ class FeeDetailsRepositoryImpl @Inject constructor() : FeeDetailsRepository {
     override suspend fun getFeeDetails(): Flow<Result<FeeDetailsEntity>> =
         flow {
             emit(Result.Loading)
-            delay(2000)
             emit(
                 Result.Success(
                     FeeDetailsEntity(

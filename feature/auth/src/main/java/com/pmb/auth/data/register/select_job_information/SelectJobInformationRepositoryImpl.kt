@@ -12,7 +12,6 @@ import javax.inject.Inject
 class SelectJobInformationRepositoryImpl @Inject constructor() : SelectJobInformationRepository {
     override suspend fun getJobInformation(): Flow<Result<SelectJobInformationEntity>> = flow {
         emit(Result.Loading)
-        delay(2000)
         emit(
             Result.Success(
                 SelectJobInformationEntity(

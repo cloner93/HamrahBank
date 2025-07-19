@@ -126,7 +126,7 @@ fun FirstLoginConfirmScreen(
         Spacer(modifier = Modifier.size(32.dp))
         AppButton(
             modifier = Modifier.fillMaxWidth(),
-            enable = otp.length >= 6,
+            enable = otp.isNotEmpty(),
             title = stringResource(R.string.login),
             onClick = {
                 viewModel.handle(

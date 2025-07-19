@@ -13,7 +13,6 @@ class CapturingVideoRepositoryImpl @Inject constructor() : CapturingVideoReposit
     override fun sendVideo(capturingVideoParams: CapturingVideoParams): Flow<Result<CapturingVideoEntity>> =
         flow {
             emit(Result.Loading)
-            delay(2000)
             capturingVideoParams.uri.takeIf { !it.isNullOrEmpty() }?.let {
                 emit(Result.Success(CapturingVideoEntity(isSuccess = true)))
             }?:run{

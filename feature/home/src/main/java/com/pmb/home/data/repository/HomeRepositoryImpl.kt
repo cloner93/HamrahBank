@@ -14,7 +14,6 @@ import javax.inject.Inject
 class HomeRepositoryImpl @Inject constructor() : HomeRepository {
     override fun getHomeData(): Flow<Result<HomeEntity>> = flow {
         emit(Result.Loading)
-        delay(2000)
         emit(
             Result.Success(
                 HomeEntity(

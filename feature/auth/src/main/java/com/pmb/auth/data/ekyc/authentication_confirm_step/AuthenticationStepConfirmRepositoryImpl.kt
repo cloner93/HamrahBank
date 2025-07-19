@@ -14,7 +14,6 @@ class AuthenticationStepConfirmRepositoryImpl @Inject constructor() :
     override fun getAuthenticationStepConfirmData(): Flow<Result<AuthenticationStepConfirmEntity>> =
         flow {
             emit(Result.Loading)
-            delay(2000)
             emit(
                 Result.Success(
                     AuthenticationStepConfirmEntity(

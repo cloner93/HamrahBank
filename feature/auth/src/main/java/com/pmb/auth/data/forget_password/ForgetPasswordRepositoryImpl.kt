@@ -19,7 +19,6 @@ class ForgetPasswordRepositoryImpl @Inject constructor(
     ): Flow<Result<ForgetPasswordEntity>> = flow {
         val accountSampleModel = AccountSampleModel()
         emit(Result.Loading)
-        delay(2000)
         if (mobileNumber == accountSampleModel.mobileNumber) {
             emit(Result.Success(ForgetPasswordEntity(isSuccess = true)))
         } else {

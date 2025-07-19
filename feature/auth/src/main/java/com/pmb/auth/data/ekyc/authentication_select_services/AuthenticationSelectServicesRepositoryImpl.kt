@@ -17,7 +17,6 @@ class AuthenticationSelectServicesRepositoryImpl @Inject constructor(
 ) : AuthenticationSelectServicesRepository {
     override fun getServices(): Flow<Result<SelectServicesEntity>> = flow {
         emit(Result.Loading)
-        delay(2000)
         emit(
             Result.Success(
                 SelectServicesEntity(
@@ -44,7 +43,6 @@ class AuthenticationSelectServicesRepositoryImpl @Inject constructor(
     override fun confirmServices(params: SelectServicesParams): Flow<Result<ConfirmSelectServicesEntity>> =
         flow {
             emit(Result.Loading)
-            delay(2000)
             params.takeIf { it.ids.size == 2 }?.let {
                 emit(Result.Success(ConfirmSelectServicesEntity(isSuccess = true)))
             } ?: run {

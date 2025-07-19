@@ -1,11 +1,11 @@
 package com.pmb.auth.presentation.register.account_opening.viewModel
 
 import androidx.lifecycle.viewModelScope
-import com.pmb.auth.domain.register.opening_account.entity.OpeningAccountParams
-import com.pmb.auth.domain.register.opening_account.useCase.SendOpeningAccountUseCase
 import com.pmb.core.platform.AlertModelState
 import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.platform.Result
+import com.pmb.domain.usecae.auth.openAccount.GenerateCodeParams
+import com.pmb.domain.usecae.auth.openAccount.GenerateCodeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.persiancalendar.calendar.PersianDate
 import kotlinx.coroutines.flow.collectLatest
@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class OpeningAccountViewModel @Inject constructor(
-    private val sendOpeningAccountUseCase: SendOpeningAccountUseCase
+    private val generateCodeUseCase: GenerateCodeUseCase
 ) :
     BaseViewModel<OpeningAccountViewActions, OpeningAccountViewState, OpeningAccountViewEvents>(
         OpeningAccountViewState()
@@ -30,7 +30,7 @@ class OpeningAccountViewModel @Inject constructor(
             }
 
             is OpeningAccountViewActions.SetBirthday -> {
-                handleSetBirthday(action.birthDay)
+                handleSetBirthday(action)
             }
 
             is OpeningAccountViewActions.SetNationalId -> {
@@ -46,26 +46,20 @@ class OpeningAccountViewModel @Inject constructor(
             }
 
             is OpeningAccountViewActions.SendOpeningAccountData -> {
-                handleSendOpeningAccountData(
-                    action.phoneNumber,
-                    action.nationalId,
-                    action.birthDay
-                )
+                handleSendOpeningAccountData()
             }
         }
     }
 
     private fun handleSendOpeningAccountData(
-        phoneNumber: String,
-        nationalId: String,
-        birthDay: String
+
     ) {
         viewModelScope.launch {
-            sendOpeningAccountUseCase.invoke(
-                OpeningAccountParams(
-                    phoneNumber,
-                    nationalId,
-                    birthDay
+            generateCodeUseCase.invoke(
+                GenerateCodeParams(
+                    nationalCode = viewState.value.nationalId ?: "",
+                    mobileNo = viewState.value.phoneNumber ?: "",
+                    birthDate = "${viewState.value.birthDateYear}${viewState.value.birthDateMonth}${viewState.value.birthDateDay}"
                 )
             ).collectLatest { result ->
                 when (result) {
@@ -130,10 +124,12 @@ class OpeningAccountViewModel @Inject constructor(
         }
     }
 
-    private fun handleSetBirthday(date: PersianDate) {
+    private fun handleSetBirthday(actions: OpeningAccountViewActions.SetBirthday) {
         setState {
             it.copy(
-                birthDay = date
+                birthDateDay = actions.birthDateDay,
+                birthDateYear = actions.birthDateYear,
+                birthDateMonth = actions.birthDateMonth,
             )
         }
     }

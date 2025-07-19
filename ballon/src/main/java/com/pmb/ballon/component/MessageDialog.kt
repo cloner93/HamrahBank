@@ -12,6 +12,7 @@ fun MessageDialog(
     title: String, message: String? = null, onConfirm: (() -> Unit)?, onDismiss: (() -> Unit)?
 ) {
     AlertDialog(
+        containerColor = AppTheme.colorScheme.background1Neutral,
         onDismissRequest = {
             if (onDismiss != null) {
                 onDismiss()

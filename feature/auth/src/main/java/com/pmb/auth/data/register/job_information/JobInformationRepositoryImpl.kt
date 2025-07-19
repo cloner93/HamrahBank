@@ -18,7 +18,6 @@ class JobInformationRepositoryImpl @Inject constructor() : JobInformationReposit
             AnnualIncomingPrediction(id = 1, income = "200000000"),
             AnnualIncomingPrediction(id = 2, income = "5000000000")
         )
-        delay(2000)
         emit(
             Result.Success(
                 JobInformationEntity(
@@ -31,7 +30,6 @@ class JobInformationRepositoryImpl @Inject constructor() : JobInformationReposit
 
     override fun sendJobInformation(jobInformationEntity: JobInformationParam): Flow<Result<Boolean>> =flow{
         emit(Result.Loading)
-        delay(2000)
         emit(Result.Success(true))
     }
 }

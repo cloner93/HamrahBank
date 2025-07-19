@@ -13,7 +13,6 @@ class OpeningAccountRepositoryImpl @Inject constructor() : OpeningAccountReposit
     override suspend fun sendOpeningAccountData(params: OpeningAccountParams): Flow<Result<OpeningAccountEntity>> =
         flow {
             emit(Result.Loading)
-            delay(2000)
             emit(Result.Success(OpeningAccountEntity(isSuccess = true)))
         }
 }
