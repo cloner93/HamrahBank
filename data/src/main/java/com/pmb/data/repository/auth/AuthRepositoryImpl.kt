@@ -10,6 +10,7 @@ import com.pmb.domain.model.LoginResponse
 import com.pmb.domain.model.SendOtpRequest
 import com.pmb.domain.model.SendOtpResponse
 import com.pmb.domain.model.UserData
+import com.pmb.domain.model.openAccount.AccountArchiveJobDocResponse
 import com.pmb.domain.model.openAccount.accountVerifyCode.VerifyCodeResponse
 import com.pmb.domain.repository.auth.AuthRepository
 import kotlinx.coroutines.flow.Flow
@@ -54,24 +55,17 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override fun generateCode(
-        nationalCode: String,
-        mobileNo: String,
-        birthDate: String
+        nationalCode: String, mobileNo: String, birthDate: String
     ): Flow<Result<Boolean>> {
         return remoteServiceProvider.getAuthService().generateCode(
-            nationalCode = nationalCode,
-            mobileNo = mobileNo,
-            birthDate = birthDate
+            nationalCode = nationalCode, mobileNo = mobileNo, birthDate = birthDate
         ).mapApiResult {
             it.first.toDomain()
         }
     }
 
     override fun verifyCode(
-        verificationCode: Int,
-        nationalCode: String,
-        mobileNo: String,
-        idSerial: String
+        verificationCode: Int, nationalCode: String, mobileNo: String, idSerial: String
     ): Flow<Result<VerifyCodeResponse>> {
         return remoteServiceProvider.getAuthService().accountVerifyCode(
             verificationCode = verificationCode,
@@ -81,5 +75,13 @@ class AuthRepositoryImpl @Inject constructor(
         ).mapApiResult {
             it.second
         }
+    }
+
+    override fun accountArchiveJobDoc(
+        file: String, nationalCode: String
+    ): Flow<Result<AccountArchiveJobDocResponse>> {
+        return remoteServiceProvider.getAuthService().accountArchiveJobDoc(
+            file, nationalCode
+        ).mapApiResult { it.second }
     }
 }

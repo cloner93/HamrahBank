@@ -7,6 +7,8 @@ import com.pmb.domain.model.LoginResponse
 import com.pmb.domain.model.RegisterRequest
 import com.pmb.domain.model.RegisterVerifyResponse
 import com.pmb.domain.model.SendOtpRequest
+import com.pmb.domain.model.openAccount.AccountArchiveJobDocRequest
+import com.pmb.domain.model.openAccount.AccountArchiveJobDocResponse
 import com.pmb.domain.model.openAccount.GenerateCodeRequest
 import com.pmb.domain.model.openAccount.GenerateCodeResponse
 import com.pmb.domain.model.openAccount.accountVerifyCode.VerifyCodeRequest
@@ -74,6 +76,16 @@ class AuthServiceImpl @Inject constructor(
             idSerial = idSerial
         )
         return client.request<VerifyCodeRequest,VerifyCodeResponse>("openAccount/accountVerifyCode",req)
+    }
+
+    override fun accountArchiveJobDoc(
+        file: String,
+        nationalCode: String
+    ): Flow<Result<SuccessData<AccountArchiveJobDocResponse>>> {
+        val req = AccountArchiveJobDocRequest(file = file, nationalCode = nationalCode)
+        return client.request<AccountArchiveJobDocRequest,AccountArchiveJobDocResponse>(
+            "openAccount/accountArchiveJobDoc",req
+        )
     }
 
 }
