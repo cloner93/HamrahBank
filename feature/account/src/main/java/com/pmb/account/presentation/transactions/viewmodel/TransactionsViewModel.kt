@@ -1,7 +1,12 @@
 package com.pmb.account.presentation.transactions.viewmodel
 
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.pmb.account.presentation.transactions.filterScreen.viewmodel.entity.TransactionFilter
+import com.pmb.account.presentation.transactions.viewmodel.TransactionsViewEvents.NavigateToTransactionInfoScreen
+import com.pmb.calender.currentMonthPair
+import com.pmb.calender.toLong
 import com.pmb.core.platform.BaseViewAction
 import com.pmb.core.platform.BaseViewEvent
 import com.pmb.core.platform.BaseViewModel
@@ -10,11 +15,16 @@ import com.pmb.core.platform.Result
 import com.pmb.domain.model.DepositModel
 import com.pmb.domain.model.TransactionModel
 import com.pmb.domain.model.TransactionRequest
-import com.pmb.domain.model.TransactionType
+import com.pmb.domain.model.transaztion.Summarize
 import com.pmb.domain.usecae.deposit.GetUserDepositListUseCase
-import com.pmb.domain.usecae.transactions.TransactionsByCountUsaCase
-import com.pmb.domain.usecae.transactions.TransactionsByDateUsaCase
+import com.pmb.domain.usecae.transactions.GetSummarizeUseCase
+import com.pmb.domain.usecae.transactions.TransactionsByPagingUsaCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.github.persiancalendar.calendar.PersianDate
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import java.net.URLEncoder
@@ -24,11 +34,16 @@ import javax.inject.Inject
 class TransactionsViewModel @Inject constructor(
     initialState: TransactionsViewState,
     private val getDepositsUseCase: GetUserDepositListUseCase,
-    private val getTransactionsUseCase: TransactionsByCountUsaCase,
-    private val getTransactionsByDateUsaCase: TransactionsByDateUsaCase
+    private val getTransactionsPaging: TransactionsByPagingUsaCase,
+    private val getSummarizeUseCase: GetSummarizeUseCase
 ) : BaseViewModel<TransactionsViewActions, TransactionsViewState, TransactionsViewEvents>(
     initialState
 ) {
+
+    // we cont handle paging flow inside of ViewState.
+    private val _transactionFlow = MutableStateFlow<
+            PagingData<TransactionModel>>(PagingData.empty())
+    val transactionFlow: StateFlow<PagingData<TransactionModel>> = _transactionFlow
 
     init {
         loadDeposits()
@@ -55,7 +70,7 @@ class TransactionsViewModel @Inject constructor(
                 val transactionJson = json.encodeToString(action.transactionId)
                 val e = URLEncoder.encode(transactionJson, "UTF-8")
 
-                postEvent(TransactionsViewEvents.NavigateToTransactionInfoScreen(e))
+                postEvent(NavigateToTransactionInfoScreen(e))
             }
 
             TransactionsViewActions.NavigateToTransactionSearchScreen -> {
@@ -88,6 +103,58 @@ class TransactionsViewModel @Inject constructor(
                 setState {
                     it.copy(transactionFilter = action.data)
                 }
+            }
+
+            is TransactionsViewActions.SelectReceiveMonth -> {
+                setState {
+                    it.copy(currentReceiveMonth = action.dates)
+                }
+            }
+
+            is TransactionsViewActions.SelectSendMonth -> {
+                setState {
+                    it.copy(
+                        currentSendMonth = action.dates,
+                        sendTransactions = emptyList(),
+                        totalSendTransactions = 0.0
+                    )
+                }
+
+                viewState.value.selectedDeposit?.let {
+                    loadSummarizeSendTransaction(
+                        it,
+                        viewState.value.currentSendMonth,
+                        1
+                    )
+                }
+
+            }
+
+            is TransactionsViewActions.SelectTab -> {
+//                if (action.id != 0) {
+//                    setState { it.copy(selectedTab = action.id) }
+//                    when (action.id) {
+//                        1 -> {
+//
+//                        }
+//
+//                        2 -> {
+//                            /*if (viewState.value.receiveTransactions == null)
+//                                viewState.value.selectedDeposit?.let {
+//                                    loadSummarizeSendTransaction(
+//                                        it,
+//                                        viewState.value.currentReceiveMonth,
+//                                        2
+//                                    )
+//                                }*/
+//
+//                        }
+//                    }
+//
+//
+//                } else
+                setState { it.copy(selectedTab = action.id) }
+
             }
         }
     }
@@ -131,9 +198,6 @@ class TransactionsViewModel @Inject constructor(
                                 loadTransactions(
                                     it
                                 )
-                                loadTransactionByDate(
-                                    it
-                                )
                             }
                         }
                     }
@@ -142,71 +206,40 @@ class TransactionsViewModel @Inject constructor(
     }
 
     private fun loadTransactions(deposit: DepositModel) {
-        viewModelScope.launch {
-
-            getTransactionsUseCase.invoke(
-                TransactionRequest(
-                    extAccNo = deposit.depositNumber.toLong(),
-                    count = 10,
-                    categoryCode = deposit.categoryCode
-                )
-            ).collect { result ->
-                when (result) {
-                    is Result.Error -> {
-                        setState {
-                            it.copy(
-                                errorMessage = result.message,
-                                isLoading = false,
-                                allTransactions = listOf()
-                            )
-                        }
-                        postEvent(TransactionsViewEvents.ShowError(result.message))
-
-                    }
-
-                    Result.Loading -> {
-                        setState { it.copy(isLoading = true) }
-                    }
-
-                    is Result.Success<*> -> {
-                        val allTransactions: List<TransactionModel> =
-                            result.data as List<TransactionModel>
-
-                        setState {
-                            it.copy(
-                                allTransactions = allTransactions,
-                                isLoading = false
-                            )
-                        }
-                    }
-                }
-            }
-        }
+        getTransactionsPaging(
+            TransactionRequest(
+                extAccNo = deposit.depositNumber.toLong(),
+                count = 10,
+                categoryCode = deposit.categoryCode
+            )
+        ).cachedIn(viewModelScope)
+            .onEach { pagingData ->
+                _transactionFlow.value = pagingData
+            }.launchIn(viewModelScope)
     }
 
-    private fun loadTransactionByDate(deposit: DepositModel) {
+    private fun loadSummarizeSendTransaction(
+        deposit: DepositModel,
+        month: Pair<PersianDate, PersianDate>,
+        type: Int
+    ) {
         viewModelScope.launch {
-
-            getTransactionsByDateUsaCase.invoke(
-                TransactionRequest(
-                    extAccNo = deposit.depositNumber.toLong(),
-                    categoryCode = deposit.categoryCode,
-                    fromDate = 14040324,
-                    toDate = 14040424
-                )
-            ).collect { result ->
+            val req = TransactionRequest(
+                fromDate = month.first.toLong(),
+                toDate = month.second.toLong(),
+                extAccNo = deposit.depositNumber.toLong(),
+                transType = type.toLong()
+            )
+            getSummarizeUseCase.invoke(req).collect { result ->
                 when (result) {
                     is Result.Error -> {
                         setState {
                             it.copy(
                                 errorMessage = result.message,
-                                isLoading = false,
-                                sendTransactions = listOf(),
-                                receiveTransactions = listOf()
+                                isLoading = false
                             )
                         }
                         postEvent(TransactionsViewEvents.ShowError(result.message))
-
                     }
 
                     Result.Loading -> {
@@ -214,25 +247,17 @@ class TransactionsViewModel @Inject constructor(
                     }
 
                     is Result.Success<*> -> {
-                        val allTransactionsByDate: List<TransactionModel> =
-                            result.data as List<TransactionModel>
-
-                        val sendTransactions: List<TransactionModel> =
-                            allTransactionsByDate.filter { it.type == TransactionType.TRANSFER }
-                        val totalSendTransactions: Double = sendTransactions.sumOf { it.amount }
-
-                        val receiveTransactions: List<TransactionModel> =
-                            allTransactionsByDate.filter { it.type == TransactionType.RECEIVE }
-                        val totalReceiveTransactions: Double =
-                            receiveTransactions.sumOf { it.amount }
+                        val list: List<Summarize> = (result.data as List<Summarize>)
+                        var total: Long = 0
+                        list.forEach {
+                            if (it.totalAmount.isNotBlank())
+                                total += it.totalAmount.toLong()
+                        }
 
                         setState {
                             it.copy(
-                                sendTransactions = sendTransactions,
-                                totalSendTransactions = totalSendTransactions,
-                                receiveTransactions = receiveTransactions,
-                                totalReceiveTransactions = totalReceiveTransactions,
-                                isLoading = false
+                                sendTransactions = list,
+                                totalSendTransactions = total.toDouble()
                             )
                         }
                     }
@@ -262,7 +287,7 @@ class TransactionsViewModel @Inject constructor(
         setState { it.copy(selectedDeposit = selectedDeposit) }
         postEvent(TransactionsViewEvents.DepositSelectionChanged(deposit.depositNumber))
         loadTransactions(deposit)
-        loadTransactionByDate(deposit)
+//        loadTransactionByDate(deposit)
     }
 }
 
@@ -288,6 +313,9 @@ sealed interface TransactionsViewActions : BaseViewAction {
         TransactionsViewActions
 
     class RemoveFilterFromList(val item: TransactionFilter) : TransactionsViewActions
+    class SelectTab(val id: Int) : TransactionsViewActions
+    class SelectSendMonth(val dates: Pair<PersianDate, PersianDate>) : TransactionsViewActions
+    class SelectReceiveMonth(val dates: Pair<PersianDate, PersianDate>) : TransactionsViewActions
     class UpdateFilterList(val data: TransactionFilter) : TransactionsViewActions
     class CloseDepositListBottomSheet(val model: DepositModel?) : TransactionsViewActions
 }
@@ -295,11 +323,17 @@ sealed interface TransactionsViewActions : BaseViewAction {
 data class TransactionsViewState(
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
+    val selectedTab: Int = 0,
     val transactionFilter: TransactionFilter? = null,
     val allTransactions: List<TransactionModel> = emptyList(),
-    val sendTransactions: List<TransactionModel> = emptyList(),
+
+    val sendTransactions: List<Summarize>? = null,
+    val receiveTransactions: List<TransactionModel>? = null,
+
+    val currentSendMonth: Pair<PersianDate, PersianDate> = currentMonthPair(), // 14040401 14040431
+    val currentReceiveMonth: Pair<PersianDate, PersianDate> = currentMonthPair(), // 14040401 14040431
+
     val totalSendTransactions: Double = 0.0,
-    val receiveTransactions: List<TransactionModel> = emptyList(),
     val totalReceiveTransactions: Double = 0.0,
     val deposits: List<DepositModel> = emptyList(),
     val selectedDeposit: DepositModel? = null,

@@ -1,6 +1,5 @@
 package com.pmb.account.presentation.transactions
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -9,7 +8,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -22,44 +20,44 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.pmb.account.presentation.component.TransactionRow
+import androidx.paging.compose.LazyPagingItems
+import com.pmb.account.presentation.deposits.TransactionLazyList
 import com.pmb.account.presentation.transactions.filterScreen.DateType
 import com.pmb.account.presentation.transactions.filterScreen.viewmodel.entity.TransactionFilter
 import com.pmb.account.utils.toPersianDate
-import com.pmb.ballon.component.annotation.AppPreview
 import com.pmb.ballon.component.base.ButtonMediumText
 import com.pmb.ballon.component.base.ChipWithIcon
 import com.pmb.ballon.models.IconStyle
 import com.pmb.ballon.ui.theme.AppTheme
-import com.pmb.ballon.ui.theme.HamrahBankTheme
 import com.pmb.core.utils.toCurrency
 import com.pmb.domain.model.TransactionModel
 
 @Composable
 internal fun AllTransactionsSection(
-    transactionList: List<TransactionModel> = emptyList(),
+    transaction: LazyPagingItems<TransactionModel>,
     transactionFilter: TransactionFilter? = null,
     onFilterClick: () -> Unit = {},
     onFilterItemClick: (TransactionFilter) -> Unit = {},
     onStatementClick: () -> Unit = {},
     onTransactionItemClick: (transaction: TransactionModel) -> Unit = {},
 ) {
-    StatementAndFilters(transactionFilter = transactionFilter, onFilterClick = {
-        onFilterClick()
-    }, onFilterItemClick = {
-        onFilterItemClick(it)
-    }, onStatementClick = {
-        onStatementClick()
-    })
-    LazyColumn(
-        contentPadding = PaddingValues(12.dp), verticalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        items(transactionList.size) { item ->
-            TransactionRow(transactionList[item]) {
-                val transaction = transactionList[item]
-                onTransactionItemClick(transaction)
-            }
-        }
+    StatementAndFilters(
+        transactionFilter = transactionFilter,
+        onFilterClick = {
+            onFilterClick()
+        },
+        onFilterItemClick = {
+            onFilterItemClick(it)
+        },
+        onStatementClick = {
+            onStatementClick()
+        })
+
+    TransactionLazyList(
+        transaction,
+        true,
+    ) { transaction ->
+        onTransactionItemClick(transaction)
     }
 }
 
@@ -174,46 +172,6 @@ private fun StatementAndFilters(
                     )
                 }
             }
-        }
-    }
-}
-
-@AppPreview
-@Composable
-private fun AllTransactionsSectionFiledPreview() {
-    val transactionList = listOf<TransactionModel>(
-    )
-    val transactionFilter = TransactionFilter(
-        transactionType = com.pmb.account.presentation.transactions.filterScreen.TransactionType.RECEIVE,
-        fromPrice = "1654",
-        toPrice = "3214",
-        dateType = null,
-        fromDate = null,
-        toDate = null
-    )
-    HamrahBankTheme {
-        Column(
-            modifier = Modifier.background(color = AppTheme.colorScheme.background1Neutral)
-        ) {
-            AllTransactionsSection(
-                transactionList = transactionList,
-                transactionFilter = transactionFilter
-            )
-        }
-    }
-}
-
-@AppPreview
-@Composable
-private fun AllTransactionsSectionEmptyPreview() {
-    HamrahBankTheme {
-        Column(
-            modifier = Modifier.background(color = AppTheme.colorScheme.background1Neutral)
-        ) {
-            AllTransactionsSection(
-                transactionList = listOf<TransactionModel>(),
-                transactionFilter = null
-            )
         }
     }
 }

@@ -1,7 +1,6 @@
 package com.pmb.account.presentation.transactions
 
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -13,14 +12,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.pmb.account.R
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.pmb.account.presentation.component.CustomAppTopBar
 import com.pmb.account.presentation.transactions.filterScreen.viewmodel.entity.TransactionFilter
 import com.pmb.account.presentation.transactions.viewmodel.TransactionsViewActions
@@ -30,7 +26,6 @@ import com.pmb.account.utils.mapToDepositMenu
 import com.pmb.account.utils.mapToDepositModel
 import com.pmb.ballon.component.DepositBottomSheet
 import com.pmb.ballon.component.DynamicTabSelector
-import com.pmb.ballon.component.EmptyList
 import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.ChipWithIcon
 import com.pmb.ballon.component.base.ClickableIcon
@@ -57,7 +52,7 @@ fun TransactionsScreen() {
     val viewModel = hiltViewModel<TransactionsViewModel>()
     val viewState by viewModel.viewState.collectAsState()
     val navigationManager = LocalNavigationManager.current
-    val selectedOption = remember { mutableIntStateOf(0) }
+
     val optionTexts = listOf("همه", "برداشت", "واریز")
 
     LaunchedEffect(Unit) {
@@ -127,7 +122,7 @@ fun TransactionsScreen() {
                     onClick = {
                         viewModel.handle(TransactionsViewActions.NavigateBack)
                     }),
-                endIcon = if (selectedOption.intValue == 0) ClickableIcon(
+                endIcon = if (viewState.selectedTab == 0) ClickableIcon(
                     IconType.ImageVector(Icons.Filled.Search),
                     tint = AppTheme.colorScheme.onBackgroundNeutralDefault,
                     onClick = {
@@ -163,43 +158,43 @@ fun TransactionsScreen() {
             containerColor = AppTheme.colorScheme.backgroundTintNeutralDefault,
             unselectedTextColor = AppTheme.colorScheme.onBackgroundNeutralSubdued,
             tabs = optionTexts,
-            selectedOption = selectedOption.intValue
+            selectedOption = viewState.selectedTab
         ) {
-            selectedOption.intValue = it
+            viewModel.handle(TransactionsViewActions.SelectTab(it))
         }
 
-        when (selectedOption.intValue) {
+        when (viewState.selectedTab) {
             0 -> {
-                if (viewState.allTransactions.isEmpty()) {
-                    EmptyList(
-                        modifier = Modifier.fillMaxSize(),
-                        iconType = IconType.Painter(painterResource(R.drawable.empty_list)),
-                        message = "تراکنشی یافت نشد!"
-                    )
-                } else {
-                    AllTransactionsSection(
-                        transactionList = viewState.allTransactions,
-                        transactionFilter = viewState.transactionFilter,
-                        onFilterClick = {
-                            viewModel.handle(TransactionsViewActions.NavigateToTransactionFilterScreen)
-                        }, onFilterItemClick = {
-                            viewModel.handle(TransactionsViewActions.RemoveFilterFromList(it))
-                        }, onStatementClick = {
-                            viewModel.handle(TransactionsViewActions.NavigateToDepositStatementScreen)
-                        }) { transactionId ->
-                        viewModel.handle(
-                            TransactionsViewActions.NavigateToTransactionInfoScreen(
-                                transactionId
-                            )
+                AllTransactionsSection(
+                    transaction = viewModel.transactionFlow.collectAsLazyPagingItems(),
+                    transactionFilter = viewState.transactionFilter,
+                    onFilterClick = {
+                        viewModel.handle(TransactionsViewActions.NavigateToTransactionFilterScreen)
+                    },
+                    onFilterItemClick = {
+                        viewModel.handle(TransactionsViewActions.RemoveFilterFromList(it))
+                    },
+                    onStatementClick = {
+                        viewModel.handle(TransactionsViewActions.NavigateToDepositStatementScreen)
+                    }) { transactionId ->
+                    viewModel.handle(
+                        TransactionsViewActions.NavigateToTransactionInfoScreen(
+                            transactionId
                         )
-                    }
+                    )
                 }
             }
 
             1 -> {
+
                 SendTransactionsSection(
                     viewState.totalSendTransactions,
-                ) { }
+                    viewState.sendTransactions,
+                    currentMonth = viewState.currentSendMonth,
+                    selectedMonth = {
+                        viewModel.handle(TransactionsViewActions.SelectSendMonth(it))
+                    }
+                )
             }
 
             2 -> {
