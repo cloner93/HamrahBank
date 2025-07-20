@@ -12,6 +12,7 @@ sealed class AuthScreens(route: String, arguments: Map<String, String> = emptyMa
         fun createRoute(mobileNumber: String, username: String, password: String) =
             "first_login_confirm/$mobileNumber/$username/$password"
     }
+
     data object Login : AuthScreens(route = "login")
 
     data object ForgetPassword : AuthScreens(route = "forget_password")
@@ -41,7 +42,10 @@ sealed class EKYCScreens(route: String, arguments: Map<String, String> = emptyMa
     data object EKYCFacePhotoCapture : EKYCScreens(route = "ekyc_face_photo_capture")
     data object EKYCVideoCapture : EKYCScreens(route = "ekyc_video_capture")
 }
-object SharedAuthAndActivationScopeGraph : Screen(baseRoute = "shared_auth_activation_scope_graph",arguments = emptyMap())
+
+object SharedAuthAndActivationScopeGraph :
+    Screen(baseRoute = "shared_auth_activation_scope_graph", arguments = emptyMap())
+
 sealed class CardScreens(route: String, arguments: Map<String, String> = emptyMap()) :
     Screen(baseRoute = route, arguments = arguments) {
     data object CardGraph : CardScreens("card_graph")
@@ -71,10 +75,15 @@ sealed class RegisterScreens(route: String, arguments: Map<String, String> = emp
     data object Signature : RegisterScreens(route = "signature")
     data object AuthenticationSelectServices :
         RegisterScreens(route = "authentication_select_services")
+
     data object RegisterChooseCard : RegisterScreens(route = "register_choose_card")
     data object RegisterAuthentication : RegisterScreens(route = "register_authentication")
     data object RegisterFacePhotoCapture : RegisterScreens(route = "register_face_photo_capture")
     data object RegisterVideo : RegisterScreens(route = "register_video")
     data object RegisterConfirmStep : RegisterScreens(route = "register_confirm_step")
     data object FeeDetails : RegisterScreens(route = "fee_details")
+    data object SelectCity : RegisterScreens(route = "select_city/{componentName}/{listId}") {
+        fun createRoute(componentName: String, listId: String) =
+            "select_city/$componentName/$listId"
+    }
 }

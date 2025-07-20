@@ -1,6 +1,7 @@
 package com.pmb.ballon.component
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -136,6 +137,7 @@ fun CustomSearchSpinner(
         )
 
         ExposedDropdownMenu(
+            modifier = Modifier.height(320.dp),
             expanded = expanded,
             containerColor = AppTheme.colorScheme.background1Neutral,
             onDismissRequest = { expanded = false }

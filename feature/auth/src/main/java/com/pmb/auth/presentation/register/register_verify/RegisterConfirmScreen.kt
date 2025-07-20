@@ -110,7 +110,7 @@ fun RegisterConfirmScreen(
         )
         Spacer(modifier = Modifier.size(32.dp))
         ChipWithIcon(
-            value = sharedState.value.phoneNumber,
+            value = sharedState.value.phoneNumber ?:"",
             icon = com.pmb.ballon.R.drawable.ic_edit,
             clickable = {
                 navigationManager.navigateAndClearStack(RegisterScreens.Register)
@@ -130,9 +130,9 @@ fun RegisterConfirmScreen(
             onClick = {
                 viewModel.handle(
                     RegisterConfirmViewActions.ConfirmVerify(
-                        sharedState.value.phoneNumber,
-                        sharedState.value.nationalId,
-                        sharedState.value.serialId,
+                        sharedState.value.phoneNumber?:"",
+                        sharedState.value.nationalId?:"",
+                        sharedState.value.serialId?:"",
                         otp.toInt()
                     )
                 )

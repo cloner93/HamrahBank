@@ -21,6 +21,7 @@ import com.pmb.auth.presentation.register.RegisterSharedViewState
 import com.pmb.auth.presentation.register.authentication_information.viewModel.AuthenticationInformationViewActions
 import com.pmb.auth.presentation.register.authentication_information.viewModel.AuthenticationInformationViewEvents
 import com.pmb.auth.presentation.register.authentication_information.viewModel.AuthenticationInformationViewModel
+import com.pmb.auth.presentation.register.authentication_information.viewModel.AuthenticationInformationViewState
 import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.CustomSearchSpinner
 import com.pmb.ballon.component.base.AppButton
@@ -34,6 +35,7 @@ import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.IconType
 import com.pmb.ballon.component.datePicker.ShowPersianDatePickerBottomSheet
 import com.pmb.calender.Jdn
+import com.pmb.calender.utils.Calendar
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.manager.NavigationManager
 import com.pmb.navigation.moduleScreen.RegisterScreens
@@ -42,6 +44,7 @@ import com.pmb.navigation.moduleScreen.RegisterScreens
 fun AuthenticationInformationScreen(
     viewModel: AuthenticationInformationViewModel,
     sharedState: State<RegisterSharedViewState>,
+    updateState: (AuthenticationInformationViewState) -> Unit
 ) {
     val navigationManager: NavigationManager = LocalNavigationManager.current
     val viewState by viewModel.viewState.collectAsState()
@@ -49,7 +52,6 @@ fun AuthenticationInformationScreen(
     var identifyPlace by remember { mutableStateOf<String>("") }
     var showBirthdayPicker by remember { mutableStateOf(false) }
     var identifyArea by remember { mutableStateOf("") }
-    var mobileNumber by remember { mutableStateOf("") }
     var education by remember { mutableStateOf("") }
     LaunchedEffect(Unit) {
         viewModel.viewEvent.collect { event ->
@@ -75,107 +77,134 @@ fun AuthenticationInformationScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 16.dp, end = 16.dp, top = 16.dp),
-                enable = true,
+                enable = ((viewState.birthDatePlace != null || !sharedState.value.verifyCodeResponse?.birthCityName.isNullOrEmpty())
+                        && (viewState.issuePlace != null || !sharedState.value.verifyCodeResponse?.issueCityName.isNullOrEmpty()) &&
+                        (!viewState.issueDateYear.isNullOrEmpty() || sharedState.value.verifyCodeResponse?.issueDate != null) &&
+                        (viewState.issueCode != null || sharedState.value.issueCode != null) &&
+                        (!viewState.tel.isNullOrEmpty() || !sharedState.value.tel.isNullOrEmpty())
+                        && (viewState.education != null)
+                        ),
                 title = stringResource(R.string._continue),
                 onClick = {
                     viewModel.handle(
-                        AuthenticationInformationViewActions.SendAuthenticationParams(
-                            cityId = viewState.sendAuthenticationInformationParam?.cityId ?: -1,
-                            identifyId = viewState.sendAuthenticationInformationParam?.identifyId
-                                ?: -1,
-                            birthDate = viewState.sendAuthenticationInformationParam?.birthDate
-                                ?: "",
-                            identifyArea = identifyArea,
-                            phoneNumber = mobileNumber,
-                            educationId = viewState.sendAuthenticationInformationParam?.educationId
-                                ?: -1
+                        AuthenticationInformationViewActions.SetAuthenticationData(
+                            sharedState.value
                         )
                     )
+                    updateState(viewState)
+                    navigationManager.navigate(RegisterScreens.JobInformation)
                 })
         }) {
         Spacer(modifier = Modifier.size(24.dp))
-        viewState.authenticationInformation?.let {
-            CustomSearchSpinner(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                options = viewState.authenticationInformation?.cities?.map { it.city },
-                labelString = stringResource(R.string.birthday_place),
-                displayText = city,
-                isEnabled = true,
-                onSearchValue = {
-                    city = it
-                }
-            ) { type ->
-                viewModel.handle(AuthenticationInformationViewActions.SetCityId(city))
+        CustomSearchSpinner(
+            modifier = Modifier
+                .fillMaxWidth(),
+            options = sharedState.value.verifyCodeResponse?.cityOfBirthInfoDTOList?.map { it.cityName },
+            labelString = stringResource(R.string.birthday_place),
+            displayText = city?.takeIf { !it.isNullOrEmpty() }?.let { it }
+                ?: run { sharedState.value.verifyCodeResponse?.birthCityName ?: "" },
+            isEnabled = true,
+            onSearchValue = {
+                city = it
             }
-            Spacer(modifier = Modifier.size(24.dp))
-            CustomSearchSpinner(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                options = viewState.authenticationInformation?.identifyPlace?.map { it.city },
-                labelString = stringResource(R.string.identify_place),
-                displayText = identifyPlace,
-                isEnabled = true,
-                onSearchValue = {
-                    identifyPlace = it
-                }
-            ) { type ->
+        ) { type ->
+            val city =
+                sharedState.value.verifyCodeResponse?.cityOfBirthInfoDTOList?.find { it.cityName == city }
+            city?.let { viewModel.handle(AuthenticationInformationViewActions.SetCityId(it)) }
+        }
+        Spacer(modifier = Modifier.size(24.dp))
+        CustomSearchSpinner(
+            modifier = Modifier
+                .fillMaxWidth(),
+            options = sharedState.value.verifyCodeResponse?.cityOfBirthInfoDTOList?.map { it.cityName },
+            labelString = stringResource(R.string.identify_place),
+            displayText = identifyPlace?.takeIf { !it.isNullOrEmpty() }?.let { it }
+                ?: run { sharedState.value.verifyCodeResponse?.issueCityName ?: "" },
+            isEnabled = true,
+            onSearchValue = {
+                identifyPlace = it
+            }
+        ) { type ->
+            val city =
+                sharedState.value.verifyCodeResponse?.cityOfBirthInfoDTOList?.find { it.cityName == city }
+            city?.let {
                 viewModel.handle(
                     AuthenticationInformationViewActions.SetIdentifyPlaceId(
-                        identifyPlace
+                        it
                     )
                 )
             }
-            Spacer(modifier = Modifier.size(24.dp))
-            AppClickableReadOnlyTextField(
-                value = viewState.sendAuthenticationInformationParam?.birthDate ?: "",
-                label = stringResource(R.string.identify_day),
-                trailingIcon = {
-                    AppButtonIcon(
-                        icon = IconType.Painter(painterResource(com.pmb.ballon.R.drawable.ic_calendar_month)),
-                        onClick = {}
-                    )
-                },
-                onClick = {
-                    println("clicked on birthday")
-                    showBirthdayPicker = true
-                })
-            Spacer(modifier = Modifier.size(24.dp))
-            AppSingleTextField(
-                modifier = Modifier.fillMaxWidth(),
-                value = identifyArea,
-                label = stringResource(R.string.username),
-                onValueChange = { identifyArea = it },
-            )
-            Spacer(modifier = Modifier.size(24.dp))
-            AppMobileTextField(
-                value = mobileNumber,
-                label = stringResource(R.string.phone_number),
-                onValueChange = {
-                    mobileNumber = it
-                })
-            Spacer(modifier = Modifier.size(24.dp))
-            CustomSearchSpinner(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                options = viewState.authenticationInformation?.educations?.map { it.education },
-                labelString = stringResource(R.string.education),
-                displayText = education,
-                isEnabled = true,
-                onSearchValue = {
-                    education = it
-                }
-            ) { type ->
-                viewModel.handle(AuthenticationInformationViewActions.SetEducation(education))
+        }
+        Spacer(modifier = Modifier.size(24.dp))
+        AppClickableReadOnlyTextField(
+            value = viewState.issueDateYear?.let { "${it}/${viewState.issueDateMonth}/${viewState.issueDateDay}" }
+                ?: run { sharedState.value.verifyCodeResponse?.issueDate?.takeIf { it != null || it > 0 } }
+                    ?.toString() ?: "",
+            label = stringResource(R.string.identify_day),
+            trailingIcon = {
+                AppButtonIcon(
+                    icon = IconType.Painter(painterResource(com.pmb.ballon.R.drawable.ic_calendar_month)),
+                    onClick = {}
+                )
+            },
+            onClick = {
+                println("clicked on birthday")
+                showBirthdayPicker = true
+            })
+        Spacer(modifier = Modifier.size(24.dp))
+        AppSingleTextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = identifyArea?.takeIf { !it.isNullOrEmpty() }?.let { it } ?: run {
+                sharedState.value.verifyCodeResponse?.issueReginCode?.takeIf { it != null || it > 0 }
+                    ?.toString() ?: ""
+            },
+            label = stringResource(R.string.issue_region),
+            onValueChange = { identifyArea = it },
+        )
+        Spacer(modifier = Modifier.size(24.dp))
+        AppMobileTextField(
+            value = viewState.tel?.takeIf { !it.isNullOrEmpty() }?.let { it } ?: run {
+                sharedState.value.verifyCodeResponse?.tel?.takeIf { !it.isNullOrEmpty() } ?: ""
+            },
+            label = stringResource(R.string.tel),
+            onValueChange = {
+                viewModel.handle(AuthenticationInformationViewActions.SetPhoneNumber(it))
+            })
+        Spacer(modifier = Modifier.size(24.dp))
+        CustomSearchSpinner(
+            modifier = Modifier
+                .fillMaxWidth(),
+            options = viewModel.getEducationList()?.map { it.education },
+            labelString = stringResource(R.string.education),
+            displayText = education,
+            isEnabled = true,
+            onSearchValue = {
+                education = it
             }
+        ) { type ->
+            val education = viewModel.getEducationList()?.find { it.education == type }
+            education?.let { viewModel.handle(AuthenticationInformationViewActions.SetEducation(it)) }
         }
         if (showBirthdayPicker) {
             ShowPersianDatePickerBottomSheet(
                 title = stringResource(R.string.birthday),
-                defaultDate = Jdn.today(), // TODO: fix it.
+                defaultDate = viewState.issueDateYear?.let {
+                    Jdn(
+                        Calendar.SHAMSI,
+                        it.toInt(),
+                        viewState.issueDateMonth?.toInt() ?: 1,
+                        viewState.issueDateDay?.toInt() ?: 1
+                    )
+                } ?: run { Jdn.today() }, // TODO: fix it.
                 onDismiss = { showBirthdayPicker = false },
                 onChangeValue = { year, month, day ->
-                    viewModel.handle(AuthenticationInformationViewActions.SetIdentifyDay("$year/$month/$day"))
+                    viewModel.handle(
+                        AuthenticationInformationViewActions.SetIssueDate(
+                            year,
+                            month,
+                            day
+                        )
+                    )
                     showBirthdayPicker = false
                 },
             )

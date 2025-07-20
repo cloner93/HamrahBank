@@ -115,8 +115,14 @@ fun NavGraphBuilder.registerScreenHandler() {
             }
         }
         composable(route = RegisterScreens.AuthenticationInformation.route) {
+            val sharedViewModel =
+                it.navigationManager.retrieveSharedViewModel<RegisterSharedViewModel>(
+                    screen = RegisterScreens.RegisterGraph, navBackStackEntry = it
+                )
+            val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
             AuthenticationInformationScreen(
                 viewModel = hiltViewModel<AuthenticationInformationViewModel>(),
+                sharedState
             )
         }
         composable(route = RegisterScreens.JobInformation.route) {
