@@ -5,6 +5,7 @@ import com.pmb.domain.model.LoginResponse
 import com.pmb.domain.model.RegisterVerifyResponse
 import com.pmb.domain.model.SendOtpRequest
 import com.pmb.domain.model.openAccount.AccountArchiveJobDocResponse
+import com.pmb.domain.model.openAccount.FetchCommitmentResponse
 import com.pmb.domain.model.openAccount.accountType.FetchAccountTypeResponse
 import com.pmb.domain.model.openAccount.accountVerifyCode.VerifyCodeResponse
 import com.pmb.domain.model.openAccount.branchName.FetchBranchListResponse
@@ -45,4 +46,6 @@ interface AuthService {
     fun fetchBranchList(
         mergeStatus: Int, stateCode: Int, cityCode: Int, organizationType: String
     ): Flow<Result<SuccessData<FetchBranchListResponse>>>
+
+    fun fetchCommitment(accType: Int): Flow<Result<SuccessData<FetchCommitmentResponse>>>
 }

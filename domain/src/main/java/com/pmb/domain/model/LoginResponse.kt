@@ -30,7 +30,7 @@ data class LoginResponse(
     val passportNumber: String?,
     val passwordX: String?,
     val postalCode: String?,
-    val sabtQueryStatus: Int,
+    val sabtQueryStatus: Long,
     val securePassword: String?,
     val userName: String?,
     val vcode: Int

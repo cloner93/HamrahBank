@@ -10,6 +10,7 @@ import com.pmb.domain.model.SendOtpRequest
 import com.pmb.domain.model.SendOtpResponse
 import com.pmb.domain.model.UserData
 import com.pmb.domain.model.openAccount.AccountArchiveJobDocResponse
+import com.pmb.domain.model.openAccount.FetchCommitmentResponse
 import com.pmb.domain.model.openAccount.accountType.FetchAccountTypeResponse
 import com.pmb.domain.model.openAccount.accountVerifyCode.VerifyCodeResponse
 import com.pmb.domain.model.openAccount.branchName.FetchBranchListResponse
@@ -120,5 +121,10 @@ class AuthRepositoryImpl @Inject constructor(
             cityCode = cityCode,
             organizationType = organizationType
         ).mapApiResult { it.second }
+    }
+
+    override fun fetchCommitment(accType: Int): Flow<Result<FetchCommitmentResponse>> {
+        return remoteServiceProvider.getAuthService().fetchCommitment(accType = accType)
+            .mapApiResult { it.second }
     }
 }
