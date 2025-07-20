@@ -109,6 +109,14 @@ class TransactionsViewModel @Inject constructor(
                 setState {
                     it.copy(currentReceiveMonth = action.dates)
                 }
+
+                viewState.value.selectedDeposit?.let {
+                    loadSummarizeTransaction(
+                        it,
+                        viewState.value.currentReceiveMonth,
+                        2
+                    )
+                }
             }
 
             is TransactionsViewActions.SelectSendMonth -> {
@@ -121,7 +129,7 @@ class TransactionsViewModel @Inject constructor(
                 }
 
                 viewState.value.selectedDeposit?.let {
-                    loadSummarizeSendTransaction(
+                    loadSummarizeTransaction(
                         it,
                         viewState.value.currentSendMonth,
                         1
@@ -131,30 +139,7 @@ class TransactionsViewModel @Inject constructor(
             }
 
             is TransactionsViewActions.SelectTab -> {
-//                if (action.id != 0) {
-//                    setState { it.copy(selectedTab = action.id) }
-//                    when (action.id) {
-//                        1 -> {
-//
-//                        }
-//
-//                        2 -> {
-//                            /*if (viewState.value.receiveTransactions == null)
-//                                viewState.value.selectedDeposit?.let {
-//                                    loadSummarizeSendTransaction(
-//                                        it,
-//                                        viewState.value.currentReceiveMonth,
-//                                        2
-//                                    )
-//                                }*/
-//
-//                        }
-//                    }
-//
-//
-//                } else
                 setState { it.copy(selectedTab = action.id) }
-
             }
         }
     }
@@ -218,7 +203,7 @@ class TransactionsViewModel @Inject constructor(
             }.launchIn(viewModelScope)
     }
 
-    private fun loadSummarizeSendTransaction(
+    private fun loadSummarizeTransaction(
         deposit: DepositModel,
         month: Pair<PersianDate, PersianDate>,
         type: Int
@@ -254,11 +239,24 @@ class TransactionsViewModel @Inject constructor(
                                 total += it.totalAmount.toLong()
                         }
 
-                        setState {
-                            it.copy(
-                                sendTransactions = list,
-                                totalSendTransactions = total.toDouble()
-                            )
+                        when (type) {
+                            1 -> {
+                                setState {
+                                    it.copy(
+                                        sendTransactions = list,
+                                        totalSendTransactions = total.toDouble()
+                                    )
+                                }
+                            }
+
+                            2 -> {
+                                setState {
+                                    it.copy(
+                                        receiveTransactions = list,
+                                        totalReceiveTransactions = total.toDouble()
+                                    )
+                                }
+                            }
                         }
                     }
                 }
@@ -328,7 +326,7 @@ data class TransactionsViewState(
     val allTransactions: List<TransactionModel> = emptyList(),
 
     val sendTransactions: List<Summarize>? = null,
-    val receiveTransactions: List<TransactionModel>? = null,
+    val receiveTransactions: List<Summarize>? = null,
 
     val currentSendMonth: Pair<PersianDate, PersianDate> = currentMonthPair(), // 14040401 14040431
     val currentReceiveMonth: Pair<PersianDate, PersianDate> = currentMonthPair(), // 14040401 14040431

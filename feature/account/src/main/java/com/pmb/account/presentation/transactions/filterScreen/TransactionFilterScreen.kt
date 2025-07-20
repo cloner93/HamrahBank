@@ -32,7 +32,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import com.pmb.account.presentation.transactions.TransactionSharedState
 import com.pmb.account.presentation.transactions.filterScreen.viewmodel.TransactionsFilterViewActions
 import com.pmb.account.presentation.transactions.filterScreen.viewmodel.TransactionsFilterViewEvents
 import com.pmb.account.presentation.transactions.filterScreen.viewmodel.TransactionsFilterViewModel
@@ -61,9 +61,11 @@ TODO checkList TransactionFilterScreen.kt
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun TransactionFilterScreen() {
-
-    val viewModel = hiltViewModel<TransactionsFilterViewModel>()
+fun TransactionFilterScreen(
+    viewModel: TransactionsFilterViewModel,
+    sharedState: TransactionSharedState,
+    function: (String) -> Unit
+) {
     val viewState by viewModel.viewState.collectAsState()
     val navigationManager = LocalNavigationManager.current
     val keyboardController = LocalSoftwareKeyboardController.current

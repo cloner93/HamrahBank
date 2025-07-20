@@ -22,7 +22,7 @@ internal fun SingleRow(
     onClick: () -> Unit
 ) {
     Row(
-        modifier = Modifier.clickable { onClick },
+        modifier = Modifier.clickable { onClick() },
         verticalAlignment = Alignment.CenterVertically
     ) {
         Headline6Text(

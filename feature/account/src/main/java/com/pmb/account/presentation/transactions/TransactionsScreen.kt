@@ -15,7 +15,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.pmb.account.presentation.component.CustomAppTopBar
 import com.pmb.account.presentation.transactions.filterScreen.viewmodel.entity.TransactionFilter
@@ -33,23 +32,18 @@ import com.pmb.ballon.component.base.IconType
 import com.pmb.ballon.models.IconStyle
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.core.utils.CollectAsEffect
+import com.pmb.domain.model.DepositModel
+import com.pmb.domain.model.transaztion.Summarize
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.moduleScreen.AccountScreens
 
-/**
-TODO checkList TransactionsScreen.kt
- *
- * - apply filter on shown list
- * - open each item on receipt screen
- * - handle search button
- * - change change icon of transactions
- * - apply paddings
- * - pass filter to filter screen if TransactionFilter nonNull
- */
-
 @Composable
-fun TransactionsScreen() {
-    val viewModel = hiltViewModel<TransactionsViewModel>()
+fun TransactionsScreen(
+    viewModel: TransactionsViewModel,
+    sharedState: TransactionSharedState,
+    updateListOfTransactions: (Summarize, DepositModel?) -> Unit
+) {
+
     val viewState by viewModel.viewState.collectAsState()
     val navigationManager = LocalNavigationManager.current
 
@@ -75,11 +69,11 @@ fun TransactionsScreen() {
                 }
 
                 TransactionsViewEvents.NavigateToDepositStatementScreen -> {
-                    navigationManager.navigate(AccountScreens.DepositStatement)
+                    navigationManager.navigate(AccountScreens.Transactions.DepositStatement)
                 }
 
                 TransactionsViewEvents.NavigateToTransactionFilterScreen -> {
-                    navigationManager.navigate(AccountScreens.TransactionsFilter)
+                    navigationManager.navigate(AccountScreens.Transactions.TransactionsFilter)
                 }
 
                 is TransactionsViewEvents.NavigateToTransactionInfoScreen -> {
@@ -93,7 +87,7 @@ fun TransactionsScreen() {
 
                 TransactionsViewEvents.NavigateToTransactionSearchScreen -> {
                     navigationManager.navigateWithString(
-                        AccountScreens.TransactionSearch.createRoute(
+                        AccountScreens.Transactions.TransactionSearch.createRoute(
                             viewState.selectedDeposit?.depositNumber!!
                         )
                     )
@@ -186,19 +180,39 @@ fun TransactionsScreen() {
             }
 
             1 -> {
-
-                SendTransactionsSection(
+                SummarizeSection(
                     viewState.totalSendTransactions,
                     viewState.sendTransactions,
+                    onTransactionClick = {
+
+                        updateListOfTransactions(it, viewState.selectedDeposit)
+
+                        navigationManager.navigate(AccountScreens.Transactions.DetailedTransactionList)
+                    },
                     currentMonth = viewState.currentSendMonth,
                     selectedMonth = {
                         viewModel.handle(TransactionsViewActions.SelectSendMonth(it))
-                    }
+                    },
+                    "مجموع برداشت ها"
                 )
             }
 
             2 -> {
-                ReceiveTransactionsSection(viewState.totalReceiveTransactions) {}
+                SummarizeSection(
+                    viewState.totalReceiveTransactions,
+                    viewState.receiveTransactions,
+                    onTransactionClick = {
+
+                        updateListOfTransactions(it, viewState.selectedDeposit)
+
+                        navigationManager.navigate(AccountScreens.Transactions.DetailedTransactionList)
+                    },
+                    currentMonth = viewState.currentReceiveMonth,
+                    selectedMonth = {
+                        viewModel.handle(TransactionsViewActions.SelectReceiveMonth(it))
+                    },
+                    "مجموع واریز ها"
+                )
             }
         }
 

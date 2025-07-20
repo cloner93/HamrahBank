@@ -1,4 +1,4 @@
-package com.pmb.account.presentation.deposits
+package com.pmb.account.presentation.account
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -130,7 +130,7 @@ fun DepositsScreen(
                 }
 
                 is DepositsViewEvents.NavigateToTransactionsList -> {
-                    navigationManager.navigate(AccountScreens.Transactions)
+                    navigationManager.navigate(AccountScreens.Transactions.AllTransactionsList)
                 }
 
                 is DepositsViewEvents.RefreshCompleted -> {

@@ -1,7 +1,6 @@
 package com.pmb.account.presentation.transactions
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -13,38 +12,33 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.pmb.account.presentation.component.RowOfMonth
 import com.pmb.account.presentation.component.SingleRow
-import com.pmb.ballon.component.annotation.AppPreview
 import com.pmb.ballon.component.base.BodySmallText
 import com.pmb.ballon.component.base.Headline6Text
 import com.pmb.ballon.ui.theme.AppTheme
-import com.pmb.ballon.ui.theme.HamrahBankTheme
 import com.pmb.calender.currentMonthPair
 import com.pmb.core.utils.toCurrency
 import com.pmb.domain.model.transaztion.Summarize
 import io.github.persiancalendar.calendar.PersianDate
 
 @Composable
-internal fun SendTransactionsSection(
-    totalSentTransaction: Double,
-    sendTransaction: List<Summarize>?,
-    onTransactionClick: () -> Unit = {},
-
+internal fun SummarizeSection(
+    totalTransaction: Double,
+    transactionList: List<Summarize>?,
+    onTransactionClick: (Summarize) -> Unit = {},
     currentMonth: Pair<PersianDate, PersianDate>,
-    selectedMonth: (Pair<PersianDate, PersianDate>) -> Unit
+    selectedMonth: (Pair<PersianDate, PersianDate>) -> Unit,
+    title: String
 ) {
 
+    // TODO: Fix it
     LaunchedEffect(Unit) {
-        println("logasdfasdfas")
         selectedMonth(currentMonthPair())
     }
 
@@ -53,7 +47,7 @@ internal fun SendTransactionsSection(
         currentMonth = currentMonth,
         selectedMonth = selectedMonth,
     )
-    sendTransaction?.let { list ->
+    transactionList?.let { list ->
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -70,7 +64,7 @@ internal fun SendTransactionsSection(
             ) {
                 BodySmallText(
                     modifier = Modifier.padding(vertical = 8.dp),
-                    text = "مجموع برداشت ها",
+                    text = title,
                     color = AppTheme.colorScheme.onBackgroundNeutralSubdued
                 )
 
@@ -78,7 +72,7 @@ internal fun SendTransactionsSection(
                     modifier = Modifier.padding(bottom = 16.dp)
                 ) {
                     Headline6Text(
-                        text = totalSentTransaction.toCurrency(),
+                        text = totalTransaction.toCurrency(),
                         color = AppTheme.colorScheme.onBackgroundNeutralDefault
                     )
 
@@ -95,25 +89,11 @@ internal fun SendTransactionsSection(
                         SingleRow(
                             title = list[item].docDesc,
                             amount = list[item].totalAmount.toDouble(),
-                            onClick = onTransactionClick
+                            onClick = { onTransactionClick(list[item]) }
                         )
                     }
                 }
 
-            }
-        }
-    }
-}
-
-@AppPreview
-@Composable
-private fun SendTransactionsSectionPreview() {
-    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
-        HamrahBankTheme {
-            Column(
-                modifier = Modifier.background(color = AppTheme.colorScheme.background1Neutral)
-            ) {
-//                SendTransactionsSection(totalSentTransaction = 12000000.0,)
             }
         }
     }
