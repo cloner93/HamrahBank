@@ -1,11 +1,10 @@
 package com.pmb.auth.presentation.register.select_job_information.viewModel
 
 import androidx.lifecycle.viewModelScope
-import com.pmb.auth.domain.register.select_job_information.entity.SelectJobInformationEntity
-import com.pmb.auth.domain.register.select_job_information.useCase.GetJobInformationUseCase
 import com.pmb.core.platform.AlertModelState
 import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.platform.Result
+import com.pmb.domain.usecae.auth.openAccount.FetchLevelJobUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -13,7 +12,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SelectJobInformationViewModel @Inject constructor(
     initialState: SelectJobInformationViewState,
-    private val getJobInformationUseCase: GetJobInformationUseCase
+    private val fetchLevelJobUseCase: FetchLevelJobUseCase,
 ) : BaseViewModel<SelectJobInformationViewActions, SelectJobInformationViewState, SelectJobInformationViewEvents>(
     initialState
 ) {
@@ -35,7 +34,7 @@ class SelectJobInformationViewModel @Inject constructor(
 
     private fun handleGetJobInformation() {
         viewModelScope.launch {
-            getJobInformationUseCase.invoke(Unit).collect { result ->
+            fetchLevelJobUseCase.invoke().collect { result ->
                 when (result) {
                     is Result.Loading -> {
                         setState {
@@ -66,8 +65,8 @@ class SelectJobInformationViewModel @Inject constructor(
                         setState {
                             it.copy(
                                 isLoading = false,
-                                selectJobInformation = result.data,
-                                originalSelectJobInformation = result.data
+                                selectJobInformation = result.data.jobList,
+                                originalSelectJobInformation = result.data.jobList
                             )
                         }
                     }
@@ -77,18 +76,21 @@ class SelectJobInformationViewModel @Inject constructor(
     }
 
     private fun handleSearchQuery(action: SelectJobInformationViewActions.SearchSelectJobInformationData) {
-        viewState.value.originalSelectJobInformation?.selectJobInformation?.filter {
-            it.jobInformation.contains(
+        setState {
+            it.copy(
+                searchValue = true
+            )
+        }
+        viewState.value.originalSelectJobInformation?.filter {
+            it.jobName.contains(
                 action.queryString
             )
         }
             ?.let { result ->
                 setState {
                     it.copy(
-                        selectJobInformation = SelectJobInformationEntity(
-                            isSuccess = true,
-                            selectJobInformation = result
-                        )
+                        searchValue = false,
+                        selectJobInformation = result
                     )
                 }
             }
@@ -101,6 +103,7 @@ class SelectJobInformationViewModel @Inject constructor(
             )
         }
     }
+
     init {
         handle(SelectJobInformationViewActions.GetSelectJobInformation)
     }

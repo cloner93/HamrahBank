@@ -6,10 +6,11 @@ import com.pmb.auth.domain.register.select_job_information.entity.JobInformation
 import com.pmb.camera.platform.PhotoViewActions
 import com.pmb.core.platform.BaseViewAction
 import com.pmb.domain.model.openAccount.accountVerifyCode.AnnualIncomeType
+import com.pmb.domain.model.openAccount.jobLevel.JobLevel
 
 sealed interface JobInformationViewActions : BaseViewAction {
     data object ClearAlert : JobInformationViewActions
-    data class SetJobInformation(val jobInformation: JobInformation) : JobInformationViewActions
+    data class SetJobInformation(val jobInformation: JobLevel) : JobInformationViewActions
     data class RequestCameraPermission(
         val managedActivityResultLauncher: ManagedActivityResultLauncher<String, Boolean>
     ) : JobInformationViewActions

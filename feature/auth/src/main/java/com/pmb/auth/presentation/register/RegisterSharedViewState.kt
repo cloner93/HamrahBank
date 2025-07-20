@@ -9,6 +9,7 @@ import com.pmb.domain.model.openAccount.accountVerifyCode.CityOfBirthInfoDTO
 import com.pmb.domain.model.openAccount.accountVerifyCode.VerifyCodeResponse
 import com.pmb.domain.model.openAccount.branchName.Branch
 import com.pmb.domain.model.openAccount.cityName.City
+import com.pmb.domain.model.openAccount.jobLevel.JobLevel
 
 data class RegisterSharedViewState(
     val verifyCodeResponse: VerifyCodeResponse? = null,
@@ -25,5 +26,6 @@ data class RegisterSharedViewState(
     val accType: AccType? = null,
     val province: Province? = null,
     val accCity: City? = null,
-    val branch: Branch? = null
+    val branch: Branch? = null,
+    val jobInformation: JobLevel? = null,
 ) : BaseSharedState
