@@ -6,6 +6,6 @@ import kotlinx.serialization.Serializable
 @SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class AnnualTransactionType(
-    val incomePredictDescription: String,
+    val incomePredictDescription: String?=null,
     val incomePredictId: Int
 )

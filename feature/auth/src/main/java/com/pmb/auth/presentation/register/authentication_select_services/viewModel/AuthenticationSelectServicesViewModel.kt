@@ -8,7 +8,7 @@ import com.pmb.core.platform.AlertModelState
 import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.platform.Result
 import com.pmb.core.utils.toCurrency
-import com.pmb.domain.model.openAccount.comissionFee.CommissionFee
+import com.pmb.domain.model.openAccount.comissionFee.Income
 import com.pmb.domain.usecae.auth.openAccount.FetchCommissionFeeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -46,8 +46,7 @@ class AuthenticationSelectServicesViewModel @Inject constructor(
                     is Result.Success -> {
                         setState {
                             it.copy(
-                                loading = false,
-                                localData = result.data
+                                loading = false, localData = result.data
                             )
                         }
                     }
@@ -73,16 +72,13 @@ class AuthenticationSelectServicesViewModel @Inject constructor(
                     is Result.Error -> {
                         setState {
                             it.copy(
-                                loading = false,
-                                alertModelState = AlertModelState.Dialog(
-                                    title = "خطا",
-                                    description = " ${result.message}",
-                                    positiveButtonTitle = "تایید",
-                                    onPositiveClick = {
-                                        setState { state -> state.copy(alertModelState = null) }
-                                    }
-                                )
-                            )
+                                loading = false, alertModelState = AlertModelState.Dialog(
+                                title = "خطا",
+                                description = " ${result.message}",
+                                positiveButtonTitle = "تایید",
+                                onPositiveClick = {
+                                    setState { state -> state.copy(alertModelState = null) }
+                                }))
                         }
                     }
 
@@ -90,9 +86,9 @@ class AuthenticationSelectServicesViewModel @Inject constructor(
                         setState {
                             it.copy(
                                 loading = false,
-                                data = result.data.commissionFeeInfo.toCollection(ArrayList()),
-                                totalPrice = viewState.value.data?.sumOf { it.amount }?.toDouble()
-                                    ?.toCurrency()
+                                data = result.data.incomeList.toCollection(ArrayList()),
+                                totalPrice = result.data.totalMainIncomeAmount.toDouble()
+                                    .toCurrency()
                             )
                         }
                     }
@@ -114,32 +110,26 @@ class AuthenticationSelectServicesViewModel @Inject constructor(
                 if (isChecked.value) {
                     viewState.value.data?.apply {
                         this.add(
-                            CommissionFee(
-                                desc = this@selectServicesList.title,
-                                amount = this@selectServicesList.price.toLong(),
-                                code = id,
-                                optional = true
+                            Income(
+                                incomeName = this@selectServicesList.title,
+                                mainIncomeAmount = this@selectServicesList.price.toInt(),
+                                incomeId = id,
+                                usedType = 1
                             )
                         )
                     }
 
                 } else {
                     viewState.value.data?.apply {
-                        this.remove(
-                            CommissionFee(
-                                desc = this@selectServicesList.title,
-                                amount = this@selectServicesList.price.toLong(),
-                                code = id,
-                                optional = true
-                            )
-                        )
+                        this.removeIf { it.incomeId == id }
                     }
                 }
             }
         }
         setState {
             it.copy(
-                totalPrice = viewState.value.data?.sumOf { it.amount }?.toDouble()?.toCurrency()
+                totalPrice = viewState.value.data?.sumOf { it.mainIncomeAmount }?.toDouble()
+                    ?.toCurrency()
             )
         }
         Log.d("lists", viewState.value.data.toString())

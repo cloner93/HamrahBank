@@ -1,6 +1,5 @@
 package com.pmb.auth.presentation.register
 
-import android.util.Log
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
@@ -41,6 +40,7 @@ import com.pmb.auth.presentation.register.select_job_information.SelectJobInform
 import com.pmb.auth.presentation.register.select_job_information.viewModel.SelectJobInformationViewModel
 import com.pmb.auth.presentation.register.signature.SignatureScreen
 import com.pmb.auth.presentation.register.signature.viewModel.SignatureViewModel
+import com.pmb.domain.model.openAccount.branchName.Branch
 import com.pmb.navigation.manager.navigationManager
 import com.pmb.navigation.moduleScreen.RegisterScreens
 
@@ -61,14 +61,11 @@ fun NavGraphBuilder.registerScreenHandler() {
                 )
             val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
             AccountOpeningScreen(
-                viewModel = hiltViewModel<OpeningAccountViewModel>(),
-                sharedState = sharedState
+                viewModel = hiltViewModel<OpeningAccountViewModel>(), sharedState = sharedState
             ) { childState ->
-                Log.d("Masoud Tag", "registerScreenHandler: $childState")
                 sharedViewModel.updateState {
                     sharedState.value.copy(
-                        phoneNumber = childState.phoneNumber,
-                        nationalId = childState.nationalId
+                        phoneNumber = childState.phoneNumber, nationalId = childState.nationalId
                     )
                 }
 //                childState.phoneNumber?.let { it1 ->
@@ -96,8 +93,6 @@ fun NavGraphBuilder.registerScreenHandler() {
             RegisterNationalIdScreen(
                 viewModel = hiltViewModel<RegisterNationalIdViewModel>(),
             ) { childState ->
-                Log.d("Masoud Tag", "registerScreenHandler child state : $childState")
-                Log.d("Masoud Tag", "registerScreenHandler shared state : $sharedState")
                 childState.nationalSerialId?.let { serial ->
                     sharedViewModel.updateState {
                         sharedState.value.copy(
@@ -113,13 +108,11 @@ fun NavGraphBuilder.registerScreenHandler() {
                     screen = RegisterScreens.RegisterGraph, navBackStackEntry = it
                 )
             val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
-            Log.d("Masoud Tag", "registerScreenHandler shared state : $sharedState")
 
             RegisterConfirmScreen(
                 sharedState = sharedState,
                 viewModel = hiltViewModel<RegisterConfirmViewModel>(),
             ) { childState ->
-                Log.d("Masoud Tag", "registerScreenHandler child state : $childState")
                 sharedViewModel.updateState {
                     sharedState.value.copy(
                         verifyCodeResponse = childState.verifyCodeResponse
@@ -134,9 +127,9 @@ fun NavGraphBuilder.registerScreenHandler() {
                 )
             val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
             AuthenticationInformationScreen(
-                viewModel = hiltViewModel<AuthenticationInformationViewModel>(),
-                sharedState
+                viewModel = hiltViewModel<AuthenticationInformationViewModel>(), sharedState
             ) { childState ->
+
                 sharedViewModel.updateState {
                     sharedState.value.copy(
                         birthDatePlace = childState.birthDatePlace,
@@ -156,14 +149,12 @@ fun NavGraphBuilder.registerScreenHandler() {
                 )
             val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
             JobInformationScreen(
-                viewModel = hiltViewModel<JobInformationViewModel>(),
-                sharedState
+                viewModel = hiltViewModel<JobInformationViewModel>(), sharedState
             ) { childState ->
                 childState.data?.let { it1 ->
                     sharedViewModel.updateState {
                         sharedState.value.copy(
-                            jobInformation = childState.jobInformation,
-                            annualIncomeType = it1
+                            jobInformation = childState.jobInformation, annualIncomeType = it1
                         )
                     }
                 }
@@ -186,30 +177,37 @@ fun NavGraphBuilder.registerScreenHandler() {
                 )
             val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
             DepositInformationScreen(
-                viewModel = hiltViewModel<DepositInformationViewModel>(),
-                sharedState.value
+                viewModel = hiltViewModel<DepositInformationViewModel>(), sharedState.value
             ) { childState ->
                 sharedViewModel.updateState {
                     sharedState.value.copy(
                         accType = childState.accType,
                         accCity = childState.city,
                         province = childState.province,
-                        branch = branch
+                        branch = Branch(
+                            branchCode = 563659,
+                            organizationType = 0,
+                            branchName = "",
+                            tel = "",
+                            fax = "",
+                            telCode = 0,
+                            hajCityCode = 0,
+                            hajProvinceCode = 0,
+                            address = ""
+                        )
                     )
                 }
             }
         }
         composable(
-            route = RegisterScreens.SearchOpeningBranch.route,
-            deepLinks = listOf(navDeepLink {
+            route = RegisterScreens.SearchOpeningBranch.route, deepLinks = listOf(navDeepLink {
                 uriPattern =
                     "myapp://search_opening_branch/{provinceCode}/{provinceName}/{cityName}/{cityId}"
-            }),
-            arguments = listOf(
-                navArgument("cityId") { type = NavType.IntType },
-                navArgument("cityName") { type = NavType.StringType },
+            }), arguments = listOf(
                 navArgument("provinceCode") { type = NavType.IntType },
                 navArgument("provinceName") { type = NavType.StringType },
+                navArgument("cityName") { type = NavType.StringType },
+                navArgument("cityId") { type = NavType.IntType },
             )
         ) {
             SearchOpeningBranchScreen(

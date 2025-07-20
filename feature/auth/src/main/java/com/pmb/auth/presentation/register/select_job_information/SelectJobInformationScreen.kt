@@ -70,9 +70,9 @@ fun SelectJobInformationScreen(
 
         viewState.selectJobInformation?.forEach { selectJobInformation ->
             BodyMediumText(
-                text = selectJobInformation.jobName,
+                text = selectJobInformation.jobName ?:"",
                 modifier = Modifier.clickable {
-                    navigationManager.setPreviousScreenData<JobLevel?>(
+                    navigationManager.setPreviousScreenData<JobLevel>(
                         "jobInformation",
                         selectJobInformation
                     )

@@ -24,8 +24,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.pmb.auth.R
-import com.pmb.auth.domain.register.job_information.entity.AnnualIncomingPrediction
-import com.pmb.auth.domain.register.select_job_information.entity.JobInformation
 import com.pmb.auth.presentation.component.UploadDocumentsSection
 import com.pmb.auth.presentation.register.RegisterSharedViewState
 import com.pmb.auth.presentation.register.job_information.viewModel.JobInformationViewActions
@@ -43,7 +41,6 @@ import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.models.MenuSheetModel
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.core.utils.CollectAsEffect
-import com.pmb.core.utils.toCurrency
 import com.pmb.domain.model.openAccount.jobLevel.JobLevel
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.manager.NavigationManager
@@ -154,11 +151,11 @@ fun JobInformationScreen(
             CustomSpinner(
                 modifier = Modifier
                     .fillMaxWidth(),
-                options = sharedState.value.verifyCodeResponse?.annualIncomeTypes?.map { it.incomePredictDescription.toCurrency() },
+                options = sharedState.value.verifyCodeResponse?.annualIncomeTypes?.map { it.incomePredictDescription?:"" },
                 labelString = "پیش بینی درآمد سالیانه",
                 displayText = viewState.data?.let {
                     it.incomePredictDescription
-                }?.toCurrency() ?: "",
+                } ?: "",
                 isEnabled = true
             ) { type ->
                 val annualIncomeTypes = sharedState.value.verifyCodeResponse?.annualIncomeTypes?.findLast { it.incomePredictDescription == type }

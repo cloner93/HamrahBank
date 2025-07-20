@@ -6,6 +6,6 @@ import kotlinx.serialization.Serializable
 @SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class FetchAdmittanceTextResponse(
-    val orderId: String,
-    val admittanceText: String
+    val orderId: String?=null,
+    val admittanceText: String?=null
 )

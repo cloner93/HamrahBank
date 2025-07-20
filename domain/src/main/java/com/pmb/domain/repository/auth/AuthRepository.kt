@@ -9,13 +9,13 @@ import com.pmb.domain.model.openAccount.AccountArchiveJobDocResponse
 import com.pmb.domain.model.openAccount.FetchCommitmentResponse
 import com.pmb.domain.model.openAccount.accountType.FetchAccountTypeResponse
 import com.pmb.domain.model.openAccount.accountVerifyCode.VerifyCodeResponse
-import com.pmb.domain.model.openAccount.branchName.FetchBranchListResponse
-import com.pmb.domain.model.openAccount.cityName.FetchCityListResponse
-import com.pmb.domain.model.openAccount.comissionFee.FetchCommissionFeeResponse
-import com.pmb.domain.model.openAccount.jobLevel.FetchJobLevelResponse
 import com.pmb.domain.model.openAccount.FetchAdmittanceTextResponse
 import com.pmb.domain.model.openAccount.RegisterOpenAccountRequest
 import com.pmb.domain.model.openAccount.RegisterOpenAccountResponse
+import com.pmb.domain.model.openAccount.branchName.Branch
+import com.pmb.domain.model.openAccount.cityName.City
+import com.pmb.domain.model.openAccount.comissionFee.FetchCommissionFeeResponse
+import com.pmb.domain.model.openAccount.jobLevel.JobLevel
 import kotlinx.coroutines.flow.Flow
 
 interface AuthRepository {
@@ -35,17 +35,17 @@ interface AuthRepository {
         file: String, nationalCode: String
     ): Flow<Result<AccountArchiveJobDocResponse>>
 
-    fun fetchJobLevel(): Flow<Result<FetchJobLevelResponse>>
+    fun fetchJobLevel(): Flow<Result<List<JobLevel>>>
 
     fun fetchAccountType(
          nationalCode: String, mobileNo: String
     ): Flow<Result<FetchAccountTypeResponse>>
 
-    fun fetchCityList(stateCode: Int): Flow<Result<FetchCityListResponse>>
+    fun fetchCityList(stateCode: Int): Flow<Result<List<City>>>
 
     fun fetchBranchList(
        stateCode: Int, cityCode: Int
-    ): Flow<Result<FetchBranchListResponse>>
+    ): Flow<Result<List<Branch>>>
 
     fun fetchCommitment(accType: Int): Flow<Result<FetchCommitmentResponse>>
 

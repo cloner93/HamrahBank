@@ -125,8 +125,8 @@ class SearchOpeningBranchViewModel @Inject constructor(
                                 setState {
                                     it.copy(
                                         isLoading = false,
-                                        branchList = result.data.branchList,
-                                        searchedBranchList = result.data.branchList
+                                        branchList = result.data,
+                                        searchedBranchList = result.data
                                     )
                                 }
                             }

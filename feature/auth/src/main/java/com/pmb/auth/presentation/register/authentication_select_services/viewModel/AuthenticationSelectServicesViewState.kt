@@ -3,12 +3,12 @@ package com.pmb.auth.presentation.register.authentication_select_services.viewMo
 import com.pmb.auth.domain.ekyc.authentication_select_services.entity.SelectServicesEntity
 import com.pmb.core.platform.AlertModelState
 import com.pmb.core.platform.BaseViewState
-import com.pmb.domain.model.openAccount.comissionFee.CommissionFee
+import com.pmb.domain.model.openAccount.comissionFee.Income
 
 data class AuthenticationSelectServicesViewState(
     val loading: Boolean = false,
     val alertModelState: AlertModelState? = null,
-    val data: ArrayList<CommissionFee>? = emptyList<CommissionFee>().toCollection(ArrayList()),
+    val data: ArrayList<Income>? = emptyList<Income>().toCollection(ArrayList()),
     val localData: SelectServicesEntity? = null,
     val totalPrice : String ?=null
 ) : BaseViewState

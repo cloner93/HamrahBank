@@ -26,9 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import com.pmb.auth.AuthActionType
 import com.pmb.auth.R
-import com.pmb.auth.domain.register.search_opening_branch.entity.OpeningBranch
 import com.pmb.auth.presentation.register.RegisterSharedViewState
 import com.pmb.auth.presentation.register.deposit_information.viewModel.DepositInformationViewActions
 import com.pmb.auth.presentation.register.deposit_information.viewModel.DepositInformationViewEvents
@@ -62,13 +60,12 @@ fun DepositInformationScreen(
     val navigationManager: NavigationManager = LocalNavigationManager.current
     val viewState by viewModel.viewState.collectAsState()
     LaunchedEffect(Unit) {
-        viewState.fetchAccountTypeResponse?.let {
+        if (viewState.fetchAccountTypeResponse == null)
             viewModel.handle(
                 DepositInformationViewActions.FetchAccountType(
                     sharedViewState.nationalId ?: "", sharedViewState.phoneNumber ?: ""
                 )
             )
-        }
     }
     var showBottomSheet by remember { mutableStateOf(false) }
     BackHandler {
@@ -115,7 +112,7 @@ fun DepositInformationScreen(
                         .fillMaxWidth()
                         .padding(horizontal = 24.dp)
                         .clickable {
-                           viewModel.handle(DepositInformationViewActions.FetchCommitment)
+                            viewModel.handle(DepositInformationViewActions.FetchCommitment)
                         },
                     title = buildAnnotatedString {
                         withStyle(
@@ -196,14 +193,14 @@ fun DepositInformationScreen(
                 value = viewState.branch?.branchName ?: "",
                 onClick = {
                     if (viewState.cityList != null)
-                    navigationManager.navigateWithString(
-                        RegisterScreens.SearchOpeningBranch.createRoute(
-                            viewState.city?.cityCode ?: -1,
-                            viewState.city?.cityName ?: "",
-                            viewState.province?.provinceCode ?: -1,
-                            viewState.province?.provinceName ?: ""
+                        navigationManager.navigateWithString(
+                            RegisterScreens.SearchOpeningBranch.createRoute(
+                                viewState.city?.cityCode ?: -1,
+                                viewState.city?.cityName ?: "",
+                                viewState.city?.provinceCode ?: -1,
+                                viewState.province?.provinceName ?: ""
+                            )
                         )
-                    )
                 },
                 label = "شعبه افتتاح کننده",
                 enabled = viewState.cityList != null,
@@ -238,7 +235,7 @@ fun DepositInformationScreen(
         ) {
             BodyMediumText(
                 textAlign = TextAlign.Center,
-                text = viewState.commitmentText?:"",
+                text = viewState.commitmentText ?: "",
                 color = AppTheme.colorScheme.onBackgroundNeutralDefault
             )
             AppButton(

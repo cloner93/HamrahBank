@@ -17,14 +17,14 @@ import com.pmb.domain.model.openAccount.accountType.FetchAccountTypeResponse
 import com.pmb.domain.model.openAccount.accountVerifyCode.VerifyCodeRequest
 import com.pmb.domain.model.openAccount.accountVerifyCode.VerifyCodeResponse
 import com.pmb.domain.model.openAccount.branchName.FetchBranchListRequest
-import com.pmb.domain.model.openAccount.branchName.FetchBranchListResponse
 import com.pmb.domain.model.openAccount.cityName.FetchCityListRequest
-import com.pmb.domain.model.openAccount.cityName.FetchCityListResponse
-import com.pmb.domain.model.openAccount.comissionFee.FetchCommissionFeeResponse
-import com.pmb.domain.model.openAccount.jobLevel.FetchJobLevelResponse
 import com.pmb.domain.model.openAccount.FetchAdmittanceTextResponse
 import com.pmb.domain.model.openAccount.RegisterOpenAccountRequest
 import com.pmb.domain.model.openAccount.RegisterOpenAccountResponse
+import com.pmb.domain.model.openAccount.branchName.Branch
+import com.pmb.domain.model.openAccount.cityName.City
+import com.pmb.domain.model.openAccount.comissionFee.FetchCommissionFeeResponse
+import com.pmb.domain.model.openAccount.jobLevel.JobLevel
 import com.pmb.model.SuccessData
 import com.pmb.network.NetworkManger
 import kotlinx.coroutines.flow.Flow
@@ -89,8 +89,8 @@ class AuthServiceImpl @Inject constructor(
         )
     }
 
-    override fun fetchJobLevel(): Flow<Result<SuccessData<FetchJobLevelResponse>>> {
-        return client.request<Unit,FetchJobLevelResponse>(
+    override fun fetchJobLevel(): Flow<Result<SuccessData<List<JobLevel>>>> {
+        return client.request<Unit,List<JobLevel>>(
             "openAccount/accountFetchLevelJob"
         )
     }
@@ -106,21 +106,21 @@ class AuthServiceImpl @Inject constructor(
         )
     }
 
-    override fun fetchCityList(stateCode: Int): Flow<Result<SuccessData<FetchCityListResponse>>> {
+    override fun fetchCityList(stateCode: Int): Flow<Result<SuccessData<List<City>>>> {
         val req = FetchCityListRequest(stateCode = stateCode)
-        return client.request<FetchCityListRequest, FetchCityListResponse>(
+        return client.request<FetchCityListRequest, List<City>>(
             "openAccount/fetchCityList", req
         )
     }
 
     override fun fetchBranchList(
         stateCode: Int, cityCode: Int
-    ): Flow<Result<SuccessData<FetchBranchListResponse>>> {
+    ): Flow<Result<SuccessData<List<Branch>>>> {
         val req = FetchBranchListRequest(
             stateCode = stateCode,
             cityCode = cityCode,
         )
-        return client.request<FetchBranchListRequest, FetchBranchListResponse>(
+        return client.request<FetchBranchListRequest, List<Branch>>(
             "openAccount/fetchBranchList", req
         )
     }
@@ -133,7 +133,7 @@ class AuthServiceImpl @Inject constructor(
     }
 
     override fun fetchCommissionFee(): Flow<Result<SuccessData<FetchCommissionFeeResponse>>> {
-        return client.request<Unit,FetchCommissionFeeResponse>(
+        return client.request<Unit, FetchCommissionFeeResponse>(
             "openAccount/fetchCommission"
         )
     }

@@ -65,8 +65,8 @@ class SelectJobInformationViewModel @Inject constructor(
                         setState {
                             it.copy(
                                 isLoading = false,
-                                selectJobInformation = result.data.jobList,
-                                originalSelectJobInformation = result.data.jobList
+                                selectJobInformation = result.data,
+                                originalSelectJobInformation = result.data
                             )
                         }
                     }
@@ -82,9 +82,9 @@ class SelectJobInformationViewModel @Inject constructor(
             )
         }
         viewState.value.originalSelectJobInformation?.filter {
-            it.jobName.contains(
+            it.jobName?.contains(
                 action.queryString
-            )
+            ) == true
         }
             ?.let { result ->
                 setState {

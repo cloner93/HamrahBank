@@ -5,9 +5,9 @@ import kotlinx.serialization.Serializable
 
 @SuppressLint("UnsafeOptInUsageError")
 @Serializable
-data class CommissionFee(
-    val desc: String,
-    val code: Int,
-    val amount: Long,
-    val optional: Boolean
+data class Income(
+    val incomeId: Int,
+    val incomeName: String,
+    val mainIncomeAmount: Int,
+    val usedType: Int
 )

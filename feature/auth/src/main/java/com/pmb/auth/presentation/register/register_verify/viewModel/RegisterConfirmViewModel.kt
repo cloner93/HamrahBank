@@ -54,7 +54,6 @@ class RegisterConfirmViewModel @Inject constructor(
     }
 
     private fun handleConfirmFirstLogin(action: RegisterConfirmViewActions.ConfirmVerify) {
-        Log.d("Masoud Tag", "handleConfirmFirstLogin: $action")
         otpTryingStack++
         viewModelScope.launch {
             verifyCodeUseCase.invoke(

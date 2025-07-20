@@ -177,12 +177,12 @@ fun AuthenticationSelectServicesScreen(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 CaptionText(
-                                    text = feeDetail.desc,
+                                    text = feeDetail.incomeName,
                                     color = AppTheme.colorScheme.onBackgroundNeutralSubdued
                                 )
                                 Spacer(modifier = Modifier.weight(1f))
                                 BodyMediumText(
-                                    text = feeDetail.amount.toDouble().toCurrency(),
+                                    text = feeDetail.mainIncomeAmount.toDouble().toCurrency(),
                                     color = AppTheme.colorScheme.onBackgroundNeutralDefault
                                 )
                                 Spacer(modifier = Modifier.size(4.dp))

@@ -11,6 +11,7 @@ import com.pmb.domain.usecae.auth.openAccount.FetchCityListUseCase
 import com.pmb.domain.usecae.auth.openAccount.FetchCommitmentParams
 import com.pmb.domain.usecae.auth.openAccount.FetchCommitmentUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,10 +21,9 @@ class DepositInformationViewModel @Inject constructor(
     private val fetchAccountTypeUseCase: FetchAccountTypeUseCase,
     private val fetchCityListUseCase: FetchCityListUseCase,
     private val fetchCommitmentUseCase: FetchCommitmentUseCase
-) :
-    BaseViewModel<DepositInformationViewActions, DepositInformationViewState, DepositInformationViewEvents>(
-        initialState
-    ) {
+) : BaseViewModel<DepositInformationViewActions, DepositInformationViewState, DepositInformationViewEvents>(
+    initialState
+) {
     override fun handle(action: DepositInformationViewActions) {
         when (action) {
             is DepositInformationViewActions.ClearAlert -> {
@@ -48,7 +48,10 @@ class DepositInformationViewModel @Inject constructor(
                         province = action.province
                     )
                 }
-                handleFetchCityList(action.province.provinceCode)
+                viewModelScope.launch {
+                    delay(50)
+                    handleFetchCityList(action.province.provinceCode)
+                }
             }
 
             is DepositInformationViewActions.FetchAccountType -> {
@@ -66,9 +69,11 @@ class DepositInformationViewModel @Inject constructor(
                     )
                 }
             }
+
             is DepositInformationViewActions.SelectRules -> {
                 handleSelectRules()
             }
+
             is DepositInformationViewActions.FetchCommitment -> {
                 handleFetchCommitment()
             }
@@ -80,13 +85,12 @@ class DepositInformationViewModel @Inject constructor(
             viewState.value.accType?.let {
                 fetchCommitmentUseCase.invoke(
                     FetchCommitmentParams(it.accountType)
-                ).collect {result ->
+                ).collect { result ->
                     when (result) {
                         is Result.Success -> {
                             setState {
                                 it.copy(
-                                    isLoading = false,
-                                   commitmentText = result.data.text
+                                    isLoading = false, commitmentText = result.data.text
                                 )
                             }
                             postEvent(DepositInformationViewEvents.GetCommitmentTextSucceed)
@@ -103,16 +107,13 @@ class DepositInformationViewModel @Inject constructor(
                         is Result.Error -> {
                             setState {
                                 it.copy(
-                                    isLoading = false,
-                                    alertModelState = AlertModelState.Dialog(
-                                        title = "خطا",
-                                        description = result.message,
-                                        positiveButtonTitle = "تایید",
-                                        onPositiveClick = {
-                                            setState { state -> state.copy(alertModelState = null) }
-                                        }
-                                    )
-                                )
+                                    isLoading = false, alertModelState = AlertModelState.Dialog(
+                                    title = "خطا",
+                                    description = result.message,
+                                    positiveButtonTitle = "تایید",
+                                    onPositiveClick = {
+                                        setState { state -> state.copy(alertModelState = null) }
+                                    }))
                             }
                         }
 
@@ -136,7 +137,7 @@ class DepositInformationViewModel @Inject constructor(
                         setState {
                             it.copy(
                                 isLoading = false,
-                                cityList = result.data.cityList
+                                cityList = result.data,
                             )
                         }
                     }
@@ -152,16 +153,13 @@ class DepositInformationViewModel @Inject constructor(
                     is Result.Error -> {
                         setState {
                             it.copy(
-                                isLoading = false,
-                                alertModelState = AlertModelState.Dialog(
-                                    title = "خطا",
-                                    description = result.message,
-                                    positiveButtonTitle = "تایید",
-                                    onPositiveClick = {
-                                        setState { state -> state.copy(alertModelState = null) }
-                                    }
-                                )
-                            )
+                                isLoading = false, alertModelState = AlertModelState.Dialog(
+                                title = "خطا",
+                                description = result.message,
+                                positiveButtonTitle = "تایید",
+                                onPositiveClick = {
+                                    setState { state -> state.copy(alertModelState = null) }
+                                }))
                         }
                     }
 
@@ -182,16 +180,14 @@ class DepositInformationViewModel @Inject constructor(
         viewModelScope.launch {
             fetchAccountTypeUseCase.invoke(
                 params = FetchAccountTypeParams(
-                    nationalCode = action.nationalCode,
-                    mobileNo = action.mobileNo
+                    nationalCode = action.nationalCode, mobileNo = action.mobileNo
                 )
             ).collect { result ->
                 when (result) {
                     is Result.Success -> {
                         setState {
                             it.copy(
-                                isLoading = false,
-                                fetchAccountTypeResponse = result.data
+                                isLoading = false, fetchAccountTypeResponse = result.data
                             )
                         }
                     }
@@ -207,16 +203,13 @@ class DepositInformationViewModel @Inject constructor(
                     is Result.Error -> {
                         setState {
                             it.copy(
-                                isLoading = false,
-                                alertModelState = AlertModelState.Dialog(
-                                    title = "خطا",
-                                    description = result.message,
-                                    positiveButtonTitle = "تایید",
-                                    onPositiveClick = {
-                                        setState { state -> state.copy(alertModelState = null) }
-                                    }
-                                )
-                            )
+                                isLoading = false, alertModelState = AlertModelState.Dialog(
+                                title = "خطا",
+                                description = result.message,
+                                positiveButtonTitle = "تایید",
+                                onPositiveClick = {
+                                    setState { state -> state.copy(alertModelState = null) }
+                                }))
                         }
                     }
 
