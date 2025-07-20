@@ -12,15 +12,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,18 +25,23 @@ import com.pmb.ballon.component.annotation.AppPreview
 import com.pmb.ballon.models.TextStyle
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.ballon.ui.theme.HamrahBankTheme
+import com.pmb.calender.currentMonthPair
 import com.pmb.calender.generateShiftedMonthList
 import com.pmb.calender.monthName
+import io.github.persiancalendar.calendar.PersianDate
 
 @Composable
-internal fun RowOfMonth(modifier: Modifier = Modifier) {
+internal fun RowOfMonth(
+    modifier: Modifier = Modifier,
+    currentMonth: Pair<PersianDate, PersianDate> = currentMonthPair(),
+    selectedMonth: (Pair<PersianDate, PersianDate>) -> Unit = {}
+) {
     val list = generateShiftedMonthList()
 
-    var selectedMonth by remember { mutableIntStateOf(list[10].first.month) }
     val listState = rememberLazyListState()
 
-    LaunchedEffect(selectedMonth) {
-        val index = list.indexOfFirst { it.first.month == selectedMonth }
+    LaunchedEffect(currentMonth) {
+        val index = list.indexOfFirst { it.first.month == currentMonth.first.month }
         if (index != -1) {
             listState.animateScrollToItem(index, scrollOffset = (list.size / 2) * -70)
         }
@@ -51,12 +52,13 @@ internal fun RowOfMonth(modifier: Modifier = Modifier) {
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         contentPadding = PaddingValues(horizontal = 16.dp)
     ) {
-        itemsIndexed(list) { _, month ->
-            val isSelected = month.first.month == selectedMonth
+        items(list) { month ->
+            val isSelected = month.first.month == currentMonth.first.month
+
             MonthItem(
                 month = month.first.monthName(),
                 isSelected = isSelected,
-                onClick = { selectedMonth = month.first.month },
+                onClick = { selectedMonth(month) },
                 year = month.first.year.toString(),
                 isEnabled = list.last() != month
             )
