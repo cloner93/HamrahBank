@@ -162,6 +162,7 @@ fun NavGraphBuilder.registerScreenHandler() {
                 childState.data?.let { it1 ->
                     sharedViewModel.updateState {
                         sharedState.value.copy(
+                            jobInformation = childState.jobInformation,
                             annualIncomeType = it1
                         )
                     }

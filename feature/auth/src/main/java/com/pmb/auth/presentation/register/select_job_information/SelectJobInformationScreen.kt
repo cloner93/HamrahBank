@@ -25,6 +25,7 @@ import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.component.base.AppSearchTextField
 import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.ui.theme.AppTheme
+import com.pmb.domain.model.openAccount.jobLevel.JobLevel
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.manager.NavigationManager
 import kotlinx.coroutines.FlowPreview
@@ -67,11 +68,11 @@ fun SelectJobInformationScreen(
 
         Spacer(modifier = Modifier.size(24.dp))
 
-        viewState.selectJobInformation?.selectJobInformation?.forEach { selectJobInformation ->
+        viewState.selectJobInformation?.forEach { selectJobInformation ->
             BodyMediumText(
-                text = selectJobInformation.jobInformation,
+                text = selectJobInformation.jobName,
                 modifier = Modifier.clickable {
-                    navigationManager.setPreviousScreenData<JobInformation?>(
+                    navigationManager.setPreviousScreenData<JobLevel?>(
                         "jobInformation",
                         selectJobInformation
                     )

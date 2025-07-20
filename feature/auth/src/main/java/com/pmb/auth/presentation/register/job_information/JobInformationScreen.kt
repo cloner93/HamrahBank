@@ -44,6 +44,7 @@ import com.pmb.ballon.models.MenuSheetModel
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.core.utils.CollectAsEffect
 import com.pmb.core.utils.toCurrency
+import com.pmb.domain.model.openAccount.jobLevel.JobLevel
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.manager.NavigationManager
 import com.pmb.navigation.moduleScreen.RegisterScreens
@@ -92,7 +93,7 @@ fun JobInformationScreen(
             viewState.fileUri?.let { launcher.launch(it) }
         }
     }
-    navigationManager.getCurrentScreenFlowData<JobInformation?>(
+    navigationManager.getCurrentScreenFlowData<JobLevel?>(
         "jobInformation",
         null
     )?.CollectAsEffect {
@@ -140,7 +141,7 @@ fun JobInformationScreen(
                 onClick = {
                     navigationManager.navigate(RegisterScreens.SelectJobInformation)
                 },
-                value = viewState.jobInformation?.jobInformation ?: "",
+                value = viewState.jobInformation?.jobName ?: "",
                 label = "انتخاب شغل",
                 trailingIcon = {
                     Icon(

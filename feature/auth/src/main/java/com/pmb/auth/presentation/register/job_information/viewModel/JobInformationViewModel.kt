@@ -4,7 +4,6 @@ import android.content.Context
 import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.viewModelScope
-import com.pmb.auth.presentation.register.account_opening.viewModel.OpeningAccountViewEvents
 import com.pmb.core.fileManager.FileManager
 import com.pmb.core.permissions.PermissionDispatcher
 import com.pmb.core.platform.AlertModelState
@@ -13,6 +12,7 @@ import com.pmb.core.platform.Result
 import com.pmb.core.utils.Base64FileHelper
 import com.pmb.domain.usecae.auth.openAccount.AccountArchiveJobDocParams
 import com.pmb.domain.usecae.auth.openAccount.AccountArchiveJobDocUseCase
+import com.pmb.domain.usecae.auth.openAccount.FetchLevelJobUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.delay
@@ -32,6 +32,7 @@ class JobInformationViewModel @Inject constructor(
     BaseViewModel<JobInformationViewActions, JobInformationViewState, JobInformationViewEvents>(
         initialState
     ) {
+
     override fun handle(action: JobInformationViewActions) {
         when (action) {
             is JobInformationViewActions.ClearAlert -> {
@@ -65,12 +66,15 @@ class JobInformationViewModel @Inject constructor(
             is JobInformationViewActions.SetAnnualIncome -> {
                 handleSetAnnualIncome(action)
             }
+
             is JobInformationViewActions.UploadArchiveDoc -> {
                 handleUploadArchiveJob(action)
             }
         }
     }
-    private fun handleUploadArchiveJob(action :JobInformationViewActions.UploadArchiveDoc){
+
+
+    private fun handleUploadArchiveJob(action: JobInformationViewActions.UploadArchiveDoc) {
         viewModelScope.launch {
             val file = viewState.value.fileUri?.let {
                 Base64FileHelper.encodeToBase64(
@@ -125,6 +129,7 @@ class JobInformationViewModel @Inject constructor(
             }
         }
     }
+
     private fun handleSetAnnualIncome(action: JobInformationViewActions.SetAnnualIncome) {
         setState {
             it.copy(

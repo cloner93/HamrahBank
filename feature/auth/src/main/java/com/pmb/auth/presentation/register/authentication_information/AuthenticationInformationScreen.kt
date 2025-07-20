@@ -101,7 +101,7 @@ fun AuthenticationInformationScreen(
                 .fillMaxWidth(),
             options = sharedState.value.verifyCodeResponse?.cityOfBirthInfoDTOList?.map { it.cityName },
             labelString = stringResource(R.string.birthday_place),
-            displayText = city?.takeIf { !it.isNullOrEmpty() }?.let { it }
+            displayText = city?.takeIf { it.isNotEmpty() }?.let { it }
                 ?: run { sharedState.value.verifyCodeResponse?.birthCityName ?: "" },
             isEnabled = true,
             onSearchValue = {
@@ -118,7 +118,7 @@ fun AuthenticationInformationScreen(
                 .fillMaxWidth(),
             options = sharedState.value.verifyCodeResponse?.cityOfBirthInfoDTOList?.map { it.cityName },
             labelString = stringResource(R.string.identify_place),
-            displayText = identifyPlace?.takeIf { !it.isNullOrEmpty() }?.let { it }
+            displayText = identifyPlace?.takeIf { it.isNotEmpty() }?.let { it }
                 ?: run { sharedState.value.verifyCodeResponse?.issueCityName ?: "" },
             isEnabled = true,
             onSearchValue = {
@@ -138,7 +138,7 @@ fun AuthenticationInformationScreen(
         Spacer(modifier = Modifier.size(24.dp))
         AppClickableReadOnlyTextField(
             value = viewState.issueDateYear?.let { "${it}/${viewState.issueDateMonth}/${viewState.issueDateDay}" }
-                ?: run { sharedState.value.verifyCodeResponse?.issueDate?.takeIf { it != null || it > 0 } }
+                ?: run { sharedState.value.verifyCodeResponse?.issueDate?.takeIf {  it > 0 } }
                     ?.toString() ?: "",
             label = stringResource(R.string.identify_day),
             trailingIcon = {
@@ -154,8 +154,8 @@ fun AuthenticationInformationScreen(
         Spacer(modifier = Modifier.size(24.dp))
         AppSingleTextField(
             modifier = Modifier.fillMaxWidth(),
-            value = identifyArea?.takeIf { !it.isNullOrEmpty() }?.let { it } ?: run {
-                sharedState.value.verifyCodeResponse?.issueReginCode?.takeIf { it != null || it > 0 }
+            value = identifyArea?.takeIf { it.isNotEmpty() }?.let { it } ?: run {
+                sharedState.value.verifyCodeResponse?.issueReginCode?.takeIf { it > 0 }
                     ?.toString() ?: ""
             },
             label = stringResource(R.string.issue_region),
@@ -163,8 +163,8 @@ fun AuthenticationInformationScreen(
         )
         Spacer(modifier = Modifier.size(24.dp))
         AppMobileTextField(
-            value = viewState.tel?.takeIf { !it.isNullOrEmpty() }?.let { it } ?: run {
-                sharedState.value.verifyCodeResponse?.tel?.takeIf { !it.isNullOrEmpty() } ?: ""
+            value = viewState.tel?.takeIf { it.isNotEmpty() }?.let { it } ?: run {
+                sharedState.value.verifyCodeResponse?.tel?.takeIf { it.isNotEmpty() } ?: ""
             },
             label = stringResource(R.string.tel),
             onValueChange = {
@@ -174,7 +174,7 @@ fun AuthenticationInformationScreen(
         CustomSearchSpinner(
             modifier = Modifier
                 .fillMaxWidth(),
-            options = viewModel.getEducationList()?.map { it.education },
+            options = viewModel.getEducationList().map { it.education },
             labelString = stringResource(R.string.education),
             displayText = education,
             isEnabled = true,
