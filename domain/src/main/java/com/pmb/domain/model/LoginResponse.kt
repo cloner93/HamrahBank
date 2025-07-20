@@ -26,11 +26,11 @@ data class LoginResponse(
     val lockDate: Int,
     val lockTime: Int,
     val name: String?,
-    val nationalCode: Int,
+    val nationalCode: Long,
     val passportNumber: String?,
     val passwordX: String?,
     val postalCode: String?,
-    val sabtQueryStatus: Int,
+    val sabtQueryStatus: Long,
     val securePassword: String?,
     val userName: String?,
     val vcode: Int

@@ -5,4 +5,6 @@ import kotlinx.serialization.Serializable
 
 @SuppressLint("UnsafeOptInUsageError")
 @Serializable
-data class GenerateCodeResponse(val data:Boolean)
+data class FetchCommitmentResponse(
+    val text:String
+)
