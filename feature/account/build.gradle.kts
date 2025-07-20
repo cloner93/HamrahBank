@@ -9,7 +9,7 @@ plugins {
 
 android {
     namespace = "com.pmb.account"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 24
@@ -54,10 +54,18 @@ dependencies {
     implementation(project(":calender"))
     implementation(project(":domain"))
 
+    // back drop view
+    implementation("androidx.compose.material:material:1.8.3")
+
+    implementation(libs.androidx.paging.runtime)
+    implementation(libs.androidx.paging.compose)
+
     implementation(libs.androidx.ui.test.android)
     implementation(libs.android.hilt)
     kapt(libs.android.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
+
+    implementation(libs.kotlinx.serialization.json)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

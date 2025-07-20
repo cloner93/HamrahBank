@@ -23,7 +23,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.pmb.account.R
-import com.pmb.account.presentation.component.TransactionType
 import com.pmb.account.presentation.transactionReceipt.viewmodel.TransactionReceiptViewModel
 import com.pmb.ballon.component.MenuBottomSheet
 import com.pmb.ballon.component.annotation.AppPreview
@@ -39,6 +38,7 @@ import com.pmb.ballon.models.MenuSheetModel
 import com.pmb.ballon.models.Size
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.ballon.ui.theme.HamrahBankTheme
+import com.pmb.domain.model.TransactionType
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.receipt.component.ReceiptComponent
 import com.pmb.receipt.component.ReceiptSaveOrShareComponent

@@ -1,8 +1,8 @@
 package com.pmb.account.usecase.deposits
 
-import com.pmb.account.presentation.component.TransactionModel
 import com.pmb.account.tempRepo.TransactionsRepository
 import com.pmb.core.qualifier.IoDispatcher
+import com.pmb.domain.model.TransactionModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import javax.inject.Inject

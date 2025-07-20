@@ -18,11 +18,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import com.pmb.account.presentation.transactions.TransactionSharedState
 import com.pmb.account.presentation.transactions.statement.viewmodel.DepositStatementViewActions
 import com.pmb.account.presentation.transactions.statement.viewmodel.DepositStatementViewEvents
 import com.pmb.account.presentation.transactions.statement.viewmodel.DepositStatementViewModel
-import com.pmb.account.utils.toPersianDate
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppButtonIcon
 import com.pmb.ballon.component.base.AppClickableReadOnlyTextField
@@ -33,13 +32,15 @@ import com.pmb.ballon.component.base.ChipWithIcon
 import com.pmb.ballon.component.base.IconType
 import com.pmb.ballon.component.datePicker.ShowPersianDatePickerBottomSheet
 import com.pmb.ballon.ui.theme.AppTheme
+import com.pmb.calender.toPersianDateString
 import com.pmb.navigation.manager.LocalNavigationManager
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun DepositStatementScreen() {
-
-    val viewModel = hiltViewModel<DepositStatementViewModel>()
+fun DepositStatementScreen(
+    viewModel: DepositStatementViewModel,
+    sharedState: TransactionSharedState
+) {
     val viewState by viewModel.viewState.collectAsState()
     val navigationManager = LocalNavigationManager.current
     LaunchedEffect(Unit) {
@@ -234,7 +235,7 @@ fun DepositStatementScreen() {
                 Column {
                     Spacer(modifier = Modifier.height(56.dp))
                     AppClickableReadOnlyTextField(
-                        value = viewState.fromDate.toPersianDate(),
+                        value = viewState.fromDate.toPersianDateString(),
                         label = "از تاریخ",
                         trailingIcon = {
                             AppButtonIcon(
@@ -248,7 +249,7 @@ fun DepositStatementScreen() {
 
                     Spacer(modifier = Modifier.height(24.dp))
                     AppClickableReadOnlyTextField(
-                        value = viewState.toDate.toPersianDate(),
+                        value = viewState.toDate.toPersianDateString(),
                         label = "تا تاریخ",
                         trailingIcon = {
                             AppButtonIcon(

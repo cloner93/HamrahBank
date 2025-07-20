@@ -27,7 +27,7 @@ val signingProperties = getSigningConfigProperties()
 
 android {
     namespace = "com.pmb.mobile"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.pmb.mobile"

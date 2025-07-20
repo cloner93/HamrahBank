@@ -13,7 +13,7 @@ import com.pmb.navigation.provider.NavigationStartDestinationProvider
 import com.pmb.navigation.screen.Screen
 import kotlinx.coroutines.flow.StateFlow
 
-class NavigationManager(
+open class NavigationManager(
     val navController: NavHostController,
 ) {
     private val startDestinationProvider: NavigationStartDestinationProvider =
