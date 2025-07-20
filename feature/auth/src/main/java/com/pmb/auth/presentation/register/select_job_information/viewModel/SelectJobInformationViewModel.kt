@@ -34,7 +34,7 @@ class SelectJobInformationViewModel @Inject constructor(
 
     private fun handleGetJobInformation() {
         viewModelScope.launch {
-            fetchLevelJobUseCase.invoke().collect { result ->
+            fetchLevelJobUseCase.invoke(Unit).collect { result ->
                 when (result) {
                     is Result.Loading -> {
                         setState {
