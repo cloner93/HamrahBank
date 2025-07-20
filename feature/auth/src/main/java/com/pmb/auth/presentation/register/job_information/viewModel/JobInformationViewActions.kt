@@ -17,5 +17,5 @@ sealed interface JobInformationViewActions : BaseViewAction {
     data object ClearPhoto : JobInformationViewActions
     data class GetFileFromStorage(val fileUri : Uri): JobInformationViewActions
     data class SetAnnualIncome(val annualIncomeType: AnnualIncomeType) :JobInformationViewActions
-    data class UploadArchiveDoc(val file : String,val nationalCode : String) : JobInformationViewActions
+    data class UploadArchiveDoc(val nationalCode : String) : JobInformationViewActions
 }

@@ -72,47 +72,56 @@ class JobInformationViewModel @Inject constructor(
     }
     private fun handleUploadArchiveJob(action :JobInformationViewActions.UploadArchiveDoc){
         viewModelScope.launch {
-            accountArchiveJobDocUseCase.invoke(
-                AccountArchiveJobDocParams(
-                    file = action.file,
-                    nationalCode = action.nationalCode
+            val file = viewState.value.fileUri?.let {
+                Base64FileHelper.encodeToBase64(
+                    context,
+                    it,
+                    viewModelScope
                 )
-            ).collectLatest { result ->
-                when (result) {
-                    is Result.Loading -> {
-                        setState {
-                            it.copy(
-                                isLoading = true
-                            )
-                        }
-                    }
-
-                    is Result.Success -> {
-                        setState {
-                            it.copy(
-                                isLoading = false
-                            )
-                        }
-                        postEvent(JobInformationViewEvents.SendJobInformationSucceed)
-                    }
-
-                    is Result.Error -> {
-                        setState {
-                            it.copy(
-                                isLoading = false,
-                                alertModelState = AlertModelState.Dialog(
-                                    title = "خطا",
-                                    description = " ${result.message}",
-                                    positiveButtonTitle = "تایید",
-                                    onPositiveClick = {
-                                        setState { state -> state.copy(alertModelState = null) }
-                                    }
+            }
+            file?.let {
+                accountArchiveJobDocUseCase.invoke(
+                    AccountArchiveJobDocParams(
+                        file = file.await(),
+                        nationalCode = action.nationalCode
+                    )
+                ).collectLatest { result ->
+                    when (result) {
+                        is Result.Loading -> {
+                            setState {
+                                it.copy(
+                                    isLoading = true
                                 )
-                            )
+                            }
+                        }
+
+                        is Result.Success -> {
+                            setState {
+                                it.copy(
+                                    isLoading = false
+                                )
+                            }
+                            postEvent(JobInformationViewEvents.SendJobInformationSucceed)
+                        }
+
+                        is Result.Error -> {
+                            setState {
+                                it.copy(
+                                    isLoading = false,
+                                    alertModelState = AlertModelState.Dialog(
+                                        title = "خطا",
+                                        description = " ${result.message}",
+                                        positiveButtonTitle = "تایید",
+                                        onPositiveClick = {
+                                            setState { state -> state.copy(alertModelState = null) }
+                                        }
+                                    )
+                                )
+                            }
                         }
                     }
-                }
 
+                }
             }
         }
     }
