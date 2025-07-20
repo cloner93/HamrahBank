@@ -74,7 +74,11 @@ class TransactionsViewModel @Inject constructor(
             }
 
             TransactionsViewActions.NavigateToTransactionSearchScreen -> {
-                postEvent(TransactionsViewEvents.NavigateToTransactionSearchScreen)
+                postEvent(
+                    TransactionsViewEvents.NavigateToTransactionSearchScreen(
+                        viewState.value.selectedDeposit
+                    )
+                )
             }
 
             is TransactionsViewActions.RemoveFilterFromList -> {
@@ -285,13 +289,15 @@ class TransactionsViewModel @Inject constructor(
         setState { it.copy(selectedDeposit = selectedDeposit) }
         postEvent(TransactionsViewEvents.DepositSelectionChanged(deposit.depositNumber))
         loadTransactions(deposit)
-//        loadTransactionByDate(deposit)
     }
 }
 
 sealed interface TransactionsViewEvents : BaseViewEvent {
     object NavigateBack : TransactionsViewEvents
-    object NavigateToTransactionSearchScreen : TransactionsViewEvents
+    class NavigateToTransactionSearchScreen(
+        val deposit: DepositModel?
+    ) : TransactionsViewEvents
+
     class NavigateToTransactionInfoScreen(val transaction: String) : TransactionsViewEvents
     object NavigateToTransactionFilterScreen : TransactionsViewEvents
     object NavigateToDepositStatementScreen : TransactionsViewEvents

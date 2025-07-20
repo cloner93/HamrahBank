@@ -15,6 +15,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.pmb.account.presentation.component.CustomAppTopBar
 import com.pmb.account.presentation.transactions.filterScreen.viewmodel.entity.TransactionFilter
@@ -33,21 +34,26 @@ import com.pmb.ballon.models.IconStyle
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.core.utils.CollectAsEffect
 import com.pmb.domain.model.DepositModel
+import com.pmb.domain.model.TransactionModel
 import com.pmb.domain.model.transaztion.Summarize
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.moduleScreen.AccountScreens
+
 
 @Composable
 fun TransactionsScreen(
     viewModel: TransactionsViewModel,
     sharedState: TransactionSharedState,
-    updateListOfTransactions: (Summarize, DepositModel?) -> Unit
+    updateSummarize: (Summarize, DepositModel?) -> Unit,
+    updateListOfTransaction: (List<TransactionModel>, DepositModel?) -> Unit,
 ) {
 
     val viewState by viewModel.viewState.collectAsState()
     val navigationManager = LocalNavigationManager.current
 
     val optionTexts = listOf("همه", "برداشت", "واریز")
+
+    lateinit var lazyPagingItems: LazyPagingItems<TransactionModel>
 
     LaunchedEffect(Unit) {
         viewModel.viewEvent.collect { event ->
@@ -85,12 +91,12 @@ fun TransactionsScreen(
                     )
                 }
 
-                TransactionsViewEvents.NavigateToTransactionSearchScreen -> {
-                    navigationManager.navigateWithString(
-                        AccountScreens.Transactions.TransactionSearch.createRoute(
-                            viewState.selectedDeposit?.depositNumber!!
-                        )
+                is TransactionsViewEvents.NavigateToTransactionSearchScreen -> {
+                    updateListOfTransaction(
+                        lazyPagingItems.itemSnapshotList.items,
+                        event.deposit
                     )
+                    navigationManager.navigate(AccountScreens.Transactions.TransactionSearch)
                 }
             }
         }
@@ -159,8 +165,10 @@ fun TransactionsScreen(
 
         when (viewState.selectedTab) {
             0 -> {
+                lazyPagingItems = viewModel.transactionFlow.collectAsLazyPagingItems()
+
                 AllTransactionsSection(
-                    transaction = viewModel.transactionFlow.collectAsLazyPagingItems(),
+                    transaction = lazyPagingItems,
                     transactionFilter = viewState.transactionFilter,
                     onFilterClick = {
                         viewModel.handle(TransactionsViewActions.NavigateToTransactionFilterScreen)
@@ -185,7 +193,7 @@ fun TransactionsScreen(
                     viewState.sendTransactions,
                     onTransactionClick = {
 
-                        updateListOfTransactions(it, viewState.selectedDeposit)
+                        updateSummarize(it, viewState.selectedDeposit)
 
                         navigationManager.navigate(AccountScreens.Transactions.DetailedTransactionList)
                     },
@@ -203,7 +211,7 @@ fun TransactionsScreen(
                     viewState.receiveTransactions,
                     onTransactionClick = {
 
-                        updateListOfTransactions(it, viewState.selectedDeposit)
+                        updateSummarize(it, viewState.selectedDeposit)
 
                         navigationManager.navigate(AccountScreens.Transactions.DetailedTransactionList)
                     },

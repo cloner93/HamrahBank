@@ -14,9 +14,7 @@ sealed class AccountScreens(route: String, arguments: Map<String, String> = empt
         data object DetailedTransactionList : Transactions(route = "DetailedTransactionList")
         data object TransactionsFilter : Transactions(route = "transactionsFilter")
         data object DepositStatement : Transactions(route = "depositStatement")
-        data object TransactionSearch : Transactions(route = "transactionSearch/{depositId}") {
-            fun createRoute(depositId: String) = "transactionSearch/$depositId"
-        }
+        data object TransactionSearch : Transactions(route = "transactionSearch")
     }
 
     data object TransactionReceipt :

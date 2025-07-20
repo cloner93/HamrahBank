@@ -18,6 +18,7 @@ import com.pmb.account.presentation.transactions.detailedTransactionLIst.Detaile
 import com.pmb.account.presentation.transactions.filterScreen.TransactionFilterScreen
 import com.pmb.account.presentation.transactions.filterScreen.viewmodel.TransactionsFilterViewModel
 import com.pmb.account.presentation.transactions.search.TransactionSearchScreen
+import com.pmb.account.presentation.transactions.search.viewmodel.TransactionSearchViewModel
 import com.pmb.account.presentation.transactions.statement.DepositStatementScreen
 import com.pmb.account.presentation.transactions.statement.viewmodel.DepositStatementViewModel
 import com.pmb.account.presentation.transactions.viewmodel.TransactionsViewModel
@@ -45,15 +46,24 @@ fun NavGraphBuilder.accountScreensHandle() {
 
             TransactionsScreen(
                 viewModel = hiltViewModel<TransactionsViewModel>(),
-                sharedState = sharedState.value
-            ) { summarize, depositModel ->
-                depositModel?.let { deposit ->
-                    sharedViewModel.updateState {
-                        copy(summarize = summarize, selectedDeposit = deposit)
+                sharedState = sharedState.value,
+                updateSummarize = { summarize, depositModel ->
+                    depositModel?.let { deposit ->
+                        sharedViewModel.updateState {
+                            copy(summarize = summarize, selectedDeposit = deposit)
+                        }
+                    }
+                },
+                updateListOfTransaction = { list, depositModel ->
+                    depositModel?.let { deposit ->
+                        sharedViewModel.updateState {
+                            copy(transactionList = list, selectedDeposit = deposit)
+                        }
                     }
                 }
-            }
+            )
         }
+
         composable(route = AccountScreens.Transactions.TransactionsFilter.route) {
             val sharedViewModel =
                 it.navigationManager.retrieveSharedViewModel<TransactionSharedViewModel>(
@@ -91,14 +101,18 @@ fun NavGraphBuilder.accountScreensHandle() {
             )
         }
 
-        composable(
-            route = AccountScreens.Transactions.TransactionSearch.route,
-            deepLinks = listOf(navDeepLink {
-                uriPattern = "myapp://transactionSearch/{depositId}"
-            }),
-            arguments = listOf(navArgument("depositId") { type = NavType.StringType })
-        ) {
-            TransactionSearchScreen()
+        composable(route = AccountScreens.Transactions.TransactionSearch.route) {
+            val sharedViewModel =
+                it.navigationManager.retrieveSharedViewModel<TransactionSharedViewModel>(
+                    screen = AccountScreens.Transactions.Graph, navBackStackEntry = it
+                )
+            val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
+
+            TransactionSearchScreen(
+                viewModel = hiltViewModel<TransactionSearchViewModel>(),
+                sharedState = sharedState.value,
+            )
+
         }
     }
 
