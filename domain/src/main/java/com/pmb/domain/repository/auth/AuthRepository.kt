@@ -13,6 +13,9 @@ import com.pmb.domain.model.openAccount.branchName.FetchBranchListResponse
 import com.pmb.domain.model.openAccount.cityName.FetchCityListResponse
 import com.pmb.domain.model.openAccount.comissionFee.FetchCommissionFeeResponse
 import com.pmb.domain.model.openAccount.jobLevel.FetchJobLevelResponse
+import com.pmb.domain.model.openAccount.FetchAdmittanceTextResponse
+import com.pmb.domain.model.openAccount.RegisterOpenAccountRequest
+import com.pmb.domain.model.openAccount.RegisterOpenAccountResponse
 import kotlinx.coroutines.flow.Flow
 
 interface AuthRepository {
@@ -47,5 +50,9 @@ interface AuthRepository {
     fun fetchCommitment(accType: Int): Flow<Result<FetchCommitmentResponse>>
 
     fun fetchCommissionFee(): Flow<Result<FetchCommissionFeeResponse>>
+
+    fun fetchAdmittanceText(): Flow<Result<FetchAdmittanceTextResponse>>
+
+    fun registerOpenAccount(registerOpenAccountRequest: RegisterOpenAccountRequest): Flow<Result<RegisterOpenAccountResponse>>
 
 }

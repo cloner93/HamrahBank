@@ -5,7 +5,10 @@ import com.pmb.domain.model.LoginResponse
 import com.pmb.domain.model.RegisterVerifyResponse
 import com.pmb.domain.model.SendOtpRequest
 import com.pmb.domain.model.openAccount.AccountArchiveJobDocResponse
+import com.pmb.domain.model.openAccount.FetchAdmittanceTextResponse
 import com.pmb.domain.model.openAccount.FetchCommitmentResponse
+import com.pmb.domain.model.openAccount.RegisterOpenAccountRequest
+import com.pmb.domain.model.openAccount.RegisterOpenAccountResponse
 import com.pmb.domain.model.openAccount.accountType.FetchAccountTypeResponse
 import com.pmb.domain.model.openAccount.accountVerifyCode.VerifyCodeResponse
 import com.pmb.domain.model.openAccount.branchName.FetchBranchListResponse
@@ -40,7 +43,7 @@ interface AuthService {
     fun fetchJobLevel(): Flow<Result<SuccessData<FetchJobLevelResponse>>>
 
     fun fetchAccountType(
-         nationalCode: String, mobileNo: String
+        nationalCode: String, mobileNo: String
     ): Flow<Result<SuccessData<FetchAccountTypeResponse>>>
 
     fun fetchCityList(
@@ -54,5 +57,9 @@ interface AuthService {
     fun fetchCommitment(accType: Int): Flow<Result<SuccessData<FetchCommitmentResponse>>>
 
     fun fetchCommissionFee(): Flow<Result<SuccessData<FetchCommissionFeeResponse>>>
+
+    fun fetchAdmittanceText(): Flow<Result<SuccessData<FetchAdmittanceTextResponse>>>
+
+    fun registerOpenAccount(registerOpenAccountRequest: RegisterOpenAccountRequest): Flow<Result<SuccessData<RegisterOpenAccountResponse>>>
 
 }

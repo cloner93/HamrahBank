@@ -22,6 +22,9 @@ import com.pmb.domain.model.openAccount.cityName.FetchCityListRequest
 import com.pmb.domain.model.openAccount.cityName.FetchCityListResponse
 import com.pmb.domain.model.openAccount.comissionFee.FetchCommissionFeeResponse
 import com.pmb.domain.model.openAccount.jobLevel.FetchJobLevelResponse
+import com.pmb.domain.model.openAccount.FetchAdmittanceTextResponse
+import com.pmb.domain.model.openAccount.RegisterOpenAccountRequest
+import com.pmb.domain.model.openAccount.RegisterOpenAccountResponse
 import com.pmb.model.SuccessData
 import com.pmb.network.NetworkManger
 import kotlinx.coroutines.flow.Flow
@@ -132,6 +135,18 @@ class AuthServiceImpl @Inject constructor(
     override fun fetchCommissionFee(): Flow<Result<SuccessData<FetchCommissionFeeResponse>>> {
         return client.request<Unit,FetchCommissionFeeResponse>(
             "openAccount/fetchCommission"
+        )
+    }
+
+    override fun fetchAdmittanceText(): Flow<Result<SuccessData<FetchAdmittanceTextResponse>>> {
+        return client.request<Unit, FetchAdmittanceTextResponse>(
+           "openAccount/fetchAdmittanceText"
+        )
+    }
+
+    override fun registerOpenAccount(registerOpenAccountRequest: RegisterOpenAccountRequest): Flow<Result<SuccessData<RegisterOpenAccountResponse>>> {
+        return client.request<RegisterOpenAccountRequest,RegisterOpenAccountResponse>(
+            "openAccount/registerRequest", registerOpenAccountRequest
         )
     }
 
