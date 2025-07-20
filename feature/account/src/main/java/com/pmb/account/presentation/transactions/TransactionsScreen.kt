@@ -106,8 +106,8 @@ fun TransactionsScreen(
         ?.CollectAsEffect {
             it.takeIf {
                 it != null
-            }?.also {
-                viewModel.handle(TransactionsViewActions.UpdateFilterList(it))
+            }?.also { transactionFilter ->
+                viewModel.handle(TransactionsViewActions.UpdateFilterList(transactionFilter))
             }
         }
 

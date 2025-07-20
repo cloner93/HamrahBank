@@ -3,6 +3,7 @@ package com.pmb.account.presentation.transactions.viewmodel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.pmb.account.presentation.transactions.filterScreen.TransactionType
 import com.pmb.account.presentation.transactions.filterScreen.viewmodel.entity.TransactionFilter
 import com.pmb.account.presentation.transactions.viewmodel.TransactionsViewEvents.NavigateToTransactionInfoScreen
 import com.pmb.calender.currentMonthPair
@@ -18,7 +19,8 @@ import com.pmb.domain.model.TransactionRequest
 import com.pmb.domain.model.transaztion.Summarize
 import com.pmb.domain.usecae.deposit.GetUserDepositListUseCase
 import com.pmb.domain.usecae.transactions.GetSummarizeUseCase
-import com.pmb.domain.usecae.transactions.TransactionsByPagingUsaCase
+import com.pmb.domain.usecae.transactions.TransactionsByCountPagingUsaCase
+import com.pmb.domain.usecae.transactions.TransactionsByDatePagingUsaCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.persiancalendar.calendar.PersianDate
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -34,7 +36,8 @@ import javax.inject.Inject
 class TransactionsViewModel @Inject constructor(
     initialState: TransactionsViewState,
     private val getDepositsUseCase: GetUserDepositListUseCase,
-    private val getTransactionsPaging: TransactionsByPagingUsaCase,
+    private val getTransactionsByCountPaging: TransactionsByCountPagingUsaCase,
+    private val getTransactionsByDatePaging: TransactionsByDatePagingUsaCase,
     private val getSummarizeUseCase: GetSummarizeUseCase
 ) : BaseViewModel<TransactionsViewActions, TransactionsViewState, TransactionsViewEvents>(
     initialState
@@ -96,7 +99,12 @@ class TransactionsViewModel @Inject constructor(
             }
 
             is TransactionsViewActions.CloseDepositListBottomSheet -> {
-                setState { it.copy(showDepositListBottomSheet = false) }
+                setState {
+                    it.copy(
+                        showDepositListBottomSheet = false,
+                        transactionFilter = null
+                    )
+                }
 
                 if (action.model != null) {
                     selectDeposit(action.model)
@@ -107,6 +115,11 @@ class TransactionsViewModel @Inject constructor(
                 setState {
                     it.copy(transactionFilter = action.data)
                 }
+
+                loadTransactionsByFilter(
+                    viewState.value.selectedDeposit!!,
+                    action.data
+                )
             }
 
             is TransactionsViewActions.SelectReceiveMonth -> {
@@ -184,7 +197,7 @@ class TransactionsViewModel @Inject constructor(
                             }
 
                             viewState.value.selectedDeposit?.let {
-                                loadTransactions(
+                                loadTransactionsByCount(
                                     it
                                 )
                             }
@@ -194,8 +207,8 @@ class TransactionsViewModel @Inject constructor(
         }
     }
 
-    private fun loadTransactions(deposit: DepositModel) {
-        getTransactionsPaging(
+    private fun loadTransactionsByCount(deposit: DepositModel) {
+        getTransactionsByCountPaging(
             TransactionRequest(
                 extAccNo = deposit.depositNumber.toLong(),
                 count = 10,
@@ -205,6 +218,30 @@ class TransactionsViewModel @Inject constructor(
             .onEach { pagingData ->
                 _transactionFlow.value = pagingData
             }.launchIn(viewModelScope)
+    }
+
+    private fun loadTransactionsByFilter(deposit: DepositModel, data: TransactionFilter) {
+
+        val request = TransactionRequest(
+            extAccNo = deposit.depositNumber.toLong(),
+            count = 10,
+            categoryCode = deposit.categoryCode,
+            fromDate = data.fromDate?.toLong() ?: 0,
+            toDate = data.toDate?.toLong() ?: 0,
+            transType = when (data.transactionType) {
+                TransactionType.ALL -> 0
+                TransactionType.SEND -> 1
+                TransactionType.RECEIVE -> 2
+                null -> 0
+            }.toLong()
+        )
+
+        getTransactionsByDatePaging(request)
+            .cachedIn(viewModelScope)
+            .onEach { pagingData ->
+                _transactionFlow.value = pagingData
+            }
+            .launchIn(viewModelScope)
     }
 
     private fun loadSummarizeTransaction(
@@ -288,7 +325,7 @@ class TransactionsViewModel @Inject constructor(
 
         setState { it.copy(selectedDeposit = selectedDeposit) }
         postEvent(TransactionsViewEvents.DepositSelectionChanged(deposit.depositNumber))
-        loadTransactions(deposit)
+        loadTransactionsByCount(deposit)
     }
 }
 

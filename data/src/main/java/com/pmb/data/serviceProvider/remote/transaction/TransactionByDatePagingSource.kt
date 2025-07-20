@@ -11,7 +11,7 @@ import com.pmb.domain.model.TransactionRequest
 import kotlinx.coroutines.flow.filterNot
 import kotlinx.coroutines.flow.first
 
-class TransactionPagingSource(
+class TransactionByDatePagingSource(
     private val remote: RemoteServiceProvider,
     private val baseRequest: TransactionRequest
 ) : PagingSource<String, TransactionModel>() {
@@ -24,7 +24,7 @@ class TransactionPagingSource(
         return try {
             val responseFlow =
                 remote.getTransactionService()
-                    .getTransactionPaging(request)
+                    .getTransactionByDatePaging(request)
                     .filterNot { it is Result.Loading }
                     .mapApiResult { it.second.mapToDomain() }
 

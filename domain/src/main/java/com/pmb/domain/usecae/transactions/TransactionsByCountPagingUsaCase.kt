@@ -9,7 +9,7 @@ import com.pmb.domain.repository.transactions.TransactionRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class TransactionsByPagingUsaCase @Inject constructor(
+class TransactionsByCountPagingUsaCase @Inject constructor(
     private val repository: TransactionRepository
 ) {
     operator fun invoke(params: TransactionRequest): Flow<PagingData<TransactionModel>> {
@@ -18,7 +18,7 @@ class TransactionsByPagingUsaCase @Inject constructor(
                 pageSize = 10,
                 enablePlaceholders = false
             ),
-            pagingSourceFactory = { repository.getPagingSource(params) }
+            pagingSourceFactory = { repository.getTransactionByCountPagingSource(params) }
         ).flow
     }
 }

@@ -55,7 +55,9 @@ class TransactionsFilterViewModel @Inject constructor(
             is TransactionsFilterViewActions.SelectDateType -> {
                 setState {
                     it.copy(
-                        dateType = action.type
+                        dateType = action.type,
+                        fromDate = action.fromDate,
+                        toDate = action.toDate
                     )
                 }
             }
@@ -123,15 +125,20 @@ sealed interface TransactionsFilterViewEvents : BaseViewEvent {
 sealed interface TransactionsFilterViewActions : BaseViewAction {
     object NavigateBack : TransactionsFilterViewActions
     class SelectTransactionType(val type: TransactionType?) : TransactionsFilterViewActions
-    class SelectDateType(val type: DateType?) : TransactionsFilterViewActions
+    class SelectDateType(
+        val type: DateType?,
+        val fromDate: Long? = null,
+        val toDate: Long? = null
+    ) : TransactionsFilterViewActions
+
     class ChangeFromPrice(val fromPrice: String?) : TransactionsFilterViewActions
     class ChangeToPrice(val toPrice: String?) : TransactionsFilterViewActions
 
     object ShowFromDatePicker : TransactionsFilterViewActions
-    class CloseFromDatePicker(val date: String?) : TransactionsFilterViewActions
+    class CloseFromDatePicker(val date: Long?) : TransactionsFilterViewActions
 
     object ShowToDatePicker : TransactionsFilterViewActions
-    class CloseToDatePicker(val date: String?) : TransactionsFilterViewActions
+    class CloseToDatePicker(val date: Long?) : TransactionsFilterViewActions
 
     object ClearFilters : TransactionsFilterViewActions
     object ApplyFilters : TransactionsFilterViewActions
@@ -145,7 +152,7 @@ data class TransactionsFilterViewState(
     val toPrice: String? = null,
     val showFromDatePicker: Boolean = false,
     val showToDatePicker: Boolean = false,
-    val fromDate: String? = null,
-    val toDate: String? = null,
+    val fromDate: Long? = null,
+    val toDate: Long? = null,
     val transactionFilter: TransactionFilter? = null
 ) : BaseViewState

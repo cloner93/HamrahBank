@@ -5,5 +5,6 @@ import com.pmb.domain.model.TransactionModel
 import com.pmb.domain.model.TransactionRequest
 
 interface TransactionRepository {
-    fun getPagingSource(request: TransactionRequest): PagingSource<String, TransactionModel>
+    fun getTransactionByCountPagingSource(request: TransactionRequest): PagingSource<String, TransactionModel>
+    fun getTransactionByDatePagingSource(request: TransactionRequest): PagingSource<String, TransactionModel>
 }

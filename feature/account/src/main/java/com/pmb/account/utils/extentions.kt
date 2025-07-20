@@ -52,21 +52,3 @@ fun List<DepositModel>.mapToDepositsChartModel(): MutableList<DepositsChartModel
         )
     }.toMutableList()
 }
-
-fun String?.toPersianDate(): String {
-    if (this == null || this.length != 8) return ""
-
-    val year = this.substring(0, 4)
-    val month = this.substring(4, 6)
-    val day = this.substring(6, 8)
-
-    val persianMonths = listOf(
-        "فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور",
-        "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"
-    )
-
-    val monthIndex = month.toIntOrNull()?.minus(1) ?: return ""
-    val monthName = persianMonths.getOrNull(monthIndex) ?: return ""
-
-    return " $day $monthName $year"
-}

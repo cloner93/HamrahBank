@@ -17,20 +17,23 @@ fun daysFromTodayTo(date: PersianDate): Int = Jdn(date) - Jdn(today())
 fun addDays(date: PersianDate, days: Int): PersianDate = (Jdn(date) + days).toPersianDate()
 fun PersianDate.addDay(day: Int) = (Jdn(this) + day).toPersianDate()
 
-fun subtractDays(date: PersianDate, days: Int): PersianDate =
-    (Jdn(date) - days).toPersianDate()
+fun PersianDate.subtractDays(days: Int): PersianDate =
+    (Jdn(this) - days).toPersianDate()
 
 fun isPast(date: PersianDate): Boolean = Jdn(date) < Jdn(today())
 fun isFuture(date: PersianDate): Boolean = Jdn(date) > Jdn(today())
 fun isToday(date: PersianDate): Boolean = Jdn(date) == Jdn(today())
 
 fun lastDayOfMonth(date: PersianDate): PersianDate =
-    subtractDays(date.monthStartOfMonthsDistance(1), 1)
+    date.monthStartOfMonthsDistance(1).subtractDays(1)
 
 fun firstDayOfMonth(date: PersianDate): PersianDate = date.monthStartOfMonthsDistance(0)
 
 fun PersianDate.monthName(): String =
     persianCalendarMonthsInPersian[this.month - 1]
+
+fun Int.monthName(): String =
+    persianCalendarMonthsInPersian[this - 1]
 
 fun PersianDate.toLong(): Long {
     val stringDate = this.year.toString() +
@@ -54,7 +57,7 @@ fun generateShiftedMonthList(
     return list
 }
 
-fun formatPersianDateForDisplay(date: String, time: String): String {
+fun formatPersianDateForDisplay(date: String, time: String?): String {
 
     val year = date.substring(0, 4).toInt()
     val month = date.substring(4, 6).toInt()
@@ -65,11 +68,16 @@ fun formatPersianDateForDisplay(date: String, time: String): String {
     val now = today()
     val yesterday = today().apply { addDay(-1) }
 
-    val hour = time.substring(0, 2).toInt()
-    val minute = time.substring(2, 4).toInt()
-    val second = time.substring(4, 6).toInt()
+    var timeStr = ""
 
-    val timeStr = "ساعت $hour:$minute:$second"
+    time?.let {
+        val hour = time.substring(0, 2).toInt()
+        val minute = time.substring(2, 4).toInt()
+        val second = time.substring(4, 6).toInt()
+
+        timeStr = "ساعت $hour:$minute:$second"
+    }
+
 
     return when {
         transactionDate.year == now.year && transactionDate.month == now.month && transactionDate.dayOfMonth == now.dayOfMonth -> {
@@ -90,6 +98,17 @@ fun formatPersianDateForDisplay(date: String, time: String): String {
             "${transactionDate.dayOfMonth} $monthName ${transactionDate.year} $timeStr"
         }
     }
+}
+
+// 14040404 -> 1404 tir 03
+fun String?.toPersianDateString(): String {
+    if (this == null || this.length != 8) return ""
+
+    val year = this.substring(0, 4)
+    val month = this.substring(4, 6).toInt().monthName()
+    val day = this.substring(6, 8)
+
+    return " $day $month $year"
 }
 
 fun Long.longToString(): Triple<String, String, String>? {

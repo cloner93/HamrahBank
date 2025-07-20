@@ -8,10 +8,12 @@ import com.pmb.model.SuccessData
 import kotlinx.coroutines.flow.Flow
 
 interface TransactionService {
-    fun getTransactionPaging(transactionRequest: TransactionRequest)
+    fun getTransactionByCountPaging(transactionRequest: TransactionRequest)
             : Flow<Result<SuccessData<List<TransactionResponse>>>>
 
-    fun getTransactionByCount(transactionRequest: TransactionRequest?): Flow<Result<SuccessData<List<TransactionResponse>>>>
-    fun getTransactionByDate(transactionRequest: TransactionRequest?): Flow<Result<SuccessData<List<TransactionResponse>>>>
-    fun getSummarize(transactionRequest: TransactionRequest?): Flow<Result<SuccessData<List<SummarizeResponse>>>>
+    fun getTransactionByDatePaging(transactionRequest: TransactionRequest?)
+            : Flow<Result<SuccessData<List<TransactionResponse>>>>
+
+    fun getSummarize(transactionRequest: TransactionRequest?)
+            : Flow<Result<SuccessData<List<SummarizeResponse>>>>
 }

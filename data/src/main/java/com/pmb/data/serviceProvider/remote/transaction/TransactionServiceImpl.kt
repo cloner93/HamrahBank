@@ -12,21 +12,14 @@ import kotlinx.coroutines.flow.Flow
 class TransactionServiceImpl @Inject constructor(
     private val client: NetworkManger
 ) : TransactionService {
-    override fun getTransactionPaging(transactionRequest: TransactionRequest): Flow<Result<SuccessData<List<TransactionResponse>>>> {
+    override fun getTransactionByCountPaging(transactionRequest: TransactionRequest): Flow<Result<SuccessData<List<TransactionResponse>>>> {
         return client.request<TransactionRequest, List<TransactionResponse>>(
             endpoint = "transactions/count",
             data = transactionRequest
         )
     }
 
-    override fun getTransactionByCount(transactionRequest: TransactionRequest?): Flow<Result<SuccessData<List<TransactionResponse>>>> {
-        return client.request<TransactionRequest, List<TransactionResponse>>(
-            endpoint = "transactions/count",
-            data = transactionRequest
-        )
-    }
-
-    override fun getTransactionByDate(transactionRequest: TransactionRequest?): Flow<Result<SuccessData<List<TransactionResponse>>>> {
+    override fun getTransactionByDatePaging(transactionRequest: TransactionRequest?): Flow<Result<SuccessData<List<TransactionResponse>>>> {
         return client.request<TransactionRequest, List<TransactionResponse>>(
             endpoint = "transactions/by-date",
             data = transactionRequest

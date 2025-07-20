@@ -24,11 +24,11 @@ import androidx.paging.compose.LazyPagingItems
 import com.pmb.account.presentation.account.TransactionLazyList
 import com.pmb.account.presentation.transactions.filterScreen.DateType
 import com.pmb.account.presentation.transactions.filterScreen.viewmodel.entity.TransactionFilter
-import com.pmb.account.utils.toPersianDate
 import com.pmb.ballon.component.base.ButtonMediumText
 import com.pmb.ballon.component.base.ChipWithIcon
 import com.pmb.ballon.models.IconStyle
 import com.pmb.ballon.ui.theme.AppTheme
+import com.pmb.calender.toPersianDateString
 import com.pmb.core.utils.toCurrency
 import com.pmb.domain.model.TransactionModel
 
@@ -135,12 +135,12 @@ private fun StatementAndFilters(
                     })
                 } else {
                     transactionFilter.fromDate?.let {
-                        chips.add("از ${it.toPersianDate()}" to {
+                        chips.add("از ${it.toString().toPersianDateString()}" to {
                             onFilterItemClick.invoke(transactionFilter.copy(fromDate = null))
                         })
                     }
                     transactionFilter.toDate?.let {
-                        chips.add("تا ${it.toPersianDate()}" to {
+                        chips.add("تا ${it.toString().toPersianDateString()}" to {
 
                             onFilterItemClick.invoke(transactionFilter.copy(toDate = null))
                         })
