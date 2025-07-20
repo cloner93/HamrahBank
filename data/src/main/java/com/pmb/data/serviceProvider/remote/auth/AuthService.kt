@@ -4,8 +4,12 @@ import com.pmb.core.platform.Result
 import com.pmb.domain.model.LoginResponse
 import com.pmb.domain.model.RegisterVerifyResponse
 import com.pmb.domain.model.SendOtpRequest
+import com.pmb.domain.model.openAccount.AccountArchiveJobDocResponse
 import com.pmb.domain.model.openAccount.GenerateCodeResponse
+import com.pmb.domain.model.openAccount.accountType.FetchAccountTypeResponse
 import com.pmb.domain.model.openAccount.accountVerifyCode.VerifyCodeResponse
+import com.pmb.domain.model.openAccount.branchName.FetchBranchListResponse
+import com.pmb.domain.model.openAccount.cityName.FetchCityListResponse
 import com.pmb.model.SuccessData
 import kotlinx.coroutines.flow.Flow
 
@@ -25,5 +29,21 @@ interface AuthService {
 
     fun accountVerifyCode(
         verificationCode: Int, nationalCode: String, mobileNo: String, idSerial: String
-    ) : Flow<Result<SuccessData<VerifyCodeResponse>>>
+    ): Flow<Result<SuccessData<VerifyCodeResponse>>>
+
+    fun accountArchiveJobDoc(
+        file: String, nationalCode: String
+    ): Flow<Result<SuccessData<AccountArchiveJobDocResponse>>>
+
+    fun fetchAccountType(
+        customerType: Int, nationalCode: String, mobileNo: String
+    ): Flow<Result<SuccessData<FetchAccountTypeResponse>>>
+
+    fun fetchCityList(
+        stateCode: Int
+    ): Flow<Result<SuccessData<FetchCityListResponse>>>
+
+    fun fetchBranchList(
+        mergeStatus: Int, stateCode: Int, cityCode: Int, organizationType: String
+    ): Flow<Result<SuccessData<FetchBranchListResponse>>>
 }

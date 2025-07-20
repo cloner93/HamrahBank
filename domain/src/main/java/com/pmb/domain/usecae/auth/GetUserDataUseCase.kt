@@ -11,7 +11,7 @@ class GetUserDataUseCase @Inject constructor(
     private val authRepository: AuthRepository
 ) : BaseUseCase<Unit, UserData?>() {
     override suspend fun execute(params: Unit): Flow<Result<UserData?>> {
-        return authRepository.getUserDataStore()
+        return authRepository.getUserData()
     }
 
 }
