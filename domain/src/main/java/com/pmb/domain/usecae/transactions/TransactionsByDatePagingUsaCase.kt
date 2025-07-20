@@ -18,7 +18,7 @@ class TransactionsByDatePagingUsaCase @Inject constructor(
                 pageSize = 10,
                 enablePlaceholders = false
             ),
-            pagingSourceFactory = { repository.getTransactionByCountPagingSource(params) }
+            pagingSourceFactory = { repository.getTransactionByDatePagingSource(params) }
         ).flow
     }
 }

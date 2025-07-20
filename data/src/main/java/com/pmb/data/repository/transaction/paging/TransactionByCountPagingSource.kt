@@ -1,4 +1,4 @@
-package com.pmb.data.serviceProvider.remote.transaction
+package com.pmb.data.repository.transaction.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
@@ -24,7 +24,7 @@ class TransactionByCountPagingSource(
         return try {
             val responseFlow =
                 remote.getTransactionService()
-                    .getTransactionByDatePaging(request)
+                    .getTransactionByCountPaging(request)
                     .filterNot { it is Result.Loading }
                     .mapApiResult { it.second.mapToDomain() }
 

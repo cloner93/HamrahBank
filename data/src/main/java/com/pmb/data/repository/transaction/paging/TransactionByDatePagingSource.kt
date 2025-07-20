@@ -1,4 +1,4 @@
-package com.pmb.data.serviceProvider.remote.transaction
+package com.pmb.data.repository.transaction.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
