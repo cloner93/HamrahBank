@@ -174,18 +174,29 @@ fun NavGraphBuilder.registerScreenHandler() {
             DepositInformationScreen(
                 viewModel = hiltViewModel<DepositInformationViewModel>(),
                 sharedState.value
-            )
+            ) { childState ->
+                sharedViewModel.updateState {
+                    sharedState.value.copy(
+                        accType = childState.accType,
+                        accCity = childState.city,
+                        province = childState.province,
+                        branch = branch
+                    )
+                }
+            }
         }
         composable(
             route = RegisterScreens.SearchOpeningBranch.route,
             deepLinks = listOf(navDeepLink {
-                uriPattern = "myapp://search_opening_branch/{provinceCode}/{provinceName}/{cityName}/{cityId}"
+                uriPattern =
+                    "myapp://search_opening_branch/{provinceCode}/{provinceName}/{cityName}/{cityId}"
             }),
             arguments = listOf(
                 navArgument("cityId") { type = NavType.IntType },
                 navArgument("cityName") { type = NavType.StringType },
                 navArgument("provinceCode") { type = NavType.IntType },
-                navArgument("provinceName") { type = NavType.StringType },)
+                navArgument("provinceName") { type = NavType.StringType },
+            )
         ) {
             SearchOpeningBranchScreen(
                 viewModel = hiltViewModel<SearchOpeningBranchViewModel>()

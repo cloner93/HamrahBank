@@ -6,9 +6,9 @@ import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.platform.Result
 import com.pmb.domain.usecae.auth.openAccount.FetchAccountTypeParams
 import com.pmb.domain.usecae.auth.openAccount.FetchAccountTypeUseCase
-import com.pmb.domain.usecae.auth.openAccount.FetchBranchListUseCase
 import com.pmb.domain.usecae.auth.openAccount.FetchCityListParams
 import com.pmb.domain.usecae.auth.openAccount.FetchCityListUseCase
+import com.pmb.domain.usecae.auth.openAccount.FetchCommitmentParams
 import com.pmb.domain.usecae.auth.openAccount.FetchCommitmentUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -58,6 +58,7 @@ class DepositInformationViewModel @Inject constructor(
             is DepositInformationViewActions.SetOpeningBranch -> {
                 handleSetOpeningBranch(action)
             }
+
             is DepositInformationViewActions.SetCity -> {
                 setState {
                     it.copy(
@@ -68,9 +69,59 @@ class DepositInformationViewModel @Inject constructor(
             is DepositInformationViewActions.SelectRules -> {
                 handleSelectRules()
             }
+            is DepositInformationViewActions.FetchCommitment -> {
+                handleFetchCommitment()
+            }
         }
     }
 
+    private fun handleFetchCommitment() {
+        viewModelScope.launch {
+            viewState.value.accType?.let {
+                fetchCommitmentUseCase.invoke(
+                    FetchCommitmentParams(it.accountType)
+                ).collect {result ->
+                    when (result) {
+                        is Result.Success -> {
+                            setState {
+                                it.copy(
+                                    isLoading = false,
+                                   commitmentText = result.data.text
+                                )
+                            }
+                            postEvent(DepositInformationViewEvents.GetCommitmentTextSucceed)
+                        }
+
+                        is Result.Loading -> {
+                            setState {
+                                it.copy(
+                                    isLoading = true
+                                )
+                            }
+                        }
+
+                        is Result.Error -> {
+                            setState {
+                                it.copy(
+                                    isLoading = false,
+                                    alertModelState = AlertModelState.Dialog(
+                                        title = "خطا",
+                                        description = result.message,
+                                        positiveButtonTitle = "تایید",
+                                        onPositiveClick = {
+                                            setState { state -> state.copy(alertModelState = null) }
+                                        }
+                                    )
+                                )
+                            }
+                        }
+
+                    }
+
+                }
+            }
+        }
+    }
 
 
     private fun handleFetchCityList(provinceCode: Int) {
