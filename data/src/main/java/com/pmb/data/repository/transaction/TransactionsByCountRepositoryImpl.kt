@@ -2,7 +2,7 @@ package com.pmb.data.repository.transaction
 
 import com.pmb.core.platform.Result
 import com.pmb.data.mapper.mapApiResult
-import com.pmb.data.mapper.mapToDomain
+import com.pmb.data.mapper.transactionService.mapToDomain
 import com.pmb.domain.model.TransactionModel
 import com.pmb.domain.model.TransactionRequest
 import com.pmb.domain.model.TransactionResponse

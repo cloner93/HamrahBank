@@ -4,6 +4,7 @@ import com.pmb.data.repository.auth.AuthRepositoryImpl
 import com.pmb.data.repository.card.CardsRepositoryImpl
 import com.pmb.data.repository.deposit.DepositRepositoryImpl
 import com.pmb.data.repository.theme.ThemeRepositoryImpl
+import com.pmb.data.repository.transaction.SummarizeRepositoryImpl
 import com.pmb.data.repository.transaction.TransactionRepositoryImpl
 import com.pmb.data.repository.transaction.TransactionsByCountRepositoryImpl
 import com.pmb.data.repository.transaction.TransactionsByDateRepositoryImpl
@@ -11,6 +12,7 @@ import com.pmb.domain.repository.auth.AuthRepository
 import com.pmb.domain.repository.card.CardsRepository
 import com.pmb.domain.repository.deposit.DepositsRepository
 import com.pmb.domain.repository.theme.ThemeRepository
+import com.pmb.domain.repository.transactions.SummarizeRepository
 import com.pmb.domain.repository.transactions.TransactionRepository
 import com.pmb.domain.repository.transactions.TransactionsByCountRepository
 import com.pmb.domain.repository.transactions.TransactionsByDateRepository
@@ -43,4 +45,7 @@ abstract class RepositoryModule {
 
     @Binds
     abstract fun bindTransactionsByDateRepository(transactionsByDateRepository: TransactionsByDateRepositoryImpl): TransactionsByDateRepository
+
+    @Binds
+    abstract fun bindSummarizeRepository(transactionsByDateRepository: SummarizeRepositoryImpl): SummarizeRepository
 }

@@ -4,7 +4,7 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.pmb.core.platform.Result
 import com.pmb.data.mapper.mapApiResult
-import com.pmb.data.mapper.mapToDomain
+import com.pmb.data.mapper.transactionService.mapToDomain
 import com.pmb.data.serviceProvider.remote.RemoteServiceProvider
 import com.pmb.domain.model.TransactionModel
 import com.pmb.domain.model.TransactionRequest
