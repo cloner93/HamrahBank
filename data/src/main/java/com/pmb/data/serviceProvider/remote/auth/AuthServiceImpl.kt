@@ -20,6 +20,7 @@ import com.pmb.domain.model.openAccount.branchName.FetchBranchListRequest
 import com.pmb.domain.model.openAccount.branchName.FetchBranchListResponse
 import com.pmb.domain.model.openAccount.cityName.FetchCityListRequest
 import com.pmb.domain.model.openAccount.cityName.FetchCityListResponse
+import com.pmb.domain.model.openAccount.jobLevel.FetchJobLevelResponse
 import com.pmb.model.SuccessData
 import com.pmb.network.NetworkManger
 import kotlinx.coroutines.flow.Flow
@@ -81,6 +82,12 @@ class AuthServiceImpl @Inject constructor(
         val req = AccountArchiveJobDocRequest(file = file, nationalCode = nationalCode)
         return client.request<AccountArchiveJobDocRequest, AccountArchiveJobDocResponse>(
             "openAccount/accountArchiveJobDoc", req
+        )
+    }
+
+    override fun fetchJobLevel(): Flow<Result<SuccessData<FetchJobLevelResponse>>> {
+        return client.request<Unit,FetchJobLevelResponse>(
+            "openAccount/accountFetchLevelJob"
         )
     }
 

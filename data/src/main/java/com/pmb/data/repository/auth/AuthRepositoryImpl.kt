@@ -15,6 +15,7 @@ import com.pmb.domain.model.openAccount.accountType.FetchAccountTypeResponse
 import com.pmb.domain.model.openAccount.accountVerifyCode.VerifyCodeResponse
 import com.pmb.domain.model.openAccount.branchName.FetchBranchListResponse
 import com.pmb.domain.model.openAccount.cityName.FetchCityListResponse
+import com.pmb.domain.model.openAccount.jobLevel.FetchJobLevelResponse
 import com.pmb.domain.repository.auth.AuthRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -97,6 +98,11 @@ class AuthRepositoryImpl @Inject constructor(
         return remoteServiceProvider.getAuthService().accountArchiveJobDoc(
             file = file, nationalCode = nationalCode
         ).mapApiResult { it.second }
+    }
+
+    override fun fetchJobLevel(): Flow<Result<FetchJobLevelResponse>> {
+        return remoteServiceProvider.getAuthService().fetchJobLevel()
+            .mapApiResult { it.second }
     }
 
     override fun fetchAccountType(

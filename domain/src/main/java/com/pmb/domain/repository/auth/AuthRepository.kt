@@ -11,6 +11,7 @@ import com.pmb.domain.model.openAccount.accountType.FetchAccountTypeResponse
 import com.pmb.domain.model.openAccount.accountVerifyCode.VerifyCodeResponse
 import com.pmb.domain.model.openAccount.branchName.FetchBranchListResponse
 import com.pmb.domain.model.openAccount.cityName.FetchCityListResponse
+import com.pmb.domain.model.openAccount.jobLevel.FetchJobLevelResponse
 import kotlinx.coroutines.flow.Flow
 
 interface AuthRepository {
@@ -29,6 +30,8 @@ interface AuthRepository {
     fun accountArchiveJobDoc(
         file: String, nationalCode: String
     ): Flow<Result<AccountArchiveJobDocResponse>>
+
+    fun fetchJobLevel(): Flow<Result<FetchJobLevelResponse>>
 
     fun fetchAccountType(
          nationalCode: String, mobileNo: String
