@@ -92,3 +92,14 @@ fun formatPersianDateForDisplay(date: String, time: String): String {
     }
 }
 
+fun Long.longToString(): Triple<String, String, String>? {
+    val dateStr = this.toString().padStart(8, '0')
+    return if (dateStr.length == 8) {
+        val year = dateStr.substring(0, 4)
+        val month = dateStr.substring(4, 6)
+        val day = dateStr.substring(6, 8)
+        Triple(year, month, day)
+    } else {
+        null
+    }
+}
