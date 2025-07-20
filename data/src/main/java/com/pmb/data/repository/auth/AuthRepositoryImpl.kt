@@ -79,13 +79,13 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override fun verifyCode(
-        verificationCode: Int, nationalCode: String, mobileNo: String, idSerial: String
+        verificationCode: Int, nationalCode: String, mobileNo: String, idSerial: String?
     ): Flow<Result<VerifyCodeResponse>> {
         return remoteServiceProvider.getAuthService().accountVerifyCode(
             verificationCode = verificationCode,
             nationalCode = nationalCode,
             mobileNo = mobileNo,
-            idSerial = idSerial
+            idSerial = null
         ).mapApiResult {
             it.second
         }
