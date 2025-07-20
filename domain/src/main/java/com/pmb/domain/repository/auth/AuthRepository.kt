@@ -23,7 +23,7 @@ interface AuthRepository {
     ): Flow<Result<Boolean>>
 
     fun verifyCode(
-        verificationCode: Int, nationalCode: String, mobileNo: String, idSerial: String
+        verificationCode: Int, nationalCode: String, mobileNo: String, idSerial: String?
     ): Flow<Result<VerifyCodeResponse>>
 
     fun accountArchiveJobDoc(

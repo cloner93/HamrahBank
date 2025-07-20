@@ -96,7 +96,9 @@ fun AccountOpeningScreen(
             value = viewState.phoneNumber ?: "",
             label = stringResource(R.string.mobile_number),
             onValidate = { isMobile = it },
-            onValueChange = { viewModel.handle(OpeningAccountViewActions.SetPhoneNumber(it)) })
+            onValueChange = {
+                viewModel.handle(OpeningAccountViewActions.SetPhoneNumber(it))
+            })
         Spacer(modifier = Modifier.size(24.dp))
         AppNationalIdTextField(
             value = viewState.nationalId ?: "",

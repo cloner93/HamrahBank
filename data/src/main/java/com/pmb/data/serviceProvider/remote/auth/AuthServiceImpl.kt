@@ -62,7 +62,7 @@ class AuthServiceImpl @Inject constructor(
     }
 
     override fun accountVerifyCode(
-        verificationCode: Int, nationalCode: String, mobileNo: String, idSerial: String
+        verificationCode: Int, nationalCode: String, mobileNo: String, idSerial: String?
     ): Flow<Result<SuccessData<VerifyCodeResponse>>> {
         val req = VerifyCodeRequest(
             verificationCode = verificationCode,

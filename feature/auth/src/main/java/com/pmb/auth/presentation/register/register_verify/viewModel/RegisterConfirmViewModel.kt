@@ -1,5 +1,6 @@
 package com.pmb.auth.presentation.register.register_verify.viewModel
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.pmb.auth.presentation.first_login_confirm.viewModel.TimerEvent
 import com.pmb.auth.presentation.first_login_confirm.viewModel.TimerState
@@ -53,6 +54,7 @@ class RegisterConfirmViewModel @Inject constructor(
     }
 
     private fun handleConfirmFirstLogin(action: RegisterConfirmViewActions.ConfirmVerify) {
+        Log.d("Masoud Tag", "handleConfirmFirstLogin: $action")
         otpTryingStack++
         viewModelScope.launch {
             verifyCodeUseCase.invoke(
