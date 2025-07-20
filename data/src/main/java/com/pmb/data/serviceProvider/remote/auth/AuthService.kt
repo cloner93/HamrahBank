@@ -5,7 +5,6 @@ import com.pmb.domain.model.LoginResponse
 import com.pmb.domain.model.RegisterVerifyResponse
 import com.pmb.domain.model.SendOtpRequest
 import com.pmb.domain.model.openAccount.AccountArchiveJobDocResponse
-import com.pmb.domain.model.openAccount.GenerateCodeResponse
 import com.pmb.domain.model.openAccount.accountType.FetchAccountTypeResponse
 import com.pmb.domain.model.openAccount.accountVerifyCode.VerifyCodeResponse
 import com.pmb.domain.model.openAccount.branchName.FetchBranchListResponse
@@ -25,7 +24,7 @@ interface AuthService {
 
     fun generateCode(
         nationalCode: String, mobileNo: String, birthDate: String
-    ): Flow<Result<SuccessData<GenerateCodeResponse>>>
+    ): Flow<Result<SuccessData<Boolean>>>
 
     fun accountVerifyCode(
         verificationCode: Int, nationalCode: String, mobileNo: String, idSerial: String

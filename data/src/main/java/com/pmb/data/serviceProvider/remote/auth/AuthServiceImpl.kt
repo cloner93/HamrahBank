@@ -10,7 +10,6 @@ import com.pmb.domain.model.SendOtpRequest
 import com.pmb.domain.model.openAccount.AccountArchiveJobDocRequest
 import com.pmb.domain.model.openAccount.AccountArchiveJobDocResponse
 import com.pmb.domain.model.openAccount.GenerateCodeRequest
-import com.pmb.domain.model.openAccount.GenerateCodeResponse
 import com.pmb.domain.model.openAccount.accountType.FetchAccountTypeRequest
 import com.pmb.domain.model.openAccount.accountType.FetchAccountTypeResponse
 import com.pmb.domain.model.openAccount.accountVerifyCode.VerifyCodeRequest
@@ -51,11 +50,11 @@ class AuthServiceImpl @Inject constructor(
 
     override fun generateCode(
         nationalCode: String, mobileNo: String, birthDate: String
-    ): Flow<Result<SuccessData<GenerateCodeResponse>>> {
+    ): Flow<Result<SuccessData<Boolean>>> {
         val req = GenerateCodeRequest(
             nationalCode = nationalCode, mobileNo = mobileNo, birthDate = birthDate
         )
-        return client.request<GenerateCodeRequest, GenerateCodeResponse>(
+        return client.request<GenerateCodeRequest, Boolean>(
             "openAccount/generateCode", req
         )
     }
