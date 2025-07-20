@@ -26,12 +26,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import com.pmb.auth.AuthActionType
 import com.pmb.auth.R
 import com.pmb.auth.domain.register.search_opening_branch.entity.OpeningBranch
 import com.pmb.auth.presentation.register.RegisterSharedViewState
 import com.pmb.auth.presentation.register.deposit_information.viewModel.DepositInformationViewActions
 import com.pmb.auth.presentation.register.deposit_information.viewModel.DepositInformationViewEvents
 import com.pmb.auth.presentation.register.deposit_information.viewModel.DepositInformationViewModel
+import com.pmb.auth.presentation.register.deposit_information.viewModel.DepositInformationViewState
 import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.CustomSearchSpinner
 import com.pmb.ballon.component.CustomSpinner
@@ -54,7 +56,8 @@ import com.pmb.navigation.moduleScreen.RegisterScreens
 @Composable
 fun DepositInformationScreen(
     viewModel: DepositInformationViewModel,
-    sharedViewState: RegisterSharedViewState
+    sharedViewState: RegisterSharedViewState,
+    updateSharedState: (DepositInformationViewState) -> Unit
 ) {
     val navigationManager: NavigationManager = LocalNavigationManager.current
     val viewState by viewModel.viewState.collectAsState()
@@ -78,8 +81,8 @@ fun DepositInformationScreen(
     LaunchedEffect(Unit) {
         viewModel.viewEvent.collect { event ->
             when (event) {
-                DepositInformationViewEvents.SendDepositInformationSucceeded -> {
-                    navigationManager.navigate(RegisterScreens.Signature)
+                DepositInformationViewEvents.GetCommitmentTextSucceed -> {
+                    showBottomSheet = true
                 }
             }
         }
@@ -112,7 +115,7 @@ fun DepositInformationScreen(
                         .fillMaxWidth()
                         .padding(horizontal = 24.dp)
                         .clickable {
-                            showBottomSheet = true
+                           viewModel.handle(DepositInformationViewActions.FetchCommitment)
                         },
                     title = buildAnnotatedString {
                         withStyle(
@@ -128,7 +131,7 @@ fun DepositInformationScreen(
                     },
                     isChecked = viewState.isChecked
                 ) {
-                    showBottomSheet = true
+                    viewModel.handle(DepositInformationViewActions.FetchCommitment)
                 }
                 Spacer(modifier = Modifier.size(22.dp))
                 AppButton(
@@ -138,7 +141,8 @@ fun DepositInformationScreen(
                     enable = !viewState.isLoading && viewState.accType != null && viewState.province != null && viewState.isChecked,
                     title = stringResource(R.string._continue),
                     onClick = {
-
+                        updateSharedState(viewState)
+                        navigationManager.navigate(RegisterScreens.Signature)
                     })
             }) {
 //            viewState.depositInformation.takeIf { it?.isSuccess == true }?.let {
@@ -211,9 +215,6 @@ fun DepositInformationScreen(
                 },
 
                 )
-
-
-//            }
         }
         if (viewState.isLoading) {
             AppLoading()
@@ -237,7 +238,7 @@ fun DepositInformationScreen(
         ) {
             BodyMediumText(
                 textAlign = TextAlign.Center,
-                text = stringResource(R.string.usage_role_desc),
+                text = viewState.commitmentText?:"",
                 color = AppTheme.colorScheme.onBackgroundNeutralDefault
             )
             AppButton(

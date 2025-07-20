@@ -17,5 +17,6 @@ data class DepositInformationViewState(
     val province: Province? = null,
     val cityList: List<City>? = null,
     val city: City? = null,
-    val branch: Branch? = null
+    val branch: Branch? = null,
+    val commitmentText :String?=null
 ) : BaseViewState
