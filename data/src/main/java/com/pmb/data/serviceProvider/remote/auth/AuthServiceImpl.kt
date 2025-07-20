@@ -20,6 +20,7 @@ import com.pmb.domain.model.openAccount.branchName.FetchBranchListRequest
 import com.pmb.domain.model.openAccount.branchName.FetchBranchListResponse
 import com.pmb.domain.model.openAccount.cityName.FetchCityListRequest
 import com.pmb.domain.model.openAccount.cityName.FetchCityListResponse
+import com.pmb.domain.model.openAccount.comissionFee.FetchCommissionFeeResponse
 import com.pmb.domain.model.openAccount.jobLevel.FetchJobLevelResponse
 import com.pmb.model.SuccessData
 import com.pmb.network.NetworkManger
@@ -125,6 +126,12 @@ class AuthServiceImpl @Inject constructor(
         val req = FetchCommitmentRequest(accType = accType)
         return client.request<FetchCommitmentRequest,FetchCommitmentResponse>(
             "openAccount/fetchCommitment",req
+        )
+    }
+
+    override fun fetchCommissionFee(): Flow<Result<SuccessData<FetchCommissionFeeResponse>>> {
+        return client.request<Unit,FetchCommissionFeeResponse>(
+            "openAccount/fetchCommission"
         )
     }
 

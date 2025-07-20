@@ -15,6 +15,7 @@ import com.pmb.domain.model.openAccount.accountType.FetchAccountTypeResponse
 import com.pmb.domain.model.openAccount.accountVerifyCode.VerifyCodeResponse
 import com.pmb.domain.model.openAccount.branchName.FetchBranchListResponse
 import com.pmb.domain.model.openAccount.cityName.FetchCityListResponse
+import com.pmb.domain.model.openAccount.comissionFee.FetchCommissionFeeResponse
 import com.pmb.domain.model.openAccount.jobLevel.FetchJobLevelResponse
 import com.pmb.domain.repository.auth.AuthRepository
 import kotlinx.coroutines.flow.Flow
@@ -129,6 +130,11 @@ class AuthRepositoryImpl @Inject constructor(
 
     override fun fetchCommitment(accType: Int): Flow<Result<FetchCommitmentResponse>> {
         return remoteServiceProvider.getAuthService().fetchCommitment(accType = accType)
+            .mapApiResult { it.second }
+    }
+
+    override fun fetchCommissionFee(): Flow<Result<FetchCommissionFeeResponse>> {
+        return remoteServiceProvider.getAuthService().fetchCommissionFee()
             .mapApiResult { it.second }
     }
 }
