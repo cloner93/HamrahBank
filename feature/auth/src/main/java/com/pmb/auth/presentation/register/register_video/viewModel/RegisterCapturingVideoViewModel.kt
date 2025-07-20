@@ -3,8 +3,6 @@ package com.pmb.auth.presentation.register.register_video.viewModel
 import android.Manifest
 import android.util.Log
 import androidx.lifecycle.viewModelScope
-import com.pmb.auth.domain.ekyc.capture_video.entity.CapturingVideoParams
-import com.pmb.auth.domain.ekyc.capture_video.useCase.SendVideoUseCase
 import com.pmb.auth.presentation.first_login_confirm.viewModel.TimerEvent
 import com.pmb.auth.presentation.first_login_confirm.viewModel.TimerState
 import com.pmb.auth.presentation.first_login_confirm.viewModel.TimerStatus
@@ -21,6 +19,7 @@ import com.pmb.core.permissions.PermissionDispatcher
 import com.pmb.core.platform.AlertModelState
 import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.platform.Result
+import com.pmb.domain.usecae.auth.openAccount.FetchAdmittanceTextUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -42,7 +41,7 @@ class RegisterCapturingVideoViewModel @Inject constructor(
     private val cameraManager: VideoCameraManagerImpl,
     private val videoCompressor: VideoCompressor,
     private val fileManager: FileManager,
-    private val sendVideoUseCase: SendVideoUseCase
+    private val fetchAdmittanceTextUseCase: FetchAdmittanceTextUseCase
 ) : BaseViewModel<
         VideoViewActions,
         RegisterCapturingVideoViewState,
@@ -79,38 +78,24 @@ class RegisterCapturingVideoViewModel @Inject constructor(
                     it.copy(isLoading = false)
                 }
             }
+
+            is RegisterCapturingVideoViewActions.GetAdmittanceText -> {
+                handleAdmittanceText()
+            }
         }
     }
-
-    private fun handleSendFacePhoto(action: RegisterCapturingVideoViewActions.SendVideo) {
+    init {
+        handle(RegisterCapturingVideoViewActions.GetAdmittanceText)
+    }
+    private fun handleAdmittanceText() {
         viewModelScope.launch {
-            sendVideoUseCase.invoke(CapturingVideoParams(action.uri)).collect { result ->
+            fetchAdmittanceTextUseCase.invoke(Unit).collect { result ->
                 when (result) {
-                    is Result.Success -> {
-                        setState {
-                            it.copy(
-                                isLoading = false,
-                                alertModelState = null,
-                                timerState = null,
-                                hasCameraPermission = false,
-                                isCameraReady = false,
-                                isFrontCamera = false,
-                                isCapturingVideo = false,
-                                videoCaptured = false,
-                                savedFileUri = null,
-                                cameraHasError = null,
-                                isCameraLoading = false,
-                                isCompressing = false
-                            )
-                        }
-                        postEvent(RegisterCapturingVideoViewEvents.VideoCaptured)
-                    }
-
                     is Result.Error -> {
                         setState {
                             it.copy(
                                 isLoading = false,
-                                alertModelState = AlertModelState.Dialog(
+                                AlertModelState.Dialog(
                                     title = "خطا",
                                     description = " ${result.message}",
                                     positiveButtonTitle = "تایید",
@@ -129,8 +114,23 @@ class RegisterCapturingVideoViewModel @Inject constructor(
                             )
                         }
                     }
+
+                    is Result.Success -> {
+                        setState {
+                            it.copy(
+                                isLoading = false,
+                                admittanceTextResponse = result.data
+                            )
+                        }
+                    }
                 }
             }
+        }
+    }
+
+    private fun handleSendFacePhoto(action: RegisterCapturingVideoViewActions.SendVideo) {
+        viewModelScope.launch {
+
         }
     }
 
@@ -164,6 +164,7 @@ class RegisterCapturingVideoViewModel @Inject constructor(
             )
         }
     }
+
     private fun requestAudioPermission(action: VideoViewActions.RequestAudioPermission) {
         viewModelScope.launch {
 
@@ -173,7 +174,7 @@ class RegisterCapturingVideoViewModel @Inject constructor(
                 onPermissionGranted = {
                     setState { state ->
                         Log.i("per", "You have permission for using camera")
-                        state.copy(hasAudioPermissions = true, hasCameraPermission = true,)
+                        state.copy(hasAudioPermissions = true, hasCameraPermission = true)
                     }
                 },
                 onPermissionDenied = {

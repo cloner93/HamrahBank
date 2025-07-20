@@ -7,4 +7,5 @@ sealed interface RegisterCapturingVideoViewActions : VideoViewActions {
     data object FinishTimer : RegisterCapturingVideoViewActions
     data object ClearVideo : RegisterCapturingVideoViewActions
     data class SendVideo(val uri: String) : RegisterCapturingVideoViewActions
+    data object GetAdmittanceText :RegisterCapturingVideoViewActions
 }

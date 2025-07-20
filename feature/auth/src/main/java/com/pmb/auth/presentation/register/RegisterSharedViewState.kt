@@ -2,6 +2,7 @@ package com.pmb.auth.presentation.register
 
 import com.pmb.auth.domain.Education
 import com.pmb.core.platform.BaseSharedState
+import com.pmb.domain.model.openAccount.FetchAdmittanceTextResponse
 import com.pmb.domain.model.openAccount.accountType.AccType
 import com.pmb.domain.model.openAccount.accountType.Province
 import com.pmb.domain.model.openAccount.accountVerifyCode.AnnualIncomeType
@@ -28,4 +29,5 @@ data class RegisterSharedViewState(
     val accCity: City? = null,
     val branch: Branch? = null,
     val jobInformation: JobLevel? = null,
+    val admittanceTextResponse: FetchAdmittanceTextResponse? = null
 ) : BaseSharedState

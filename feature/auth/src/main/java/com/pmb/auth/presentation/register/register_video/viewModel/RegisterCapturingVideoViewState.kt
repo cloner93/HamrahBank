@@ -4,10 +4,12 @@ import com.pmb.auth.presentation.first_login_confirm.viewModel.TimerState
 import com.pmb.auth.presentation.first_login_confirm.viewModel.TimerTypeId
 import com.pmb.camera.platform.VideoViewState
 import com.pmb.core.platform.AlertModelState
+import com.pmb.domain.model.openAccount.FetchAdmittanceTextResponse
 
 data class RegisterCapturingVideoViewState(
-    val isLoading :Boolean = false,
-    val alertModelState: AlertModelState?=null,
+    val isLoading: Boolean = false,
+    val alertModelState: AlertModelState? = null,
+    val admittanceTextResponse: FetchAdmittanceTextResponse? = null,
     val timerState: Map<TimerTypeId, TimerState>? = null,
     override val hasCameraPermission: Boolean = false,
 //    override val hasFilePermissions: Boolean = false,
@@ -20,7 +22,7 @@ data class RegisterCapturingVideoViewState(
     override val cameraHasError: String? = null,
     override val isCameraLoading: Boolean = false,
     override val isCompressing: Boolean = false
-) : VideoViewState{
+) : VideoViewState {
     fun calculateSecond(timerTypeId: TimerTypeId) =
         (((timerState?.get(timerTypeId)?.remainingTime ?: 0)) % 60).toString().padStart(2, '0')
 

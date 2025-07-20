@@ -239,13 +239,13 @@ fun RegisterVideoScreen(
 
             )
             if (viewState.isCapturingVideo && !viewState.videoCaptured)
-                Headline4Text(
-                    text = stringResource(
-                        R.string.repeated_sentence
-                    ),
-                    textAlign = TextAlign.Center,
-                    color = AppTheme.colorScheme.foregroundPrimaryDefault
-                )
+                viewState.admittanceTextResponse?.admittanceText?.let {
+                    Headline4Text(
+                        text = it,
+                        textAlign = TextAlign.Center,
+                        color = AppTheme.colorScheme.foregroundPrimaryDefault
+                    )
+                }
         }
         Spacer(modifier = Modifier.size(44.dp))
         if (viewState.savedFileUri != null && viewState.videoCaptured) {
