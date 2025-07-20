@@ -123,12 +123,37 @@ fun NavGraphBuilder.registerScreenHandler() {
             AuthenticationInformationScreen(
                 viewModel = hiltViewModel<AuthenticationInformationViewModel>(),
                 sharedState
-            )
+            ) { childState ->
+                sharedViewModel.updateState {
+                    sharedState.value.copy(
+                        birthDatePlace = childState.birthDatePlace,
+                        issuePlace = childState.issuePlace,
+                        tel = childState.tel,
+                        education = childState.education,
+                        issueCode = childState.issueCode,
+                        issueDate = "${childState.issueDateYear}${childState.issueDateMonth}${childState.issueDateDay}".toInt()
+                    )
+                }
+            }
         }
         composable(route = RegisterScreens.JobInformation.route) {
+            val sharedViewModel =
+                it.navigationManager.retrieveSharedViewModel<RegisterSharedViewModel>(
+                    screen = RegisterScreens.RegisterGraph, navBackStackEntry = it
+                )
+            val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
             JobInformationScreen(
-                viewModel = hiltViewModel<JobInformationViewModel>()
-            )
+                viewModel = hiltViewModel<JobInformationViewModel>(),
+                sharedState
+            ) { childState ->
+                childState.data?.let { it1 ->
+                    sharedViewModel.updateState {
+                        sharedState.value.copy(
+                            annualIncomeType = it1
+                        )
+                    }
+                }
+            }
         }
         composable(route = RegisterScreens.SelectJobInformation.route) {
             SelectJobInformationScreen(

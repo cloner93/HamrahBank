@@ -1,6 +1,7 @@
 package com.pmb.auth.presentation.register.authentication_information.viewModel
 
 import com.pmb.auth.domain.Education
+import com.pmb.calender.longToString
 import com.pmb.core.platform.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -64,12 +65,16 @@ class AuthenticationInformationViewModel @Inject constructor(
     }
 
     private fun handleAuthenticationData(action: AuthenticationInformationViewActions.SetAuthenticationData) {
+        val issueDate = action.sharedViewState.verifyCodeResponse?.issueDate?.toLong()?.longToString()
         setState {
             it.copy(
                 birthDatePlace = it.birthDatePlace ?: action.sharedViewState.birthDatePlace,
                 issuePlace = it.issuePlace ?: action.sharedViewState.issuePlace,
                 issueCode = it.issueCode ?: action.sharedViewState.issueCode,
                 tel = it.tel ?: action.sharedViewState.tel,
+                issueDateYear = it.issueDateYear ?: issueDate?.first,
+                issueDateMonth = it.issueDateMonth ?: issueDate?.second,
+                issueDateDay = it.issueDateDay ?: issueDate?.third,
             )
         }
     }
