@@ -7,6 +7,9 @@ import io.github.persiancalendar.calendar.PersianDate
 
 fun today(): PersianDate = Jdn.today().toPersianDate()
 
+fun currentMonthPair(): Pair<PersianDate, PersianDate> =
+    (firstDayOfMonth(today()) to today())
+
 fun daysBetween(from: PersianDate, to: PersianDate): Int = Jdn(to) - Jdn(from)
 
 fun daysFromTodayTo(date: PersianDate): Int = Jdn(date) - Jdn(today())
@@ -24,8 +27,18 @@ fun isToday(date: PersianDate): Boolean = Jdn(date) == Jdn(today())
 fun lastDayOfMonth(date: PersianDate): PersianDate =
     subtractDays(date.monthStartOfMonthsDistance(1), 1)
 
+fun firstDayOfMonth(date: PersianDate): PersianDate = date.monthStartOfMonthsDistance(0)
+
 fun PersianDate.monthName(): String =
     persianCalendarMonthsInPersian[this.month - 1]
+
+fun PersianDate.toLong(): Long {
+    val stringDate = this.year.toString() +
+            this.month.toString().padStart(2, '0') +
+            this.dayOfMonth.toString().padStart(2, '0')
+
+    return stringDate.toLong()
+}
 
 fun generateShiftedMonthList(
     currentDate: PersianDate = today()
@@ -74,7 +87,7 @@ fun formatPersianDateForDisplay(date: String, time: String): String {
 
         else -> {
             val monthName = transactionDate.monthName()
-            "${transactionDate.year} ${transactionDate.dayOfMonth} $monthName $timeStr"
+            "${transactionDate.dayOfMonth} $monthName ${transactionDate.year} $timeStr"
         }
     }
 }
