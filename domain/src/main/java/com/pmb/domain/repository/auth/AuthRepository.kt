@@ -31,13 +31,13 @@ interface AuthRepository {
     ): Flow<Result<AccountArchiveJobDocResponse>>
 
     fun fetchAccountType(
-        customerType: Int, nationalCode: String, mobileNo: String
+         nationalCode: String, mobileNo: String
     ): Flow<Result<FetchAccountTypeResponse>>
 
     fun fetchCityList(stateCode: Int): Flow<Result<FetchCityListResponse>>
 
     fun fetchBranchList(
-        mergeStatus: Int, stateCode: Int, cityCode: Int, organizationType: String
+       stateCode: Int, cityCode: Int
     ): Flow<Result<FetchBranchListResponse>>
 
     fun fetchCommitment(accType: Int): Flow<Result<FetchCommitmentResponse>>

@@ -67,9 +67,9 @@ sealed class RegisterScreens(route: String, arguments: Map<String, String> = emp
     data object CheckPostalCode : RegisterScreens(route = "check_postal_code")
     data object DepositInformation : RegisterScreens(route = "deposit_information")
     data object SearchOpeningBranch :
-        RegisterScreens(route = "search_opening_branch/{provinceName}/{cityName}/{cityId}") {
-        fun createRoute(cityId: Int, cityName: String, provinceName: String) =
-            "search_opening_branch/$provinceName/$cityName/$cityId"
+        RegisterScreens(route = "search_opening_branch/{provinceCode}/{provinceName}/{cityName}/{cityId}") {
+        fun createRoute(cityId: Int, cityName: String, provinceCode: Int,provinceName:String) =
+            "search_opening_branch/$provinceCode/$provinceName/$cityName/$cityId"
     }
 
     data object Signature : RegisterScreens(route = "signature")

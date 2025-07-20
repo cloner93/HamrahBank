@@ -36,7 +36,7 @@ interface AuthService {
     ): Flow<Result<SuccessData<AccountArchiveJobDocResponse>>>
 
     fun fetchAccountType(
-        customerType: Int, nationalCode: String, mobileNo: String
+         nationalCode: String, mobileNo: String
     ): Flow<Result<SuccessData<FetchAccountTypeResponse>>>
 
     fun fetchCityList(
@@ -44,7 +44,7 @@ interface AuthService {
     ): Flow<Result<SuccessData<FetchCityListResponse>>>
 
     fun fetchBranchList(
-        mergeStatus: Int, stateCode: Int, cityCode: Int, organizationType: String
+        stateCode: Int, cityCode: Int
     ): Flow<Result<SuccessData<FetchBranchListResponse>>>
 
     fun fetchCommitment(accType: Int): Flow<Result<SuccessData<FetchCommitmentResponse>>>

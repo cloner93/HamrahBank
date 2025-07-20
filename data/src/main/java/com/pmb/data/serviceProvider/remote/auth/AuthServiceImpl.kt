@@ -85,10 +85,10 @@ class AuthServiceImpl @Inject constructor(
     }
 
     override fun fetchAccountType(
-        customerType: Int, nationalCode: String, mobileNo: String
+       nationalCode: String, mobileNo: String
     ): Flow<Result<SuccessData<FetchAccountTypeResponse>>> {
         val req = FetchAccountTypeRequest(
-            customerType = customerType, nationalCode = nationalCode, mobileNo = mobileNo
+            nationalCode = nationalCode, mobileNo = mobileNo
         )
         return client.request<FetchAccountTypeRequest, FetchAccountTypeResponse>(
             "openAccount/fetchAccountType", req
@@ -103,13 +103,11 @@ class AuthServiceImpl @Inject constructor(
     }
 
     override fun fetchBranchList(
-        mergeStatus: Int, stateCode: Int, cityCode: Int, organizationType: String
+        stateCode: Int, cityCode: Int
     ): Flow<Result<SuccessData<FetchBranchListResponse>>> {
         val req = FetchBranchListRequest(
-            mergeStatus = mergeStatus,
             stateCode = stateCode,
             cityCode = cityCode,
-            organizationType = organizationType
         )
         return client.request<FetchBranchListRequest, FetchBranchListResponse>(
             "openAccount/fetchBranchList", req

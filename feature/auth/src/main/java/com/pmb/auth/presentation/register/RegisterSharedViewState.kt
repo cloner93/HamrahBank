@@ -17,5 +17,5 @@ data class RegisterSharedViewState(
     val issueCode: Int? = null,
     val tel: String? = null,
     val education: Education? = null,
-    val annualIncomeType: AnnualIncomeType
+    val annualIncomeType: AnnualIncomeType ?=null
 ): BaseSharedState

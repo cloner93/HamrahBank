@@ -2,12 +2,11 @@ package com.pmb.auth.presentation.register.search_opening_branch.viewModel
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.pmb.auth.domain.register.search_opening_branch.entity.OpeningBranchEntity
-import com.pmb.auth.domain.register.search_opening_branch.entity.OpeningBranchParams
-import com.pmb.auth.domain.register.search_opening_branch.useCase.OpeningBranchUseCase
 import com.pmb.core.platform.AlertModelState
 import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.platform.Result
+import com.pmb.domain.usecae.auth.openAccount.FetchBranchListParams
+import com.pmb.domain.usecae.auth.openAccount.FetchBranchListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -15,7 +14,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchOpeningBranchViewModel @Inject constructor(
     initialState: SearchOpeningBranchViewState,
-    private val openingBranchUseCase: OpeningBranchUseCase,
+    private val fetchBranchListUseCase: FetchBranchListUseCase,
     private val savedStateHandle: SavedStateHandle
 ) : BaseViewModel<SearchOpeningBranchViewActions, SearchOpeningBranchViewState, SearchOpeningBranchViewEvents>(
     initialState
@@ -23,6 +22,7 @@ class SearchOpeningBranchViewModel @Inject constructor(
     private val cityId = savedStateHandle.get<Int>("cityId")
     private val cityName = savedStateHandle.get<String>("cityName")
     private val provinceName = savedStateHandle.get<String>("provinceName")
+    private val provinceCode = savedStateHandle.get<Int>("provinceCode")
     override fun handle(action: SearchOpeningBranchViewActions) {
         when (action) {
             is SearchOpeningBranchViewActions.ClearAlert -> {
@@ -44,7 +44,8 @@ class SearchOpeningBranchViewModel @Inject constructor(
             is SearchOpeningBranchViewActions.SearchOpeningBranchData -> {
                 handleSearchQuery(action)
             }
-            is SearchOpeningBranchViewActions.ClearSearchData->{
+
+            is SearchOpeningBranchViewActions.ClearSearchData -> {
                 handleClearSearchData()
             }
         }
@@ -52,39 +53,32 @@ class SearchOpeningBranchViewModel @Inject constructor(
     }
 
     private fun handleSearchQuery(action: SearchOpeningBranchViewActions.SearchOpeningBranchData) {
-        viewState.value.originalOpeningBranch?.openingBranch?.filter { it.openingBranch.contains(action.queryString) || it.openingBranchAddress.contains(action.queryString) }
+        viewState.value.branchList?.filter {
+            it.branchName.contains(action.queryString) || it.address.contains(
+                action.queryString
+            )
+        }
             ?.let { result ->
                 setState {
                     it.copy(
-                        openingBranch = OpeningBranchEntity(
-                            isSuccess = true,
-                            openingBranch = result
-                        )
+                        searchedBranchList = result
                     )
                 }
             }
     }
-    private fun handleClearSearchData(){
+
+    private fun handleClearSearchData() {
         setState {
             it.copy(
-                openingBranch = it.originalOpeningBranch
+                searchedBranchList = it.branchList
             )
         }
     }
+
     private fun checkAndChangeBranchId(action: SearchOpeningBranchViewActions.SelectOpeningBranchId) {
-        if (action.branch.id != viewState.value.selectedOpeningBranch?.id) {
+        if (action.branch.branchCode != viewState.value.selectedBranch?.branchCode) {
             setState {
-                it.copy(selectedOpeningBranch = action.branch)
-            }
-            viewState.value.openingBranch?.openingBranch?.findLast { it.isChecked.value }?.id?.let {
-                viewState.value.openingBranch?.openingBranch?.get(it)?.apply {
-                    isChecked.value = false
-                }
-            }
-            viewState.value.openingBranch?.openingBranch?.findLast { it.id == action.branch.id }?.id?.let {
-                viewState.value.openingBranch?.openingBranch?.get(it)?.apply {
-                    isChecked.value = isChecked.value == false
-                }
+                it.copy(selectedBranch = action.branch)
             }
         }
     }
@@ -100,7 +94,7 @@ class SearchOpeningBranchViewModel @Inject constructor(
     private fun handleGetOpeningBranch() {
         cityId?.let {
             viewModelScope.launch {
-                openingBranchUseCase.invoke(OpeningBranchParams(it))
+                fetchBranchListUseCase.invoke(FetchBranchListParams(provinceCode ?: -1, it))
                     .collect { result ->
                         when (result) {
                             is Result.Loading -> {
@@ -131,8 +125,8 @@ class SearchOpeningBranchViewModel @Inject constructor(
                                 setState {
                                     it.copy(
                                         isLoading = false,
-                                        openingBranch = result.data,
-                                        originalOpeningBranch = result.data
+                                        branchList = result.data.branchList,
+                                        searchedBranchList = result.data.branchList
                                     )
                                 }
                             }

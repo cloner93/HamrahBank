@@ -166,19 +166,26 @@ fun NavGraphBuilder.registerScreenHandler() {
             )
         }
         composable(route = RegisterScreens.DepositInformation.route) {
+            val sharedViewModel =
+                it.navigationManager.retrieveSharedViewModel<RegisterSharedViewModel>(
+                    screen = RegisterScreens.RegisterGraph, navBackStackEntry = it
+                )
+            val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
             DepositInformationScreen(
-                viewModel = hiltViewModel<DepositInformationViewModel>()
+                viewModel = hiltViewModel<DepositInformationViewModel>(),
+                sharedState.value
             )
         }
         composable(
             route = RegisterScreens.SearchOpeningBranch.route,
             deepLinks = listOf(navDeepLink {
-                uriPattern = "myapp://search_opening_branch/{provinceName}/{cityName}/{cityId}"
+                uriPattern = "myapp://search_opening_branch/{provinceCode}/{provinceName}/{cityName}/{cityId}"
             }),
             arguments = listOf(
                 navArgument("cityId") { type = NavType.IntType },
                 navArgument("cityName") { type = NavType.StringType },
-                navArgument("provinceName") { type = NavType.StringType })
+                navArgument("provinceCode") { type = NavType.IntType },
+                navArgument("provinceName") { type = NavType.StringType },)
         ) {
             SearchOpeningBranchScreen(
                 viewModel = hiltViewModel<SearchOpeningBranchViewModel>()

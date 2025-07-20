@@ -12,14 +12,12 @@ class FetchBranchListUseCase @Inject constructor(
 ) : BaseUseCase<FetchBranchListParams, FetchBranchListResponse>() {
     override suspend fun execute(params: FetchBranchListParams): Flow<Result<FetchBranchListResponse>> {
         return authRepository.fetchBranchList(
-            mergeStatus = params.mergeStatus,
             stateCode = params.cityCode,
             cityCode = params.cityCode,
-            organizationType = params.organizationType
         )
     }
 }
 
 data class FetchBranchListParams(
-    val mergeStatus: Int, val stateCode: Int, val cityCode: Int, val organizationType: String
+     val stateCode: Int, val cityCode: Int
 )

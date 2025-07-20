@@ -100,10 +100,10 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override fun fetchAccountType(
-        customerType: Int, nationalCode: String, mobileNo: String
+         nationalCode: String, mobileNo: String
     ): Flow<Result<FetchAccountTypeResponse>> {
         return remoteServiceProvider.getAuthService().fetchAccountType(
-                customerType = customerType, nationalCode = nationalCode, mobileNo = mobileNo
+                nationalCode = nationalCode, mobileNo = mobileNo
             ).mapApiResult { it.second }
     }
 
@@ -113,13 +113,11 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override fun fetchBranchList(
-        mergeStatus: Int, stateCode: Int, cityCode: Int, organizationType: String
+        stateCode: Int, cityCode: Int
     ): Flow<Result<FetchBranchListResponse>> {
         return remoteServiceProvider.getAuthService().fetchBranchList(
-            mergeStatus = mergeStatus,
             stateCode = stateCode,
             cityCode = cityCode,
-            organizationType = organizationType
         ).mapApiResult { it.second }
     }
 
