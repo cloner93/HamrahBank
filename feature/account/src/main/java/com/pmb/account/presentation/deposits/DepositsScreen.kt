@@ -81,33 +81,6 @@ fun DepositsScreen(
     val backdropState: BackdropScaffoldState =
         rememberBackdropScaffoldState(BackdropValue.Revealed)
 
-    val menuItems = listOf(
-        MenuSheetModel(
-            title = stringResource(R.string.select_for_main_deposit),
-            icon = com.pmb.ballon.R.drawable.ic_pin,
-            onClicked = {
-
-            }
-        ), MenuSheetModel(
-            title = stringResource(R.string.cards_connected_to_the_deposit),
-            icon = com.pmb.ballon.R.drawable.ic_credit_cards,
-            onClicked = {
-
-            }
-        ), MenuSheetModel(
-            title = stringResource(R.string.request_to_issue_a_card_for_deposit),
-            icon = com.pmb.ballon.R.drawable.ic_credit_card,
-            onClicked = {
-
-            }
-        ), MenuSheetModel(
-            title = stringResource(R.string.edit_deposit_title),
-            icon = com.pmb.ballon.R.drawable.ic_edit,
-            onClicked = {
-
-            }
-        )
-    )
     LocalContext.current
 
     LaunchedEffect(Unit) {
@@ -146,6 +119,14 @@ fun DepositsScreen(
 
                 is DepositsViewEvents.NavigateToBalanceScreen -> {
                     navigationManager.navigate(AccountScreens.Balance)
+                }
+
+                is DepositsViewEvents.NavigateToDetailsScreen -> {
+                    navigationManager.navigateWithString(
+                        AccountScreens.DepositDetailsScreen.createRoute(
+                            event.detail
+                        )
+                    )
                 }
             }
         }
@@ -313,7 +294,39 @@ fun DepositsScreen(
     if (viewState.showMoreBottomSheet)
         MenuBottomSheet(
             title = viewState.selectedDeposit?.title,
-            items = menuItems,
+            items = listOf(
+                MenuSheetModel(
+                    title = stringResource(R.string.select_for_main_deposit),
+                    icon = com.pmb.ballon.R.drawable.ic_pin,
+                    onClicked = {
+
+                    }
+                ), MenuSheetModel(
+                    title = stringResource(R.string.cards_connected_to_the_deposit),
+                    icon = com.pmb.ballon.R.drawable.ic_credit_cards,
+                    onClicked = {
+
+                    }
+                ), MenuSheetModel(
+                    title = stringResource(R.string.request_to_issue_a_card_for_deposit),
+                    icon = com.pmb.ballon.R.drawable.ic_credit_card,
+                    onClicked = {
+
+                    }
+                ), MenuSheetModel(
+                    title = stringResource(R.string.edit_deposit_title),
+                    icon = com.pmb.ballon.R.drawable.ic_edit,
+                    onClicked = {
+
+                    }
+                ), MenuSheetModel(
+                    title = stringResource(R.string.deposit_details),
+                    icon = com.pmb.ballon.R.drawable.ic_deposit_details,
+                    onClicked = {
+                        viewModel.handle(DepositsViewActions.OpenDepositDetailsScreen)
+                    }
+                )
+            ),
             onDismiss = { viewModel.handle(DepositsViewActions.CloseDepositMoreActionBottomSheet) }
         )
 
