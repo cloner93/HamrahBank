@@ -13,7 +13,6 @@ sealed interface TransferConfirmViewEvents : BaseViewEvent {
     ) : TransferConfirmViewEvents
 
     data class NavigateToReceipt(
-        val source: TransferSourceEntity,
         val receipt: TransferReceiptEntity,
     ) : TransferConfirmViewEvents
 }

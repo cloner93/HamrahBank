@@ -143,7 +143,7 @@ class TransferRepositoryImpl @Inject constructor(
                         destination = params.destinationNumber,
                         amount = params.amount.toLong(),
                         payerId = -1,
-                        customerId = 1,
+                        customerId = params.customerId.toLong(),
                         saveFavorite = params.favoriteDestination
                     )
                 ).mapApiResult {
@@ -157,7 +157,6 @@ class TransferRepositoryImpl @Inject constructor(
                     )
                 }
         }
-
 
 
     override suspend fun transferResendVerifyCardInfo(params: TransferResendVerifyCardInfoUseCase.Params): Flow<Result<CardVerificationEntity>> =

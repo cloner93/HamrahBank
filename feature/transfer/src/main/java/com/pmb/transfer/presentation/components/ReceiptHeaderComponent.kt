@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.pmb.ballon.component.base.ButtonSmallText
 import com.pmb.ballon.ui.theme.AppTheme
@@ -20,7 +21,8 @@ fun ReceiptHeaderComponent(receipt: TransferReceiptEntity?) {
         Spacer(modifier = Modifier.size(12.dp))
         ButtonSmallText(
             text = it,
-            color = AppTheme.colorScheme.onBackgroundNeutralSubdued
+            color = AppTheme.colorScheme.onBackgroundNeutralSubdued,
+            textAlign = TextAlign.Center
         )
     }
 }

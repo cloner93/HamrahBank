@@ -27,6 +27,7 @@ import com.pmb.core.utils.Convert
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.moduleScreen.TransferScreens
 import com.pmb.transfer.R
+import com.pmb.transfer.domain.entity.AccountBankEntity
 import com.pmb.transfer.domain.entity.TransactionClientBankEntity
 import com.pmb.transfer.domain.entity.TransferMethodEntity
 import com.pmb.transfer.presentation.components.ClientBankProfileInfo

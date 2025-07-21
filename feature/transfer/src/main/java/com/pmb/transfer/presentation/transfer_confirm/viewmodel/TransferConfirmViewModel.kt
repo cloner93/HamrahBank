@@ -4,6 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.pmb.core.platform.AlertModelState
 import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.platform.Result
+import com.pmb.data.serviceProvider.local.LocalServiceProvider
 import com.pmb.transfer.domain.entity.BankIdentifierNumberType
 import com.pmb.transfer.domain.entity.PaymentType
 import com.pmb.transfer.domain.entity.TransferConfirmEntity
@@ -20,7 +21,8 @@ import javax.inject.Inject
 class TransferConfirmViewModel @Inject constructor(
     private val sourceCardBankUseCase: SourceCardBankUseCase,
     private val sourceAccountBankUseCase: SourceAccountBankUseCase,
-    private val transferConfirmCardUseCase: TransferConfirmUseCase
+    private val transferConfirmCardUseCase: TransferConfirmUseCase,
+    private val localServiceProvider: LocalServiceProvider
 ) : BaseViewModel<TransferConfirmViewActions, TransferConfirmViewState, TransferConfirmViewEvents>(
     TransferConfirmViewState()
 ) {
@@ -116,7 +118,12 @@ class TransferConfirmViewModel @Inject constructor(
     private fun fetchSourceAccountBanks() {
         if (viewState.value.sourceAccountBanks.isNotEmpty()) return
         viewModelScope.launch {
-            sourceAccountBankUseCase.invoke(SourceAccountBankUseCase.Params(userId = "1"))
+            sourceAccountBankUseCase.invoke(
+                SourceAccountBankUseCase.Params(
+                    userId = localServiceProvider.getUserDataStore().getUserData()?.customerId
+                        ?: return@launch
+                )
+            )
                 .collect { result ->
                     when (result) {
                         is Result.Error -> {
@@ -140,16 +147,22 @@ class TransferConfirmViewModel @Inject constructor(
                         }
 
                         is Result.Success -> {
+                            val items = result.data.map {
+                                it.copy(
+                                    accountHolderName = localServiceProvider.getUserDataStore()
+                                        .getUserData()?.fullName
+                                )
+                            }
                             val defaultSource =
-                                (result.data.firstOrNull { account -> account.defaulted }
-                                    ?: result.data.firstOrNull())?.let {
+                                (items.firstOrNull { account -> account.defaulted }
+                                    ?: items.firstOrNull())?.let {
                                     TransferSourceEntity.Account(account = it)
                                 }
                             setState {
                                 it.copy(
                                     loading = false,
                                     defaultSource = defaultSource,
-                                    sourceAccountBanks = result.data
+                                    sourceAccountBanks = items
                                 )
                             }
                         }
@@ -166,26 +179,26 @@ class TransferConfirmViewModel @Inject constructor(
             null -> null
         }
 
+        viewModelScope.launch {
+            val params = viewState.value.run {
+                val sourceNumber = when (defaultSource) {
+                    is TransferSourceEntity.Card -> defaultSource.card.cardNumber
+                    is TransferSourceEntity.Account -> defaultSource.account.accountNumber
+                    null -> return@launch
+                }
 
-        val params = viewState.value.run {
-            val sourceNumber = when (defaultSource) {
-                is TransferSourceEntity.Card -> defaultSource.card.cardNumber
-                is TransferSourceEntity.Account -> defaultSource.account.accountNumber
-                null -> return
+                TransferConfirmUseCase.Params(
+                    sourceNumber = sourceNumber ?: return@launch,
+                    destinationNumber = destinationNumber ?: return@launch,
+                    customerId = localServiceProvider.getUserDataStore().getUserData()?.customerId ?:"",
+                    amount = destinationAmount,
+                    reasonId = defaultReason?.id,
+                    depositId = depositId,
+                    transferMethod = transferMethod?.paymentType ?: return@launch,
+                    favoriteDestination = favoriteDestination
+                )
             }
 
-            TransferConfirmUseCase.Params(
-                sourceNumber = sourceNumber ?: return,
-                destinationNumber = destinationNumber ?: return,
-                amount = destinationAmount,
-                reasonId = defaultReason?.id,
-                depositId = depositId,
-                transferMethod = transferMethod?.paymentType ?: return,
-                favoriteDestination = favoriteDestination
-            )
-        }
-
-        viewModelScope.launch {
             transferConfirmCardUseCase.invoke(params).collect { result ->
                 when (result) {
                     is Result.Error -> {
@@ -212,14 +225,19 @@ class TransferConfirmViewModel @Inject constructor(
                         setState { it.copy(loading = false) }
 
                         when (val model = result.data) {
-                            is TransferConfirmEntity.ReceiptConfirm ->
-                                postEvent(
-                                    TransferConfirmViewEvents.NavigateToReceipt(
-                                        source = viewState.value.defaultSource
-                                            ?: throw IllegalStateException("No valid source"),
-                                        receipt = gerReceipt(model.receipt)
+                            is TransferConfirmEntity.ReceiptConfirm -> {
+                                val receipt = gerReceipt(
+                                    receipt = model.receipt.copy(
+                                        source = viewState.value.defaultSource,
+                                        destination = viewState.value.destinationAccount,
                                     )
                                 )
+                                postEvent(
+                                    TransferConfirmViewEvents.NavigateToReceipt(
+                                        receipt = receipt
+                                    )
+                                )
+                            }
 
                             is TransferConfirmEntity.CardVerificationRequired ->
                                 postEvent(

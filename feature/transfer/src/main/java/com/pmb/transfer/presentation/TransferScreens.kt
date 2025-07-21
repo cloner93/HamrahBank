@@ -130,7 +130,7 @@ fun NavGraphBuilder.transferScreensHandle() {
 
             TransferAmountScreen(
                 viewModel = hiltViewModel<TransferAmountViewModel>(),
-                account = sharedViewModel.destinationAccount.value
+                account = sharedViewModel.destinationAccount.value,
             ) { amount, methods ->
                 sharedViewModel.setAmount(amount)
                 sharedViewModel.setTransferMethods(methods)
@@ -162,7 +162,7 @@ fun NavGraphBuilder.transferScreensHandle() {
                 reason = sharedViewModel.transferReason.value,
                 transferMethod = sharedViewModel.transferMethod.value,
                 clear = { sharedViewModel.clearPaymentData() }
-            ) { source: TransferSourceEntity,
+            ) { source: TransferSourceEntity?,
                 receipt: TransferReceiptEntity?,
                 verificationInfo: CardVerificationEntity? ->
 
