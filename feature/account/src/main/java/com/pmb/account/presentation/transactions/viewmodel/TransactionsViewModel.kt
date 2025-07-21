@@ -90,6 +90,9 @@ class TransactionsViewModel @Inject constructor(
                         transactionFilter = action.item
                     )
                 }
+                viewState.value.selectedDeposit?.let { deposit ->
+                    loadTransactionsByCount(deposit)
+                }
             }
 
             TransactionsViewActions.ShowDepositListBottomSheet -> {

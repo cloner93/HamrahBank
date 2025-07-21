@@ -7,5 +7,9 @@ import androidx.compose.ui.platform.LocalClipboardManager
 @Composable
 fun ReadClipboardOnFirstLoad(clipboardText: (String) -> Unit) {
     val clipboardManager = LocalClipboardManager.current
-    LaunchedEffect(Unit) { clipboardManager.getText()?.let { clipboardText.invoke(it.text) } }
+    LaunchedEffect(Unit) {
+        clipboardManager.getText()?.let {
+            clipboardText.invoke(it.text)
+        }
+    }
 }
