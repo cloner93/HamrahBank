@@ -19,13 +19,17 @@ class UserDataStoreImpl @Inject constructor(
 
     private val customerUserKey = stringPreferencesKey("customer_id")
     private val usernameKey = stringPreferencesKey("username")
-    private val passwordKey = stringPreferencesKey("password")
+    private val firstNameKey = stringPreferencesKey("firstName")
+    private val lastNameKey = stringPreferencesKey("lastName")
+    private val phoneNumberKey = stringPreferencesKey("phoneNumber")
 
     override suspend fun setUserData(userData: UserData) {
         context.dataStore.edit { preferences ->
             preferences[customerUserKey] = userData.customerId
             preferences[usernameKey] = userData.username
-            preferences[passwordKey] = userData.password
+            preferences[firstNameKey] = userData.firstName
+            preferences[lastNameKey] = userData.lastName
+            preferences[phoneNumberKey] = userData.phoneNumber
         }
     }
 
@@ -33,10 +37,18 @@ class UserDataStoreImpl @Inject constructor(
         val preferences = context.dataStore.data.first()
         val customerId = preferences[customerUserKey]
         val username = preferences[usernameKey]
-        val password = preferences[passwordKey]
+        val firstName = preferences[firstNameKey]
+        val lastName = preferences[lastNameKey]
+        val phoneNumber = preferences[phoneNumberKey]
 
-        return if (customerId != null && username != null && password != null) {
-            UserData(customerId, username, password)
+        return if (customerId != null && username != null) {
+            UserData(
+                customerId = customerId,
+                username = username,
+                firstName = firstName ?: "",
+                lastName = lastName ?: "",
+                phoneNumber = phoneNumber ?: ""
+            )
         } else {
             null
         }

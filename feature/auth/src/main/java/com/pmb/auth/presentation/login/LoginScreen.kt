@@ -77,20 +77,19 @@ fun LoginScreen(viewModel: LoginViewModel) {
     ) {
         Spacer(modifier = Modifier.size(32.dp))
         TextImage(
-            modifier = Modifier,
             spacer = 0.dp,
             image = IconType.Painter(
                 painterResource(com.pmb.ballon.R.drawable.profile_placeholder)
             ),
-            text = viewState.userData?.customerId ?: "",
-            imageStyle = ImageStyle(size = Size.FIX(all = 70.dp)),
+            text = viewState.userData?.fullName ?: "",
+            imageStyle = ImageStyle(size = Size.FIX(all = 56.dp)),
             textStyle = TextStyle(
                 color = AppTheme.colorScheme.onBackgroundNeutralDefault,
-                typography = AppTheme.typography.bodyMedium,
+                typography = AppTheme.typography.headline4,
                 textAlign = TextAlign.Center
             )
         )
-        Spacer(modifier = Modifier.size(32.dp))
+        Spacer(modifier = Modifier.size(8.dp))
         BodySmallText(
             text = "${stringResource(com.pmb.auth.R.string.username)}: ${viewState.userData?.username}",
             color = AppTheme.colorScheme.onBackgroundPrimarySubdued

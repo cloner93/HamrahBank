@@ -10,17 +10,17 @@ import com.pmb.domain.model.SendOtpRequest
 import com.pmb.domain.model.SendOtpResponse
 import com.pmb.domain.model.UserData
 import com.pmb.domain.model.openAccount.AccountArchiveJobDocResponse
-import com.pmb.domain.model.openAccount.FetchCommitmentResponse
-import com.pmb.domain.model.openAccount.accountType.FetchAccountTypeResponse
-import com.pmb.domain.model.openAccount.accountVerifyCode.VerifyCodeResponse
-import com.pmb.domain.repository.auth.AuthRepository
 import com.pmb.domain.model.openAccount.FetchAdmittanceTextResponse
+import com.pmb.domain.model.openAccount.FetchCommitmentResponse
 import com.pmb.domain.model.openAccount.RegisterOpenAccountRequest
 import com.pmb.domain.model.openAccount.RegisterOpenAccountResponse
+import com.pmb.domain.model.openAccount.accountType.FetchAccountTypeResponse
+import com.pmb.domain.model.openAccount.accountVerifyCode.VerifyCodeResponse
 import com.pmb.domain.model.openAccount.branchName.Branch
 import com.pmb.domain.model.openAccount.cityName.City
 import com.pmb.domain.model.openAccount.comissionFee.FetchCommissionFeeResponse
 import com.pmb.domain.model.openAccount.jobLevel.JobLevel
+import com.pmb.domain.repository.auth.AuthRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -42,13 +42,17 @@ class AuthRepositoryImpl @Inject constructor(
     override suspend fun sendOtp(sendOtpRequest: SendOtpRequest): Flow<Result<SendOtpResponse>> {
         return remoteServiceProvider.getAuthService().sendOtp(sendOtpRequest).mapApiResult {
             if (it.first?.statusMessage == "موفق") {
-                localServiceProvider.getUserDataStore().setUserData(
-                    UserData(
-                        customerId = sendOtpRequest.mobileNumber,
-                        username = sendOtpRequest.userName,
-                        password = sendOtpRequest.password
+                it.second.let { user ->
+                    localServiceProvider.getUserDataStore().setUserData(
+                        UserData(
+                            customerId = user.customerId.toString(),
+                            username = sendOtpRequest.userName,
+                            firstName = user.name,
+                            lastName = user.family,
+                            phoneNumber = sendOtpRequest.mobileNumber,
+                        )
                     )
-                )
+                }
             }
             it.second.toDomain()
         }
@@ -59,6 +63,18 @@ class AuthRepositoryImpl @Inject constructor(
     ): Flow<Result<LoginResponse>> {
         return remoteServiceProvider.getAuthService()
             .login(customerId = customerId, username = username, password = password).mapApiResult {
+                it.second.let { user ->
+                    localServiceProvider.getUserDataStore().setUserData(
+                        UserData(
+                            customerId = user.customerId.toString(),
+                            username = user.userName ?: username,
+                            firstName = user.name ?: "",
+                            lastName = user.family ?: "",
+                            phoneNumber = localServiceProvider.getUserDataStore()
+                                .getUserData()?.phoneNumber ?: ""
+                        )
+                    )
+                }
                 it.second
             }
     }
@@ -110,11 +126,11 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override fun fetchAccountType(
-         nationalCode: String, mobileNo: String
+        nationalCode: String, mobileNo: String
     ): Flow<Result<FetchAccountTypeResponse>> {
         return remoteServiceProvider.getAuthService().fetchAccountType(
-                nationalCode = nationalCode, mobileNo = mobileNo
-            ).mapApiResult { it.second }
+            nationalCode = nationalCode, mobileNo = mobileNo
+        ).mapApiResult { it.second }
     }
 
     override fun fetchCityList(stateCode: Int): Flow<Result<List<City>>> {
@@ -147,7 +163,8 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override fun registerOpenAccount(registerOpenAccountRequest: RegisterOpenAccountRequest): Flow<Result<RegisterOpenAccountResponse>> {
-        return remoteServiceProvider.getAuthService().registerOpenAccount(registerOpenAccountRequest)
+        return remoteServiceProvider.getAuthService()
+            .registerOpenAccount(registerOpenAccountRequest)
             .mapApiResult { it.second }
     }
 }

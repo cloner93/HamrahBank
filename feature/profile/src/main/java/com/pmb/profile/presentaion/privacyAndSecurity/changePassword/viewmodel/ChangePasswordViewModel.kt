@@ -73,7 +73,6 @@ class ChangePasswordViewModel @Inject constructor(
     }
 
     private fun updatePassword() {
-        val newPassword = viewState.value.newPassword
         viewModelScope.launch {
             val customerId =
                 localProvider.getUserDataStore().getUserData()?.customerId ?: return@launch
@@ -107,10 +106,6 @@ class ChangePasswordViewModel @Inject constructor(
                     }
 
                     is Result.Success -> {
-                        localProvider.getUserDataStore().getUserData()?.copy(password = newPassword)
-                            ?.let {
-                                localProvider.getUserDataStore().setUserData(userData = it)
-                            }
                         setState { it.copy(loading = false) }
                         postEvent(ChangePasswordViewEvents.NavigateBack)
                     }
