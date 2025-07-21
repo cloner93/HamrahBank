@@ -54,33 +54,6 @@ internal fun PieChart(
 @Composable
 private fun PieChartPreview() {
     val depositsChartList = listOf<DepositModel>(
-        DepositModel(
-            "حساب قرض الحسنه",
-            "",
-            "123456",
-            500_000.0,
-            "ریال",
-            "IR1234567890098765432112",
-            "6219861920241234",
-        ),
-        DepositModel(
-            "حساب سرمایه گذاری بلند مدت",
-            "",
-            "97974632",
-            300_000.0,
-            "ریال",
-            "IR1234567890098765432112",
-            "6219861920241234"
-        ),
-        DepositModel(
-            "حساب مشترک",
-            "",
-            "82768947",
-            200_000.0,
-            "ریال",
-            "IR1234567890098765432112",
-            "6219861920241234"
-        ),
     ).mapToDepositsChartModel()
     PieChart(
         modifier = Modifier, charts = depositsChartList, size = 100.dp, strokeWidth = 5.dp

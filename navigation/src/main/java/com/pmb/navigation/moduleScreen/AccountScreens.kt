@@ -6,16 +6,21 @@ sealed class AccountScreens(route: String, arguments: Map<String, String> = empt
     Screen(baseRoute = route, arguments = arguments) {
     data object Account : AccountScreens(route = "account")
     data object Balance : AccountScreens(route = "balance")
-    data object Transactions : AccountScreens(route = "transactions")
-    data object TransactionsFilter : AccountScreens(route = "transactionsFilter")
-    data object DepositStatement : AccountScreens(route = "depositStatement")
-    data object TransactionSearch : AccountScreens(route = "transactionSearch/{depositId}") {
-        fun createRoute(depositId: String) = "transactionSearch/$depositId"
+
+    sealed class Transactions(route: String) : AccountScreens(route) {
+        data object Graph : Transactions(route = "transactions_graph")
+
+        data object AllTransactionsList : Transactions(route = "allTransactionsList")
+        data object DetailedTransactionList : Transactions(route = "DetailedTransactionList")
+        data object TransactionsFilter : Transactions(route = "transactionsFilter")
+        data object DepositStatement : Transactions(route = "depositStatement")
+        data object TransactionSearch : Transactions(route = "transactionSearch")
     }
+
     data object TransactionReceipt :
-        AccountScreens(route = "transactionReceipt/{depositId}/{transactionId}") {
-        fun createRoute(depositId: String, transactionId: String) =
-            "transactionReceipt/$depositId/$transactionId"
+        AccountScreens(route = "transactionReceipt/{depositId}/{transactionJson}") {
+        fun createRoute(depositId: String, transactionJson: String) =
+            "transactionReceipt/$depositId/$transactionJson"
     }
 
     companion object {

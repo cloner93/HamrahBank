@@ -49,6 +49,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.pmb.auth.R
 import com.pmb.auth.presentation.first_login_confirm.viewModel.TimerStatus
 import com.pmb.auth.presentation.first_login_confirm.viewModel.TimerTypeId
+import com.pmb.auth.presentation.register.RegisterSharedViewState
 import com.pmb.auth.presentation.register.register_video.viewModel.RegisterCapturingVideoViewActions
 import com.pmb.auth.presentation.register.register_video.viewModel.RegisterCapturingVideoViewEvents
 import com.pmb.auth.presentation.register.register_video.viewModel.RegisterCapturingVideoViewModel
@@ -70,6 +71,8 @@ import com.pmb.navigation.moduleScreen.RegisterScreens
 @Composable
 fun RegisterVideoScreen(
     viewModel: RegisterCapturingVideoViewModel,
+    sharedState:RegisterSharedViewState,
+    updateState:(String?)->Unit
 ) {
     val navigationManager: NavigationManager = LocalNavigationManager.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -101,8 +104,12 @@ fun RegisterVideoScreen(
     LaunchedEffect(Unit) {
         viewModel.viewEvent.collect { event ->
             when (event) {
-                RegisterCapturingVideoViewEvents.VideoCaptured -> {
+                RegisterCapturingVideoViewEvents.VideoSent -> {
+                    updateState(viewState.refId)
                     navigationManager.navigateAndClearStack(RegisterScreens.RegisterConfirmStep)
+                }
+                else->{
+
                 }
             }
         }
@@ -207,7 +214,7 @@ fun RegisterVideoScreen(
                         enable = true,
                         title = stringResource(R.string._continue),
                         onClick = {
-                            viewModel.handle(RegisterCapturingVideoViewActions.SendVideo("FF"))
+                            viewModel.handle(RegisterCapturingVideoViewActions.SendVideo(sharedState))
                         })
                 }
             }
@@ -239,13 +246,13 @@ fun RegisterVideoScreen(
 
             )
             if (viewState.isCapturingVideo && !viewState.videoCaptured)
-                Headline4Text(
-                    text = stringResource(
-                        R.string.repeated_sentence
-                    ),
-                    textAlign = TextAlign.Center,
-                    color = AppTheme.colorScheme.foregroundPrimaryDefault
-                )
+                viewState.admittanceTextResponse?.admittanceText?.let {
+                    Headline4Text(
+                        text = it,
+                        textAlign = TextAlign.Center,
+                        color = AppTheme.colorScheme.foregroundPrimaryDefault
+                    )
+                }
         }
         Spacer(modifier = Modifier.size(44.dp))
         if (viewState.savedFileUri != null && viewState.videoCaptured) {

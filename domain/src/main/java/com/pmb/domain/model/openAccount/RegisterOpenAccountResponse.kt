@@ -1,10 +1,10 @@
-package com.pmb.domain.model.openAccount.cityName
+package com.pmb.domain.model.openAccount
 
 import android.annotation.SuppressLint
 import kotlinx.serialization.Serializable
 
 @SuppressLint("UnsafeOptInUsageError")
 @Serializable
-data class FetchCityListResponse(
-    val cityList: List<City>
+data class RegisterOpenAccountResponse(
+    val refId: String
 )

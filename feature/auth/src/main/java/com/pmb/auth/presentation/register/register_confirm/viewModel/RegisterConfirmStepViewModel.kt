@@ -70,7 +70,4 @@ class RegisterConfirmStepViewModel @Inject constructor(
         }
     }
 
-    init {
-        handle(RegisterConfirmStepViewActions.LoadAuthenticationStep)
-    }
 }

@@ -4,7 +4,6 @@ import com.pmb.core.platform.BaseViewAction
 
 sealed interface RegisterNationalIdViewActions : BaseViewAction {
     data object ClearAlert : RegisterNationalIdViewActions
-    data class RegisterNationalIdSerialServices(
-        val nationalSerialId: String
-    ) : RegisterNationalIdViewActions
+    data object RegisterNationalIdSerialServices : RegisterNationalIdViewActions
+    data class SetNationalIdSerial(val nationalIdSerial: String) : RegisterNationalIdViewActions
 }

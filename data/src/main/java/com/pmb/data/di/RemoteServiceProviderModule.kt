@@ -8,6 +8,8 @@ import com.pmb.data.serviceProvider.remote.card.CardService
 import com.pmb.data.serviceProvider.remote.card.CardServiceImpl
 import com.pmb.data.serviceProvider.remote.deposit.DepositService
 import com.pmb.data.serviceProvider.remote.deposit.DepositServiceImpl
+import com.pmb.data.serviceProvider.remote.transaction.TransactionService
+import com.pmb.data.serviceProvider.remote.transaction.TransactionServiceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -28,5 +30,8 @@ abstract class RemoteServiceProviderModule {
 
     @Binds
     abstract fun bindDepositService(depositServiceImpl: DepositServiceImpl): DepositService
+
+    @Binds
+    abstract fun bindTransactionService(transactionServiceImpl: TransactionServiceImpl): TransactionService
 
 }

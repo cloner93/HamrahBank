@@ -11,6 +11,6 @@ data class TransactionFilter(
     val fromPrice: String? = null,
     val toPrice: String? = null,
     val dateType: DateType? = null,
-    val fromDate: String? = null,
-    val toDate: String? = null,
+    val fromDate: Long? = null,
+    val toDate: Long? = null,
 ) : Parcelable

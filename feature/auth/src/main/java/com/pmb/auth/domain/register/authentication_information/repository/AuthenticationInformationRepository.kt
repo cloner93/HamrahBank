@@ -6,6 +6,5 @@ import com.pmb.core.platform.Result
 import kotlinx.coroutines.flow.Flow
 
 interface AuthenticationInformationRepository {
-    suspend fun getAuthenticationInformation(): Flow<Result<GetAuthenticationEntity>>
     suspend fun sendAuthenticationInformation(authenticationInformationParam: SendAuthenticationInformationParam): Flow<Result<Boolean>>
 }

@@ -2,6 +2,7 @@ package com.pmb.ballon.component.base
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Icon
@@ -10,25 +11,19 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import com.pmb.ballon.R
+import com.pmb.ballon.component.annotation.AppPreview
 import com.pmb.ballon.ui.theme.AppTheme
+import com.pmb.ballon.ui.theme.HamrahBankTheme
 
 sealed class BottomNavItem(
-    @StringRes
-    val title: Int,
-    @DrawableRes
-    val selectedIcon: Int,
-    @DrawableRes
-    val unselectedIcon: Int,
-    val badgeAmount: Int? = null,
+    @StringRes val title: Int,
+    @DrawableRes val selectedIcon: Int,
+    @DrawableRes val unselectedIcon: Int,
+    val badgeAmount: Int? = null
 ) {
     data object Home : BottomNavItem(
         title = R.string.home,
@@ -38,8 +33,8 @@ sealed class BottomNavItem(
 
     data object Transfer : BottomNavItem(
         title = R.string.transfer_and_receive,
-        selectedIcon = R.drawable.ic_double_left_circle,
-        unselectedIcon = R.drawable.ic_double_left_circle,
+        selectedIcon = R.drawable.ic_transfer_unselected,
+        unselectedIcon = R.drawable.ic_transfer_selected,
     )
 
     data object AccountCard : BottomNavItem(
@@ -55,7 +50,7 @@ sealed class BottomNavItem(
     )
 }
 
-val bottomNavItems = mutableListOf(
+val bottomNavItems = listOf(
     BottomNavItem.Home,
     BottomNavItem.Transfer,
     BottomNavItem.AccountCard,
@@ -63,21 +58,20 @@ val bottomNavItems = mutableListOf(
 )
 
 @Composable
-fun AppBottomBar(tabBarItems: List<BottomNavItem>, selectedItem: (BottomNavItem) -> Unit) {
-    var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
-
+fun AppBottomBar(
+    tabBarItems: List<BottomNavItem>,
+    selectedTab: BottomNavItem,
+    selectedItem: (BottomNavItem) -> Unit
+) {
     NavigationBar(containerColor = AppTheme.colorScheme.background1Neutral) {
-        // looping over each tab to generate the views and navigation for each item
-        tabBarItems.forEachIndexed { index, tabBarItem ->
+        tabBarItems.forEachIndexed { _, tabBarItem ->
+            val isSelected = tabBarItem == selectedTab
             NavigationBarItem(
-                selected = selectedTabIndex == index,
-                onClick = {
-                    selectedTabIndex = index
-                    selectedItem.invoke(tabBarItem)
-                },
+                selected = isSelected,
+                onClick = { selectedItem(tabBarItem) },
                 icon = {
                     TabBarIconView(
-                        isSelected = selectedTabIndex == index,
+                        isSelected = isSelected,
                         selectedIcon = painterResource(tabBarItem.selectedIcon),
                         unselectedIcon = painterResource(tabBarItem.unselectedIcon),
                         title = stringResource(tabBarItem.title),
@@ -85,14 +79,16 @@ fun AppBottomBar(tabBarItems: List<BottomNavItem>, selectedItem: (BottomNavItem)
                     )
                 },
                 label = {
-                    if (selectedTabIndex == index) ButtonXSmallText(
-                        text = stringResource(tabBarItem.title),
-                        color = AppTheme.colorScheme.onBackgroundNeutralDefault
-                    )
-                    else CaptionText(
-                        text = stringResource(tabBarItem.title),
-                        color = AppTheme.colorScheme.onBackgroundNeutralSubdued
-                    )
+                    if (isSelected)
+                        ButtonXSmallText(
+                            text = stringResource(tabBarItem.title),
+                            color = AppTheme.colorScheme.onBackgroundNeutralDefault
+                        )
+                    else
+                        CaptionText(
+                            text = stringResource(tabBarItem.title),
+                            color = AppTheme.colorScheme.onBackgroundNeutralSubdued
+                        )
                 },
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = AppTheme.colorScheme.onBackgroundNeutralDefault,
@@ -106,8 +102,6 @@ fun AppBottomBar(tabBarItems: List<BottomNavItem>, selectedItem: (BottomNavItem)
     }
 }
 
-// This component helps to clean up the API call from our TabView above,
-// but could just as easily be added inside the TabView without creating this custom component
 @Composable
 fun TabBarIconView(
     isSelected: Boolean,
@@ -118,18 +112,12 @@ fun TabBarIconView(
 ) {
     BadgedBox(badge = { TabBarBadgeView(badgeAmount) }) {
         Icon(
-            painter = if (isSelected) {
-                selectedIcon
-            } else {
-                unselectedIcon
-            },
+            painter = if (isSelected) selectedIcon else unselectedIcon,
             contentDescription = title
         )
     }
 }
 
-// This component helps to clean up the API call from our TabBarIconView above,
-// but could just as easily be added inside the TabBarIconView without creating this custom component
 @Composable
 fun TabBarBadgeView(count: Int? = null) {
     if (count != null) {
@@ -137,8 +125,29 @@ fun TabBarBadgeView(count: Int? = null) {
     }
 }
 
-@Preview(showBackground = true)
+
+@AppPreview
 @Composable
-fun GreetingPreview() {
-//    AppBottomBar(tabBarItems = bottomNavItems)
+fun AppBottomBarPreview() {
+
+    HamrahBankTheme {
+        Column {
+            AppBottomBar(
+                tabBarItems = bottomNavItems,
+                selectedTab = bottomNavItems[0],
+            ) { }
+            AppBottomBar(
+                tabBarItems = bottomNavItems,
+                selectedTab = bottomNavItems[1],
+            ) { }
+            AppBottomBar(
+                tabBarItems = bottomNavItems,
+                selectedTab = bottomNavItems[2],
+            ) { }
+            AppBottomBar(
+                tabBarItems = bottomNavItems,
+                selectedTab = bottomNavItems[3],
+            ) { }
+        }
+    }
 }

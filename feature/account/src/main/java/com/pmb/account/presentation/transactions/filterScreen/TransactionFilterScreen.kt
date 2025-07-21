@@ -32,12 +32,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import com.pmb.account.presentation.transactions.TransactionSharedState
 import com.pmb.account.presentation.transactions.filterScreen.viewmodel.TransactionsFilterViewActions
 import com.pmb.account.presentation.transactions.filterScreen.viewmodel.TransactionsFilterViewEvents
 import com.pmb.account.presentation.transactions.filterScreen.viewmodel.TransactionsFilterViewModel
 import com.pmb.account.presentation.transactions.filterScreen.viewmodel.entity.TransactionFilter
-import com.pmb.account.utils.toPersianDate
+import com.pmb.ballon.R
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppButtonIcon
 import com.pmb.ballon.component.base.AppClickableReadOnlyTextField
@@ -50,6 +50,11 @@ import com.pmb.ballon.component.base.ChipWithIcon
 import com.pmb.ballon.component.base.IconType
 import com.pmb.ballon.component.datePicker.ShowPersianDatePickerBottomSheet
 import com.pmb.ballon.ui.theme.AppTheme
+import com.pmb.calender.currentMonthPair
+import com.pmb.calender.formatPersianDateForDisplay
+import com.pmb.calender.subtractDays
+import com.pmb.calender.toLong
+import com.pmb.calender.today
 import com.pmb.navigation.manager.LocalNavigationManager
 
 /**
@@ -61,9 +66,11 @@ TODO checkList TransactionFilterScreen.kt
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun TransactionFilterScreen() {
-
-    val viewModel = hiltViewModel<TransactionsFilterViewModel>()
+fun TransactionFilterScreen(
+    viewModel: TransactionsFilterViewModel,
+    sharedState: TransactionSharedState,
+    function: (String) -> Unit
+) {
     val viewState by viewModel.viewState.collectAsState()
     val navigationManager = LocalNavigationManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -255,7 +262,7 @@ fun TransactionFilterScreen() {
                 },
                 trailingIcon = {
                     BodyMediumText(
-                        text = stringResource(com.pmb.ballon.R.string.real_carrency),
+                        text = stringResource(R.string.real_carrency),
                         color = AppTheme.colorScheme.onBackgroundNeutralSubdued
                     )
                 },
@@ -276,7 +283,7 @@ fun TransactionFilterScreen() {
                 focusRequester = focusRequesterTo,
                 trailingIcon = {
                     BodyMediumText(
-                        text = stringResource(com.pmb.ballon.R.string.real_carrency),
+                        text = stringResource(R.string.real_carrency),
                         color = AppTheme.colorScheme.onBackgroundNeutralSubdued
                     )
                 },
@@ -305,7 +312,9 @@ fun TransactionFilterScreen() {
                         else
                             viewModel.handle(
                                 TransactionsFilterViewActions.SelectDateType(
-                                    DateType.TODAY
+                                    DateType.TODAY,
+                                    fromDate = today().toLong(),
+                                    toDate = today().toLong(),
                                 )
                             )
                     },
@@ -323,7 +332,9 @@ fun TransactionFilterScreen() {
                         else
                             viewModel.handle(
                                 TransactionsFilterViewActions.SelectDateType(
-                                    DateType.LAST_WEEK
+                                    DateType.LAST_WEEK,
+                                    fromDate = today().subtractDays(7).toLong(),
+                                    toDate = today().toLong()
                                 )
                             )
                     },
@@ -342,7 +353,9 @@ fun TransactionFilterScreen() {
                         else
                             viewModel.handle(
                                 TransactionsFilterViewActions.SelectDateType(
-                                    DateType.LAST_MONTH
+                                    DateType.LAST_MONTH,
+                                    fromDate = today().subtractDays(30).toLong(),
+                                    toDate = today().toLong()
                                 )
                             )
                     },
@@ -360,7 +373,9 @@ fun TransactionFilterScreen() {
                         else
                             viewModel.handle(
                                 TransactionsFilterViewActions.SelectDateType(
-                                    DateType.CURRENT_MONTH
+                                    DateType.CURRENT_MONTH,
+                                    fromDate = currentMonthPair().first.toLong(),
+                                    toDate = currentMonthPair().second.toLong()
                                 )
                             )
                     },
@@ -378,7 +393,9 @@ fun TransactionFilterScreen() {
                         else
                             viewModel.handle(
                                 TransactionsFilterViewActions.SelectDateType(
-                                    DateType.CUSTOM
+                                    DateType.CUSTOM,
+                                    fromDate = today().toLong(),
+                                    toDate = today().toLong()
                                 )
                             )
                     },
@@ -392,11 +409,14 @@ fun TransactionFilterScreen() {
                 Column {
                     Spacer(modifier = Modifier.height(32.dp))
                     AppClickableReadOnlyTextField(
-                        value = viewState.fromDate.toPersianDate(),
+                        value = formatPersianDateForDisplay(
+                            date = viewState.fromDate.toString(),
+                            time = null,
+                        ),
                         label = "از تاریخ",
                         trailingIcon = {
                             AppButtonIcon(
-                                icon = IconType.Painter(painterResource(com.pmb.ballon.R.drawable.ic_calendar_month)),
+                                icon = IconType.Painter(painterResource(R.drawable.ic_calendar_month)),
                                 onClick = {}
                             )
                         },
@@ -406,11 +426,14 @@ fun TransactionFilterScreen() {
 
                     Spacer(modifier = Modifier.height(24.dp))
                     AppClickableReadOnlyTextField(
-                        value = viewState.toDate.toPersianDate(),
+                        value = formatPersianDateForDisplay(
+                            date = viewState.toDate.toString(),
+                            time = null,
+                        ),
                         label = "تا تاریخ",
                         trailingIcon = {
                             AppButtonIcon(
-                                icon = IconType.Painter(painterResource(com.pmb.ballon.R.drawable.ic_calendar_month)),
+                                icon = IconType.Painter(painterResource(R.drawable.ic_calendar_month)),
                                 onClick = {}
                             )
                         },
@@ -425,7 +448,7 @@ fun TransactionFilterScreen() {
     if (viewState.showFromDatePicker) {
         ShowPersianDatePickerBottomSheet(
             onChangeValue = { year, month, day ->
-                viewModel.handle(TransactionsFilterViewActions.CloseFromDatePicker("$year$month$day"))
+                viewModel.handle(TransactionsFilterViewActions.CloseFromDatePicker("$year$month$day".toLong()))
             },
             onDismiss = {
                 viewModel.handle(TransactionsFilterViewActions.CloseFromDatePicker(null))
@@ -436,7 +459,7 @@ fun TransactionFilterScreen() {
     if (viewState.showToDatePicker) {
         ShowPersianDatePickerBottomSheet(
             onChangeValue = { year, month, day ->
-                viewModel.handle(TransactionsFilterViewActions.CloseToDatePicker("$year$month$day"))
+                viewModel.handle(TransactionsFilterViewActions.CloseToDatePicker("$year$month$day".toLong()))
             },
             onDismiss = {
                 viewModel.handle(TransactionsFilterViewActions.CloseToDatePicker(null))

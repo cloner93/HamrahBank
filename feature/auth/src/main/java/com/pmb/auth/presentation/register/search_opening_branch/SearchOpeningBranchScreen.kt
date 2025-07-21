@@ -31,6 +31,7 @@ import com.pmb.ballon.component.base.AppSearchTextField
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.ClickableIcon
 import com.pmb.ballon.component.base.IconType
+import com.pmb.domain.model.openAccount.branchName.Branch
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.manager.NavigationManager
 import kotlinx.coroutines.FlowPreview
@@ -75,12 +76,12 @@ fun SearchOpeningBranchScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 16.dp, end = 16.dp, top = 16.dp),
-                enable = viewState.selectedOpeningBranch != null,
+                enable = viewState.selectedBranch != null,
                 title = stringResource(com.pmb.ballon.R.string.confirm),
                 onClick = {
-                    navigationManager.setPreviousScreenData<OpeningBranch?>(
+                    navigationManager.setPreviousScreenData<Branch?>(
                         "openingBranch",
-                        viewState.selectedOpeningBranch
+                        viewState.selectedBranch
                     )
                     navigationManager.navigateBack()
                 })
@@ -98,20 +99,17 @@ fun SearchOpeningBranchScreen(
         AnimatedVisibility(visible = searchVisible) {
             AppSearchTextField(
                 modifier = Modifier.padding(end = 16.dp),
-                hint = stringResource(R.string.open_account),
+                hint = "لیست شعب",
                 query = searchQuery,
                 onValueChange = { searchQuery = it }
             )
         }
         Spacer(modifier = Modifier.size(16.dp))
-        viewState.openingBranch?.openingBranch?.forEach { openingBranch ->
+        viewState.searchedBranchList?.forEach { openingBranch ->
             RoundedCornerCheckboxComponent(
-                title = openingBranch.openingBranch,
-                caption = stringResource(
-                    R.string.tax_amount,
-                    openingBranch.openingBranchAddress
-                ),
-                isChecked = openingBranch.isChecked.value
+                title = "${openingBranch.branchName},${openingBranch.branchCode}",
+                caption = openingBranch.address,
+                isChecked = openingBranch.branchCode == viewState.selectedBranch?.branchCode
             ) {
                 viewModel.handle(SearchOpeningBranchViewActions.SelectOpeningBranchId(openingBranch))
             }

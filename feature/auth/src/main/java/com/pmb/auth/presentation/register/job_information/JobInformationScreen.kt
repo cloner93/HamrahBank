@@ -13,6 +13,7 @@ import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -23,12 +24,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.pmb.auth.R
-import com.pmb.auth.domain.register.job_information.entity.AnnualIncomingPrediction
-import com.pmb.auth.domain.register.select_job_information.entity.JobInformation
 import com.pmb.auth.presentation.component.UploadDocumentsSection
+import com.pmb.auth.presentation.register.RegisterSharedViewState
 import com.pmb.auth.presentation.register.job_information.viewModel.JobInformationViewActions
 import com.pmb.auth.presentation.register.job_information.viewModel.JobInformationViewEvents
 import com.pmb.auth.presentation.register.job_information.viewModel.JobInformationViewModel
+import com.pmb.auth.presentation.register.job_information.viewModel.JobInformationViewState
 import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.CustomSpinner
 import com.pmb.ballon.component.MenuBottomSheet
@@ -40,22 +41,21 @@ import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.models.MenuSheetModel
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.core.utils.CollectAsEffect
-import com.pmb.core.utils.toCurrency
+import com.pmb.domain.model.openAccount.jobLevel.JobLevel
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.manager.NavigationManager
 import com.pmb.navigation.moduleScreen.RegisterScreens
 
 @Composable
 fun JobInformationScreen(
-    viewModel: JobInformationViewModel
+    viewModel: JobInformationViewModel,
+    sharedState :State<RegisterSharedViewState>,
+    updateState: (JobInformationViewState) -> Unit
 ) {
     val navigationManager: NavigationManager = LocalNavigationManager.current
     val viewState by viewModel.viewState.collectAsState()
     val context = LocalContext.current
 
-    var annualIncome by remember {
-        mutableStateOf<AnnualIncomingPrediction?>(null)
-    }
     var showShareBottomSheet by remember { mutableStateOf(false) }
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
@@ -90,7 +90,7 @@ fun JobInformationScreen(
             viewState.fileUri?.let { launcher.launch(it) }
         }
     }
-    navigationManager.getCurrentScreenFlowData<JobInformation?>(
+    navigationManager.getCurrentScreenFlowData<JobLevel?>(
         "jobInformation",
         null
     )?.CollectAsEffect {
@@ -105,6 +105,7 @@ fun JobInformationScreen(
         viewModel.viewEvent.collect { event ->
             when (event) {
                 JobInformationViewEvents.SendJobInformationSucceed -> {
+                    updateState(viewState)
                     navigationManager.navigate(RegisterScreens.CheckPostalCode)
                 }
             }
@@ -125,25 +126,19 @@ fun JobInformationScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 16.dp, end = 16.dp, top = 16.dp),
-                enable = !viewState.isLoading && viewState.jobInformation != null,
+                enable = !viewState.isLoading && viewState.data != null,
                 title = stringResource(R.string._continue),
                 onClick = {
-                    annualIncome?.id?.let {
-                        viewModel.handle(
-                            JobInformationViewActions.SendJonInformation(
-                                it,
-                                jobId = viewState.jobInformation?.id ?: -1
-                            )
-                        )
-                    }
+                    viewModel.handle(JobInformationViewActions.UploadArchiveDoc(sharedState.value.nationalCode ?:""))
+                    updateState(viewState)
+                    navigationManager.navigate(RegisterScreens.CheckPostalCode)
                 })
         }) {
-        viewState.data?.let {
             AppClickableReadOnlyTextField(
                 onClick = {
                     navigationManager.navigate(RegisterScreens.SelectJobInformation)
                 },
-                value = viewState.jobInformation?.jobInformation ?: "",
+                value = viewState.jobInformation?.jobName ?: "",
                 label = "انتخاب شغل",
                 trailingIcon = {
                     Icon(
@@ -156,21 +151,15 @@ fun JobInformationScreen(
             CustomSpinner(
                 modifier = Modifier
                     .fillMaxWidth(),
-                options = viewState.data?.annualIncomingPrediction?.map { it.income.toCurrency() },
+                options = sharedState.value.verifyCodeResponse?.annualIncomeTypes?.map { it.incomePredictDescription?:"" },
                 labelString = "پیش بینی درآمد سالیانه",
-                displayText = viewState.data?.annualIncomingPrediction?.findLast {
-                    it.id == (annualIncome?.id ?: -1)
-                }?.income?.toCurrency() ?: "",
+                displayText = viewState.data?.let {
+                    it.incomePredictDescription
+                } ?: "",
                 isEnabled = true
             ) { type ->
-                viewState.data?.annualIncomingPrediction?.findLast {
-                    it.income == type.replace(
-                        ",",
-                        ""
-                    )
-                }?.let {
-                    annualIncome = it
-                }
+                val annualIncomeTypes = sharedState.value.verifyCodeResponse?.annualIncomeTypes?.findLast { it.incomePredictDescription == type }
+                annualIncomeTypes?.let { viewModel.handle(JobInformationViewActions.SetAnnualIncome(it)) }
             }
             UploadDocumentsSection(
                 images = if (viewState.isTookPhoto) viewState.fileUri else null,
@@ -181,7 +170,6 @@ fun JobInformationScreen(
                     viewModel.handle(JobInformationViewActions.ClearPhoto)
                 }
             )
-        }
     }
     if (viewState.isLoading) {
         AppLoading()

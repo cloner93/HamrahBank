@@ -1,8 +1,11 @@
 package com.pmb.account.presentation.deposits.viewmodel
 
-import com.pmb.account.presentation.component.TransactionModel
+import androidx.paging.PagingData
 import com.pmb.core.platform.BaseViewState
 import com.pmb.domain.model.DepositModel
+import com.pmb.domain.model.TransactionModel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 
 
 data class DepositsViewState(
@@ -13,6 +16,7 @@ data class DepositsViewState(
     val selectedDeposit: DepositModel? = null,
     val totalBalance: Double = 0.0,
     val isAmountVisible: Boolean = true,
+    val transactionFlow: Flow<PagingData<TransactionModel>> = emptyFlow(),
     val transactions: List<TransactionModel> = emptyList(),
     val showShareDepositInfoBottomSheet: Boolean = false,
     val showMoreBottomSheet: Boolean = false,

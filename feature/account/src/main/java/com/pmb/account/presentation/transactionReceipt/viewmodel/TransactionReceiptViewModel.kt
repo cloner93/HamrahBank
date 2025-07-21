@@ -2,16 +2,18 @@ package com.pmb.account.presentation.transactionReceipt.viewmodel
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.pmb.account.presentation.component.TransactionModel
 import com.pmb.account.usecase.deposits.GetTransactionByIdUseCase
 import com.pmb.core.platform.BaseViewAction
 import com.pmb.core.platform.BaseViewEvent
 import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.platform.BaseViewState
 import com.pmb.core.utils.toCurrency
+import com.pmb.domain.model.TransactionModel
 import com.pmb.receipt.model.RowData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
+import java.net.URLDecoder
 import javax.inject.Inject
 
 @HiltViewModel
@@ -23,7 +25,7 @@ class TransactionReceiptViewModel @Inject constructor(
     initialState
 ) {
     private val depositId = savedStateHandle.get<String>("depositId")
-    private val transactionId = savedStateHandle.get<String>("transactionId")
+    private val transactionJson = savedStateHandle.get<String>("transactionJson")
 
     init {
         loadTransaction()
@@ -33,16 +35,27 @@ class TransactionReceiptViewModel @Inject constructor(
         viewModelScope.launch {
             setState { it.copy(isLoading = true, errorMessage = null) }
 
-            val result = transactionsByIdUseCase(depositId, transactionId)
-            val rows = result.mapToRows()
-            setState {
-                it.copy(
-                    isLoading = false,
-                    transaction = result,
-                    rows = rows
-                )
-            }
+            try {
+                val json = Json { ignoreUnknownKeys = true }
+                val jsonString = URLDecoder.decode(transactionJson, "UTF-8")
+                val transaction = json.decodeFromString<TransactionModel>(jsonString)
 
+                val rows = transaction.mapToRows()
+                setState {
+                    it.copy(
+                        isLoading = false,
+                        transaction = transaction,
+                        rows = rows
+                    )
+                }
+            } catch (e: Exception) {
+                setState {
+                    it.copy(
+                        isLoading = false,
+                        errorMessage = e.message
+                    )
+                }
+            }
         }
     }
 

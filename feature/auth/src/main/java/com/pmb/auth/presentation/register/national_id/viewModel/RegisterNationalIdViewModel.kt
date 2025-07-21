@@ -28,15 +28,23 @@ class RegisterNationalIdViewModel @Inject constructor(
             }
 
             is RegisterNationalIdViewActions.RegisterNationalIdSerialServices -> {
-                handleRegisterNationalId(action)
+                handleRegisterNationalId()
+            }
+
+            is RegisterNationalIdViewActions.SetNationalIdSerial -> {
+                handleSetNationalIdSerial(action)
             }
         }
     }
 
-    private fun handleRegisterNationalId(action: RegisterNationalIdViewActions.RegisterNationalIdSerialServices) {
+    private fun handleSetNationalIdSerial(serial: RegisterNationalIdViewActions.SetNationalIdSerial) {
+        setState { it.copy(nationalSerialId = serial.nationalIdSerial) }
+    }
+
+    private fun handleRegisterNationalId() {
         viewModelScope.launch {
             repository.invoke(
-                RegisterNationalIdRequest(action.nationalSerialId)
+                RegisterNationalIdRequest(viewState.value.nationalSerialId ?: "")
             ).collect { result ->
                 when (result) {
                     is Result.Error -> {

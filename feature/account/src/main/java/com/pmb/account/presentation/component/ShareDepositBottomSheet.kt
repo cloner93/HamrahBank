@@ -278,6 +278,7 @@ private fun ContentPreview() {
         currency = stringResource(com.pmb.ballon.R.string.real_carrency),
         ibanNumber = "IR1234567890098765432112",
         cardNumber = "6219861920241234",
+        categoryCode = 0,
     )
     HamrahBankTheme {
         ShareDepositBottomSheetContent(info = dip, onCopyAllClick = {}, onShareClick = {})

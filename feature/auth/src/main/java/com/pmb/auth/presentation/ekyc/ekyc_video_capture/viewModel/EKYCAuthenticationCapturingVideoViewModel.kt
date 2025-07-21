@@ -1,4 +1,5 @@
 package com.pmb.auth.presentation.ekyc.ekyc_video_capture.viewModel
+import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.pmb.auth.domain.ekyc.capture_video.entity.CapturingVideoParams
@@ -31,6 +32,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
