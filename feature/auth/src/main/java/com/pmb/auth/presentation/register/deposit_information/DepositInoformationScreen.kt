@@ -59,6 +59,8 @@ fun DepositInformationScreen(
 ) {
     val navigationManager: NavigationManager = LocalNavigationManager.current
     val viewState by viewModel.viewState.collectAsState()
+    var city by remember { mutableStateOf("") }
+    var province by remember { mutableStateOf("") }
     LaunchedEffect(Unit) {
         if (viewState.fetchAccountTypeResponse == null)
             viewModel.handle(
@@ -164,8 +166,12 @@ fun DepositInformationScreen(
                     .fillMaxWidth(),
                 options = viewState.fetchAccountTypeResponse?.provinceList?.map { it.provinceName },
                 labelString = "استان شعبه مورد نظر",
-                displayText = viewState.province?.provinceName ?: "",
-                isEnabled = viewState.fetchAccountTypeResponse?.provinceList?.isNotEmpty() == true
+                displayText = province.takeIf { it.isNotEmpty() }
+                    ?: run {viewState.province?.provinceName ?: ""},
+                isEnabled = viewState.fetchAccountTypeResponse?.provinceList?.isNotEmpty() == true,
+                onSearchValue = {
+                    province = it
+                }
             ) { type ->
                 val province =
                     viewState.fetchAccountTypeResponse?.provinceList?.find { it.provinceName == type }
@@ -179,8 +185,12 @@ fun DepositInformationScreen(
                     .fillMaxWidth(),
                 options = viewState.cityList?.map { it.cityName },
                 labelString = "شهر شعبه مورد نظر",
-                displayText = viewState.city?.cityName ?: "",
-                isEnabled = viewState.cityList?.isNotEmpty() == true
+                displayText = city.takeIf { it.isNotEmpty() }
+                    ?: run {viewState.city?.cityName ?: ""},
+                isEnabled = viewState.cityList?.isNotEmpty() == true,
+                onSearchValue = {
+                    city = it
+                }
             ) { type ->
                 val city = viewState.cityList?.find { it.cityName == type }
                 city?.let {

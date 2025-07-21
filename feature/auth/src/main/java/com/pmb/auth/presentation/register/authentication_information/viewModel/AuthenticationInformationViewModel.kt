@@ -70,7 +70,7 @@ class AuthenticationInformationViewModel @Inject constructor(
             it.copy(
                 birthDatePlace = it.birthDatePlace ?: action.sharedViewState.birthDatePlace,
                 issuePlace = it.issuePlace ?: action.sharedViewState.issuePlace,
-                issueCode = it.issueCode ?: action.sharedViewState.issueCode,
+                issueCode = it.issueCode ?: action.sharedViewState.issueRgnCode,
                 tel = it.tel ?: action.sharedViewState.tel,
                 issueDateYear = it.issueDateYear ?: issueDate?.first,
                 issueDateMonth = it.issueDateMonth ?: issueDate?.second,

@@ -129,7 +129,7 @@ fun JobInformationScreen(
                 enable = !viewState.isLoading && viewState.data != null,
                 title = stringResource(R.string._continue),
                 onClick = {
-                    viewModel.handle(JobInformationViewActions.UploadArchiveDoc(sharedState.value.nationalId ?:""))
+                    viewModel.handle(JobInformationViewActions.UploadArchiveDoc(sharedState.value.nationalCode ?:""))
                     updateState(viewState)
                     navigationManager.navigate(RegisterScreens.CheckPostalCode)
                 })

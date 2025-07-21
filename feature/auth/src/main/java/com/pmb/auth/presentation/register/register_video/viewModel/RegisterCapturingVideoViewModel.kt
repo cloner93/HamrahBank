@@ -1,6 +1,8 @@
 package com.pmb.auth.presentation.register.register_video.viewModel
 
 import android.Manifest
+import android.content.Context
+import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.pmb.auth.presentation.first_login_confirm.viewModel.TimerEvent
@@ -19,8 +21,12 @@ import com.pmb.core.permissions.PermissionDispatcher
 import com.pmb.core.platform.AlertModelState
 import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.platform.Result
+import com.pmb.core.utils.Base64FileHelper
 import com.pmb.domain.usecae.auth.openAccount.FetchAdmittanceTextUseCase
+import com.pmb.domain.usecae.auth.openAccount.RegisterOpenAccountParams
+import com.pmb.domain.usecae.auth.openAccount.RegisterOpenAccountUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
@@ -32,6 +38,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
@@ -41,7 +48,9 @@ class RegisterCapturingVideoViewModel @Inject constructor(
     private val cameraManager: VideoCameraManagerImpl,
     private val videoCompressor: VideoCompressor,
     private val fileManager: FileManager,
-    private val fetchAdmittanceTextUseCase: FetchAdmittanceTextUseCase
+    private val fetchAdmittanceTextUseCase: FetchAdmittanceTextUseCase,
+    private val registerOpenAccountUseCase: RegisterOpenAccountUseCase,
+    @ApplicationContext private val context :Context
 ) : BaseViewModel<
         VideoViewActions,
         RegisterCapturingVideoViewState,
@@ -84,9 +93,11 @@ class RegisterCapturingVideoViewModel @Inject constructor(
             }
         }
     }
+
     init {
         handle(RegisterCapturingVideoViewActions.GetAdmittanceText)
     }
+
     private fun handleAdmittanceText() {
         viewModelScope.launch {
             fetchAdmittanceTextUseCase.invoke(Unit).collect { result ->
@@ -95,7 +106,7 @@ class RegisterCapturingVideoViewModel @Inject constructor(
                         setState {
                             it.copy(
                                 isLoading = false,
-                                AlertModelState.Dialog(
+                                alertModelState = AlertModelState.Dialog(
                                     title = "خطا",
                                     description = " ${result.message}",
                                     positiveButtonTitle = "تایید",
@@ -131,7 +142,74 @@ class RegisterCapturingVideoViewModel @Inject constructor(
     private fun handleSendFacePhoto(action: RegisterCapturingVideoViewActions.SendVideo) {
         viewModelScope.launch {
 
-        }
+                registerOpenAccountUseCase.invoke(
+                    RegisterOpenAccountParams(
+                        accType = action.registerSharedViewState.accType ?: 0,
+                        address = action.registerSharedViewState.address ?: "",
+                        birthCityCode = action.registerSharedViewState.birthCityCode ?: 0,
+                        birthDate = action.registerSharedViewState.birthDate ?: "",
+                        branch = action.registerSharedViewState.branch ?: 0,
+                        cardFormatId = 0,
+                        cardReq = action.registerSharedViewState.cardReq ?: 0,
+                        cinCpId = action.registerSharedViewState.cinCpId ?: 0,
+                        ctrApId = 0,
+                        education = action.registerSharedViewState.education ?: 0,
+                        intBankReq = action.registerSharedViewState.intBankReq ?: 0,
+                        issueCityCode = action.registerSharedViewState.issueCityCode ?: 0,
+                        issueDate = action.registerSharedViewState.issueDate ?: "",
+                        issueRgnCode = action.registerSharedViewState.issueRgnCode ?: 0,
+                        jobCode = action.registerSharedViewState.jobCode ?: 0,
+                        mobileNo = action.registerSharedViewState.mobileNo ?: "",
+                        nationalCode = action.registerSharedViewState.nationalCode ?: "",
+                        postcode = action.registerSharedViewState.postcode ?: 0L,
+                        seriMeli = action.registerSharedViewState.seriMeli ?: "",
+                        serialMeli = action.registerSharedViewState.serialMeli ?: "",
+                        signData = action.registerSharedViewState.signData ?: "",
+                        tel = action.registerSharedViewState.tel ?: "",
+                        authImage = action.registerSharedViewState.authImage ?: "",
+                        admittanceText = viewState.value.admittanceTextResponse?.admittanceText
+                            ?: "",
+                        authVideo = action.registerSharedViewState.authImage ?: ""
+                    )
+                ).collect { result ->
+                    when (result) {
+                        is Result.Error -> {
+                            setState { state ->
+                                state.copy(
+                                    isLoading = false,
+                                    alertModelState = AlertModelState.Dialog(
+                                        title = "خطا",
+                                        description = " ${result.message}",
+                                        positiveButtonTitle = "تایید",
+                                        onPositiveClick = {
+                                            setState { state -> state.copy(alertModelState = null) }
+                                        }
+                                    )
+                                )
+                            }
+                        }
+
+                        is Result.Success -> {
+                            setState { state ->
+                                state.copy(
+                                    isLoading = false,
+                                    refId = result.data.refId
+                                )
+                            }
+                            postEvent(RegisterCapturingVideoViewEvents.VideoSent)
+                        }
+
+                        is Result.Loading -> {
+                            setState { state ->
+                                state.copy(
+                                    isLoading = true,
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+
     }
 
     fun onSinglePermissionResult(isGranted: Boolean) {
@@ -317,51 +395,60 @@ class RegisterCapturingVideoViewModel @Inject constructor(
         dispatch(TimerTypeId.VIDEO_TAKEN_TIMER, TimerEvent.STARTED)
         cameraManager.startRecording(videoFile, onCaptured = {
             viewModelScope.launch {
-
-                videoCompressor.compress(
-                    videoFile.absolutePath,
-                    configureWith = Configuration(
-                        quality = VideoQuality.LOW,
-                        videoNames = videoFile.name,
-                        isMinBitrateCheckEnabled = false,
-                        keepOriginalResolution = true,
-                    ),
-                    listener = object : CompressionListener {
-                        override fun onProgress(percent: Float) {
-                        }
-
-                        override fun onStart() {
-                            setState { state ->
-                                state.copy(
-                                    isLoading = true,
-                                    isCompressing = true
-                                )
-                            }
-
-                        }
-
-                        override fun onSuccess(size: Long, path: String?) {
-                            setState { state ->
-                                state.copy(
-                                    isLoading = false,
-                                    isCapturingVideo = false,
-                                    videoCaptured = true,
-                                    isCompressing = false,
-                                    savedFileUri = path,
-                                    cameraHasError = null
-                                )
-                            }
-                        }
-
-                        override fun onFailure(failureMessage: String) {
-                            Log.wtf("failureMessage", failureMessage)
-                        }
-
-                        override fun onCancelled() {
-                            Log.wtf("TAG", "compression has been cancelled")
-                        }
-                    },
-                )
+                setState { state ->
+                    state.copy(
+                        isLoading = false,
+                        isCapturingVideo = false,
+                        videoCaptured = true,
+                        isCompressing = false,
+                        savedFileUri = videoFile.absolutePath,
+                        cameraHasError = null,
+                    )
+                }
+//                videoCompressor.compress(
+//                    videoFile.absolutePath,
+//                    configureWith = Configuration(
+//                        quality = VideoQuality.LOW,
+//                        videoNames = videoFile.name,
+//                        isMinBitrateCheckEnabled = false,
+//                        keepOriginalResolution = true,
+//                    ),
+//                    listener = object : CompressionListener {
+//                        override fun onProgress(percent: Float) {
+//                        }
+//
+//                        override fun onStart() {
+//                            setState { state ->
+//                                state.copy(
+//                                    isLoading = true,
+//                                    isCompressing = true
+//                                )
+//                            }
+//
+//                        }
+//
+//                        override fun onSuccess(size: Long, path: String?) {
+////                                setState { state ->
+////                                    state.copy(
+////                                        isLoading = false,
+////                                        isCapturingVideo = false,
+////                                        videoCaptured = true,
+////                                        isCompressing = false,
+////                                        savedFileUri = path,
+////                                        cameraHasError = null,
+////                                    )
+////                            }
+//                        }
+//
+//                        override fun onFailure(failureMessage: String) {
+//                            Log.wtf("failureMessage", failureMessage)
+//                        }
+//
+//                        override fun onCancelled() {
+//                            Log.wtf("TAG", "compression has been cancelled")
+//                        }
+//                    },
+//                )
             }
         }, onError = { error ->
             setState { state ->

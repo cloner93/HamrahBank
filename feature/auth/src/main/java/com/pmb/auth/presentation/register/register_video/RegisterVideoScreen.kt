@@ -49,6 +49,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.pmb.auth.R
 import com.pmb.auth.presentation.first_login_confirm.viewModel.TimerStatus
 import com.pmb.auth.presentation.first_login_confirm.viewModel.TimerTypeId
+import com.pmb.auth.presentation.register.RegisterSharedViewState
 import com.pmb.auth.presentation.register.register_video.viewModel.RegisterCapturingVideoViewActions
 import com.pmb.auth.presentation.register.register_video.viewModel.RegisterCapturingVideoViewEvents
 import com.pmb.auth.presentation.register.register_video.viewModel.RegisterCapturingVideoViewModel
@@ -70,6 +71,8 @@ import com.pmb.navigation.moduleScreen.RegisterScreens
 @Composable
 fun RegisterVideoScreen(
     viewModel: RegisterCapturingVideoViewModel,
+    sharedState:RegisterSharedViewState,
+    updateState:(String?)->Unit
 ) {
     val navigationManager: NavigationManager = LocalNavigationManager.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -101,8 +104,12 @@ fun RegisterVideoScreen(
     LaunchedEffect(Unit) {
         viewModel.viewEvent.collect { event ->
             when (event) {
-                RegisterCapturingVideoViewEvents.VideoCaptured -> {
+                RegisterCapturingVideoViewEvents.VideoSent -> {
+                    updateState(viewState.refId)
                     navigationManager.navigateAndClearStack(RegisterScreens.RegisterConfirmStep)
+                }
+                else->{
+
                 }
             }
         }
@@ -207,7 +214,7 @@ fun RegisterVideoScreen(
                         enable = true,
                         title = stringResource(R.string._continue),
                         onClick = {
-                            viewModel.handle(RegisterCapturingVideoViewActions.SendVideo("FF"))
+                            viewModel.handle(RegisterCapturingVideoViewActions.SendVideo(sharedState))
                         })
                 }
             }

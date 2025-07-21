@@ -265,13 +265,31 @@ fun NavGraphBuilder.registerScreenHandler() {
             }
         }
         composable(route = RegisterScreens.RegisterVideo.route) {
+            val sharedViewModel =
+                it.navigationManager.retrieveSharedViewModel<RegisterSharedViewModel>(
+                    screen = RegisterScreens.RegisterGraph, navBackStackEntry = it
+                )
+            val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
             RegisterVideoScreen(
-                viewModel = hiltViewModel<RegisterCapturingVideoViewModel>()
-            )
+                viewModel = hiltViewModel<RegisterCapturingVideoViewModel>(),
+                sharedState.value
+            ){childState->
+                sharedViewModel.updateState {
+                    sharedState.value.copy(
+                        refId = childState
+                    )
+                }
+            }
         }
         composable(route = RegisterScreens.RegisterConfirmStep.route) {
+            val sharedViewModel =
+                it.navigationManager.retrieveSharedViewModel<RegisterSharedViewModel>(
+                    screen = RegisterScreens.RegisterGraph, navBackStackEntry = it
+                )
+            val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
             RegisterConfirmStepScreen(
                 viewModel = hiltViewModel<RegisterConfirmStepViewModel>(),
+                sharedState.value
             )
         }
         composable(route = RegisterScreens.FeeDetails.route) {

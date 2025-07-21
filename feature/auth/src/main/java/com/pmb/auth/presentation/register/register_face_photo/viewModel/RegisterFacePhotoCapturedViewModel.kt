@@ -29,6 +29,9 @@ class RegisterFacePhotoCapturedViewModel @Inject constructor(
 ) : BaseViewModel<PhotoViewActions, RegisterFacePhotoCapturedViewState, RegisterFacePhotoCapturedViewEvents>(
     initialState
 ) {
+    init {
+        cameraManager.toggleCamera()
+    }
     override fun handle(action: PhotoViewActions) {
         when (action) {
             is PhotoViewActions.RequestCameraPermission -> {

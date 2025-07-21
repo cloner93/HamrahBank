@@ -27,6 +27,7 @@ data class RegisterOpenAccountRequest(
     val seriMeli: String,
     val serialMeli: String,
     val signData: String,
+    val admittanceText :String,
     val tel: String,
     val authImage :String,
     val authVideo :String

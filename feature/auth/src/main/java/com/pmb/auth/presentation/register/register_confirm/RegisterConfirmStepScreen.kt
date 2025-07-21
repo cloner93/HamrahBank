@@ -18,6 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.pmb.auth.R
+import com.pmb.auth.presentation.register.RegisterSharedViewState
 import com.pmb.auth.presentation.register.register_confirm.viewModel.RegisterConfirmStepViewModel
 import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.base.AppContent
@@ -37,6 +38,7 @@ import com.pmb.navigation.moduleScreen.AuthScreens
 @Composable
 fun RegisterConfirmStepScreen(
     viewModel: RegisterConfirmStepViewModel,
+    sharedViewState: RegisterSharedViewState
 ) {
     val navigationManager: NavigationManager = LocalNavigationManager.current
     val viewState by viewModel.viewState.collectAsState()
@@ -55,8 +57,7 @@ fun RegisterConfirmStepScreen(
 
         }
     ) {
-        viewState.data?.authenticationStepConfirmList?.takeIf { it.isNotEmpty() }
-            ?.let { authenticationObject ->
+
                 Column(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -84,12 +85,12 @@ fun RegisterConfirmStepScreen(
                     )
                     Spacer(modifier = Modifier.size(32.dp))
                     BodyLargeText(
-                        text = stringResource(R.string.interception_number, 12345),
+                        text = stringResource(R.string.interception_number, sharedViewState.refId ?:""),
                         color = AppTheme.colorScheme.onBackgroundNeutralDefault
                     )
 
                 }
-            }
+
     }
     if (viewState.loading) {
         AppLoading()

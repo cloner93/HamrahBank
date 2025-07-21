@@ -31,6 +31,9 @@ class SignatureViewModel @Inject constructor(
     private val sendSignaturePhotoUseCase: SendSignaturePhotoUseCase,
     @ApplicationContext private val context: Context
 ) : BaseViewModel<PhotoViewActions, SignatureViewState, SignatureViewEvents>(initialSate) {
+    init {
+        cameraManager.toggleCamera()
+    }
     override fun handle(action: PhotoViewActions) {
         when (action) {
             is PhotoViewActions.RequestCameraPermission -> {

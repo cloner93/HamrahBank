@@ -42,6 +42,7 @@ private fun RegisterOpenAccountParams.mapToRequest(): RegisterOpenAccountRequest
         serialMeli = serialMeli,
         signData = signData,
         tel = tel,
+        admittanceText = admittanceText,
         authImage = authImage,
         authVideo = authVideo
     )
@@ -68,6 +69,7 @@ data class RegisterOpenAccountParams(
     val postcode: Long,
     val seriMeli: String,
     val serialMeli: String,
+    val admittanceText :String,
     val signData: String,
     val tel: String,
     val authImage :String,
