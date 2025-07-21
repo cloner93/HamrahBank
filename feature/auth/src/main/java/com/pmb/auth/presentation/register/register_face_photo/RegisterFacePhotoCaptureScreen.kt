@@ -56,7 +56,8 @@ import com.pmb.navigation.moduleScreen.RegisterScreens
 
 @Composable
 fun RegisterFacePhotoCaptureScreen(
-    viewModel: RegisterFacePhotoCapturedViewModel
+    viewModel: RegisterFacePhotoCapturedViewModel,
+    updateState:(String?)-> Unit
 ) {
     val navigationManager: NavigationManager = LocalNavigationManager.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -92,6 +93,7 @@ fun RegisterFacePhotoCaptureScreen(
         viewModel.viewEvent.collect { event ->
             when (event) {
                 RegisterFacePhotoCapturedViewEvents.FacePhotoCaptured -> {
+                    updateState(viewState.fileBase64)
                     navigationManager.navigate(RegisterScreens.RegisterVideo)
                 }
             }

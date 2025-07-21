@@ -9,15 +9,22 @@ import com.pmb.domain.model.RegisterVerifyResponse
 import com.pmb.domain.model.SendOtpRequest
 import com.pmb.domain.model.openAccount.AccountArchiveJobDocRequest
 import com.pmb.domain.model.openAccount.AccountArchiveJobDocResponse
+import com.pmb.domain.model.openAccount.FetchCommitmentRequest
+import com.pmb.domain.model.openAccount.FetchCommitmentResponse
 import com.pmb.domain.model.openAccount.GenerateCodeRequest
 import com.pmb.domain.model.openAccount.accountType.FetchAccountTypeRequest
 import com.pmb.domain.model.openAccount.accountType.FetchAccountTypeResponse
 import com.pmb.domain.model.openAccount.accountVerifyCode.VerifyCodeRequest
 import com.pmb.domain.model.openAccount.accountVerifyCode.VerifyCodeResponse
 import com.pmb.domain.model.openAccount.branchName.FetchBranchListRequest
-import com.pmb.domain.model.openAccount.branchName.FetchBranchListResponse
 import com.pmb.domain.model.openAccount.cityName.FetchCityListRequest
-import com.pmb.domain.model.openAccount.cityName.FetchCityListResponse
+import com.pmb.domain.model.openAccount.FetchAdmittanceTextResponse
+import com.pmb.domain.model.openAccount.RegisterOpenAccountRequest
+import com.pmb.domain.model.openAccount.RegisterOpenAccountResponse
+import com.pmb.domain.model.openAccount.branchName.Branch
+import com.pmb.domain.model.openAccount.cityName.City
+import com.pmb.domain.model.openAccount.comissionFee.FetchCommissionFeeResponse
+import com.pmb.domain.model.openAccount.jobLevel.JobLevel
 import com.pmb.model.SuccessData
 import com.pmb.network.NetworkManger
 import kotlinx.coroutines.flow.Flow
@@ -60,7 +67,7 @@ class AuthServiceImpl @Inject constructor(
     }
 
     override fun accountVerifyCode(
-        verificationCode: Int, nationalCode: String, mobileNo: String, idSerial: String
+        verificationCode: Int, nationalCode: String, mobileNo: String, idSerial: String?
     ): Flow<Result<SuccessData<VerifyCodeResponse>>> {
         val req = VerifyCodeRequest(
             verificationCode = verificationCode,
@@ -82,35 +89,64 @@ class AuthServiceImpl @Inject constructor(
         )
     }
 
+    override fun fetchJobLevel(): Flow<Result<SuccessData<List<JobLevel>>>> {
+        return client.request<Unit,List<JobLevel>>(
+            "openAccount/accountFetchLevelJob"
+        )
+    }
+
     override fun fetchAccountType(
-        customerType: Int, nationalCode: String, mobileNo: String
+       nationalCode: String, mobileNo: String
     ): Flow<Result<SuccessData<FetchAccountTypeResponse>>> {
         val req = FetchAccountTypeRequest(
-            customerType = customerType, nationalCode = nationalCode, mobileNo = mobileNo
+            nationalCode = nationalCode, mobileNo = mobileNo
         )
         return client.request<FetchAccountTypeRequest, FetchAccountTypeResponse>(
             "openAccount/fetchAccountType", req
         )
     }
 
-    override fun fetchCityList(stateCode: Int): Flow<Result<SuccessData<FetchCityListResponse>>> {
+    override fun fetchCityList(stateCode: Int): Flow<Result<SuccessData<List<City>>>> {
         val req = FetchCityListRequest(stateCode = stateCode)
-        return client.request<FetchCityListRequest, FetchCityListResponse>(
+        return client.request<FetchCityListRequest, List<City>>(
             "openAccount/fetchCityList", req
         )
     }
 
     override fun fetchBranchList(
-        mergeStatus: Int, stateCode: Int, cityCode: Int, organizationType: String
-    ): Flow<Result<SuccessData<FetchBranchListResponse>>> {
+        stateCode: Int, cityCode: Int
+    ): Flow<Result<SuccessData<List<Branch>>>> {
         val req = FetchBranchListRequest(
-            mergeStatus = mergeStatus,
             stateCode = stateCode,
             cityCode = cityCode,
-            organizationType = organizationType
         )
-        return client.request<FetchBranchListRequest, FetchBranchListResponse>(
+        return client.request<FetchBranchListRequest, List<Branch>>(
             "openAccount/fetchBranchList", req
+        )
+    }
+
+    override fun fetchCommitment(accType: Int): Flow<Result<SuccessData<FetchCommitmentResponse>>> {
+        val req = FetchCommitmentRequest(accType = accType)
+        return client.request<FetchCommitmentRequest,FetchCommitmentResponse>(
+            "openAccount/fetchCommitment",req
+        )
+    }
+
+    override fun fetchCommissionFee(): Flow<Result<SuccessData<FetchCommissionFeeResponse>>> {
+        return client.request<Unit, FetchCommissionFeeResponse>(
+            "openAccount/fetchCommission"
+        )
+    }
+
+    override fun fetchAdmittanceText(): Flow<Result<SuccessData<FetchAdmittanceTextResponse>>> {
+        return client.request<Unit, FetchAdmittanceTextResponse>(
+           "openAccount/fetchAdmittanceText"
+        )
+    }
+
+    override fun registerOpenAccount(registerOpenAccountRequest: RegisterOpenAccountRequest): Flow<Result<SuccessData<RegisterOpenAccountResponse>>> {
+        return client.request<RegisterOpenAccountRequest,RegisterOpenAccountResponse>(
+            "openAccount/registerRequest", registerOpenAccountRequest
         )
     }
 

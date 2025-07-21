@@ -6,8 +6,6 @@ import kotlinx.serialization.Serializable
 @SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class FetchBranchListRequest(
-    val mergeStatus: Int,
     val stateCode: Int,
     val cityCode: Int,
-    val organizationType: String
 )

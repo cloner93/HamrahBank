@@ -19,9 +19,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.pmb.auth.R
+import com.pmb.auth.presentation.register.account_opening.viewModel.OpeningAccountViewState
 import com.pmb.auth.presentation.register.national_id.viewModel.RegisterNationalIdViewActions
 import com.pmb.auth.presentation.register.national_id.viewModel.RegisterNationalIdViewEvents
 import com.pmb.auth.presentation.register.national_id.viewModel.RegisterNationalIdViewModel
+import com.pmb.auth.presentation.register.national_id.viewModel.RegisterNationalIdViewState
 import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppContent
@@ -39,16 +41,16 @@ import com.pmb.navigation.moduleScreen.RegisterScreens
 @Composable
 fun RegisterNationalIdScreen(
     viewModel: RegisterNationalIdViewModel,
+    updateState: (RegisterNationalIdViewState) -> Unit
 ) {
     val navigationManager: NavigationManager = LocalNavigationManager.current
     val viewState by viewModel.viewState.collectAsState()
-    var nationalSerialId by remember {
-        mutableStateOf("")
-    }
+
     LaunchedEffect(Unit) {
         viewModel.viewEvent.collect { event ->
             when (event) {
                 RegisterNationalIdViewEvents.RegisterNationalSucceed -> {
+                    updateState(viewState)
                     navigationManager.navigate(RegisterScreens.RegisterConfirm)
                 }
             }
@@ -67,13 +69,11 @@ fun RegisterNationalIdScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 16.dp, end = 16.dp, top = 16.dp),
-                enable = nationalSerialId.isNotEmpty() && !viewState.isLoading,
+                enable = !viewState.nationalSerialId.isNullOrEmpty() && !viewState.isLoading,
                 title = stringResource(R.string._continue),
                 onClick = {
                     viewModel.handle(
-                        RegisterNationalIdViewActions.RegisterNationalIdSerialServices(
-                            nationalSerialId
-                        )
+                        RegisterNationalIdViewActions.RegisterNationalIdSerialServices
                     )
                 })
         }
@@ -87,10 +87,10 @@ fun RegisterNationalIdScreen(
         Spacer(modifier = Modifier.size(32.dp))
         AppSingleTextField(
             modifier = Modifier.fillMaxWidth(),
-            value = nationalSerialId,
+            value = viewState.nationalSerialId ?:"",
             label = stringResource(R.string.national_id_serial_interception),
             onValueChange = {
-                nationalSerialId = it
+                viewModel.handle(RegisterNationalIdViewActions.SetNationalIdSerial(it))
             },
         )
         Spacer(modifier = Modifier.size(32.dp))

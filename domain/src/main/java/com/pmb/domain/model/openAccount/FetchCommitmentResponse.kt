@@ -1,10 +1,10 @@
-package com.pmb.domain.model.openAccount.branchName
+package com.pmb.domain.model.openAccount
 
 import android.annotation.SuppressLint
 import kotlinx.serialization.Serializable
 
 @SuppressLint("UnsafeOptInUsageError")
 @Serializable
-data class FetchBranchListResponse(
-    val branchList: List<Branch>
+data class FetchCommitmentResponse(
+    val text:String
 )

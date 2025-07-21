@@ -57,7 +57,8 @@ import com.pmb.navigation.moduleScreen.RegisterScreens
 
 @Composable
 fun SignatureScreen(
-    viewModel: SignatureViewModel
+    viewModel: SignatureViewModel,
+    updateState:(String?)->Unit
 ) {
     val navigationManager: NavigationManager = LocalNavigationManager.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -89,6 +90,7 @@ fun SignatureScreen(
         viewModel.viewEvent.collect { event ->
             when (event) {
                 SignatureViewEvents.SignaturePhotoCaptured -> {
+                    updateState(viewState.fileBase64)
                     navigationManager.navigate(RegisterScreens.AuthenticationSelectServices)
                 }
             }

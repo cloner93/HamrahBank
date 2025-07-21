@@ -33,7 +33,8 @@ import com.pmb.navigation.moduleScreen.RegisterScreens
 
 @Composable
 fun CheckPostalCodeScreen(
-    viewModel: CheckPostalCodeViewModel
+    viewModel: CheckPostalCodeViewModel,
+    updateState:(String,String)-> Unit
 ) {
     val navigationManager: NavigationManager = LocalNavigationManager.current
     val viewState by viewModel.viewState.collectAsState()
@@ -74,6 +75,7 @@ fun CheckPostalCodeScreen(
                 enable = !viewState.isLoading && address.isNotEmpty() && postalCode.isNotEmpty(),
                 title = stringResource(R.string._continue),
                 onClick = {
+                    updateState(postalCode, address)
                     viewModel.handle(
                         CheckPostalCodeViewActions.CheckAddress(postalCode, address)
                     )

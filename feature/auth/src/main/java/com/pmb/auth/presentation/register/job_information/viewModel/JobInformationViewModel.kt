@@ -1,18 +1,22 @@
 package com.pmb.auth.presentation.register.job_information.viewModel
 
+import android.content.Context
 import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.viewModelScope
-import com.pmb.auth.domain.register.job_information.entity.JobInformationParam
-import com.pmb.auth.domain.register.job_information.useCase.GetAnnualIncomePrediction
-import com.pmb.auth.domain.register.job_information.useCase.SendJobInformationUseCase
 import com.pmb.core.fileManager.FileManager
 import com.pmb.core.permissions.PermissionDispatcher
 import com.pmb.core.platform.AlertModelState
 import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.platform.Result
+import com.pmb.core.utils.Base64FileHelper
+import com.pmb.domain.usecae.auth.openAccount.AccountArchiveJobDocParams
+import com.pmb.domain.usecae.auth.openAccount.AccountArchiveJobDocUseCase
+import com.pmb.domain.usecae.auth.openAccount.FetchLevelJobUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,14 +24,15 @@ import javax.inject.Inject
 @HiltViewModel
 class JobInformationViewModel @Inject constructor(
     initialState: JobInformationViewState,
-    private val getAnnualIncomePrediction: GetAnnualIncomePrediction,
-    private val sendJobInformationUseCase: SendJobInformationUseCase,
+    private val accountArchiveJobDocUseCase: AccountArchiveJobDocUseCase,
     private val permissionDispatcher: PermissionDispatcher,
-    private val fileManager: FileManager
+    private val fileManager: FileManager,
+    @ApplicationContext private val context: Context
 ) :
     BaseViewModel<JobInformationViewActions, JobInformationViewState, JobInformationViewEvents>(
         initialState
     ) {
+
     override fun handle(action: JobInformationViewActions) {
         when (action) {
             is JobInformationViewActions.ClearAlert -> {
@@ -42,14 +47,6 @@ class JobInformationViewModel @Inject constructor(
                 handleSetJobInformation(action)
             }
 
-            is JobInformationViewActions.GetAnnualIncomePrediction -> {
-                handleGetAnnualIncomePrediction()
-            }
-
-            is JobInformationViewActions.SendJonInformation -> {
-                handleSendJobInformation(action)
-            }
-
             is JobInformationViewActions.RequestCameraPermission -> {
                 requestCameraPermission(action)
             }
@@ -61,9 +58,83 @@ class JobInformationViewModel @Inject constructor(
             is JobInformationViewActions.ClearPhoto -> {
                 clearPhoto()
             }
+
             is JobInformationViewActions.GetFileFromStorage -> {
                 handleGetFileFromStorage(action.fileUri)
             }
+
+            is JobInformationViewActions.SetAnnualIncome -> {
+                handleSetAnnualIncome(action)
+            }
+
+            is JobInformationViewActions.UploadArchiveDoc -> {
+                handleUploadArchiveJob(action)
+            }
+        }
+    }
+
+
+    private fun handleUploadArchiveJob(action: JobInformationViewActions.UploadArchiveDoc) {
+        viewModelScope.launch {
+            val file = viewState.value.fileUri?.let {
+                Base64FileHelper.encodeToBase64(
+                    context,
+                    it,
+                    viewModelScope
+                )
+            }
+            file?.let {
+                accountArchiveJobDocUseCase.invoke(
+                    AccountArchiveJobDocParams(
+                        file = file.await(),
+                        nationalCode = action.nationalCode
+                    )
+                ).collectLatest { result ->
+                    when (result) {
+                        is Result.Loading -> {
+                            setState {
+                                it.copy(
+                                    isLoading = true
+                                )
+                            }
+                        }
+
+                        is Result.Success -> {
+                            setState {
+                                it.copy(
+                                    isLoading = false
+                                )
+                            }
+                            postEvent(JobInformationViewEvents.SendJobInformationSucceed)
+                        }
+
+                        is Result.Error -> {
+                            setState {
+                                it.copy(
+                                    isLoading = false,
+                                    alertModelState = AlertModelState.Dialog(
+                                        title = "خطا",
+                                        description = " ${result.message}",
+                                        positiveButtonTitle = "تایید",
+                                        onPositiveClick = {
+                                            setState { state -> state.copy(alertModelState = null) }
+                                        }
+                                    )
+                                )
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+    }
+
+    private fun handleSetAnnualIncome(action: JobInformationViewActions.SetAnnualIncome) {
+        setState {
+            it.copy(
+                data = action.annualIncomeType
+            )
         }
     }
 
@@ -74,7 +145,7 @@ class JobInformationViewModel @Inject constructor(
             fileName = fileName,
             fileManager = fileManager
         )
-        if (success){
+        if (success) {
             setState {
                 it.copy(
                     fileUri = uri,
@@ -157,92 +228,5 @@ class JobInformationViewModel @Inject constructor(
 
     }
 
-    private fun handleGetAnnualIncomePrediction() {
-        viewModelScope.launch {
-            getAnnualIncomePrediction.invoke(Unit).collect { result ->
-                when (result) {
-                    is Result.Loading -> {
-                        setState {
-                            it.copy(
-                                isLoading = true
-                            )
-                        }
-                    }
 
-                    is Result.Error -> {
-                        setState {
-                            it.copy(
-                                isLoading = false, alertModelState = AlertModelState.Dialog(
-                                    title = "خطا",
-                                    description = " ${result.message}",
-                                    positiveButtonTitle = "تایید",
-                                    onPositiveClick = {
-                                        setState { state -> state.copy(alertModelState = null) }
-                                    }
-                                )
-                            )
-                        }
-                    }
-
-                    is Result.Success -> {
-                        setState {
-                            it.copy(
-                                isLoading = false,
-                                data = result.data
-                            )
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private fun handleSendJobInformation(action: JobInformationViewActions.SendJonInformation) {
-        viewModelScope.launch {
-            sendJobInformationUseCase.invoke(
-                JobInformationParam(
-                    annualIncomeId = action.annualId,
-                    jobId = action.jobId
-                )
-            ).collect { result ->
-                when (result) {
-                    is Result.Loading -> {
-                        setState {
-                            it.copy(
-                                isLoading = true
-                            )
-                        }
-                    }
-
-                    is Result.Error -> {
-                        setState {
-                            it.copy(
-                                isLoading = false, alertModelState = AlertModelState.Dialog(
-                                    title = "خطا",
-                                    description = " ${result.message}",
-                                    positiveButtonTitle = "تایید",
-                                    onPositiveClick = {
-                                        setState { state -> state.copy(alertModelState = null) }
-                                    }
-                                )
-                            )
-                        }
-                    }
-
-                    is Result.Success -> {
-                        setState {
-                            it.copy(
-                                isLoading = false,
-                            )
-                        }
-                        postEvent(JobInformationViewEvents.SendJobInformationSucceed)
-                    }
-                }
-            }
-        }
-    }
-
-    init {
-        handle(JobInformationViewActions.GetAnnualIncomePrediction)
-    }
 }

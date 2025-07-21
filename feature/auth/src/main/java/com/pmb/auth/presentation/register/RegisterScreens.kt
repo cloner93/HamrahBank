@@ -1,5 +1,6 @@
 package com.pmb.auth.presentation.register
 
+import android.util.Log
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
@@ -8,7 +9,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import androidx.navigation.navigation
-import com.pmb.auth.presentation.first_login_confirm.viewModel.FirstLoginConfirmViewModel
 import com.pmb.auth.presentation.register.account_opening.AccountOpeningScreen
 import com.pmb.auth.presentation.register.account_opening.viewModel.OpeningAccountViewModel
 import com.pmb.auth.presentation.register.authentication_information.AuthenticationInformationScreen
@@ -31,6 +31,8 @@ import com.pmb.auth.presentation.register.register_confirm.RegisterConfirmStepSc
 import com.pmb.auth.presentation.register.register_confirm.viewModel.RegisterConfirmStepViewModel
 import com.pmb.auth.presentation.register.register_face_photo.RegisterFacePhotoCaptureScreen
 import com.pmb.auth.presentation.register.register_face_photo.viewModel.RegisterFacePhotoCapturedViewModel
+import com.pmb.auth.presentation.register.register_verify.RegisterConfirmScreen
+import com.pmb.auth.presentation.register.register_verify.viewModel.RegisterConfirmViewModel
 import com.pmb.auth.presentation.register.register_video.RegisterVideoScreen
 import com.pmb.auth.presentation.register.register_video.viewModel.RegisterCapturingVideoViewModel
 import com.pmb.auth.presentation.register.search_opening_branch.SearchOpeningBranchScreen
@@ -40,7 +42,6 @@ import com.pmb.auth.presentation.register.select_job_information.viewModel.Selec
 import com.pmb.auth.presentation.register.signature.SignatureScreen
 import com.pmb.auth.presentation.register.signature.viewModel.SignatureViewModel
 import com.pmb.navigation.manager.navigationManager
-import com.pmb.navigation.moduleScreen.AuthScreens
 import com.pmb.navigation.moduleScreen.RegisterScreens
 
 fun NavGraphBuilder.registerScreenHandler() {
@@ -63,19 +64,36 @@ fun NavGraphBuilder.registerScreenHandler() {
                 viewModel = hiltViewModel<OpeningAccountViewModel>(),
                 sharedState = sharedState
             ) { childState ->
-                childState.phoneNumber?.let { it1 ->
-                    sharedViewModel.updateState {
-                        sharedState.value.copy(
-                            phoneNumber = it1,
-                        )
-                    }
+                Log.d("Masoud Tag", "registerScreenHandler: $childState")
+                sharedViewModel.updateState {
+                    sharedState.value.copy(
+                        mobileNo = childState.phoneNumber,
+                        nationalCode = childState.nationalId,
+                        birthDate = "${childState.birthDateYear}${childState.birthDateMonth}${childState.birthDateDay}",
+                    )
                 }
             }
         }
         composable(route = RegisterScreens.RegisterNationalId.route) {
+            val sharedViewModel =
+                it.navigationManager.retrieveSharedViewModel<RegisterSharedViewModel>(
+                    screen = RegisterScreens.RegisterGraph, navBackStackEntry = it
+                )
+            val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
             RegisterNationalIdScreen(
                 viewModel = hiltViewModel<RegisterNationalIdViewModel>(),
-            )
+            ) { childState ->
+                Log.d("Masoud Tag", "registerScreenHandler child state : $childState")
+                Log.d("Masoud Tag", "registerScreenHandler shared state : $sharedState")
+                childState.nationalSerialId?.let { serial ->
+                    sharedViewModel.updateState {
+                        sharedState.value.copy(
+                            seriMeli = serial.substring(0, 2),
+                            serialMeli = serial.substring(2, 10)
+                        )
+                    }
+                }
+            }
         }
         composable(route = RegisterScreens.RegisterConfirm.route) {
             val sharedViewModel =
@@ -83,20 +101,61 @@ fun NavGraphBuilder.registerScreenHandler() {
                     screen = RegisterScreens.RegisterGraph, navBackStackEntry = it
                 )
             val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
+            Log.d("Masoud Tag", "registerScreenHandler shared state : $sharedState")
+
             RegisterConfirmScreen(
                 sharedState = sharedState,
-                viewModel = hiltViewModel<FirstLoginConfirmViewModel>(),
-            )
+                viewModel = hiltViewModel<RegisterConfirmViewModel>(),
+            ) { childState ->
+                Log.d("Masoud Tag", "registerScreenHandler child state : $childState")
+                sharedViewModel.updateState {
+                    sharedState.value.copy(
+                        verifyCodeResponse = childState.verifyCodeResponse
+                    )
+                }
+            }
         }
         composable(route = RegisterScreens.AuthenticationInformation.route) {
+            val sharedViewModel =
+                it.navigationManager.retrieveSharedViewModel<RegisterSharedViewModel>(
+                    screen = RegisterScreens.RegisterGraph, navBackStackEntry = it
+                )
+            val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
             AuthenticationInformationScreen(
-                viewModel = hiltViewModel<AuthenticationInformationViewModel>()
-            )
+                viewModel = hiltViewModel<AuthenticationInformationViewModel>(),
+                sharedState
+            ) { childState ->
+                sharedViewModel.updateState {
+                    sharedState.value.copy(
+                        birthCityCode = childState.birthDatePlace?.cityCode,
+                        tel = childState.tel,
+                        education = childState.education?.id,
+                        issueCityCode = childState.issuePlace?.cityCode,
+                        issueRgnCode = childState.issuePlace?.provinceCode,
+                        issueDate = "${childState.issueDateYear}${childState.issueDateMonth}${childState.issueDateDay}"
+                    )
+                }
+            }
         }
         composable(route = RegisterScreens.JobInformation.route) {
+            val sharedViewModel =
+                it.navigationManager.retrieveSharedViewModel<RegisterSharedViewModel>(
+                    screen = RegisterScreens.RegisterGraph, navBackStackEntry = it
+                )
+            val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
             JobInformationScreen(
-                viewModel = hiltViewModel<JobInformationViewModel>()
-            )
+                viewModel = hiltViewModel<JobInformationViewModel>(),
+                sharedState
+            ) { childState ->
+                childState.data?.let { it1 ->
+                    sharedViewModel.updateState {
+                        sharedState.value.copy(
+                            jobCode = childState.jobInformation?.jobCode,
+                            cinCpId = it1.incomePredictId
+                        )
+                    }
+                }
+            }
         }
         composable(route = RegisterScreens.SelectJobInformation.route) {
             SelectJobInformationScreen(
@@ -104,55 +163,133 @@ fun NavGraphBuilder.registerScreenHandler() {
             )
         }
         composable(route = RegisterScreens.CheckPostalCode.route) {
+            val sharedViewModel =
+                it.navigationManager.retrieveSharedViewModel<RegisterSharedViewModel>(
+                    screen = RegisterScreens.RegisterGraph, navBackStackEntry = it
+                )
+            val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
             CheckPostalCodeScreen(
                 viewModel = hiltViewModel<CheckPostalCodeViewModel>()
-            )
+            ) { post, address ->
+                sharedViewModel.updateState {
+                    sharedState.value.copy(
+                        postcode = post.toLong(),
+                        address = address
+                    )
+                }
+            }
         }
         composable(route = RegisterScreens.DepositInformation.route) {
+            val sharedViewModel =
+                it.navigationManager.retrieveSharedViewModel<RegisterSharedViewModel>(
+                    screen = RegisterScreens.RegisterGraph, navBackStackEntry = it
+                )
+            val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
             DepositInformationScreen(
-                viewModel = hiltViewModel<DepositInformationViewModel>()
-            )
+                viewModel = hiltViewModel<DepositInformationViewModel>(),
+                sharedState.value
+            ) { childState ->
+                sharedViewModel.updateState {
+                    sharedState.value.copy(
+                        accType = childState.accType?.accountType,
+                        branch = branch
+                    )
+                }
+            }
         }
         composable(
-            route = RegisterScreens.SearchOpeningBranch.route,
-            deepLinks = listOf(navDeepLink {
-                uriPattern = "myapp://search_opening_branch/{provinceName}/{cityName}/{cityId}"
-            }),
-            arguments = listOf(
-                navArgument("cityId") { type = NavType.IntType },
+            route = RegisterScreens.SearchOpeningBranch.route, deepLinks = listOf(navDeepLink {
+                uriPattern =
+                    "myapp://search_opening_branch/{provinceCode}/{provinceName}/{cityName}/{cityId}"
+            }), arguments = listOf(
+                navArgument("provinceCode") { type = NavType.IntType },
+                navArgument("provinceName") { type = NavType.StringType },
                 navArgument("cityName") { type = NavType.StringType },
-                navArgument("provinceName") { type = NavType.StringType })
+                navArgument("cityId") { type = NavType.IntType },
+            )
         ) {
             SearchOpeningBranchScreen(
                 viewModel = hiltViewModel<SearchOpeningBranchViewModel>()
             )
         }
         composable(route = RegisterScreens.Signature.route) {
+            val sharedViewModel =
+                it.navigationManager.retrieveSharedViewModel<RegisterSharedViewModel>(
+                    screen = RegisterScreens.RegisterGraph, navBackStackEntry = it
+                )
+            val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
             SignatureScreen(
                 viewModel = hiltViewModel<SignatureViewModel>()
-            )
+            ) { childState ->
+                sharedViewModel.updateState {
+                    sharedState.value.copy(
+                        signData = childState
+                    )
+                }
+            }
         }
         composable(route = RegisterScreens.AuthenticationSelectServices.route) {
+            val sharedViewModel =
+                it.navigationManager.retrieveSharedViewModel<RegisterSharedViewModel>(
+                    screen = RegisterScreens.RegisterGraph, navBackStackEntry = it
+                )
+            val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
             AuthenticationSelectServicesScreen(
                 viewModel = hiltViewModel<AuthenticationSelectServicesViewModel>()
-            )
+            ) { childState ->
+                sharedViewModel.updateState {
+                    sharedState.value.copy(
+                        cardReq = if (childState.localData?.selectServicesList?.findLast { id == 1 }?.isChecked?.value == true) 1 else 0,
+                        intBankReq = if (childState.localData?.selectServicesList?.findLast { id == 0 }?.isChecked?.value == true) 1 else 0
+                    )
+                }
+            }
         }
         composable(route = RegisterScreens.RegisterAuthentication.route) {
             RegisterAuthenticationScreen()
         }
         composable(route = RegisterScreens.RegisterFacePhotoCapture.route) {
+            val sharedViewModel =
+                it.navigationManager.retrieveSharedViewModel<RegisterSharedViewModel>(
+                    screen = RegisterScreens.RegisterGraph, navBackStackEntry = it
+                )
+            val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
             RegisterFacePhotoCaptureScreen(
                 viewModel = hiltViewModel<RegisterFacePhotoCapturedViewModel>()
-            )
+            ){childState->
+                sharedViewModel.updateState {
+                    sharedState.value.copy(
+                        authImage = childState
+                    )
+                }
+            }
         }
         composable(route = RegisterScreens.RegisterVideo.route) {
+            val sharedViewModel =
+                it.navigationManager.retrieveSharedViewModel<RegisterSharedViewModel>(
+                    screen = RegisterScreens.RegisterGraph, navBackStackEntry = it
+                )
+            val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
             RegisterVideoScreen(
-                viewModel = hiltViewModel<RegisterCapturingVideoViewModel>()
-            )
+                viewModel = hiltViewModel<RegisterCapturingVideoViewModel>(),
+                sharedState.value
+            ){childState->
+                sharedViewModel.updateState {
+                    sharedState.value.copy(
+                        refId = childState
+                    )
+                }
+            }
         }
         composable(route = RegisterScreens.RegisterConfirmStep.route) {
+            val sharedViewModel =
+                it.navigationManager.retrieveSharedViewModel<RegisterSharedViewModel>(
+                    screen = RegisterScreens.RegisterGraph, navBackStackEntry = it
+                )
+            val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
             RegisterConfirmStepScreen(
                 viewModel = hiltViewModel<RegisterConfirmStepViewModel>(),
+                sharedState.value
             )
         }
         composable(route = RegisterScreens.FeeDetails.route) {
@@ -160,7 +297,7 @@ fun NavGraphBuilder.registerScreenHandler() {
                 viewModel = hiltViewModel<FeeDetailsViewModel>()
             )
         }
-        composable (route = RegisterScreens.RegisterChooseCard.route){
+        composable(route = RegisterScreens.RegisterChooseCard.route) {
             ChooseCardScreen()
         }
     }

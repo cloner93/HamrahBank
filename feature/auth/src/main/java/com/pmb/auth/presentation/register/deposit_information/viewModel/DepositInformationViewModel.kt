@@ -1,28 +1,29 @@
 package com.pmb.auth.presentation.register.deposit_information.viewModel
 
 import androidx.lifecycle.viewModelScope
-import com.pmb.auth.domain.register.deposit_information.entity.BranchCityParams
-import com.pmb.auth.domain.register.deposit_information.entity.SendDepositInformationParams
-import com.pmb.auth.domain.register.deposit_information.useCase.BranchCityUseCase
-import com.pmb.auth.domain.register.deposit_information.useCase.DepositInformationUseCase
-import com.pmb.auth.domain.register.deposit_information.useCase.SendDepositInformationUseCase
 import com.pmb.core.platform.AlertModelState
 import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.platform.Result
+import com.pmb.domain.usecae.auth.openAccount.FetchAccountTypeParams
+import com.pmb.domain.usecae.auth.openAccount.FetchAccountTypeUseCase
+import com.pmb.domain.usecae.auth.openAccount.FetchCityListParams
+import com.pmb.domain.usecae.auth.openAccount.FetchCityListUseCase
+import com.pmb.domain.usecae.auth.openAccount.FetchCommitmentParams
+import com.pmb.domain.usecae.auth.openAccount.FetchCommitmentUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class DepositInformationViewModel @Inject constructor(
     initialState: DepositInformationViewState,
-    private val branchCityUseCase: BranchCityUseCase,
-    private val depositInformationUseCase: DepositInformationUseCase,
-    private val sendDepositInformationUseCase: SendDepositInformationUseCase,
-) :
-    BaseViewModel<DepositInformationViewActions, DepositInformationViewState, DepositInformationViewEvents>(
-        initialState
-    ) {
+    private val fetchAccountTypeUseCase: FetchAccountTypeUseCase,
+    private val fetchCityListUseCase: FetchCityListUseCase,
+    private val fetchCommitmentUseCase: FetchCommitmentUseCase
+) : BaseViewModel<DepositInformationViewActions, DepositInformationViewState, DepositInformationViewEvents>(
+    initialState
+) {
     override fun handle(action: DepositInformationViewActions) {
         when (action) {
             is DepositInformationViewActions.ClearAlert -> {
@@ -33,31 +34,136 @@ class DepositInformationViewModel @Inject constructor(
                 }
             }
 
-            is DepositInformationViewActions.GetBranchCity -> {
-                handleBranchCity(action)
+            is DepositInformationViewActions.SetAccountType -> {
+                setState {
+                    it.copy(
+                        accType = action.accType
+                    )
+                }
             }
 
-            is DepositInformationViewActions.GetDepositInformation -> {
-                handleDepositInformation()
+            is DepositInformationViewActions.SetProvince -> {
+                setState {
+                    it.copy(
+                        province = action.province
+                    )
+                }
+                viewModelScope.launch {
+                    delay(50)
+                    handleFetchCityList(action.province.provinceCode)
+                }
             }
 
-            is DepositInformationViewActions.SetCityId -> {
-                handleSetCityId(action)
-            }
-
-            is DepositInformationViewActions.SendDepositInformation -> {
-                handleSendDepositInformation(action)
-            }
-
-            is DepositInformationViewActions.DepositType -> {
-                handleDepositType(action)
+            is DepositInformationViewActions.FetchAccountType -> {
+                handleFetchAccountType(action)
             }
 
             is DepositInformationViewActions.SetOpeningBranch -> {
                 handleSetOpeningBranch(action)
             }
-            is DepositInformationViewActions.SelectRules ->{
+
+            is DepositInformationViewActions.SetCity -> {
+                setState {
+                    it.copy(
+                        city = action.city
+                    )
+                }
+            }
+
+            is DepositInformationViewActions.SelectRules -> {
                 handleSelectRules()
+            }
+
+            is DepositInformationViewActions.FetchCommitment -> {
+                handleFetchCommitment()
+            }
+        }
+    }
+
+    private fun handleFetchCommitment() {
+        viewModelScope.launch {
+            viewState.value.accType?.let {
+                fetchCommitmentUseCase.invoke(
+                    FetchCommitmentParams(it.accountType)
+                ).collect { result ->
+                    when (result) {
+                        is Result.Success -> {
+                            setState {
+                                it.copy(
+                                    isLoading = false, commitmentText = result.data.text
+                                )
+                            }
+                            postEvent(DepositInformationViewEvents.GetCommitmentTextSucceed)
+                        }
+
+                        is Result.Loading -> {
+                            setState {
+                                it.copy(
+                                    isLoading = true
+                                )
+                            }
+                        }
+
+                        is Result.Error -> {
+                            setState {
+                                it.copy(
+                                    isLoading = false, alertModelState = AlertModelState.Dialog(
+                                    title = "خطا",
+                                    description = result.message,
+                                    positiveButtonTitle = "تایید",
+                                    onPositiveClick = {
+                                        setState { state -> state.copy(alertModelState = null) }
+                                    }))
+                            }
+                        }
+
+                    }
+
+                }
+            }
+        }
+    }
+
+
+    private fun handleFetchCityList(provinceCode: Int) {
+        viewModelScope.launch {
+            fetchCityListUseCase.invoke(
+                params = FetchCityListParams(
+                    stateCode = provinceCode
+                )
+            ).collect { result ->
+                when (result) {
+                    is Result.Success -> {
+                        setState {
+                            it.copy(
+                                isLoading = false,
+                                cityList = result.data,
+                            )
+                        }
+                    }
+
+                    is Result.Loading -> {
+                        setState {
+                            it.copy(
+                                isLoading = true
+                            )
+                        }
+                    }
+
+                    is Result.Error -> {
+                        setState {
+                            it.copy(
+                                isLoading = false, alertModelState = AlertModelState.Dialog(
+                                title = "خطا",
+                                description = result.message,
+                                positiveButtonTitle = "تایید",
+                                onPositiveClick = {
+                                    setState { state -> state.copy(alertModelState = null) }
+                                }))
+                        }
+                    }
+
+                }
             }
         }
     }
@@ -70,200 +176,54 @@ class DepositInformationViewModel @Inject constructor(
         }
     }
 
-    private fun handleSetCityId(action: DepositInformationViewActions.SetCityId) {
-        setState {
-            it.copy(
-                sendDepositInformationParams = it.sendDepositInformationParams?.copy(
-                    branchCity = action.cityId
-                ) ?: run {
-                    SendDepositInformationParams(
-                        branchProvince = null,
-                        openingBranch = null,
-                        branchCity = action.cityId,
-                        depositType = null
-                    )
+    private fun handleFetchAccountType(action: DepositInformationViewActions.FetchAccountType) {
+        viewModelScope.launch {
+            fetchAccountTypeUseCase.invoke(
+                params = FetchAccountTypeParams(
+                    nationalCode = action.nationalCode, mobileNo = action.mobileNo
+                )
+            ).collect { result ->
+                when (result) {
+                    is Result.Success -> {
+                        setState {
+                            it.copy(
+                                isLoading = false, fetchAccountTypeResponse = result.data
+                            )
+                        }
+                    }
+
+                    is Result.Loading -> {
+                        setState {
+                            it.copy(
+                                isLoading = true
+                            )
+                        }
+                    }
+
+                    is Result.Error -> {
+                        setState {
+                            it.copy(
+                                isLoading = false, alertModelState = AlertModelState.Dialog(
+                                title = "خطا",
+                                description = result.message,
+                                positiveButtonTitle = "تایید",
+                                onPositiveClick = {
+                                    setState { state -> state.copy(alertModelState = null) }
+                                }))
+                        }
+                    }
+
                 }
-            )
+            }
         }
     }
+
     private fun handleSetOpeningBranch(action: DepositInformationViewActions.SetOpeningBranch) {
         setState {
             it.copy(
-                openedBranch = action.openingBranchId,
-                sendDepositInformationParams = it.sendDepositInformationParams?.copy(
-                    openingBranch = action.openingBranchId.id
-                ) ?: run {
-                    SendDepositInformationParams(
-                        branchCity = null,
-                        branchProvince = null,
-                        openingBranch = action.openingBranchId.id,
-                        depositType = null
-                    )
-                }
+                branch = action.openingBranchId
             )
         }
     }
 
-    private fun handleDepositType(action: DepositInformationViewActions.DepositType) {
-        setState {
-            it.copy(
-                sendDepositInformationParams = it.sendDepositInformationParams?.copy(
-                    depositType = action.depositType
-                ) ?: run {
-                    SendDepositInformationParams(
-                        branchCity = null,
-                        branchProvince = null,
-                        openingBranch = null,
-                        depositType = action.depositType
-                    )
-                }
-            )
-        }
-    }
-
-    private fun handleSendDepositInformation(action: DepositInformationViewActions.SendDepositInformation) {
-        viewModelScope.launch {
-            sendDepositInformationUseCase.invoke(
-                action.sendDepositInformationParams
-            ).collect { result ->
-                when (result) {
-                    is Result.Loading -> {
-                        setState {
-                            it.copy(
-                                isLoading = true
-                            )
-                        }
-                    }
-
-                    is Result.Error -> {
-                        setState {
-                            it.copy(
-                                isLoading = false,
-                                alertModelState = AlertModelState.Dialog(
-                                    title = "خطا",
-                                    description = " ${result.message}",
-                                    positiveButtonTitle = "تایید",
-                                    onPositiveClick = {
-                                        setState { state -> state.copy(alertModelState = null) }
-                                    }
-                                )
-
-                            )
-                        }
-                    }
-
-                    is Result.Success -> {
-                        setState {
-                            it.copy(
-                                isLoading = false,
-                            )
-                        }
-                        postEvent(DepositInformationViewEvents.SendDepositInformationSucceeded)
-                    }
-                }
-
-            }
-        }
-    }
-
-    private fun handleBranchCity(action: DepositInformationViewActions.GetBranchCity) {
-        viewModelScope.launch {
-            branchCityUseCase.invoke(
-                BranchCityParams(id = action.provinceId)
-            ).collect { result ->
-                when (result) {
-                    is Result.Loading -> {
-                        setState {
-                            it.copy(
-                                isLoading = true
-                            )
-                        }
-                    }
-
-                    is Result.Error -> {
-                        setState {
-                            it.copy(
-                                isLoading = false,
-                                alertModelState = AlertModelState.Dialog(
-                                    title = "خطا",
-                                    description = " ${result.message}",
-                                    positiveButtonTitle = "تایید",
-                                    onPositiveClick = {
-                                        setState { state -> state.copy(alertModelState = null) }
-                                    }
-                                )
-
-                            )
-                        }
-                    }
-
-                    is Result.Success -> {
-                        setState {
-                            it.copy(
-                                isLoading = false,
-                                branchCity = result.data,
-                                sendDepositInformationParams = it.sendDepositInformationParams?.copy(
-                                    branchProvince = action.provinceId
-                                ) ?: run {
-                                    SendDepositInformationParams(
-                                        branchProvince = action.provinceId,
-                                        branchCity = null,
-                                        openingBranch = null,
-                                        depositType = null
-                                    )
-                                }
-                            )
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-
-    private fun handleDepositInformation() {
-        viewModelScope.launch {
-            depositInformationUseCase.invoke(Unit).collect { result ->
-                when (result) {
-                    is Result.Loading -> {
-                        setState {
-                            it.copy(
-                                isLoading = true
-                            )
-                        }
-                    }
-
-                    is Result.Error -> {
-                        setState {
-                            it.copy(
-                                isLoading = false,
-                                alertModelState = AlertModelState.Dialog(
-                                    title = "خطا",
-                                    description = " ${result.message}",
-                                    positiveButtonTitle = "تایید",
-                                    onPositiveClick = {
-                                        setState { state -> state.copy(alertModelState = null) }
-                                    }
-                                )
-
-                            )
-                        }
-                    }
-
-                    is Result.Success -> {
-                        setState {
-                            it.copy(
-                                isLoading = false, depositInformation = result.data
-                            )
-                        }
-                    }
-                }
-
-            }
-        }
-    }
-
-    init {
-        handle(DepositInformationViewActions.GetDepositInformation)
-    }
 }

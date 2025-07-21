@@ -12,7 +12,6 @@ class FetchAccountTypeUseCase @Inject constructor(
 ) : BaseUseCase<FetchAccountTypeParams, FetchAccountTypeResponse>() {
     override suspend fun execute(params: FetchAccountTypeParams): Flow<Result<FetchAccountTypeResponse>> {
         return authRepository.fetchAccountType(
-            customerType = params.customerType,
             nationalCode = params.nationalCode,
             mobileNo = params.mobileNo
         )
@@ -20,5 +19,5 @@ class FetchAccountTypeUseCase @Inject constructor(
 }
 
 data class FetchAccountTypeParams(
-    val customerType: Int, val nationalCode: String, val mobileNo: String
+     val nationalCode: String, val mobileNo: String
 )

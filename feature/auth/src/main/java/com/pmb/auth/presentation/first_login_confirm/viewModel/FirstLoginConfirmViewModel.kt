@@ -1,6 +1,5 @@
 package com.pmb.auth.presentation.first_login_confirm.viewModel
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.pmb.auth.utils.startCountDown
 import com.pmb.core.platform.AlertModelState
@@ -28,15 +27,9 @@ class FirstLoginConfirmViewModel @Inject constructor(
     initialState: FirstLoginConfirmViewState,
     private val firstLoginUseCase: FirstLoginUseCase,
     private val firstLoginConfirmUseCase: FirstLoginConfirmUseCase,
-    savedStateHandle: SavedStateHandle
 ) : BaseViewModel<FirstLoginConfirmViewActions, FirstLoginConfirmViewState, FirstLoginConfirmViewEvents>(
     initialState
 ) {
-//    private val mobileNumber = savedStateHandle.get<String>("mobileNumber")
-//    private val username = savedStateHandle.get<String>("username")
-//    private val password = savedStateHandle.get<String>("password")
-
-
     private var timerDurationInterval: Long = 120000L
     private var otpTryingStack = 0
     override fun handle(action: FirstLoginConfirmViewActions) {

@@ -27,11 +27,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.pmb.auth.R
-import com.pmb.auth.domain.register.search_opening_branch.entity.OpeningBranch
+import com.pmb.auth.presentation.register.RegisterSharedViewState
 import com.pmb.auth.presentation.register.deposit_information.viewModel.DepositInformationViewActions
 import com.pmb.auth.presentation.register.deposit_information.viewModel.DepositInformationViewEvents
 import com.pmb.auth.presentation.register.deposit_information.viewModel.DepositInformationViewModel
+import com.pmb.auth.presentation.register.deposit_information.viewModel.DepositInformationViewState
 import com.pmb.ballon.component.AlertComponent
+import com.pmb.ballon.component.CustomSearchSpinner
 import com.pmb.ballon.component.CustomSpinner
 import com.pmb.ballon.component.RoundedCornerCheckboxComponent
 import com.pmb.ballon.component.base.AppButton
@@ -44,6 +46,7 @@ import com.pmb.ballon.component.base.ClickableIcon
 import com.pmb.ballon.component.base.IconType
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.core.utils.CollectAsEffect
+import com.pmb.domain.model.openAccount.branchName.Branch
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.manager.NavigationManager
 import com.pmb.navigation.moduleScreen.RegisterScreens
@@ -51,9 +54,21 @@ import com.pmb.navigation.moduleScreen.RegisterScreens
 @Composable
 fun DepositInformationScreen(
     viewModel: DepositInformationViewModel,
+    sharedViewState: RegisterSharedViewState,
+    updateSharedState: (DepositInformationViewState) -> Unit
 ) {
     val navigationManager: NavigationManager = LocalNavigationManager.current
     val viewState by viewModel.viewState.collectAsState()
+    var city by remember { mutableStateOf("") }
+    var province by remember { mutableStateOf("") }
+    LaunchedEffect(Unit) {
+        if (viewState.fetchAccountTypeResponse == null)
+            viewModel.handle(
+                DepositInformationViewActions.FetchAccountType(
+                    sharedViewState.nationalCode ?: "", sharedViewState.mobileNo ?: ""
+                )
+            )
+    }
     var showBottomSheet by remember { mutableStateOf(false) }
     BackHandler {
         if (showBottomSheet) {
@@ -65,14 +80,14 @@ fun DepositInformationScreen(
     LaunchedEffect(Unit) {
         viewModel.viewEvent.collect { event ->
             when (event) {
-                DepositInformationViewEvents.SendDepositInformationSucceeded -> {
-                    navigationManager.navigate(RegisterScreens.Signature)
+                DepositInformationViewEvents.GetCommitmentTextSucceed -> {
+                    showBottomSheet = true
                 }
             }
         }
     }
 
-    navigationManager.getCurrentScreenFlowData<OpeningBranch?>(
+    navigationManager.getCurrentScreenFlowData<Branch?>(
         "openingBranch",
         null
     )?.CollectAsEffect {
@@ -99,7 +114,7 @@ fun DepositInformationScreen(
                         .fillMaxWidth()
                         .padding(horizontal = 24.dp)
                         .clickable {
-                            showBottomSheet = true
+                            viewModel.handle(DepositInformationViewActions.FetchCommitment)
                         },
                     title = buildAnnotatedString {
                         withStyle(
@@ -115,116 +130,98 @@ fun DepositInformationScreen(
                     },
                     isChecked = viewState.isChecked
                 ) {
-                    showBottomSheet = true
+                    viewModel.handle(DepositInformationViewActions.FetchCommitment)
                 }
                 Spacer(modifier = Modifier.size(22.dp))
                 AppButton(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(start = 16.dp, end = 16.dp, top = 16.dp),
-                    enable = !viewState.isLoading && viewState.depositInformation != null && viewState.branchCity != null && viewState.isChecked,
+                    enable = !viewState.isLoading && viewState.accType != null && viewState.province != null && viewState.isChecked,
                     title = stringResource(R.string._continue),
                     onClick = {
-                        viewState.sendDepositInformationParams?.let {
-                            viewModel.handle(
-                                DepositInformationViewActions.SendDepositInformation(
-                                    it
-                                )
-                            )
-                        }
+                        updateSharedState(viewState)
+                        navigationManager.navigate(RegisterScreens.Signature)
                     })
             }) {
-            viewState.depositInformation.takeIf { it?.isSuccess == true }?.let {
-                Spacer(modifier = Modifier.size(24.dp))
-                CustomSpinner(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    options = viewState.depositInformation?.depositType?.map { it.type },
-                    labelString = "نوع حساب",
-                    displayText = viewState.depositInformation?.depositType?.findLast {
-                        it.id == (viewState.sendDepositInformationParams?.depositType ?: -1)
-                    }?.type ?: "",
-                    isEnabled = viewState.depositInformation?.depositType?.isNotEmpty() == true
-                ) { type ->
-                    viewState.depositInformation?.depositType?.findLast { it.type == type }?.id?.let {
-                        viewModel.handle(
-                            DepositInformationViewActions.DepositType(
-                                it
-                            )
-                        )
-                    }
+//            viewState.depositInformation.takeIf { it?.isSuccess == true }?.let {
+            Spacer(modifier = Modifier.size(24.dp))
+            CustomSpinner(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                options = viewState.fetchAccountTypeResponse?.accTypeList?.map { it.accountTypeDesc },
+                labelString = "نوع حساب",
+                displayText = viewState.accType?.accountTypeDesc ?: "",
+                isEnabled = viewState.fetchAccountTypeResponse?.accTypeList?.isNotEmpty() == true
+            ) { type ->
+                val accType =
+                    viewState.fetchAccountTypeResponse?.accTypeList?.find { it.accountTypeDesc == type }
+                accType?.let {
+                    viewModel.handle(DepositInformationViewActions.SetAccountType(it))
                 }
-                Spacer(modifier = Modifier.size(12.dp))
-                CustomSpinner(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    options = viewState.depositInformation?.branchProvince?.map { it.province },
-                    labelString = "استان شعبه مورد نظر",
-                    displayText = viewState.depositInformation?.branchProvince?.findLast {
-                        it.id == (viewState.sendDepositInformationParams?.branchProvince ?: -1)
-                    }?.province ?: "",
-                    isEnabled = viewState.depositInformation?.branchProvince?.isNotEmpty() == true
-                ) { type ->
-                    viewState.depositInformation?.branchProvince?.findLast { it.province == type }?.id?.let {
-                        viewModel.handle(
-                            DepositInformationViewActions.GetBranchCity(
-                                it
-                            )
-                        )
-                    }
-                }
-                Spacer(modifier = Modifier.size(12.dp))
-                CustomSpinner(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    options = viewState.branchCity?.branchCity?.map { it.city },
-                    labelString = "شهر شعبه مورد نظر",
-                    displayText = viewState.branchCity?.branchCity?.findLast {
-                        it.id == (viewState.sendDepositInformationParams?.branchCity ?: -1)
-                    }?.city ?: "",
-                    isEnabled = viewState.branchCity?.branchCity?.isNotEmpty() == true
-                ) { type ->
-                    viewState.branchCity?.branchCity?.findLast { it.city == type }?.id?.let {
-                        viewModel.handle(
-                            DepositInformationViewActions.SetCityId(
-                                it
-                            )
-                        )
-                    }
-                }
-                Spacer(modifier = Modifier.size(12.dp))
-
-                AppClickableReadOnlyTextField(
-                    value = viewState.openedBranch?.openingBranch ?: "",
-                    onClick = {
-                        if (viewState.sendDepositInformationParams?.branchCity != null)
-                            navigationManager.navigateWithString(
-                                RegisterScreens.SearchOpeningBranch.createRoute(
-                                    viewState.sendDepositInformationParams?.branchCity ?: -1,
-                                    viewState.branchCity?.branchCity?.findLast {
-                                        it.id == (viewState.sendDepositInformationParams?.branchCity
-                                            ?: -1)
-                                    }?.city ?: "",
-                                    viewState.depositInformation?.branchProvince?.findLast {
-                                        it.id == (viewState.sendDepositInformationParams?.branchProvince
-                                            ?: -1)
-                                    }?.province ?: ""
-                                )
-                            )
-                    },
-                    label = "شعبه افتتاح کننده",
-                    enabled = viewState.sendDepositInformationParams?.branchCity != null,
-                    trailingIcon = {
-                        Icon(
-                            imageVector = Icons.Default.KeyboardArrowDown,
-                            contentDescription = "down Icon",
-                        )
-                    },
-
-                    )
-
-
             }
+            Spacer(modifier = Modifier.size(12.dp))
+            CustomSearchSpinner(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                options = viewState.fetchAccountTypeResponse?.provinceList?.map { it.provinceName },
+                labelString = "استان شعبه مورد نظر",
+                displayText = province.takeIf { it.isNotEmpty() }
+                    ?: run {viewState.province?.provinceName ?: ""},
+                isEnabled = viewState.fetchAccountTypeResponse?.provinceList?.isNotEmpty() == true,
+                onSearchValue = {
+                    province = it
+                }
+            ) { type ->
+                val province =
+                    viewState.fetchAccountTypeResponse?.provinceList?.find { it.provinceName == type }
+                province?.let {
+                    viewModel.handle(DepositInformationViewActions.SetProvince(it))
+                }
+            }
+            Spacer(modifier = Modifier.size(12.dp))
+            CustomSearchSpinner(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                options = viewState.cityList?.map { it.cityName },
+                labelString = "شهر شعبه مورد نظر",
+                displayText = city.takeIf { it.isNotEmpty() }
+                    ?: run {viewState.city?.cityName ?: ""},
+                isEnabled = viewState.cityList?.isNotEmpty() == true,
+                onSearchValue = {
+                    city = it
+                }
+            ) { type ->
+                val city = viewState.cityList?.find { it.cityName == type }
+                city?.let {
+                    viewModel.handle(DepositInformationViewActions.SetCity(it))
+                }
+            }
+            Spacer(modifier = Modifier.size(12.dp))
+
+            AppClickableReadOnlyTextField(
+                value = viewState.branch?.branchName ?: "",
+                onClick = {
+                    if (viewState.cityList != null)
+                        navigationManager.navigateWithString(
+                            RegisterScreens.SearchOpeningBranch.createRoute(
+                                viewState.city?.cityCode ?: -1,
+                                viewState.city?.cityName ?: "",
+                                viewState.city?.provinceCode ?: -1,
+                                viewState.province?.provinceName ?: ""
+                            )
+                        )
+                },
+                label = "شعبه افتتاح کننده",
+                enabled = viewState.cityList != null,
+                trailingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.KeyboardArrowDown,
+                        contentDescription = "down Icon",
+                    )
+                },
+
+                )
         }
         if (viewState.isLoading) {
             AppLoading()
@@ -248,7 +245,7 @@ fun DepositInformationScreen(
         ) {
             BodyMediumText(
                 textAlign = TextAlign.Center,
-                text = stringResource(R.string.usage_role_desc),
+                text = viewState.commitmentText ?: "",
                 color = AppTheme.colorScheme.onBackgroundNeutralDefault
             )
             AppButton(

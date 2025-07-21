@@ -1,24 +1,29 @@
 package com.pmb.auth.presentation.register.authentication_information.viewModel
 
-import androidx.lifecycle.viewModelScope
-import com.pmb.auth.domain.register.authentication_information.entity.SendAuthenticationInformationParam
-import com.pmb.auth.domain.register.authentication_information.useCase.GetAuthenticationInformationUseCase
-import com.pmb.auth.domain.register.authentication_information.useCase.SendAuthenticationInformationUseCase
-import com.pmb.core.platform.AlertModelState
+import com.pmb.auth.domain.Education
+import com.pmb.calender.longToString
 import com.pmb.core.platform.BaseViewModel
-import com.pmb.core.platform.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class AuthenticationInformationViewModel @Inject constructor(
     initialState: AuthenticationInformationViewState,
-    private val getAuthenticationInformationUseCase: GetAuthenticationInformationUseCase,
-    private val sendAuthenticationInformationUseCase: SendAuthenticationInformationUseCase
 ) : BaseViewModel<AuthenticationInformationViewActions, AuthenticationInformationViewState, AuthenticationInformationViewEvents>(
     initialState
 ) {
+    private val educationList = listOf(
+        Education(1, "دیپلم"),
+        Education(2, "فوق دیپلم"),
+        Education(3, "لیسانس"),
+        Education(4, "فوق لیسانس"),
+        Education(5, "دکترا"),
+        Education(6, "حوزوی"),
+        Education(7, "سیکل"), Education(8, "ابتدایی"), Education(9, "بیسواد")
+    )
+
+    fun getEducationList() = educationList
+
     override fun handle(action: AuthenticationInformationViewActions) {
         when (action) {
             AuthenticationInformationViewActions.ClearAlert -> {
@@ -29,12 +34,8 @@ class AuthenticationInformationViewModel @Inject constructor(
                 }
             }
 
-            AuthenticationInformationViewActions.GetAuthenticationEntity -> {
-                handleGetAuthenticationInfo()
-            }
-
-            is AuthenticationInformationViewActions.SendAuthenticationParams -> {
-                handleSendAuthenticationParams(action)
+            is AuthenticationInformationViewActions.SetAuthenticationData -> {
+                handleAuthenticationData(action)
             }
 
             is AuthenticationInformationViewActions.SetCityId -> {
@@ -49,7 +50,7 @@ class AuthenticationInformationViewModel @Inject constructor(
                 handleSetEducation(action)
             }
 
-            is AuthenticationInformationViewActions.SetIdentifyDay -> {
+            is AuthenticationInformationViewActions.SetIssueDate -> {
                 handleSetIdentifyDay(action)
             }
 
@@ -57,69 +58,49 @@ class AuthenticationInformationViewModel @Inject constructor(
                 handleSetPhoneNumber(action)
             }
 
-            is AuthenticationInformationViewActions.SetIdentifyArea -> {
+            is AuthenticationInformationViewActions.SetIssueRegion -> {
                 handleSetIdentifyArea(action)
             }
         }
     }
 
-    private fun handleSetCityId(action: AuthenticationInformationViewActions.SetCityId) {
-        viewState.value.originalAuthenticationInformation?.cities?.findLast { it.city == action.city }?.id?.let { id ->
-            setState {
-                it.copy(
-                    sendAuthenticationInformationParam = it.sendAuthenticationInformationParam?.copy(
-                        cityId = id
-                    ) ?: run {
-                        SendAuthenticationInformationParam(
-                            cityId = id,
-                            identifyId = null,
-                            birthDate = null,
-                            identifyArea = null,
-                            phoneNumber = null,
-                            educationId = null
-
-
-                        )
-                    }
-                )
-            }
-        }
-    }
-
-    private fun handleSetIdentifyDay(action: AuthenticationInformationViewActions.SetIdentifyDay) {
+    private fun handleAuthenticationData(action: AuthenticationInformationViewActions.SetAuthenticationData) {
+        val issueDate = action.sharedViewState.verifyCodeResponse?.issueDate?.toLong()?.longToString()
         setState {
             it.copy(
-                sendAuthenticationInformationParam = it.sendAuthenticationInformationParam?.copy(
-                    birthDate = action.identifyDay
-                ) ?: run {
-                    SendAuthenticationInformationParam(
-                        cityId = null,
-                        identifyId = null,
-                        birthDate = action.identifyDay,
-                        identifyArea = null,
-                        phoneNumber = null,
-                        educationId = null
-                    )
-                }
+                birthDatePlace = it.birthDatePlace ?: action.sharedViewState.birthDatePlace,
+                issuePlace = it.issuePlace ?: action.sharedViewState.issuePlace,
+                issueCode = it.issueCode ?: action.sharedViewState.issueRgnCode,
+                tel = it.tel ?: action.sharedViewState.tel,
+                issueDateYear = it.issueDateYear ?: issueDate?.first,
+                issueDateMonth = it.issueDateMonth ?: issueDate?.second,
+                issueDateDay = it.issueDateDay ?: issueDate?.third,
             )
         }
     }
 
-    private fun handleSetIdentifyArea(action: AuthenticationInformationViewActions.SetIdentifyArea) {
+    private fun handleSetCityId(action: AuthenticationInformationViewActions.SetCityId) {
         setState {
             it.copy(
-                sendAuthenticationInformationParam = it.sendAuthenticationInformationParam?.copy(
-                    identifyArea = action.identifyArea
-                ) ?: run {
-                    SendAuthenticationInformationParam(
-                        cityId = null,
-                        identifyId = null,
-                        birthDate = null,
-                        identifyArea = action.identifyArea,
-                        phoneNumber = null,
-                        educationId = null
-                    )
-                }
+                birthDatePlace = action.city
+            )
+        }
+    }
+
+    private fun handleSetIdentifyDay(action: AuthenticationInformationViewActions.SetIssueDate) {
+        setState {
+            it.copy(
+                issueDateYear = action.issueDateYear,
+                issueDateMonth = action.issueDateMonth,
+                issueDateDay = action.issueDateDay,
+            )
+        }
+    }
+
+    private fun handleSetIdentifyArea(action: AuthenticationInformationViewActions.SetIssueRegion) {
+        setState {
+            it.copy(
+                issueCode = action.identifyArea
             )
         }
     }
@@ -127,161 +108,26 @@ class AuthenticationInformationViewModel @Inject constructor(
     private fun handleSetPhoneNumber(action: AuthenticationInformationViewActions.SetPhoneNumber) {
         setState {
             it.copy(
-                sendAuthenticationInformationParam = it.sendAuthenticationInformationParam?.copy(
-                    identifyArea = action.phoneNumber
-                ) ?: run {
-                    SendAuthenticationInformationParam(
-                        cityId = null,
-                        identifyId = null,
-                        birthDate = null,
-                        identifyArea = null,
-                        phoneNumber = action.phoneNumber,
-                        educationId = null
-                    )
-                }
+                tel = action.phoneNumber
             )
         }
     }
 
     private fun handleIdentifyPlaceId(action: AuthenticationInformationViewActions.SetIdentifyPlaceId) {
-        viewState.value.originalAuthenticationInformation?.identifyPlace?.findLast { it.city == action.city }?.id?.let { id ->
-            setState {
-                it.copy(
-                    sendAuthenticationInformationParam = it.sendAuthenticationInformationParam?.copy(
-                        identifyId = id
-                    ) ?: run {
-                        SendAuthenticationInformationParam(
-                            identifyId = id,
-                            cityId = null,
-                            birthDate = null,
-                            identifyArea = null,
-                            phoneNumber = null,
-                            educationId = null
-
-
-                        )
-                    }
-                )
-            }
+        setState {
+            it.copy(
+                issuePlace = action.city
+            )
         }
     }
 
     private fun handleSetEducation(action: AuthenticationInformationViewActions.SetEducation) {
-        viewState.value.originalAuthenticationInformation?.educations?.findLast { it.education == action.eduction }?.id?.let { id ->
-            setState {
-                it.copy(
-                    sendAuthenticationInformationParam = it.sendAuthenticationInformationParam?.copy(
-                        educationId = id
-                    ) ?: run {
-                        SendAuthenticationInformationParam(
-                            educationId = id,
-                            identifyId = null,
-                            birthDate = null,
-                            identifyArea = null,
-                            phoneNumber = null,
-                            cityId = null
+        setState {
+            it.copy(
+                education = action.eduction
+            )
 
-
-                        )
-                    }
-                )
-            }
         }
     }
 
-    private fun handleSendAuthenticationParams(action: AuthenticationInformationViewActions.SendAuthenticationParams) {
-        viewModelScope.launch {
-            sendAuthenticationInformationUseCase.invoke(
-                SendAuthenticationInformationParam(
-                    cityId = action.cityId,
-                    identifyArea = action.identifyArea,
-                    birthDate = action.birthDate,
-                    phoneNumber = action.phoneNumber,
-                    educationId = action.educationId,
-                    identifyId = action.identifyId
-                )
-            ).collect { result ->
-                when (result) {
-                    is Result.Loading -> {
-                        setState {
-                            it.copy(
-                                isLoading = true
-                            )
-                        }
-                    }
-
-                    is Result.Error -> {
-                        setState {
-                            it.copy(
-                                isLoading = false, alertModelState = AlertModelState.Dialog(
-                                    title = "خطا",
-                                    description = " ${result.message}",
-                                    positiveButtonTitle = "تایید",
-                                    onPositiveClick = {
-                                        setState { state -> state.copy(alertModelState = null) }
-                                    }
-                                )
-                            )
-                        }
-                    }
-
-                    is Result.Success -> {
-                        setState {
-                            it.copy(
-                                isLoading = false,
-                            )
-                        }
-                        postEvent(AuthenticationInformationViewEvents.SendAuthenticationInformationViewSucceed)
-                    }
-                }
-            }
-        }
-
-    }
-
-    private fun handleGetAuthenticationInfo() {
-        viewModelScope.launch {
-            getAuthenticationInformationUseCase.invoke(Unit).collect { result ->
-                when (result) {
-                    is Result.Loading -> {
-                        setState {
-                            it.copy(
-                                isLoading = true
-                            )
-                        }
-                    }
-
-                    is Result.Error -> {
-                        setState {
-                            it.copy(
-                                isLoading = false, alertModelState = AlertModelState.Dialog(
-                                    title = "خطا",
-                                    description = " ${result.message}",
-                                    positiveButtonTitle = "تایید",
-                                    onPositiveClick = {
-                                        setState { state -> state.copy(alertModelState = null) }
-                                    }
-                                )
-                            )
-                        }
-                    }
-
-                    is Result.Success -> {
-                        setState {
-                            it.copy(
-                                isLoading = false,
-                                authenticationInformation = result.data,
-                                originalAuthenticationInformation = result.data
-                            )
-                        }
-                    }
-                }
-
-            }
-        }
-    }
-
-    init {
-        handle(AuthenticationInformationViewActions.GetAuthenticationEntity)
-    }
 }

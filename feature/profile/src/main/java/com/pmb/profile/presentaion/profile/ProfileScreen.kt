@@ -22,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.pmb.ballon.component.AlertComponent
@@ -32,6 +33,9 @@ import com.pmb.ballon.component.base.AppButtonIcon
 import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.models.IconStyle
+import com.pmb.ballon.models.ImageStyle
+import com.pmb.ballon.models.Size
+import com.pmb.ballon.models.TextStyle
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.ballon.ui.theme.HamrahBankTheme
 import com.pmb.navigation.manager.LocalNavigationManager
@@ -92,7 +96,13 @@ fun ProfileScreen(viewModel: ProfileViewModel) {
                     TextImage(
                         image = R.drawable.ic_profile,
                         spacer = 0.dp,
-                        text = "userData "
+                        text = viewState.userData?.fullName ?: "",
+                        imageStyle = ImageStyle(size = Size.FIX(all = 64.dp)),
+                        textStyle = TextStyle(
+                            color = AppTheme.colorScheme.onBackgroundNeutralDefault,
+                            typography = AppTheme.typography.headline4,
+                            textAlign = TextAlign.Center
+                        )
                     )
                 }
             }

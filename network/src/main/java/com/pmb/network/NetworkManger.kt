@@ -45,6 +45,7 @@ class NetworkManger @Inject constructor(
     val client: HttpClient = HttpClient(Android) {
         defaultRequest {
             host = "172.20.140.242:8443/api/v1"
+//            host = "172.20.140.167:8443/api/v1"
             url {
                 protocol = URLProtocol.HTTPS
             }

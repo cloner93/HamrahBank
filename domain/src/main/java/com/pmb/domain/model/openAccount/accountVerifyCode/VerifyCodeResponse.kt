@@ -7,20 +7,20 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class VerifyCodeResponse(
     val actionType: Int,
-    val annualIncomeTypes: List<AnnualIncomeType>,
-    val annualTransactionTypes: List<AnnualTransactionType>,
+    val annualIncomeTypes: List<AnnualIncomeType>?=null,
+    val annualTransactionTypes: List<AnnualTransactionType>?=null,
     val birthCityCode: Int,
-    val birthCityName: String,
+    val birthCityName: String?=null,
     val birthDate: Int,
-    val cityOfBirthInfoDTOList: List<CityOfBirthInfoDTO>,
+    val cityOfBirthInfoDTOList: List<CityOfBirthInfoDTO>?=null,
     val education: Int,
     val errorCode: Int,
     val issueCityCode: Int,
-    val issueCityName: String,
+    val issueCityName: String?=null,
     val issueDate: Int,
     val issueReginCode: Int,
-    val job: String,
+    val job: String?=null,
     val jobCode: Int,
-    val metaData: String,
-    val tel: String
+    val metaData: String?=null,
+    val tel: String?=null
 )

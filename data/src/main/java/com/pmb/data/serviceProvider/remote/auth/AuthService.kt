@@ -5,10 +5,16 @@ import com.pmb.domain.model.LoginResponse
 import com.pmb.domain.model.RegisterVerifyResponse
 import com.pmb.domain.model.SendOtpRequest
 import com.pmb.domain.model.openAccount.AccountArchiveJobDocResponse
+import com.pmb.domain.model.openAccount.FetchAdmittanceTextResponse
+import com.pmb.domain.model.openAccount.FetchCommitmentResponse
+import com.pmb.domain.model.openAccount.RegisterOpenAccountRequest
+import com.pmb.domain.model.openAccount.RegisterOpenAccountResponse
 import com.pmb.domain.model.openAccount.accountType.FetchAccountTypeResponse
 import com.pmb.domain.model.openAccount.accountVerifyCode.VerifyCodeResponse
-import com.pmb.domain.model.openAccount.branchName.FetchBranchListResponse
-import com.pmb.domain.model.openAccount.cityName.FetchCityListResponse
+import com.pmb.domain.model.openAccount.branchName.Branch
+import com.pmb.domain.model.openAccount.cityName.City
+import com.pmb.domain.model.openAccount.comissionFee.FetchCommissionFeeResponse
+import com.pmb.domain.model.openAccount.jobLevel.JobLevel
 import com.pmb.model.SuccessData
 import kotlinx.coroutines.flow.Flow
 
@@ -27,22 +33,33 @@ interface AuthService {
     ): Flow<Result<SuccessData<Boolean>>>
 
     fun accountVerifyCode(
-        verificationCode: Int, nationalCode: String, mobileNo: String, idSerial: String
+        verificationCode: Int, nationalCode: String, mobileNo: String, idSerial: String?
     ): Flow<Result<SuccessData<VerifyCodeResponse>>>
 
     fun accountArchiveJobDoc(
         file: String, nationalCode: String
     ): Flow<Result<SuccessData<AccountArchiveJobDocResponse>>>
 
+    fun fetchJobLevel(): Flow<Result<SuccessData<List<JobLevel>>>>
+
     fun fetchAccountType(
-        customerType: Int, nationalCode: String, mobileNo: String
+        nationalCode: String, mobileNo: String
     ): Flow<Result<SuccessData<FetchAccountTypeResponse>>>
 
     fun fetchCityList(
         stateCode: Int
-    ): Flow<Result<SuccessData<FetchCityListResponse>>>
+    ): Flow<Result<SuccessData<List<City>>>>
 
     fun fetchBranchList(
-        mergeStatus: Int, stateCode: Int, cityCode: Int, organizationType: String
-    ): Flow<Result<SuccessData<FetchBranchListResponse>>>
+        stateCode: Int, cityCode: Int
+    ): Flow<Result<SuccessData<List<Branch>>>>
+
+    fun fetchCommitment(accType: Int): Flow<Result<SuccessData<FetchCommitmentResponse>>>
+
+    fun fetchCommissionFee(): Flow<Result<SuccessData<FetchCommissionFeeResponse>>>
+
+    fun fetchAdmittanceText(): Flow<Result<SuccessData<FetchAdmittanceTextResponse>>>
+
+    fun registerOpenAccount(registerOpenAccountRequest: RegisterOpenAccountRequest): Flow<Result<SuccessData<RegisterOpenAccountResponse>>>
+
 }

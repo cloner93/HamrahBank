@@ -7,8 +7,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class CityOfBirthInfoDTO(
     val cityCode: Int,
-    val cityLatinName: String,
-    val cityName: String,
+    val cityLatinName: String?=null,
+    val cityName: String?=null,
     val hajCityCode: Int,
     val issueRegionCode: Int,
     val macnacitiesCode: Int,
@@ -16,6 +16,6 @@ data class CityOfBirthInfoDTO(
     val provinceCode: Int,
     val status: Int,
     val statusDate: Int,
-    val time: String,
-    val userId: String
+    val time: String?=null,
+    val userId: String?=null
 )

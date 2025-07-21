@@ -5,6 +5,7 @@ import com.pmb.ballon.models.AccountSampleModel
 import com.pmb.core.platform.AlertModelState
 import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.platform.Result
+import com.pmb.domain.usecae.auth.GetUserDataUseCase
 import com.pmb.profile.domain.profile.useCase.ProfileUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -13,8 +14,23 @@ import javax.inject.Inject
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     initialState: ProfileViewState,
-    private val profileUseCase: ProfileUseCase
+    private val profileUseCase: ProfileUseCase,
+    private val getUserDataUseCase: GetUserDataUseCase
 ) : BaseViewModel<ProfileViewActions, ProfileViewState, ProfileViewEvents>(initialState) {
+
+    init {
+        viewModelScope.launch {
+            getUserDataUseCase.invoke(Unit).collect { result ->
+                when (result) {
+                    is Result.Success ->
+                        setState { it.copy(userData = result.data) }
+
+                    else -> Unit
+                }
+            }
+        }
+    }
+
     override fun handle(action: ProfileViewActions) {
         when (action) {
             ProfileViewActions.ClearAlert -> setState { it.copy(loading = false) }
@@ -30,15 +46,16 @@ class ProfileViewModel @Inject constructor(
                 when (result) {
                     is Result.Success -> {
                         setState {
-                            it.copy(loading = false, alertModelState = AlertModelState.SnackBar(
-                                message = result.data,
-                                onActionPerformed = {
-                                    setState { state -> state.copy(alertModelState = null) }
-                                },
-                                onDismissed = {
-                                    setState { state -> state.copy(alertModelState = null) }
-                                }
-                            ), userData = null)
+                            it.copy(
+                                loading = false, alertModelState = AlertModelState.SnackBar(
+                                    message = result.data,
+                                    onActionPerformed = {
+                                        setState { state -> state.copy(alertModelState = null) }
+                                    },
+                                    onDismissed = {
+                                        setState { state -> state.copy(alertModelState = null) }
+                                    }
+                                ), userData = null)
                         }
                         postEvent(ProfileViewEvents.LogoutAccountSucceed)
                     }
@@ -48,18 +65,6 @@ class ProfileViewModel @Inject constructor(
                 }
             }
         }
-    }
-
-    private fun getUserData() {
-        setState {
-            it.copy(
-                userData = AccountSampleModel()
-            )
-        }
-    }
-
-    init {
-        getUserData()
     }
 
 }

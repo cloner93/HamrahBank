@@ -9,5 +9,5 @@ data class VerifyCodeRequest (
     val verificationCode: Int,
     val nationalCode:String,
     val mobileNo: String,
-    val idSerial: String
+    val idSerial: String ?=null
 )
