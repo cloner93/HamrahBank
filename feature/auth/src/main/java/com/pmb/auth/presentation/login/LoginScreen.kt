@@ -89,11 +89,11 @@ fun LoginScreen(viewModel: LoginViewModel) {
                 textAlign = TextAlign.Center
             )
         )
-        Spacer(modifier = Modifier.size(8.dp))
-        BodySmallText(
-            text = "${stringResource(com.pmb.auth.R.string.username)}: ${viewState.userData?.username}",
-            color = AppTheme.colorScheme.onBackgroundPrimarySubdued
-        )
+//        Spacer(modifier = Modifier.size(8.dp))
+//        BodySmallText(
+//            text = "${stringResource(com.pmb.auth.R.string.username)}: ${viewState.userData?.username}",
+//            color = AppTheme.colorScheme.onBackgroundPrimarySubdued
+//        )
         Spacer(modifier = Modifier.size(32.dp))
         AppPasswordTextField(
             value = password,
