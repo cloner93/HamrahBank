@@ -20,5 +20,7 @@ sealed interface DepositsViewActions : BaseViewAction {
     object SetAmountVisibility : DepositsViewActions
 
     object ShowDepositListBottomSheet : DepositsViewActions
+    object OpenDepositDetailsScreen : DepositsViewActions
+
     class CloseDepositListBottomSheet(val model: DepositModel?) : DepositsViewActions
 }

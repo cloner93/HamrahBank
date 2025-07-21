@@ -1,5 +1,6 @@
 package com.pmb.account.di
 
+import com.pmb.account.presentation.account.details.DepositDetailsViewState
 import com.pmb.account.presentation.balance.viewmodel.BalanceViewState
 import com.pmb.account.presentation.cards.viewmodel.CardsViewState
 import com.pmb.account.presentation.deposits.viewmodel.DepositsViewState
@@ -58,5 +59,10 @@ object StateModule {
     @Singleton
     fun provideDetailedTransactionListViewState(): DetailedTransactionListViewState =
         DetailedTransactionListViewState()
+
+    @Provides
+    @Singleton
+    fun provideDepositDetailsViewState(): DepositDetailsViewState =
+        DepositDetailsViewState()
 
 }

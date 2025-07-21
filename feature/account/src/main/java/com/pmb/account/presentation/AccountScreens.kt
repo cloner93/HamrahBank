@@ -9,6 +9,8 @@ import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import androidx.navigation.navigation
 import com.pmb.account.presentation.account.AccountScreen
+import com.pmb.account.presentation.account.details.DepositDetailsScreen
+import com.pmb.account.presentation.account.details.DepositDetailsViewModel
 import com.pmb.account.presentation.balance.BalanceScreen
 import com.pmb.account.presentation.transactionReceipt.TransactionsReceiptScreen
 import com.pmb.account.presentation.transactions.DetailedTransactionList
@@ -31,6 +33,17 @@ fun NavGraphBuilder.accountScreensHandle() {
     }
     composable(route = AccountScreens.Balance.route) {
         BalanceScreen()
+    }
+    composable(
+        route = AccountScreens.DepositDetailsScreen.route,
+        deepLinks = listOf(navDeepLink {
+            uriPattern = "myapp://depositDetails/{deposit}"
+        }),
+        arguments = listOf(
+            navArgument("deposit") { type = NavType.StringType },
+        )
+    ) {
+        DepositDetailsScreen(viewModel = hiltViewModel<DepositDetailsViewModel>())
     }
 
     navigation(

@@ -102,8 +102,8 @@ class AuthRepositoryImpl @Inject constructor(
         customerType: Int, nationalCode: String, mobileNo: String
     ): Flow<Result<FetchAccountTypeResponse>> {
         return remoteServiceProvider.getAuthService().fetchAccountType(
-                customerType = customerType, nationalCode = nationalCode, mobileNo = mobileNo
-            ).mapApiResult { it.second }
+            customerType = customerType, nationalCode = nationalCode, mobileNo = mobileNo
+        ).mapApiResult { it.second }
     }
 
     override fun fetchCityList(stateCode: Int): Flow<Result<FetchCityListResponse>> {

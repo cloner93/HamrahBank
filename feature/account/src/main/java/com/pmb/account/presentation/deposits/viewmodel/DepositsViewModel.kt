@@ -95,6 +95,18 @@ open class DepositsViewModel @Inject constructor(
             is DepositsViewActions.CloseDepositMoreActionBottomSheet -> {
                 setState { it.copy(showMoreBottomSheet = false) }
             }
+
+            DepositsViewActions.OpenDepositDetailsScreen -> {
+                viewState.value.selectedDeposit?.let { depositModel ->
+
+                    val json = Json { ignoreUnknownKeys = true }
+                    val deposit = json.encodeToString(depositModel)
+                    val e = URLEncoder.encode(deposit, "UTF-8")
+
+
+                    postEvent(DepositsViewEvents.NavigateToDetailsScreen(e))
+                }
+            }
         }
     }
 

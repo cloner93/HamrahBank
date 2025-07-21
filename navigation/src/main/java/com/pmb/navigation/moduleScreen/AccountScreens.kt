@@ -6,6 +6,12 @@ sealed class AccountScreens(route: String, arguments: Map<String, String> = empt
     Screen(baseRoute = route, arguments = arguments) {
     data object Account : AccountScreens(route = "account")
     data object Balance : AccountScreens(route = "balance")
+    data object DepositDetailsScreen : AccountScreens(route = "depositDetails/{deposit}") {
+        fun createRoute(
+            deposit: String,
+        ) =
+            "depositDetails/$deposit"
+    }
 
     sealed class Transactions(route: String) : AccountScreens(route) {
         data object Graph : Transactions(route = "transactions_graph")
