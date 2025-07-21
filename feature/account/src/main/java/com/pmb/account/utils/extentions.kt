@@ -14,6 +14,7 @@ internal fun DepositBottomSheetModel.mapToDepositModel(): DepositModel {
         amount = this.amount,
         currency = this.currency,
         ibanNumber = this.ibanNumber,
+        categoryCode = this.categoryCode,
         cardNumber = this.cardNumber
     )
 }
@@ -30,7 +31,8 @@ internal fun List<DepositModel>.mapToDepositMenu(): List<DepositBottomSheetModel
             ibanNumber = item.ibanNumber,
             selected = item.isSelected,
             state = 1,
-            cardNumber = item.cardNumber
+            cardNumber = item.cardNumber,
+            categoryCode = item.categoryCode
         )
         list.add(deposit)
     }
@@ -49,22 +51,4 @@ fun List<DepositModel>.mapToDepositsChartModel(): MutableList<DepositsChartModel
             currency = it.currency
         )
     }.toMutableList()
-}
-
-fun String?.toPersianDate(): String {
-    if (this == null || this.length != 8) return ""
-
-    val year = this.substring(0, 4)
-    val month = this.substring(4, 6)
-    val day = this.substring(6, 8)
-
-    val persianMonths = listOf(
-        "فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور",
-        "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"
-    )
-
-    val monthIndex = month.toIntOrNull()?.minus(1) ?: return ""
-    val monthName = persianMonths.getOrNull(monthIndex) ?: return ""
-
-    return " $day $monthName $year"
 }

@@ -23,37 +23,21 @@ import com.pmb.ballon.models.Size
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.ballon.ui.theme.HamrahBankTheme
 import com.pmb.core.utils.toCurrency
-
-enum class TransactionType {
-    DEPOSIT,
-    WITHDRAWAL,
-    TRANSFER,
-    RECEIVE,
-    FEE
-}
-
-
-data class TransactionModel(
-    val transactionId: String,
-    val type: TransactionType,
-    val title: String,
-    val amount: Double,
-    val currency: String,
-    val date: String
-)
+import com.pmb.domain.model.TransactionModel
+import com.pmb.domain.model.TransactionType
 
 @Composable
 fun TransactionRow(
     item: TransactionModel,
     isAmountVisible: Boolean,
-    onClick: (transactionId: String) -> Unit = {}
+    onClick: (transaction: TransactionModel) -> Unit = {}
 ) {
     Row(
         modifier = Modifier
             .background(color = AppTheme.colorScheme.background1Neutral)
             .height(48.dp)
             .clickable {
-                onClick(item.transactionId)
+                onClick(item)
             },
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -64,6 +48,7 @@ fun TransactionRow(
                 TransactionType.TRANSFER -> R.drawable.ic_transfer
                 TransactionType.RECEIVE -> R.drawable.ic_receive
                 TransactionType.FEE -> R.drawable.ic_transfer
+                TransactionType.UNKNOWN -> R.drawable.ic_unknown
             },
             style = ImageStyle(size = Size.FIX(42.dp))
         )
@@ -95,7 +80,10 @@ fun TransactionRow(
                     )
                 }
             }
-            CaptionText(text = item.date, color = AppTheme.colorScheme.onBackgroundNeutralSubdued)
+            CaptionText(
+                text = item.date,
+                color = AppTheme.colorScheme.onBackgroundNeutralSubdued
+            )
         }
     }
 }
@@ -104,14 +92,7 @@ fun TransactionRow(
 @Composable
 private fun TransactionRowPreview() {
     HamrahBankTheme {
-        val d = TransactionModel(
-            "0",
-            TransactionType.RECEIVE,
-            "واریز حقوق",
-            1_000_000.0,
-            "ریال",
-            "امروز ساعت ۱۰:۳۰"
-        )
-        TransactionRow(item = d, isAmountVisible = true) {}
+
+//        TransactionRow(item = d, isAmountVisible = true) {}
     }
 }

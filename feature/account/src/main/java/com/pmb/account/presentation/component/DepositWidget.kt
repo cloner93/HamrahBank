@@ -132,6 +132,7 @@ private fun DepositPrev() {
         currency = stringResource(R.string.real_carrency),
         ibanNumber = "IR1234567890098765432112",
         cardNumber = "6219861920241234",
+        categoryCode = 0,
     )
     CompositionLocalProvider(
         LocalLayoutDirection provides LayoutDirection.Rtl
@@ -158,6 +159,7 @@ private fun DepositPrev2() {
         amount = 10000023400.0,
         currency = stringResource(R.string.real_carrency),
         ibanNumber = "IR1234567890098765432112",
+        categoryCode = 0,
         cardNumber = "6219861920241234",
     )
     HamrahBankTheme {

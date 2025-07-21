@@ -1,4 +1,4 @@
-package com.pmb.domain.repository
+package com.pmb.domain.repository.deposit
 
 import com.pmb.core.platform.Result
 import com.pmb.domain.model.DepositModel

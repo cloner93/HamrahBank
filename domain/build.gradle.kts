@@ -10,7 +10,7 @@ plugins {
 
 android {
     namespace = "com.pmb.domain"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 24
@@ -35,6 +35,7 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.kotlinx.serialization.json)
+    implementation(libs.androidx.paging.common.android)
 
 
     // DI > Hilt

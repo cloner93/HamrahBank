@@ -71,3 +71,13 @@ enum class Calendar(
 val PERSIAN_DIGITS = charArrayOf('۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹')
 val ARABIC_DIGITS = charArrayOf('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')
 val ARABIC_INDIC_DIGITS = charArrayOf('٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩')
+
+val persianCalendarMonthsInPersian = listOf(
+    "فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد",
+    "شهریور", "مهر", "آبان", "آذر", "دی",
+    "بهمن", "اسفند"
+)
+val persianCalendarMonthsInDariOrPersianOldEra = listOf(
+    "حمل", "ثور", "جوزا", "سرطان", "اسد", "سنبله",
+    "میزان", "عقرب", "قوس", "جدی", "دلو", "حوت"
+)

@@ -78,6 +78,7 @@ fun TransferSearchHistoryScreen(
 
         if (viewState.accounts.isEmpty() && !viewState.loading) {
             EmptyList(
+                modifier = Modifier.fillMaxSize(),
                 iconType = IconType.Painter(painterResource(R.drawable.img_bank_card_shrare_money)),
                 message = stringResource(R.string.msg_dont_have_transfer_yet)
             )
