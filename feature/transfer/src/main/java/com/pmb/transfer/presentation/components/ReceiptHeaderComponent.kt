@@ -13,7 +13,7 @@ import com.pmb.transfer.domain.entity.TransferReceiptEntity
 @Composable
 fun ReceiptHeaderComponent(receipt: TransferReceiptEntity?) {
     Spacer(modifier = Modifier.size(8.dp))
-    receipt?.let { ClientBankProfileInfo(it.destination) }
+    receipt?.destination?.let { ClientBankProfileInfo(it) }
     Spacer(modifier = Modifier.size(12.dp))
     ReceiptStatusBadge(receipt?.status ?: ReceiptStatus.UNKNOWN)
     receipt?.message?.let {

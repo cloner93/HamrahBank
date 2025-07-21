@@ -1,9 +1,5 @@
 package com.pmb.data.di
 
-import com.pmb.data.serviceProvider.local.LocalServiceProvider
-import com.pmb.data.serviceProvider.local.LocalServiceProviderImpl
-import com.pmb.data.serviceProvider.local.user.UserDataStore
-import com.pmb.data.serviceProvider.local.user.UserDataStoreImpl
 import com.pmb.data.serviceProvider.remote.RemoteServiceProvider
 import com.pmb.data.serviceProvider.remote.RemoteServiceProviderImpl
 import com.pmb.data.serviceProvider.remote.auth.AuthService

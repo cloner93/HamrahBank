@@ -51,9 +51,9 @@ class TransferConfirmViewModel @Inject constructor(
 
     private fun fetchData() {
         when (viewState.value.transferMethod?.paymentType) {
-            PaymentType.MELLAT_TO_MELLAT, PaymentType.CARD_TO_CARD -> fetchSourceCardBanks()
+            PaymentType.CARD_TO_CARD -> fetchSourceCardBanks()
 
-            PaymentType.INTERNAL_SATNA, PaymentType.INTERNAL_PAYA, PaymentType.INTERNAL_BRIDGE -> fetchSourceAccountBanks()
+            PaymentType.MELLAT_TO_MELLAT, PaymentType.INTERNAL_SATNA, PaymentType.INTERNAL_PAYA, PaymentType.INTERNAL_BRIDGE -> fetchSourceAccountBanks()
 
             null -> Unit
         }
@@ -81,14 +81,14 @@ class TransferConfirmViewModel @Inject constructor(
                             setState {
                                 it.copy(
                                     loading = false,
-                                    alertState = AlertModelState.SnackBar(
-                                        message = result.message,
-                                        onActionPerformed = {
-                                            setState { it.copy(loading = false) }
-                                        },
-                                        onDismissed = {
-                                            setState { it.copy(loading = false) }
-                                        })
+                                    alertState = AlertModelState.Dialog(
+                                        title = "خطا",
+                                        description = " ${result.message}",
+                                        positiveButtonTitle = "تایید",
+                                        onPositiveClick = {
+                                            setState { state -> state.copy(alertState = null) }
+                                        }
+                                    )
                                 )
                             }
                         }
@@ -123,14 +123,14 @@ class TransferConfirmViewModel @Inject constructor(
                             setState {
                                 it.copy(
                                     loading = false,
-                                    alertState = AlertModelState.SnackBar(
-                                        message = result.message,
-                                        onActionPerformed = {
-                                            setState { it.copy(loading = false) }
-                                        },
-                                        onDismissed = {
-                                            setState { it.copy(loading = false) }
-                                        })
+                                    alertState = AlertModelState.Dialog(
+                                        title = "خطا",
+                                        description = " ${result.message}",
+                                        positiveButtonTitle = "تایید",
+                                        onPositiveClick = {
+                                            setState { state -> state.copy(alertState = null) }
+                                        }
+                                    )
                                 )
                             }
                         }
@@ -166,14 +166,16 @@ class TransferConfirmViewModel @Inject constructor(
             null -> null
         }
 
-        val params = viewState.value.run {
-            TransferConfirmUseCase.Params(
-                sourceId = when (defaultSource) {
-                    is TransferSourceEntity.Card -> defaultSource.card.id
-                    is TransferSourceEntity.Account -> defaultSource.account.id
-                    null -> return
 
-                },
+        val params = viewState.value.run {
+            val sourceNumber = when (defaultSource) {
+                is TransferSourceEntity.Card -> defaultSource.card.cardNumber
+                is TransferSourceEntity.Account -> defaultSource.account.accountNumber
+                null -> return
+            }
+
+            TransferConfirmUseCase.Params(
+                sourceNumber = sourceNumber ?: return,
                 destinationNumber = destinationNumber ?: return,
                 amount = destinationAmount,
                 reasonId = defaultReason?.id,
@@ -190,14 +192,14 @@ class TransferConfirmViewModel @Inject constructor(
                         setState {
                             it.copy(
                                 loading = false,
-                                alertState = AlertModelState.SnackBar(
-                                    message = result.message,
-                                    onActionPerformed = {
-                                        setState { it.copy(loading = false) }
-                                    },
-                                    onDismissed = {
-                                        setState { it.copy(loading = false) }
-                                    })
+                                alertState = AlertModelState.Dialog(
+                                    title = "خطا",
+                                    description = " ${result.message}",
+                                    positiveButtonTitle = "تایید",
+                                    onPositiveClick = {
+                                        setState { state -> state.copy(alertState = null) }
+                                    }
+                                )
                             )
                         }
                     }

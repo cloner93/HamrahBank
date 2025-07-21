@@ -16,7 +16,7 @@ class TransferConfirmUseCase @Inject constructor(
     }
 
     data class Params(
-        val sourceId: Long,
+        val sourceNumber: String,
         val destinationNumber: String,
         val amount: Double,
         val reasonId: Long?,

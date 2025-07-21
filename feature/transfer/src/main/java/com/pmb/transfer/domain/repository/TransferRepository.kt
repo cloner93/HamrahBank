@@ -12,6 +12,7 @@ import com.pmb.transfer.domain.entity.TransferReceiptEntity
 import com.pmb.transfer.domain.param.AccountDetailParam
 import com.pmb.transfer.domain.param.AccountFavoriteToggleParam
 import com.pmb.transfer.domain.param.AccountRemoveFavoriteParam
+import com.pmb.transfer.domain.use_case.TransferAmountUseCase
 import com.pmb.transfer.domain.use_case.TransferConfirmUseCase
 import com.pmb.transfer.domain.use_case.TransferResendVerifyCardInfoUseCase
 import com.pmb.transfer.domain.use_case.TransferVerifyCardInfoUseCase
@@ -31,4 +32,5 @@ interface TransferRepository {
     suspend fun fetchSourceCartBank(userId: String): Flow<Result<List<CardBankEntity>>>
     suspend fun fetchSourceAccountBank(userId: String): Flow<Result<List<AccountBankEntity>>>
     suspend fun fetchReasons(): Flow<Result<List<ReasonEntity>>>
+    suspend fun transferAmount(params: TransferAmountUseCase.Params): Flow<Result<List<TransferMethodEntity>>>
 }

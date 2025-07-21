@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.android.hilt)
     alias(libs.plugins.kotlin.kapt)
     id("kotlin-parcelize")
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -52,6 +53,9 @@ dependencies {
     implementation(project(":ballon"))
     implementation(project(":navigation"))
     implementation(project(":snapui:receipt"))
+    implementation(project(":domain"))
+    implementation(project(":model"))
+    implementation(project(":data"))
     // DI > Hilt
     implementation(libs.android.hilt)
     kapt(libs.android.hilt.compiler)
@@ -62,6 +66,7 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
+    implementation(libs.kotlinx.serialization.json)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

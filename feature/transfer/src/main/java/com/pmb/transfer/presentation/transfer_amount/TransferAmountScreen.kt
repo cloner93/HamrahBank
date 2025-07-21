@@ -28,6 +28,7 @@ import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.moduleScreen.TransferScreens
 import com.pmb.transfer.R
 import com.pmb.transfer.domain.entity.TransactionClientBankEntity
+import com.pmb.transfer.domain.entity.TransferMethodEntity
 import com.pmb.transfer.presentation.components.ClientBankProfileInfo
 import com.pmb.transfer.presentation.transfer_amount.viewmodel.TransferAmountViewActions
 import com.pmb.transfer.presentation.transfer_amount.viewmodel.TransferAmountViewEvents
@@ -37,7 +38,7 @@ import com.pmb.transfer.presentation.transfer_amount.viewmodel.TransferAmountVie
 fun TransferAmountScreen(
     viewModel: TransferAmountViewModel,
     account: TransactionClientBankEntity?,
-    amount: (Double) -> Unit
+    amount: (Double, List<TransferMethodEntity>) -> Unit
 ) {
     val viewState by viewModel.viewState.collectAsState()
     val navigationManager = LocalNavigationManager.current
@@ -46,11 +47,14 @@ fun TransferAmountScreen(
         viewModel.viewEvent.collect { event ->
             when (event) {
                 is TransferAmountViewEvents.NavigateToDestinationType -> {
-                    amount.invoke(event.amount)
+                    amount.invoke(event.amount, event.methods)
                     navigationManager.navigate(TransferScreens.TransferMethod)
                 }
             }
         }
+    }
+    LaunchedEffect(Unit) {
+        viewModel.handle(TransferAmountViewActions.UpdateDestination(account = account))
     }
 
     val trailingIcon: (@Composable () -> Unit)? = viewState.amount.takeIf { it > 0 }?.let {
