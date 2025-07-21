@@ -63,7 +63,7 @@ fun DepositInformationScreen(
         if (viewState.fetchAccountTypeResponse == null)
             viewModel.handle(
                 DepositInformationViewActions.FetchAccountType(
-                    sharedViewState.nationalId ?: "", sharedViewState.phoneNumber ?: ""
+                    sharedViewState.nationalCode ?: "", sharedViewState.mobileNo ?: ""
                 )
             )
     }

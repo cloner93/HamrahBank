@@ -1,6 +1,7 @@
 package com.pmb.auth.presentation.register.signature.viewModel
 
 import android.Manifest
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.pmb.auth.domain.ekyc.signature.entity.SignatureParams
@@ -13,7 +14,9 @@ import com.pmb.core.permissions.PermissionDispatcher
 import com.pmb.core.platform.AlertModelState
 import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.platform.Result
+import com.pmb.core.utils.Base64FileHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -25,7 +28,8 @@ class SignatureViewModel @Inject constructor(
     private val cameraManager: CameraManagerImpl,
     private val imageCompressor: ImageCompressor,
     private val fileManager: FileManager,
-    private val sendSignaturePhotoUseCase: SendSignaturePhotoUseCase
+    private val sendSignaturePhotoUseCase: SendSignaturePhotoUseCase,
+    @ApplicationContext private val context: Context
 ) : BaseViewModel<PhotoViewActions, SignatureViewState, SignatureViewEvents>(initialSate) {
     override fun handle(action: PhotoViewActions) {
         when (action) {
@@ -96,6 +100,7 @@ class SignatureViewModel @Inject constructor(
 
     private fun handleSendSignaturePhoto(action: SignatureViewActions.SendSignaturePhoto) {
         viewModelScope.launch {
+
             sendSignaturePhotoUseCase.invoke(SignatureParams(action.uri)).collect { result ->
                 when (result) {
                     is Result.Loading -> {
@@ -221,14 +226,23 @@ class SignatureViewModel @Inject constructor(
                         val compressedFilePath = imageCompressor.compressAndReplaceImage(
                             photoFile.absolutePath, 1024, 1024, compressionPercentage = 50
                         )
-                        setState { state ->
-                            state.copy(
-                                isLoading = false,
-                                isCapturingPhoto = false,
-                                photoCaptured = compressedFilePath,
-                                savedFileUri = photoFile.absolutePath,
-                                cameraHasError = null
+                        val file =
+                            Base64FileHelper.encodeToBase64(
+                                photoFile,
+                                viewModelScope
                             )
+                        file?.let {
+                            val f = it.await()
+                            setState { state ->
+                                state.copy(
+                                    isLoading = false,
+                                    isCapturingPhoto = false,
+                                    photoCaptured = compressedFilePath,
+                                    savedFileUri = photoFile.absolutePath,
+                                    cameraHasError = null,
+                                    fileBase64 = f
+                                )
+                            }
                         }
                     }
                 }

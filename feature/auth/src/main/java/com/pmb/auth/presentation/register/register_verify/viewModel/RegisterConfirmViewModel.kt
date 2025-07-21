@@ -72,6 +72,11 @@ class RegisterConfirmViewModel @Inject constructor(
                                 verifyCodeResponse = result.data
                             )
                         }
+                        updateState(
+                            TimerTypeId.RESEND_TIMER,
+                            0,
+                            timerStatus = TimerStatus.IS_FINISHED
+                        )
                         postEvent(RegisterConfirmViewEvents.ConfirmVerifySucceed)
                     }
 

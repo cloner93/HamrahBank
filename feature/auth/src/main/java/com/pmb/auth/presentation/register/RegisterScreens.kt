@@ -1,5 +1,6 @@
 package com.pmb.auth.presentation.register
 
+import android.util.Log
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
@@ -40,7 +41,6 @@ import com.pmb.auth.presentation.register.select_job_information.SelectJobInform
 import com.pmb.auth.presentation.register.select_job_information.viewModel.SelectJobInformationViewModel
 import com.pmb.auth.presentation.register.signature.SignatureScreen
 import com.pmb.auth.presentation.register.signature.viewModel.SignatureViewModel
-import com.pmb.domain.model.openAccount.branchName.Branch
 import com.pmb.navigation.manager.navigationManager
 import com.pmb.navigation.moduleScreen.RegisterScreens
 
@@ -61,27 +61,17 @@ fun NavGraphBuilder.registerScreenHandler() {
                 )
             val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
             AccountOpeningScreen(
-                viewModel = hiltViewModel<OpeningAccountViewModel>(), sharedState = sharedState
+                viewModel = hiltViewModel<OpeningAccountViewModel>(),
+                sharedState = sharedState
             ) { childState ->
+                Log.d("Masoud Tag", "registerScreenHandler: $childState")
                 sharedViewModel.updateState {
                     sharedState.value.copy(
-                        phoneNumber = childState.phoneNumber, nationalId = childState.nationalId
+                        mobileNo = childState.phoneNumber,
+                        nationalCode = childState.nationalId,
+                        birthDate = "${childState.birthDateYear}${childState.birthDateMonth}${childState.birthDateDay}",
                     )
                 }
-//                childState.phoneNumber?.let { it1 ->
-//                    sharedViewModel.updateState {
-//                        sharedState.value.copy(
-//                            phoneNumber = it1,
-//                        )
-//                    }
-//                }
-//                childState.nationalId?.let { it1 ->
-//                    sharedViewModel.updateState {
-//                        sharedState.value.copy(
-//                            nationalId = it1,
-//                        )
-//                    }
-//                }
             }
         }
         composable(route = RegisterScreens.RegisterNationalId.route) {
@@ -93,10 +83,13 @@ fun NavGraphBuilder.registerScreenHandler() {
             RegisterNationalIdScreen(
                 viewModel = hiltViewModel<RegisterNationalIdViewModel>(),
             ) { childState ->
+                Log.d("Masoud Tag", "registerScreenHandler child state : $childState")
+                Log.d("Masoud Tag", "registerScreenHandler shared state : $sharedState")
                 childState.nationalSerialId?.let { serial ->
                     sharedViewModel.updateState {
                         sharedState.value.copy(
-                            serialId = serial
+                            seriMeli = serial.substring(0, 2),
+                            serialMeli = serial.substring(2, 10)
                         )
                     }
                 }
@@ -108,11 +101,13 @@ fun NavGraphBuilder.registerScreenHandler() {
                     screen = RegisterScreens.RegisterGraph, navBackStackEntry = it
                 )
             val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
+            Log.d("Masoud Tag", "registerScreenHandler shared state : $sharedState")
 
             RegisterConfirmScreen(
                 sharedState = sharedState,
                 viewModel = hiltViewModel<RegisterConfirmViewModel>(),
             ) { childState ->
+                Log.d("Masoud Tag", "registerScreenHandler child state : $childState")
                 sharedViewModel.updateState {
                     sharedState.value.copy(
                         verifyCodeResponse = childState.verifyCodeResponse
@@ -127,17 +122,17 @@ fun NavGraphBuilder.registerScreenHandler() {
                 )
             val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
             AuthenticationInformationScreen(
-                viewModel = hiltViewModel<AuthenticationInformationViewModel>(), sharedState
+                viewModel = hiltViewModel<AuthenticationInformationViewModel>(),
+                sharedState
             ) { childState ->
-
                 sharedViewModel.updateState {
                     sharedState.value.copy(
-                        birthDatePlace = childState.birthDatePlace,
-                        issuePlace = childState.issuePlace,
+                        birthCityCode = childState.birthDatePlace?.cityCode,
                         tel = childState.tel,
-                        education = childState.education,
-                        issueCode = childState.issueCode,
-                        issueDate = "${childState.issueDateYear}${childState.issueDateMonth}${childState.issueDateDay}".toInt()
+                        education = childState.education?.id,
+                        issueCityCode = childState.issuePlace?.cityCode,
+                        issueRgnCode = childState.issuePlace?.provinceCode,
+                        issueDate = "${childState.issueDateYear}${childState.issueDateMonth}${childState.issueDateDay}"
                     )
                 }
             }
@@ -149,12 +144,14 @@ fun NavGraphBuilder.registerScreenHandler() {
                 )
             val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
             JobInformationScreen(
-                viewModel = hiltViewModel<JobInformationViewModel>(), sharedState
+                viewModel = hiltViewModel<JobInformationViewModel>(),
+                sharedState
             ) { childState ->
                 childState.data?.let { it1 ->
                     sharedViewModel.updateState {
                         sharedState.value.copy(
-                            jobInformation = childState.jobInformation, annualIncomeType = it1
+                            jobCode = childState.jobInformation?.jobCode,
+                            cinCpId = it1.incomePredictId
                         )
                     }
                 }
@@ -166,9 +163,21 @@ fun NavGraphBuilder.registerScreenHandler() {
             )
         }
         composable(route = RegisterScreens.CheckPostalCode.route) {
+            val sharedViewModel =
+                it.navigationManager.retrieveSharedViewModel<RegisterSharedViewModel>(
+                    screen = RegisterScreens.RegisterGraph, navBackStackEntry = it
+                )
+            val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
             CheckPostalCodeScreen(
                 viewModel = hiltViewModel<CheckPostalCodeViewModel>()
-            )
+            ) { post, address ->
+                sharedViewModel.updateState {
+                    sharedState.value.copy(
+                        postcode = post.toLong(),
+                        address = address
+                    )
+                }
+            }
         }
         composable(route = RegisterScreens.DepositInformation.route) {
             val sharedViewModel =
@@ -177,24 +186,13 @@ fun NavGraphBuilder.registerScreenHandler() {
                 )
             val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
             DepositInformationScreen(
-                viewModel = hiltViewModel<DepositInformationViewModel>(), sharedState.value
+                viewModel = hiltViewModel<DepositInformationViewModel>(),
+                sharedState.value
             ) { childState ->
                 sharedViewModel.updateState {
                     sharedState.value.copy(
-                        accType = childState.accType,
-                        accCity = childState.city,
-                        province = childState.province,
-                        branch = Branch(
-                            branchCode = 563659,
-                            organizationType = 0,
-                            branchName = "",
-                            tel = "",
-                            fax = "",
-                            telCode = 0,
-                            hajCityCode = 0,
-                            hajProvinceCode = 0,
-                            address = ""
-                        )
+                        accType = childState.accType?.accountType,
+                        branch = branch
                     )
                 }
             }
@@ -215,22 +213,56 @@ fun NavGraphBuilder.registerScreenHandler() {
             )
         }
         composable(route = RegisterScreens.Signature.route) {
+            val sharedViewModel =
+                it.navigationManager.retrieveSharedViewModel<RegisterSharedViewModel>(
+                    screen = RegisterScreens.RegisterGraph, navBackStackEntry = it
+                )
+            val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
             SignatureScreen(
                 viewModel = hiltViewModel<SignatureViewModel>()
-            )
+            ) { childState ->
+                sharedViewModel.updateState {
+                    sharedState.value.copy(
+                        signData = childState
+                    )
+                }
+            }
         }
         composable(route = RegisterScreens.AuthenticationSelectServices.route) {
+            val sharedViewModel =
+                it.navigationManager.retrieveSharedViewModel<RegisterSharedViewModel>(
+                    screen = RegisterScreens.RegisterGraph, navBackStackEntry = it
+                )
+            val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
             AuthenticationSelectServicesScreen(
                 viewModel = hiltViewModel<AuthenticationSelectServicesViewModel>()
-            )
+            ) { childState ->
+                sharedViewModel.updateState {
+                    sharedState.value.copy(
+                        cardReq = if (childState.localData?.selectServicesList?.findLast { id == 1 }?.isChecked?.value == true) 1 else 0,
+                        intBankReq = if (childState.localData?.selectServicesList?.findLast { id == 0 }?.isChecked?.value == true) 1 else 0
+                    )
+                }
+            }
         }
         composable(route = RegisterScreens.RegisterAuthentication.route) {
             RegisterAuthenticationScreen()
         }
         composable(route = RegisterScreens.RegisterFacePhotoCapture.route) {
+            val sharedViewModel =
+                it.navigationManager.retrieveSharedViewModel<RegisterSharedViewModel>(
+                    screen = RegisterScreens.RegisterGraph, navBackStackEntry = it
+                )
+            val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
             RegisterFacePhotoCaptureScreen(
                 viewModel = hiltViewModel<RegisterFacePhotoCapturedViewModel>()
-            )
+            ){childState->
+                sharedViewModel.updateState {
+                    sharedState.value.copy(
+                        authImage = childState
+                    )
+                }
+            }
         }
         composable(route = RegisterScreens.RegisterVideo.route) {
             RegisterVideoScreen(

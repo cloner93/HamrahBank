@@ -12,6 +12,7 @@ import com.pmb.core.permissions.PermissionDispatcher
 import com.pmb.core.platform.AlertModelState
 import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.platform.Result
+import com.pmb.core.utils.Base64FileHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -241,14 +242,22 @@ class RegisterFacePhotoCapturedViewModel @Inject constructor(
                         val compressedFilePath = imageCompressor.compressAndReplaceImage(
                             photoFile.absolutePath, 1024, 1024, compressionPercentage = 50
                         )
-                        setState { state ->
-                            state.copy(
-                                isLoading = false,
-                                isCapturingPhoto = false,
-                                photoCaptured = compressedFilePath,
-                                savedFileUri = photoFile.absolutePath,
-                                cameraHasError = null
+                        val file =
+                            Base64FileHelper.encodeToBase64(
+                                photoFile,
+                                viewModelScope
                             )
+                        file?.let {
+                            val f = it.await()
+                            setState { state ->
+                                state.copy(
+                                    isLoading = false,
+                                    isCapturingPhoto = false,
+                                    photoCaptured = compressedFilePath,
+                                    savedFileUri = photoFile.absolutePath,
+                                    cameraHasError = null, fileBase64 = f
+                                )
+                            }
                         }
                     }
                 }

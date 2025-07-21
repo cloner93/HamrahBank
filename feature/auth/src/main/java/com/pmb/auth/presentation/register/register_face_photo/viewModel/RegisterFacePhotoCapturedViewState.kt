@@ -6,6 +6,7 @@ import com.pmb.core.platform.AlertModelState
 data class RegisterFacePhotoCapturedViewState(
     val isLoading :Boolean = false,
     val alertModelState: AlertModelState?=null,
+    val fileBase64 :String ?=null,
     override val hasCameraPermission: Boolean = false,
     override val hasFilePermissions: Boolean = false,
     override val isCameraReady: Boolean = false,

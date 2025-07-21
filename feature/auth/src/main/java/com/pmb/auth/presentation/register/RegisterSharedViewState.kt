@@ -1,33 +1,34 @@
 package com.pmb.auth.presentation.register
 
-import com.pmb.auth.domain.Education
 import com.pmb.core.platform.BaseSharedState
 import com.pmb.domain.model.openAccount.FetchAdmittanceTextResponse
-import com.pmb.domain.model.openAccount.accountType.AccType
-import com.pmb.domain.model.openAccount.accountType.Province
-import com.pmb.domain.model.openAccount.accountVerifyCode.AnnualIncomeType
-import com.pmb.domain.model.openAccount.accountVerifyCode.CityOfBirthInfoDTO
 import com.pmb.domain.model.openAccount.accountVerifyCode.VerifyCodeResponse
-import com.pmb.domain.model.openAccount.branchName.Branch
-import com.pmb.domain.model.openAccount.cityName.City
-import com.pmb.domain.model.openAccount.jobLevel.JobLevel
 
 data class RegisterSharedViewState(
     val verifyCodeResponse: VerifyCodeResponse? = null,
-    val phoneNumber: String? = null,
-    val serialId: String? = null,
-    val nationalId: String? = null,
-    val birthDatePlace: CityOfBirthInfoDTO? = null,
-    val issuePlace: CityOfBirthInfoDTO? = null,
-    val issueDate: Int? = null,
-    val issueCode: Int? = null,
-    val tel: String? = null,
-    val education: Education? = null,
-    val annualIncomeType: AnnualIncomeType? = null,
-    val accType: AccType? = null,
-    val province: Province? = null,
-    val accCity: City? = null,
-    val branch: Branch? = null,
-    val jobInformation: JobLevel? = null,
-    val admittanceTextResponse: FetchAdmittanceTextResponse? = null
+    val admittanceTextResponse: FetchAdmittanceTextResponse? = null,
+    val accType: Int? = null,//
+    val address: String? = null,//
+    val birthCityCode: Int? = null,//
+    val birthDate: String? = null,//
+    val branch: Int? = null,//
+    val cardFormatId: Int? = null,//
+    val cardReq: Int? = null,//
+    val cinCpId: Int? = null,//
+    val ctrApId: Int? = null,//
+    val education: Int? = null,//
+    val intBankReq: Int? = null,//
+    val issueCityCode: Int? = null,//
+    val issueDate: String? = null,//
+    val issueRgnCode: Int? = null,//
+    val jobCode: Int? = null,//
+    val mobileNo: String? = null,//
+    val nationalCode: String? = null,//
+    val postcode: Long? = null,//
+    val seriMeli: String? = null,//
+    val serialMeli: String? = null,//
+    val signData: String? = null,
+    val tel: String? = null,//
+    val authImage: String? = null,
+    val authVideo: String? = null
 ) : BaseSharedState

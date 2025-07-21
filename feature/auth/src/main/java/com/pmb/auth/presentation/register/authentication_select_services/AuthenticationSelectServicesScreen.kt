@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import com.pmb.auth.R
 import com.pmb.auth.presentation.register.authentication_select_services.viewModel.AuthenticationSelectServicesViewEvent
 import com.pmb.auth.presentation.register.authentication_select_services.viewModel.AuthenticationSelectServicesViewModel
+import com.pmb.auth.presentation.register.authentication_select_services.viewModel.AuthenticationSelectServicesViewState
 import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.RoundedCornerCheckboxComponent
 import com.pmb.ballon.component.base.AppButton
@@ -45,7 +46,8 @@ import com.pmb.navigation.moduleScreen.RegisterScreens
 
 @Composable
 fun AuthenticationSelectServicesScreen(
-    viewModel: AuthenticationSelectServicesViewModel
+    viewModel: AuthenticationSelectServicesViewModel,
+    updateState :(AuthenticationSelectServicesViewState)-> Unit
 ) {
     val navigationManager: NavigationManager = LocalNavigationManager.current
     val viewState by viewModel.viewState.collectAsState()
@@ -105,6 +107,7 @@ fun AuthenticationSelectServicesScreen(
                         enable = !viewState.data.isNullOrEmpty(),
                         title = stringResource(R.string._continue),
                         onClick = {
+                            updateState(viewState)
                             navigationManager.navigate(RegisterScreens.RegisterChooseCard)
                         })
                 }
