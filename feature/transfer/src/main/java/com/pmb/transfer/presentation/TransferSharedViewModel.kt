@@ -18,6 +18,9 @@ class TransferSharedViewModel @Inject constructor() : ViewModel() {
     private val _amount = MutableStateFlow(0.0)
     val amount: StateFlow<Double> = _amount
 
+    private val _transferMethods = MutableStateFlow<List<TransferMethodEntity>>(listOf())
+    val transferMethods: StateFlow<List<TransferMethodEntity>> = _transferMethods
+
     private val _transferMethod = MutableStateFlow<TransferMethodEntity?>(null)
     val transferMethod: StateFlow<TransferMethodEntity?> = _transferMethod
 
@@ -41,6 +44,11 @@ class TransferSharedViewModel @Inject constructor() : ViewModel() {
 
     fun setAmount(amount: Double) {
         _amount.value = amount
+    }
+
+
+    fun setTransferMethods(transferMethods: List<TransferMethodEntity>) {
+        _transferMethods.value = transferMethods
     }
 
     fun setTransferMethod(transferMethod: TransferMethodEntity?) {

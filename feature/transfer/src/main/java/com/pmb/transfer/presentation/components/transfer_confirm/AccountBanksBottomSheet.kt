@@ -53,9 +53,9 @@ fun AccountBanksBottomSheet(
                     items(items.size) { index ->
                         val item = items[index]
                         ItemCheckRow(
-                            title = item.accountType,
+                            title = item.accountType ?: "",
                             titleMore = item.accountNumber,
-                            subtitle = item.accountHint?:"",
+                            subtitle = item.accountHint ?: "",
                             subtitleMore = stringResource(
                                 com.pmb.ballon.R.string.price_in_real_currency,
                                 item.accountBalance.toCurrency()

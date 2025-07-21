@@ -57,7 +57,8 @@ fun CaptionText(
     text: String,
     color: Color = Color.Unspecified,
     textAlign: TextAlign = TextAlign.Unspecified,
-    overflow: TextOverflow = TextOverflow.Clip
+    overflow: TextOverflow = TextOverflow.Clip,
+    maxLines: Int = Int.MAX_VALUE
 ) {
     BaseAppText(
         modifier = modifier, title = text, style = TextStyle(
@@ -65,7 +66,8 @@ fun CaptionText(
             typography = AppTheme.typography.caption,
             textAlign = textAlign,
             overflow = overflow
-        )
+        ),
+        maxLines = maxLines
     )
 }
 
@@ -106,14 +108,18 @@ fun BodyMediumText(
     modifier: Modifier = Modifier,
     text: String,
     color: Color = Color.Unspecified,
-    textAlign: TextAlign = TextAlign.Unspecified
+    textAlign: TextAlign = TextAlign.Unspecified,
+    overflow: TextOverflow = TextOverflow.Clip,
+    maxLines: Int = Int.MAX_VALUE
 ) {
     BaseAppText(
         modifier = modifier, title = text, style = TextStyle(
             color = color,
             typography = AppTheme.typography.bodyMedium,
-            textAlign = textAlign
-        )
+            textAlign = textAlign,
+            overflow = overflow
+        ),
+        maxLines = maxLines
     )
 }
 

@@ -35,6 +35,7 @@ class TransferReceiptViewModel @Inject constructor() :
 
     private fun handleUpdateTransferReceipt(receipt: TransferReceiptEntity?) {
         receipt ?: return
+        receipt.source ?: return
         setState {
             it.copy(
                 receipt = receipt,
@@ -50,7 +51,7 @@ class TransferReceiptViewModel @Inject constructor() :
                     ),
                     RowData.TwoText(
                         subtitle = when (receipt.source) {
-                            is TransferSourceEntity.Account -> receipt.source.account.accountHolderName
+                            is TransferSourceEntity.Account -> receipt.source.account.accountHolderName?:""
                             is TransferSourceEntity.Card -> receipt.source.card.cardHolderName
                         },
                         title = "شخص انتقال دهنده",
@@ -67,7 +68,7 @@ class TransferReceiptViewModel @Inject constructor() :
                         subtitle =
                             when (receipt.source) {
                                 is TransferSourceEntity.Account ->
-                                    BankUtil.formatMaskAccountBankNumber(receipt.source.account.accountNumber)
+                                    BankUtil.formatMaskAccountBankNumber(receipt.source.account.accountNumber?: "")
 
                                 is TransferSourceEntity.Card ->
                                     BankUtil.formatMaskCardNumber(receipt.source.card.cardNumber)

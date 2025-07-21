@@ -13,19 +13,16 @@ import javax.inject.Inject
 @HiltViewModel
 class TransferMethodViewModel @Inject constructor(
     private val transferMethodUseCase: TransferMethodUseCase
-) :
-    BaseViewModel<TransferMethodViewActions, TransferMethodViewState, TransferMethodViewEvents>(
-        TransferMethodViewState()
-    ) {
-    init {
-        fetchTransferMethods()
-    }
+) : BaseViewModel<TransferMethodViewActions, TransferMethodViewState, TransferMethodViewEvents>(
+    TransferMethodViewState()
+) {
 
     override fun handle(action: TransferMethodViewActions) {
         when (action) {
             TransferMethodViewActions.ClearAlert -> setState { it.copy(alertState = null) }
-            is TransferMethodViewActions.SelectPaymentType ->
-                handleSelectPaymentType(action.transferMethod)
+            is TransferMethodViewActions.SelectPaymentType -> handleSelectPaymentType(action.transferMethod)
+
+            is TransferMethodViewActions.SetPaymentTypes -> setState { it.copy(transferMethods = action.methods) }
         }
     }
 
@@ -36,17 +33,13 @@ class TransferMethodViewModel @Inject constructor(
                     is Result.Error -> {
                         setState {
                             it.copy(
-                                loading = false,
-                                alertState = AlertModelState.SnackBar(
-                                    message = result.message,
-                                    onActionPerformed = {
-                                        setState { it.copy(loading = false) }
-                                    },
-                                    onDismissed = {
-                                        setState { it.copy(loading = false) }
-                                    }
-                                )
-                            )
+                                loading = false, alertState = AlertModelState.Dialog(
+                                title = "خطا",
+                                description = " ${result.message}",
+                                positiveButtonTitle = "تایید",
+                                onPositiveClick = {
+                                    setState { state -> state.copy(alertState = null) }
+                                }))
                         }
                     }
 
@@ -57,8 +50,7 @@ class TransferMethodViewModel @Inject constructor(
                     is Result.Success -> {
                         setState {
                             it.copy(
-                                loading = false,
-                                transferMethods = result.data
+                                loading = false, transferMethods = result.data
                             )
                         }
                     }
