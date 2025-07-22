@@ -43,8 +43,7 @@ fun ShowInputsByTransferType(
     ) {
 
         when (transferMethod.paymentType) {
-            PaymentType.CARD_TO_CARD,
-            PaymentType.MELLAT_TO_MELLAT ->
+            PaymentType.CARD_TO_CARD ->
                 if (sourceCardBanks != null)
                     defaultSource.asCard()?.let { defaultCard ->
                         CartBanksComponent(
@@ -54,7 +53,7 @@ fun ShowInputsByTransferType(
                         )
                     }
 
-
+            PaymentType.MELLAT_TO_MELLAT,
             PaymentType.INTERNAL_SATNA,
             PaymentType.INTERNAL_PAYA,
             PaymentType.INTERNAL_BRIDGE ->

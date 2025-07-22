@@ -9,6 +9,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
@@ -40,7 +41,8 @@ fun ClientBankProfileInfo(
         Spacer(modifier = Modifier.size(12.dp))
         Headline6Text(
             text = item.clientBankEntity.name,
-            color = AppTheme.colorScheme.foregroundNeutralDefault
+            color = AppTheme.colorScheme.foregroundNeutralDefault,
+            textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.size(4.dp))
         CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {

@@ -9,7 +9,12 @@ import com.pmb.ballon.ui.theme.AppTheme
 
 @Composable
 fun MessageDialog(
-    title: String, message: String? = null, onConfirm: (() -> Unit)?, onDismiss: (() -> Unit)?
+    title: String,
+    message: String? = null,
+    positiveButtonTitle: String = "تایید",
+    negativeButtonTitle: String = "لغو",
+    onConfirm: (() -> Unit)?,
+    onDismiss: (() -> Unit)?
 ) {
     AlertDialog(
         containerColor = AppTheme.colorScheme.background1Neutral,
@@ -34,14 +39,14 @@ fun MessageDialog(
         },
         confirmButton = {
             onConfirm?.let {
-                AppButton(title = "OK", onClick = {
+                AppButton(title = positiveButtonTitle, onClick = {
                     onConfirm()
                 })
             }
         },
         dismissButton = {
             onDismiss?.let {
-                AppButton(title = "Cancel", onClick = {
+                AppButton(title = negativeButtonTitle, onClick = {
                     onDismiss()
                 })
             }

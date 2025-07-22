@@ -50,7 +50,7 @@ fun TransferConfirmScreen(
     reason: ReasonEntity?,
     clear: () -> Unit,
     result: (
-        source: TransferSourceEntity,
+        source: TransferSourceEntity?,
         receipt: TransferReceiptEntity?,
         verificationInfo: CardVerificationEntity?
     ) -> Unit
@@ -71,7 +71,7 @@ fun TransferConfirmScreen(
 
                 is TransferConfirmViewEvents.NavigateToReceipt -> {
                     result.invoke(
-                        event.source,
+                        event.receipt.source,
                         event.receipt,
                         null
                     )

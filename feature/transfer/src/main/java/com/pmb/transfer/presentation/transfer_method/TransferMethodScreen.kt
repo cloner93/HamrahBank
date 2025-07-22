@@ -33,6 +33,7 @@ import com.pmb.transfer.presentation.transfer_method.viewmodel.TransferMethodVie
 @Composable
 fun TransferMethodScreen(
     viewModel: TransferMethodViewModel,
+    methods: List<TransferMethodEntity>,
     selectedTransferMethod: (TransferMethodEntity) -> Unit
 ) {
     val viewState by viewModel.viewState.collectAsState()
@@ -47,6 +48,10 @@ fun TransferMethodScreen(
                 }
             }
         }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.handle(TransferMethodViewActions.SetPaymentTypes(methods))
     }
 
     Box(modifier = Modifier.background(color = AppTheme.colorScheme.background1Neutral)) {

@@ -8,19 +8,26 @@ import com.pmb.transfer.domain.entity.BankIdentifierNumberType
 import com.pmb.transfer.domain.entity.TransactionClientBankEntity
 import com.pmb.transfer.domain.param.AccountDetailParam
 import com.pmb.transfer.domain.use_case.AccountDetailUseCase
+import com.pmb.transfer.domain.use_case.SourceAccountBankUseCase
 import com.pmb.transfer.utils.BankUtil.extractOrderByIdentifier
 import com.pmb.transfer.utils.BankUtil.formatGropedWithSeparator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.invoke
 
 @HiltViewModel
 class TransferDestinationInputViewModel @Inject constructor(
+    private val sourceAccountBankUseCase: SourceAccountBankUseCase,
     private val accountDetailUseCase: AccountDetailUseCase
 ) :
     BaseViewModel<TransferDestinationInputViewActions, TransferDestinationInputViewState, TransferDestinationInputViewEvents>(
         TransferDestinationInputViewState()
     ) {
+    init {
+        fetchSourceAccount() // this must call before call other api for transfer flow
+    }
+
     override fun handle(action: TransferDestinationInputViewActions) {
         when (action) {
             TransferDestinationInputViewActions.CheckAccount -> handleSubmitAccount(viewState.value.identifierNumber)
@@ -59,13 +66,12 @@ class TransferDestinationInputViewModel @Inject constructor(
                         setState {
                             it.copy(
                                 loading = false,
-                                alertState = AlertModelState.SnackBar(
-                                    message = result.message,
-                                    onActionPerformed = {
-                                        setState { it.copy(loading = false) }
-                                    },
-                                    onDismissed = {
-                                        setState { it.copy(loading = false) }
+                                alertState = AlertModelState.Dialog(
+                                    title = "خطا",
+                                    description = " ${result.message}",
+                                    positiveButtonTitle = "تایید",
+                                    onPositiveClick = {
+                                        setState { state -> state.copy(alertState = null) }
                                     }
                                 )
                             )
@@ -117,6 +123,32 @@ class TransferDestinationInputViewModel @Inject constructor(
                 setState { it.copy(loading = false) }
                 postEvent(TransferDestinationInputViewEvents.NavigateToDestinationAmount(data))
             })
+        }
+    }
+
+    private fun fetchSourceAccount() {
+        viewModelScope.launch {
+            sourceAccountBankUseCase.invoke(SourceAccountBankUseCase.Params(userId = "1"))
+                .collect { result ->
+                    when (result) {
+                        is Result.Error ->
+                            setState {
+                                it.copy(
+                                    alertState = AlertModelState.Dialog(
+                                        title = "خطا",
+                                        description = " ${result.message}",
+                                        positiveButtonTitle = "تایید",
+                                        onPositiveClick = {
+                                            setState { state -> state.copy(alertState = null) }
+                                        }
+                                    )
+                                )
+                            }
+
+                        Result.Loading -> Unit
+                        is Result.Success -> Unit
+                    }
+                }
         }
     }
 }

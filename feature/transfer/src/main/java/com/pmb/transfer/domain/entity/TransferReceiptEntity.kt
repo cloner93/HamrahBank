@@ -1,13 +1,14 @@
 package com.pmb.transfer.domain.entity
 
 import com.pmb.core.platform.DomainModel
+import java.util.Date
 
 data class TransferReceiptEntity(
-    val amount: Double,
-    val source: TransferSourceEntity,
-    val destination: TransactionClientBankEntity,
+    val amount: Double = 0.0,
+    val source: TransferSourceEntity? = null,
+    val destination: TransactionClientBankEntity? = null,
     val status: ReceiptStatus,
-    val date: Long,
+    val date: Long = Date().time,
     val paymentType: PaymentType,
     val trackingNumber: Long,
     val message: String? = null

@@ -130,9 +130,10 @@ fun NavGraphBuilder.transferScreensHandle() {
 
             TransferAmountScreen(
                 viewModel = hiltViewModel<TransferAmountViewModel>(),
-                account = sharedViewModel.destinationAccount.value
-            ) { amount ->
+                account = sharedViewModel.destinationAccount.value,
+            ) { amount, methods ->
                 sharedViewModel.setAmount(amount)
+                sharedViewModel.setTransferMethods(methods)
             }
         }
         composable(route = TransferScreens.TransferMethod.route) {
@@ -142,7 +143,8 @@ fun NavGraphBuilder.transferScreensHandle() {
                     navBackStackEntry = it
                 )
             TransferMethodScreen(
-                viewModel = hiltViewModel<TransferMethodViewModel>()
+                viewModel = hiltViewModel<TransferMethodViewModel>(),
+                methods = sharedViewModel.transferMethods.value
             ) { transferMethod ->
                 sharedViewModel.setTransferMethod(transferMethod)
             }
@@ -160,7 +162,7 @@ fun NavGraphBuilder.transferScreensHandle() {
                 reason = sharedViewModel.transferReason.value,
                 transferMethod = sharedViewModel.transferMethod.value,
                 clear = { sharedViewModel.clearPaymentData() }
-            ) { source: TransferSourceEntity,
+            ) { source: TransferSourceEntity?,
                 receipt: TransferReceiptEntity?,
                 verificationInfo: CardVerificationEntity? ->
 

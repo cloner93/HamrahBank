@@ -120,78 +120,78 @@ private fun ProfileInfoItemsComponent(viewModel: PersonalInfoViewModel) {
                     viewModel.handle(PersonalInfoViewActions.ChangeUsername)
                 })
 
-            MenuItem(
-                title = stringResource(R.string.change_phone_number),
-                startIcon = com.pmb.ballon.R.drawable.ic_mobile,
-                endIcon = com.pmb.ballon.R.drawable.ic_arrow_left,
-                bottomDivider = true,
-                titleStyle = TextStyle(color = AppTheme.colorScheme.foregroundNeutralDefault),
-                startIconStyle = IconStyle(tint = AppTheme.colorScheme.onBackgroundPrimaryCTA),
-                endContent = {
-                    CaptionText(
-                        text = viewState.personalInfo.safePhoneNumber,
-                        color = AppTheme.colorScheme.onBackgroundNeutralSubdued
-                    )
-                },
-                onItemClick = {
-                    viewModel.handle(PersonalInfoViewActions.ChangePhoneNumber)
-                })
+//            MenuItem(
+//                title = stringResource(R.string.change_phone_number),
+//                startIcon = com.pmb.ballon.R.drawable.ic_mobile,
+//                endIcon = com.pmb.ballon.R.drawable.ic_arrow_left,
+//                bottomDivider = true,
+//                titleStyle = TextStyle(color = AppTheme.colorScheme.foregroundNeutralDefault),
+//                startIconStyle = IconStyle(tint = AppTheme.colorScheme.onBackgroundPrimaryCTA),
+//                endContent = {
+//                    CaptionText(
+//                        text = viewState.personalInfo.safePhoneNumber,
+//                        color = AppTheme.colorScheme.onBackgroundNeutralSubdued
+//                    )
+//                },
+//                onItemClick = {
+//                    viewModel.handle(PersonalInfoViewActions.ChangePhoneNumber)
+//                })
 
-            MenuItem(
-                title = stringResource(R.string.change_address),
-                startIcon = com.pmb.ballon.R.drawable.ic_address,
-                endIcon = com.pmb.ballon.R.drawable.ic_arrow_left,
-                bottomDivider = true,
-                titleStyle = TextStyle(color = AppTheme.colorScheme.foregroundNeutralDefault),
-                startIconStyle = IconStyle(tint = AppTheme.colorScheme.onBackgroundPrimaryCTA),
-                endContent = {
-                    BaseAppText(
-                        modifier = Modifier.weight(4f).padding(start = 16.dp),
-                        title = viewState.personalInfo.safeAddressEntity.safeAddress,
-                        maxLines = 1,
-                        style = TextStyle(
-                            color = AppTheme.colorScheme.onBackgroundNeutralSubdued,
-                            typography = AppTheme.typography.caption,
-                            overflow = TextOverflow.Ellipsis
-                        ),
-                    )
-                },
-                onItemClick = {
-                    viewModel.handle(PersonalInfoViewActions.ChangeAddress)
-                })
-
-            MenuItem(
-                title = stringResource(R.string.change_job),
-                startIcon = com.pmb.ballon.R.drawable.ic_job,
-                endIcon = com.pmb.ballon.R.drawable.ic_arrow_left,
-                bottomDivider = true,
-                titleStyle = TextStyle(color = AppTheme.colorScheme.foregroundNeutralDefault),
-                startIconStyle = IconStyle(tint = AppTheme.colorScheme.onBackgroundPrimaryCTA),
-                endContent = {
-                    CaptionText(
-                        text = viewState.personalInfo.safeJobEntity.title,
-                        color = AppTheme.colorScheme.onBackgroundNeutralSubdued
-                    )
-                },
-                onItemClick = {
-                    viewModel.handle(PersonalInfoViewActions.ChangeJob)
-                })
-            MenuItem(
-                title = stringResource(R.string.change_education),
-                startIcon = com.pmb.ballon.R.drawable.ic_education,
-                endIcon = com.pmb.ballon.R.drawable.ic_arrow_left,
-                bottomDivider = false,
-                titleStyle = TextStyle(color = AppTheme.colorScheme.foregroundNeutralDefault),
-                startIconStyle = IconStyle(tint = AppTheme.colorScheme.onBackgroundPrimaryCTA),
-                endContent = {
-                    CaptionText(
-                        text = viewState.personalInfo.safeEducation.title,
-                        color = AppTheme.colorScheme.onBackgroundNeutralSubdued
-                    )
-                },
-                onItemClick = {
-                    viewModel.handle(PersonalInfoViewActions.ChangeEducation)
-                })
+//            MenuItem(
+//                title = stringResource(R.string.change_address),
+//                startIcon = com.pmb.ballon.R.drawable.ic_address,
+//                endIcon = com.pmb.ballon.R.drawable.ic_arrow_left,
+//                bottomDivider = true,
+//                titleStyle = TextStyle(color = AppTheme.colorScheme.foregroundNeutralDefault),
+//                startIconStyle = IconStyle(tint = AppTheme.colorScheme.onBackgroundPrimaryCTA),
+//                endContent = {
+//                    BaseAppText(
+//                        modifier = Modifier.weight(4f).padding(start = 16.dp),
+//                        title = viewState.personalInfo.safeAddressEntity.safeAddress,
+//                        maxLines = 1,
+//                        style = TextStyle(
+//                            color = AppTheme.colorScheme.onBackgroundNeutralSubdued,
+//                            typography = AppTheme.typography.caption,
+//                            overflow = TextOverflow.Ellipsis
+//                        ),
+//                    )
+//                },
+//                onItemClick = {
+//                    viewModel.handle(PersonalInfoViewActions.ChangeAddress)
+//                })
+//
+//            MenuItem(
+//                title = stringResource(R.string.change_job),
+//                startIcon = com.pmb.ballon.R.drawable.ic_job,
+//                endIcon = com.pmb.ballon.R.drawable.ic_arrow_left,
+//                bottomDivider = true,
+//                titleStyle = TextStyle(color = AppTheme.colorScheme.foregroundNeutralDefault),
+//                startIconStyle = IconStyle(tint = AppTheme.colorScheme.onBackgroundPrimaryCTA),
+//                endContent = {
+//                    CaptionText(
+//                        text = viewState.personalInfo.safeJobEntity.title,
+//                        color = AppTheme.colorScheme.onBackgroundNeutralSubdued
+//                    )
+//                },
+//                onItemClick = {
+//                    viewModel.handle(PersonalInfoViewActions.ChangeJob)
+//                })
+//            MenuItem(
+//                title = stringResource(R.string.change_education),
+//                startIcon = com.pmb.ballon.R.drawable.ic_education,
+//                endIcon = com.pmb.ballon.R.drawable.ic_arrow_left,
+//                bottomDivider = false,
+//                titleStyle = TextStyle(color = AppTheme.colorScheme.foregroundNeutralDefault),
+//                startIconStyle = IconStyle(tint = AppTheme.colorScheme.onBackgroundPrimaryCTA),
+//                endContent = {
+//                    CaptionText(
+//                        text = viewState.personalInfo.safeEducation.title,
+//                        color = AppTheme.colorScheme.onBackgroundNeutralSubdued
+//                    )
+//                },
+//                onItemClick = {
+//                    viewModel.handle(PersonalInfoViewActions.ChangeEducation)
+//                })
         }
     )
 }
