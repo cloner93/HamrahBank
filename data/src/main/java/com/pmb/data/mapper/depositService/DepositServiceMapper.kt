@@ -16,7 +16,10 @@ fun List<Deposit>.toDomain(): List<DepositModel> {
                 amount = it.balance.toDouble(),
                 currency = "ریال",
                 ibanNumber = it.shebaNo.toString(),
-                cardNumber = ""
+                cardNumber = "",
+                branchName = it.organizationName ?: "",
+                branchCode = it.branchCode.toString(),
+                lastTransactionDate = it.lastTransactionDate
             )
         )
     }

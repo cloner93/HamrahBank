@@ -111,7 +111,7 @@ private fun Content(
     depositDetail.interestRate?.let {
         Item(
             "نرخ سود",
-            it
+            "$it %"
         )
     }
 }
