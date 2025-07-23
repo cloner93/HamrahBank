@@ -29,14 +29,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.pmb.account.R
+import com.pmb.ballon.component.annotation.AppPreview
 import com.pmb.ballon.component.base.AppImage
 import com.pmb.ballon.component.base.ButtonMediumText
 import com.pmb.ballon.component.base.ButtonSmallText
-import com.pmb.ballon.component.base.Headline4Text
 import com.pmb.ballon.component.base.Headline5Text
 import com.pmb.ballon.component.base.Headline6Text
 import com.pmb.ballon.models.ImageStyle
@@ -48,6 +47,18 @@ import com.pmb.domain.model.CardType
 @Composable
 fun CardInfo(item: CardModel, onClick: (CardModel) -> Unit) {
     val cardNumberSplint = item.cardNumber.chunked(4)
+
+    val backgroundColor = if (item.cardType == CardType.MELLAT_CARD)
+        Brush.linearGradient(
+            colors = listOf(Color(0xFFC1112E), Color(0xFFFF4861))
+        ) else
+        Brush.linearGradient(
+            colors = listOf(Color(0xFFFCBEA4), Color(0xFFFAE2CB))
+        )
+
+    val textColor = if (item.cardType == CardType.MELLAT_CARD)
+        Color.White else Color(0xFF494949)
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -60,9 +71,7 @@ fun CardInfo(item: CardModel, onClick: (CardModel) -> Unit) {
             modifier = Modifier
                 .fillMaxSize()
                 .background(
-                    brush = Brush.linearGradient(
-                        colors = listOf(Color(0xFFC1112E), Color(0xFFFF4861))
-                    )
+                    brush = backgroundColor
                 )
         ) {
             Image(
@@ -105,9 +114,9 @@ fun CardInfo(item: CardModel, onClick: (CardModel) -> Unit) {
             )
             Column(
                 modifier = Modifier
-                    .padding(24.dp)
+                    .padding(18.dp)
                     .fillMaxSize(),
-                verticalArrangement = Arrangement.SpaceBetween
+                verticalArrangement = Arrangement.SpaceAround
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -118,40 +127,77 @@ fun CardInfo(item: CardModel, onClick: (CardModel) -> Unit) {
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         AppImage(
-                            image = R.drawable.mellat_logo_white,
+                            image = if (item.cardType == CardType.MELLAT_CARD) R.drawable.mellat_logo_white else R.drawable.ic_colored_mellat,
                             style = ImageStyle(size = Size.FIX(34.dp))
                         )
 
                         Spacer(modifier = Modifier.width(6.dp))
-                        Headline6Text(text = item.cardType.cardType, color = Color.White)
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+
+                            Headline6Text(
+                                text = item.cardType.cardType,
+                                color = textColor
+                            )
+                            item.placeholder?.let {
+                                Spacer(modifier = Modifier.width(4.dp))
+                                ButtonSmallText(
+                                    text = "(" + item.placeholder + ")",
+                                    color = textColor
+                                )
+                            }
+                        }
                     }
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Headline5Text(text = item.amount.toCurrency(), color = Color.White)
-                        Spacer(modifier = Modifier.width(6.dp))
-                        ButtonSmallText(text = item.currency, color = Color.White)
+                    if (item.amount != 0.0) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Headline6Text(
+                                text = item.amount.toCurrency(),
+                                color = textColor
+                            )
+                            Spacer(modifier = Modifier.width(6.dp))
+                            ButtonSmallText(
+                                text = item.currency,
+                                color = textColor
+                            )
+                        }
                     }
                 }
 
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(10.dp))
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    Headline4Text(text = cardNumberSplint[3], color = Color.White)
-                    Headline4Text(text = cardNumberSplint[2], color = Color.White)
-                    Headline4Text(text = cardNumberSplint[1], color = Color.White)
-                    Headline4Text(text = cardNumberSplint[0], color = Color.White)
+                    Headline5Text(
+                        text = cardNumberSplint[3],
+                        color = textColor
+                    )
+                    Headline5Text(
+                        text = cardNumberSplint[2],
+                        color = textColor
+                    )
+                    Headline5Text(
+                        text = cardNumberSplint[1],
+                        color = textColor
+                    )
+                    Headline5Text(
+                        text = cardNumberSplint[0],
+                        color = textColor
+                    )
                 }
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.Center
                 ) {
-                    ButtonMediumText(text = item.placeholder, color = Color.White)
-                    ButtonMediumText(text = "انقضاء " + item.expiredDate, color = Color.White)
+                    ButtonMediumText(
+                        text = "انقضاء " + item.expiredDate,
+                        color = textColor
+                    )
                 }
             }
         }
@@ -159,9 +205,10 @@ fun CardInfo(item: CardModel, onClick: (CardModel) -> Unit) {
     }
 }
 
-@Preview(showBackground = true)
+
+@AppPreview
 @Composable
-private fun CardInfoPreview() {
+private fun MellatCardPreview() {
     CompositionLocalProvider(
         LocalLayoutDirection provides LayoutDirection.Rtl
     ) {
@@ -169,9 +216,27 @@ private fun CardInfoPreview() {
             cardNumber = "1234123412341234",
             amount = 200000.0,
             currency = "ریال",
-            placeholder = "میلاد طارقلی",
+            placeholder = null,
             expiredDate = "04/07",
             cardType = CardType.MELLAT_CARD
+        )
+        CardInfo(item = cardModel) { }
+    }
+}
+
+@AppPreview
+@Composable
+private fun BonCardPreview() {
+    CompositionLocalProvider(
+        LocalLayoutDirection provides LayoutDirection.Rtl
+    ) {
+        val cardModel = CardModel(
+            cardNumber = "1234123412341234",
+            amount = 200000.0,
+            currency = "ریال",
+            cardType = CardType.BON_CARD,
+            placeholder = "بهسازان ملت",
+            expiredDate = "04/07",
         )
         CardInfo(item = cardModel) { }
     }
