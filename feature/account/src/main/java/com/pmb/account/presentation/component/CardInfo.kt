@@ -21,6 +21,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.BlurredEdgeTreatment
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
@@ -29,10 +31,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.pmb.account.R
-import com.pmb.ballon.component.annotation.AppPreview
 import com.pmb.ballon.component.base.AppImage
 import com.pmb.ballon.component.base.ButtonMediumText
 import com.pmb.ballon.component.base.ButtonSmallText
@@ -200,13 +202,25 @@ fun CardInfo(item: CardModel, onClick: (CardModel) -> Unit) {
                     )
                 }
             }
+
+            if (item.cardStatus == 0) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .blur(
+                            radiusX = 10.dp,
+                            radiusY = 10.dp,
+                            edgeTreatment = BlurredEdgeTreatment.Unbounded
+                        )
+                )
+            }
         }
 
     }
 }
 
 
-@AppPreview
+@Preview
 @Composable
 private fun MellatCardPreview() {
     CompositionLocalProvider(
@@ -224,7 +238,26 @@ private fun MellatCardPreview() {
     }
 }
 
-@AppPreview
+@Preview
+@Composable
+private fun MellatCardDisablePreview() {
+    CompositionLocalProvider(
+        LocalLayoutDirection provides LayoutDirection.Rtl
+    ) {
+        val cardModel = CardModel(
+            cardNumber = "1234123412341234",
+            amount = 200000.0,
+            currency = "ریال",
+            placeholder = null,
+            expiredDate = "04/07",
+            cardStatus = 0,
+            cardType = CardType.MELLAT_CARD
+        )
+        CardInfo(item = cardModel) { }
+    }
+}
+
+@Preview
 @Composable
 private fun BonCardPreview() {
     CompositionLocalProvider(
