@@ -220,7 +220,7 @@ fun CardInfo(item: CardModel, onClick: (CardModel) -> Unit) {
                 Column(
                     modifier = Modifier
                         .fillMaxSize(),
-                    verticalArrangement = Arrangement.SpaceAround,
+                    verticalArrangement = Arrangement.SpaceEvenly,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Row(
