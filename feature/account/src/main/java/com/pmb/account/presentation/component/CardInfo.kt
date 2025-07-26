@@ -21,13 +21,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
@@ -36,12 +36,15 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.pmb.account.R
 import com.pmb.ballon.component.base.AppImage
+import com.pmb.ballon.component.base.AppOutlineButton
 import com.pmb.ballon.component.base.ButtonMediumText
 import com.pmb.ballon.component.base.ButtonSmallText
+import com.pmb.ballon.component.base.Headline4Text
 import com.pmb.ballon.component.base.Headline5Text
 import com.pmb.ballon.component.base.Headline6Text
 import com.pmb.ballon.models.ImageStyle
 import com.pmb.ballon.models.Size
+import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.core.utils.toCurrency
 import com.pmb.domain.model.CardModel
 import com.pmb.domain.model.CardType
@@ -76,149 +79,179 @@ fun CardInfo(item: CardModel, onClick: (CardModel) -> Unit) {
                     brush = backgroundColor
                 )
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.mellat_logo_line),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize()
-            )
+            val disabledCardModifier = Modifier
+                .graphicsLayer(alpha = 5f)
+                .blur(radiusX = 3.dp, radiusY = 3.dp)
+
             Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .drawBehind {
-                        val arcWidth = size.width * 1.5f
-                        val arcHeight = size.height * 1.2f
-
-                        val topLeft = Offset(
-                            x = -size.width * 0.25f,
-                            y = size.height * 0.4f
-                        )
-
-                        drawArc(
-                            brush = Brush.radialGradient(
-                                colors = listOf(
-                                    Color.Transparent,
-                                    Color.White.copy(alpha = 0.16f),
-                                ),
-                                center = Offset(
-                                    x = size.width / 2f,
-                                    y = size.height * 2
-                                ),
-                                radius = size.minDimension
-                            ),
-                            startAngle = -180f,
-                            sweepAngle = 180f,
-                            useCenter = false,
-                            topLeft = topLeft,
-                            size = androidx.compose.ui.geometry.Size(arcWidth, arcHeight)
-                        )
-                    }
-            )
-            Column(
-                modifier = Modifier
-                    .padding(18.dp)
-                    .fillMaxSize(),
-                verticalArrangement = Arrangement.SpaceAround
+                modifier = Modifier.then(
+                    if (item.cardStatus == 0) disabledCardModifier else Modifier
+                )
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+                Image(
+                    painter = painterResource(id = R.drawable.mellat_logo_line),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize()
+                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .drawBehind {
+                            val arcWidth = size.width * 1.5f
+                            val arcHeight = size.height * 1.2f
+
+                            val topLeft = Offset(
+                                x = -size.width * 0.25f,
+                                y = size.height * 0.4f
+                            )
+
+                            drawArc(
+                                brush = Brush.radialGradient(
+                                    colors = listOf(
+                                        Color.Transparent,
+                                        Color.White.copy(alpha = 0.16f),
+                                    ),
+                                    center = Offset(
+                                        x = size.width / 2f,
+                                        y = size.height * 2
+                                    ),
+                                    radius = size.minDimension
+                                ),
+                                startAngle = -180f,
+                                sweepAngle = 180f,
+                                useCenter = false,
+                                topLeft = topLeft,
+                                size = androidx.compose.ui.geometry.Size(arcWidth, arcHeight)
+                            )
+                        }
+                )
+                Column(
+                    modifier = Modifier
+                        .padding(18.dp)
+                        .fillMaxSize(),
+                    verticalArrangement = Arrangement.SpaceAround
                 ) {
                     Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        AppImage(
-                            image = if (item.cardType == CardType.MELLAT_CARD) R.drawable.mellat_logo_white else R.drawable.ic_colored_mellat,
-                            style = ImageStyle(size = Size.FIX(34.dp))
-                        )
-
-                        Spacer(modifier = Modifier.width(6.dp))
                         Row(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-
-                            Headline6Text(
-                                text = item.cardType.cardType,
-                                color = textColor
+                            AppImage(
+                                image = if (item.cardType == CardType.MELLAT_CARD) R.drawable.mellat_logo_white else R.drawable.ic_colored_mellat,
+                                style = ImageStyle(size = Size.FIX(34.dp))
                             )
-                            item.placeholder?.let {
-                                Spacer(modifier = Modifier.width(4.dp))
+
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+
+                                Headline6Text(
+                                    text = item.cardType.cardType,
+                                    color = textColor
+                                )
+                                item.placeholder?.let {
+                                    Spacer(modifier = Modifier.width(4.dp))
+                                    ButtonSmallText(
+                                        text = "(" + item.placeholder + ")",
+                                        color = textColor
+                                    )
+                                }
+                            }
+                        }
+                        if (item.amount != 0.0) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Headline6Text(
+                                    text = item.amount.toCurrency(),
+                                    color = textColor
+                                )
+                                Spacer(modifier = Modifier.width(6.dp))
                                 ButtonSmallText(
-                                    text = "(" + item.placeholder + ")",
+                                    text = item.currency,
                                     color = textColor
                                 )
                             }
                         }
                     }
-                    if (item.amount != 0.0) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Headline6Text(
-                                text = item.amount.toCurrency(),
-                                color = textColor
-                            )
-                            Spacer(modifier = Modifier.width(6.dp))
-                            ButtonSmallText(
-                                text = item.currency,
-                                color = textColor
-                            )
-                        }
+
+                    Spacer(modifier = Modifier.height(10.dp))
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceEvenly
+                    ) {
+                        Headline5Text(
+                            text = cardNumberSplint[3],
+                            color = textColor
+                        )
+                        Headline5Text(
+                            text = cardNumberSplint[2],
+                            color = textColor
+                        )
+                        Headline5Text(
+                            text = cardNumberSplint[1],
+                            color = textColor
+                        )
+                        Headline5Text(
+                            text = cardNumberSplint[0],
+                            color = textColor
+                        )
                     }
-                }
 
-                Spacer(modifier = Modifier.height(10.dp))
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    Headline5Text(
-                        text = cardNumberSplint[3],
-                        color = textColor
-                    )
-                    Headline5Text(
-                        text = cardNumberSplint[2],
-                        color = textColor
-                    )
-                    Headline5Text(
-                        text = cardNumberSplint[1],
-                        color = textColor
-                    )
-                    Headline5Text(
-                        text = cardNumberSplint[0],
-                        color = textColor
-                    )
-                }
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    ButtonMediumText(
-                        text = "انقضاء " + item.expiredDate,
-                        color = textColor
-                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        ButtonMediumText(
+                            text = "انقضاء " + item.expiredDate,
+                            color = textColor
+                        )
+                    }
                 }
             }
 
             if (item.cardStatus == 0) {
-                Box(
+                Column(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .blur(
-                            radiusX = 10.dp,
-                            radiusY = 10.dp,
-                            edgeTreatment = BlurredEdgeTreatment.Unbounded
+                        .fillMaxSize(),
+                    verticalArrangement = Arrangement.SpaceAround,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+
+                        Headline4Text(
+                            text = item.cardType.cardType,
+                            color = AppTheme.colorScheme.onBackgroundNeutralDefault
                         )
-                )
+                        item.placeholder?.let {
+                            Spacer(modifier = Modifier.width(4.dp))
+                            ButtonMediumText(
+                                text = "(" + item.placeholder + ")",
+                                color = AppTheme.colorScheme.onBackgroundNeutralDefault
+                            )
+                        }
+
+                        Headline4Text(
+                            text = " غیر فعال",
+                            color = AppTheme.colorScheme.onBackgroundNeutralDefault
+                        )
+                    }
+                    AppOutlineButton(title = "مشاهده جزئیات") { }
+
+                }
             }
         }
 
     }
 }
-
 
 @Preview
 @Composable
@@ -226,7 +259,7 @@ private fun MellatCardPreview() {
     CompositionLocalProvider(
         LocalLayoutDirection provides LayoutDirection.Rtl
     ) {
-        val cardModel = CardModel(
+        val normalCard = CardModel(
             cardNumber = "1234123412341234",
             amount = 200000.0,
             currency = "ریال",
@@ -234,17 +267,18 @@ private fun MellatCardPreview() {
             expiredDate = "04/07",
             cardType = CardType.MELLAT_CARD
         )
-        CardInfo(item = cardModel) { }
-    }
-}
 
-@Preview
-@Composable
-private fun MellatCardDisablePreview() {
-    CompositionLocalProvider(
-        LocalLayoutDirection provides LayoutDirection.Rtl
-    ) {
-        val cardModel = CardModel(
+        val bonCard = CardModel(
+            cardNumber = "1234123412341234",
+            amount = 200000.0,
+            currency = "ریال",
+            cardType = CardType.BON_CARD,
+            placeholder = "بهسازان ملت",
+            expiredDate = "04/07",
+        )
+
+
+        val disable = CardModel(
             cardNumber = "1234123412341234",
             amount = 200000.0,
             currency = "ریال",
@@ -253,24 +287,25 @@ private fun MellatCardDisablePreview() {
             cardStatus = 0,
             cardType = CardType.MELLAT_CARD
         )
-        CardInfo(item = cardModel) { }
-    }
-}
-
-@Preview
-@Composable
-private fun BonCardPreview() {
-    CompositionLocalProvider(
-        LocalLayoutDirection provides LayoutDirection.Rtl
-    ) {
-        val cardModel = CardModel(
+        val disable2 = CardModel(
             cardNumber = "1234123412341234",
             amount = 200000.0,
             currency = "ریال",
-            cardType = CardType.BON_CARD,
             placeholder = "بهسازان ملت",
             expiredDate = "04/07",
+            cardStatus = 0,
+            cardType = CardType.MELLAT_CARD
         )
-        CardInfo(item = cardModel) { }
+
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.SpaceAround
+        ) {
+
+            CardInfo(item = normalCard) { }
+            CardInfo(item = bonCard) { }
+            CardInfo(item = disable) { }
+            CardInfo(item = disable2) { }
+        }
     }
 }
