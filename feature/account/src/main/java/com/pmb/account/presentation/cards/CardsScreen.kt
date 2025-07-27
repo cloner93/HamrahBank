@@ -128,7 +128,7 @@ fun CardsScreen() {
             }
             else
                 EmptyList(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxSize(),
                     iconType = IconType.Painter(painterResource(R.drawable.ic_add_card)),
                     message = "هنوز کارتی اضافه نکرده\u200Cاید.\n" +
                             "روی دکمه + در پایین صفحه بزنید و کارت بانکی خود را اضافه کنید."
