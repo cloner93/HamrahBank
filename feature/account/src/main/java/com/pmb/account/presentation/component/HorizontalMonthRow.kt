@@ -33,8 +33,9 @@ import io.github.persiancalendar.calendar.PersianDate
 @Composable
 internal fun RowOfMonth(
     modifier: Modifier = Modifier,
+    loading: Boolean,
     currentMonth: Pair<PersianDate, PersianDate> = currentMonthPair(),
-    selectedMonth: (Pair<PersianDate, PersianDate>) -> Unit = {}
+    selectedMonth: (Pair<PersianDate, PersianDate>) -> Unit = {},
 ) {
     val list = generateShiftedMonthList()
 
@@ -52,15 +53,16 @@ internal fun RowOfMonth(
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         contentPadding = PaddingValues(horizontal = 16.dp)
     ) {
-        items(list) { month ->
-            val isSelected = month.first.month == currentMonth.first.month
+        items(list) { selectedMonth ->
+            val isSelected = selectedMonth.first.month == currentMonth.first.month
 
             MonthItem(
-                month = month.first.monthName(),
+                month = selectedMonth.first.monthName(),
                 isSelected = isSelected,
-                onClick = { selectedMonth(month) },
-                year = month.first.year.toString(),
-                isEnabled = list.last() != month
+                isLoading = loading,
+                onClick = { selectedMonth(selectedMonth) },
+                year = selectedMonth.first.year.toString(),
+                isEnabled = list.last() != selectedMonth
             )
         }
     }
@@ -75,7 +77,7 @@ fun RowOfMonthPreview() {
             modifier = Modifier.background(color = AppTheme.colorScheme.background1Neutral),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            RowOfMonth()
+            RowOfMonth(loading = true)
         }
     }
 }
@@ -87,8 +89,10 @@ internal fun MonthItem(
     month: String,
     isSelected: Boolean,
     isEnabled: Boolean,
+    isLoading: Boolean = false,
     onClick: () -> Unit
 ) {
+
     Box(
         modifier = modifier
             .clip(RoundedCornerShape(8.dp))
@@ -96,11 +100,16 @@ internal fun MonthItem(
                 if (isSelected) AppTheme.colorScheme.foregroundPrimaryDefault
                 else AppTheme.colorScheme.backgroundTintNeutralDefault
             )
-            .clickable { if (isEnabled) onClick() }
+            .clickable { if (!(isLoading) && isEnabled) onClick() }
+            .then(
+                if (isSelected && isLoading) Modifier
+                    .shimmerLoading() else Modifier
+            )
             .padding(
                 horizontal = 16.dp,
                 vertical = 8.dp
-            )) {
+            )
+    ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
