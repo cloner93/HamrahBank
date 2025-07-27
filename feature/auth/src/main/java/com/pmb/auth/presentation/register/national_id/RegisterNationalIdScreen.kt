@@ -19,7 +19,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.pmb.auth.R
-import com.pmb.auth.presentation.register.account_opening.viewModel.OpeningAccountViewState
+import com.pmb.auth.presentation.register.RegisterSharedViewState
 import com.pmb.auth.presentation.register.national_id.viewModel.RegisterNationalIdViewActions
 import com.pmb.auth.presentation.register.national_id.viewModel.RegisterNationalIdViewEvents
 import com.pmb.auth.presentation.register.national_id.viewModel.RegisterNationalIdViewModel
@@ -33,6 +33,8 @@ import com.pmb.ballon.component.base.AppSingleTextField
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.ui.theme.AppTheme
+import com.pmb.core.utils.allowOnlyEnglishLettersAndDigits
+import com.pmb.core.utils.isValidCustomInput
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.manager.NavigationManager
 import com.pmb.navigation.moduleScreen.RegisterScreens
@@ -41,11 +43,12 @@ import com.pmb.navigation.moduleScreen.RegisterScreens
 @Composable
 fun RegisterNationalIdScreen(
     viewModel: RegisterNationalIdViewModel,
+    sharedState: RegisterSharedViewState,
     updateState: (RegisterNationalIdViewState) -> Unit
 ) {
     val navigationManager: NavigationManager = LocalNavigationManager.current
     val viewState by viewModel.viewState.collectAsState()
-
+    var isError by remember { mutableStateOf(false) }
     LaunchedEffect(Unit) {
         viewModel.viewEvent.collect { event ->
             when (event) {
@@ -72,9 +75,17 @@ fun RegisterNationalIdScreen(
                 enable = !viewState.nationalSerialId.isNullOrEmpty() && !viewState.isLoading,
                 title = stringResource(R.string._continue),
                 onClick = {
-                    viewModel.handle(
-                        RegisterNationalIdViewActions.RegisterNationalIdSerialServices
-                    )
+                    if (viewState.nationalSerialId?.isValidCustomInput() == true) {
+                        isError = false
+                        viewModel.handle(
+                            RegisterNationalIdViewActions.RegisterNationalIdSerialServices(
+                                sharedState.nationalCode ?: "",
+                                sharedState.mobileNo ?: "",
+                                sharedState.birthDate ?: ""
+                            )
+                        )
+                    }else
+                        isError = true
                 })
         }
     ) {
@@ -87,10 +98,17 @@ fun RegisterNationalIdScreen(
         Spacer(modifier = Modifier.size(32.dp))
         AppSingleTextField(
             modifier = Modifier.fillMaxWidth(),
-            value = viewState.nationalSerialId ?:"",
+            value = viewState.nationalSerialId ?: "",
             label = stringResource(R.string.national_id_serial_interception),
+            isError = isError,
+            errorText = "الگوی وارد شده صحیح نمی باشد",
+            onFocused = {
+                if (it)
+                    isError = false
+            },
             onValueChange = {
-                viewModel.handle(RegisterNationalIdViewActions.SetNationalIdSerial(it))
+                if (it.length <= 10 && it.allowOnlyEnglishLettersAndDigits())
+                    viewModel.handle(RegisterNationalIdViewActions.SetNationalIdSerial(it))
             },
         )
         Spacer(modifier = Modifier.size(32.dp))

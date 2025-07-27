@@ -79,7 +79,7 @@ fun PreviewRoundedImageComponent(
                 painter = painterResource(R.drawable.ic_pdf),
                 contentDescription = "PDF File",
                 tint = Color.Unspecified,
-                modifier = Modifier.size(156.dp)
+                modifier = Modifier.size(156.dp).align(Alignment.Center)
             )
         }
         IconButton(

@@ -95,7 +95,7 @@ fun CheckPostalCodeScreen(
             value = postalCode,
             label = stringResource(R.string.postal_code),
             onValueChange = {
-                if (postalCode.length < 10) postalCode = it
+                if (postalCode.length <= 10) postalCode = it
             },
             trailingIcon = {
                 AppButton(

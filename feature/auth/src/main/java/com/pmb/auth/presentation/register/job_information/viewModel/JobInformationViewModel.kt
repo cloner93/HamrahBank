@@ -102,9 +102,11 @@ class JobInformationViewModel @Inject constructor(
                         is Result.Success -> {
                             setState {
                                 it.copy(
-                                    isLoading = false
+                                    isLoading = false,
+                                    hasCameraPermission = false
                                 )
                             }
+                            delay(50)
                             postEvent(JobInformationViewEvents.SendJobInformationSucceed)
                         }
 

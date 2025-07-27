@@ -53,10 +53,12 @@ fun AuthenticationInformationScreen(
     val navigationManager: NavigationManager = LocalNavigationManager.current
     val viewState by viewModel.viewState.collectAsState()
     val coroutineContext = rememberCoroutineScope()
-    var city by remember { mutableStateOf("") }
-    var identifyPlace by remember { mutableStateOf("") }
+    var city by remember { mutableStateOf(sharedState.value.verifyCodeResponse?.birthCityName ?: "") }
+    var identifyPlace by remember { mutableStateOf(sharedState.value.verifyCodeResponse?.issueCityName ?: "") }
     var showBirthdayPicker by remember { mutableStateOf(false) }
-    var identifyArea by remember { mutableStateOf("") }
+    var identifyArea by remember { mutableStateOf(sharedState.value.verifyCodeResponse?.issueReginCode?.takeIf { it > 0 }?.toString()
+        ?: "") }
+    var tel by remember { mutableStateOf(sharedState.value.verifyCodeResponse?.tel?.takeIf { it.isNotEmpty() } ?: "") }
     var education by remember { mutableStateOf("") }
     LaunchedEffect(Unit) {
         viewModel.viewEvent.collect { event ->
@@ -105,8 +107,7 @@ fun AuthenticationInformationScreen(
                 it.cityName ?: ""
             },
             labelString = stringResource(R.string.birthday_place),
-            displayText = city.takeIf { it.isNotEmpty() }
-                ?: run { sharedState.value.verifyCodeResponse?.birthCityName ?: "" },
+            displayText = city,
             isEnabled = true,
             onSearchValue = {
                 city = it
@@ -122,8 +123,7 @@ fun AuthenticationInformationScreen(
                 it.cityName ?: ""
             },
             labelString = stringResource(R.string.identify_place),
-            displayText = identifyPlace.takeIf { it.isNotEmpty() }
-                ?: run { sharedState.value.verifyCodeResponse?.issueCityName ?: "" },
+            displayText = identifyPlace,
             isEnabled = true,
             onSearchValue = {
                 identifyPlace = it
@@ -156,17 +156,13 @@ fun AuthenticationInformationScreen(
         Spacer(modifier = Modifier.size(24.dp))
         AppSingleTextField(
             modifier = Modifier.fillMaxWidth(),
-            value = identifyArea.takeIf { it.isNotEmpty() } ?: run {
-                sharedState.value.verifyCodeResponse?.issueReginCode?.takeIf { it > 0 }?.toString()
-                    ?: ""
-            },
+            value = identifyArea,
             label = stringResource(R.string.issue_region),
             onValueChange = { identifyArea = it },
         )
         Spacer(modifier = Modifier.size(24.dp))
-        AppMobileTextField(value = viewState.tel?.takeIf { it.isNotEmpty() } ?: run {
-            sharedState.value.verifyCodeResponse?.tel?.takeIf { it.isNotEmpty() } ?: ""
-        }, label = stringResource(R.string.tel), onValueChange = {
+        AppMobileTextField(value = tel, label = stringResource(R.string.tel), onValueChange = {
+            tel = it
             viewModel.handle(AuthenticationInformationViewActions.SetPhoneNumber(it))
         })
         Spacer(modifier = Modifier.size(24.dp))
@@ -185,12 +181,12 @@ fun AuthenticationInformationScreen(
         if (showBirthdayPicker) {
             ShowPersianDatePickerBottomSheet(
                 title = stringResource(R.string.birthday),
-                defaultDate = viewState.issueDateYear?.let {
+                defaultDate = sharedState.value.verifyCodeResponse?.issueDate?.toLong()?.longToString()?.let {
                     Jdn(
                         Calendar.SHAMSI,
-                        it.toInt(),
-                        viewState.issueDateMonth?.toInt() ?: 1,
-                        viewState.issueDateDay?.toInt() ?: 1
+                        it.first.toInt(),
+                        it.second.toInt() ?: 1,
+                        it.third.toInt() ?: 1
                     )
                 } ?: run { Jdn.today() }, // TODO: fix it.
                 onDismiss = { showBirthdayPicker = false },
