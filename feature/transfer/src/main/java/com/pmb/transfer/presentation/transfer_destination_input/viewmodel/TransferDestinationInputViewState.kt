@@ -24,5 +24,5 @@ data class TransferDestinationInputViewState(
     val showFavorite: Boolean
         get() = !showClipboard
     val showClipboard: Boolean
-        get() = identifierNumberClipboard.isValidIranBankIdentifier() && accountDetail == null
+        get() = identifierNumberClipboard.isValidIranBankIdentifier()
 }

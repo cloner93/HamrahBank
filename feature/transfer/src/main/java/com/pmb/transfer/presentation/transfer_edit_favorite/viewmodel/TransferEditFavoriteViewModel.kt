@@ -100,6 +100,14 @@ class TransferEditFavoriteViewModel @Inject constructor(
                             it.copy(
                                 loading = false,
                                 accountsFavorite = result.data,
+                                alertState = AlertModelState.Dialog(
+                                    title = "پیغام",
+                                    description = "${accountValue.clientBankEntity.name} از مقاصد برگزیده حذف شد",
+                                    positiveButtonTitle = "تایید",
+                                    onPositiveClick = {
+                                        setState { state -> state.copy(alertState = null) }
+                                    }
+                                )
                             )
                         }
                     }

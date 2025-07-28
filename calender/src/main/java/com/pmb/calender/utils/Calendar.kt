@@ -81,3 +81,18 @@ val persianCalendarMonthsInDariOrPersianOldEra = listOf(
     "حمل", "ثور", "جوزا", "سرطان", "اسد", "سنبله",
     "میزان", "عقرب", "قوس", "جدی", "دلو", "حوت"
 )
+
+val persianCalendarDayOfWeekInPersian = listOf(
+    "شنبه", "یک‌شنبه", "دوشنبه", "سه‌شنبه", "چهارشنبه", "پنجشنبه", "جمعه"
+)
+
+fun getDayOfWeekName(dayOfWeek: Int): String = when (dayOfWeek) {
+    1    -> "یک‌شنبه"
+    2    -> "دوشنبه"
+    3    -> "سه‌شنبه"
+    4    -> "چهارشنبه"
+    5    -> "پنجشنبه"
+    6    -> "جمعه"
+    7    -> "شنبه"
+    else -> "نامعلوم"
+}

@@ -11,5 +11,5 @@ data class TransferAmountViewState(
     val amount: Double = 0.0,
 ) : BaseViewState {
     val enableButton: Boolean
-        get() = amount >= 1000.0
+        get() = amount >= 10.0
 }
