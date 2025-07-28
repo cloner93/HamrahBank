@@ -15,6 +15,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.text.isDigitsOnly
 import com.pmb.auth.AuthActionType
 import com.pmb.auth.AuthSharedViewState
 import com.pmb.auth.R
@@ -30,6 +31,7 @@ import com.pmb.ballon.component.base.AppMobileTextField
 import com.pmb.ballon.component.base.AppNationalIdTextField
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.text_field.AppPasswordTextField
+import com.pmb.core.utils.validatePhone
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.manager.NavigationManager
 import com.pmb.navigation.moduleScreen.AuthScreens
@@ -52,7 +54,7 @@ fun ForgetPasswordScreen(
     var isNationalId by remember { mutableStateOf(false) }
     var isPassword by remember { mutableStateOf(false) }
     var isRePassword by remember { mutableStateOf(false) }
-
+    var isError by remember { mutableStateOf(false) }
     val viewState by viewModel.viewState.collectAsState()
 
     LaunchedEffect(Unit) {
@@ -77,7 +79,7 @@ fun ForgetPasswordScreen(
         modifier = Modifier.padding(24.dp),
         topBar = {
             AppTopBar(
-                title = stringResource(R.string.forget_password),
+                title = stringResource(R.string.forget_login_password),
                 onBack = { navigationManager.navigateBack() })
         },
         footer = {
@@ -99,9 +101,21 @@ fun ForgetPasswordScreen(
 
             AppMobileTextField(
                 value = mobile,
-                label = stringResource(R.string.phone_number),
-                onValidate = { isMobile = it },
-                onValueChange = { mobile = it })
+                label = stringResource(R.string.mobile_number),
+                onFocused = { focused ->
+                    isError = if (!focused && !mobile.isNullOrEmpty()) {
+                        !mobile.validatePhone()
+                    } else {
+                        false
+                    }
+                },
+                isError = isError,
+                errorText = stringResource(R.string.validate_phone_number),
+                onValueChange = { phone ->
+                    if (phone.isDigitsOnly() || phone.isEmpty())
+                        mobile = phone
+                }
+                )
 
             Spacer(modifier = Modifier.height(24.dp))
 
