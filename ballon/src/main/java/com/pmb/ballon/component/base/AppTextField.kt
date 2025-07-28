@@ -48,7 +48,6 @@ import com.pmb.ballon.models.AppTextField
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.ballon.ui.theme.appFontFamily
 import com.pmb.core.utils.isIranianNationalId
-import com.pmb.core.utils.isMobile
 import java.text.DecimalFormat
 
 @Composable
@@ -76,6 +75,8 @@ fun AppBaseTextField(
         fontFamily = appFontFamily
     ),
     interactionSource: MutableInteractionSource? = null,
+    isError: Boolean = false,
+    errorText: String? = null,
     onClick: (() -> Unit)? = null
 ) {
     var isFocused by remember { mutableStateOf(false) }
@@ -97,6 +98,15 @@ fun AppBaseTextField(
         enabled = if (readOnly) false else enabled,
         onValueChange = { input ->
             onValueChange(input)
+        },
+        isError = isError,
+        supportingText = {
+            if (isError)
+                errorText?.let {
+                    CaptionText(
+                        text = it,
+                    )
+                }
         },
         label = {
             label?.let {
@@ -124,7 +134,7 @@ fun AppBaseTextField(
             errorLabelColor = AppTextField.defaultColors().errorLabelColor,
             disabledLabelColor = AppTextField.defaultColors().disabledLabelColor,
             errorTextColor = AppTextField.defaultColors().errorTextColor,
-            disabledTextColor = AppTextField.defaultColors().disabledTextColor,
+            disabledTextColor = AppTextField.defaultColors().focusedTextColor,
             focusedTextColor = AppTextField.defaultColors().focusedTextColor,
             unfocusedTextColor = AppTextField.defaultColors().unfocusedTextColor
         ),
@@ -132,7 +142,7 @@ fun AppBaseTextField(
         minLines = minLines,
         singleLine = singleLine,
         shape = RoundedCornerShape(12.dp),
-        interactionSource = interactionSource
+        interactionSource = interactionSource,
     )
 }
 
@@ -142,6 +152,9 @@ fun AppSingleTextField(
     value: String,
     label: String,
     readOnly: Boolean = false,
+    isError: Boolean = false,
+    errorText: String? = null,
+    onFocused: ((Boolean) -> Unit)? = null,
     onValueChange: (String) -> Unit
 ) {
     AppBaseTextField(
@@ -149,12 +162,20 @@ fun AppSingleTextField(
         value = value,
         label = label,
         singleLine = true,
+        isError = isError,
+        errorText = errorText,
         readOnly = readOnly,
         onValueChange = onValueChange,
         trailingIcon = @Composable {
-            if (value.isNotEmpty()) AppButtonIcon(icon = Icons.Default.Close) { onValueChange("") }
+            if (value.isNotEmpty()) AppButtonIcon(icon = Icons.Default.Close) {
+                onValueChange("")
+                onFocused?.invoke(true)
+            }
         },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+        onFocused = {
+            onFocused?.invoke(it)
+        }
     )
 }
 
@@ -201,7 +222,10 @@ fun AppMobileTextField(
     modifier: Modifier = Modifier,
     value: String,
     label: String,
+    isError: Boolean = false,
+    errorText: String? = null,
     onValidate: ((Boolean) -> Unit)? = null,
+    onFocused: ((Boolean) -> Unit)? = null,
     onValueChange: (String) -> Unit
 ) {
     AppBaseTextField(
@@ -209,19 +233,26 @@ fun AppMobileTextField(
         value = value.trim(),
         label = label,
         singleLine = true,
+        isError = isError,
+        errorText = errorText,
         onValueChange = {
-            val result = it.isMobile()
-            if (it.length <= result.length || result.isValid) onValueChange(it)
-            onValidate?.invoke(result.isValid)
+//            val result = it.isMobile()
+            if (it.length <= 11)
+                onValueChange(it)
+//            onValidate?.invoke(result.isValid)
         },
         trailingIcon = @Composable {
             if (value.isNotEmpty())
                 AppButtonIcon(icon = Icons.Default.Close) {
-                    onValidate?.invoke(false)
                     onValueChange("")
+                    onValidate?.invoke(false)
+                    onFocused?.invoke(true)
                 }
         },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone)
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+        onFocused = {
+            onFocused?.invoke(it)
+        }
     )
 }
 
