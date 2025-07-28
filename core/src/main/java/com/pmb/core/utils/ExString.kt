@@ -35,6 +35,11 @@ fun String.setMobileValidator(): String {
 fun String.allowOnlyEnglishLettersAndDigits(): Boolean {
     return this.all { it.isDigit() || it in 'a'..'z' || it in 'A'..'Z' }
 }
+fun String.allowOnlyEnglishLettersDigitsAndSymbols(): Boolean {
+    return this.all {
+        it.code in 32..126 // ASCII printable characters: includes letters, digits, symbols
+    }
+}
 fun String.isValidCustomInput(): Boolean {
     if (this.length != 10) return false
 

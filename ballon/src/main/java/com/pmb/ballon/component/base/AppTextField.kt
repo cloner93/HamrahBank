@@ -145,12 +145,139 @@ fun AppBaseTextField(
         interactionSource = interactionSource,
     )
 }
+@Composable
+fun AppBaseTextField(
+    modifier: Modifier = Modifier,
+    value: String,
+    onValueChange: (String) -> Unit,
+    focusRequester: FocusRequester = remember { FocusRequester() },
+    enabled: Boolean = true,
+    readOnly: Boolean = false,
+    hideCursor: Boolean = false,
+    label: AnnotatedString? = null,
+    leadingIcon: @Composable (() -> Unit)? = null,
+    trailingIcon: @Composable (() -> Unit)? = null,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
+    onFocused: ((Boolean) -> Unit)? = null,
+    bordered: Boolean = true,
+    singleLine: Boolean = false,
+    maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
+    minLines: Int = 1,
+    textStyle: TextStyle = TextStyle.Default.copy(
+        fontSize = 16.sp,
+        fontFamily = appFontFamily
+    ),
+    interactionSource: MutableInteractionSource? = null,
+    isError: Boolean = false,
+    errorText: String? = null,
+    onClick: (() -> Unit)? = null
+) {
+    var isFocused by remember { mutableStateOf(false) }
+    OutlinedTextField(
+        modifier = modifier
+            .fillMaxWidth()
+            .defaultMinSize(minHeight = 56.dp)
+            .focusRequester(focusRequester)
+            .clickable(enabled = onClick != null) {
+                onClick?.let {
+                    onClick()
+                }
+            }
+            .onFocusChanged { focusState ->
+                isFocused = focusState.isFocused
+                onFocused?.invoke(isFocused)
+            },
+        value = value,
+        enabled = if (readOnly) false else enabled,
+        onValueChange = { input ->
+            onValueChange(input)
+        },
+        isError = isError,
+        supportingText = {
+            if (isError)
+                errorText?.let {
+                    CaptionText(
+                        text = it,
+                    )
+                }
+        },
+        label = {
+            label?.let {
+                BodyMediumText(
+                    text = it,
+                    color = AppTheme.colorScheme.onBackgroundNeutralDefault
+                )
+            }
+        },
+        visualTransformation = visualTransformation,
+        keyboardOptions = keyboardOptions,
+        keyboardActions = keyboardActions,
+        textStyle = textStyle,
+        leadingIcon = leadingIcon,
+        trailingIcon = trailingIcon,
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedBorderColor = if (bordered) AppTextField.defaultColors().focusedIndicatorColor else Color.Transparent,
+            disabledBorderColor = if (bordered) AppTextField.defaultColors().disabledIndicatorColor else Color.Transparent,
+            unfocusedBorderColor = if (bordered) AppTextField.defaultColors().unfocusedIndicatorColor else Color.Transparent,
+            focusedLabelColor = AppTextField.defaultColors().focusedLabelColor,
+            unfocusedLabelColor = AppTextField.defaultColors().unfocusedLabelColor,
+            cursorColor = if (hideCursor) Color.Transparent else
+                AppTheme.colorScheme.onBackgroundNeutralDefault,
+            errorBorderColor = AppTextField.defaultColors().errorIndicatorColor,
+            errorLabelColor = AppTextField.defaultColors().errorLabelColor,
+            disabledLabelColor = AppTextField.defaultColors().disabledLabelColor,
+            errorTextColor = AppTextField.defaultColors().errorTextColor,
+            disabledTextColor = AppTextField.defaultColors().focusedTextColor,
+            focusedTextColor = AppTextField.defaultColors().focusedTextColor,
+            unfocusedTextColor = AppTextField.defaultColors().unfocusedTextColor
+        ),
+        maxLines = maxLines,
+        minLines = minLines,
+        singleLine = singleLine,
+        shape = RoundedCornerShape(12.dp),
+        interactionSource = interactionSource,
+    )
+}
 
 @Composable
 fun AppSingleTextField(
     modifier: Modifier = Modifier,
     value: String,
     label: String,
+    readOnly: Boolean = false,
+    isError: Boolean = false,
+    errorText: String? = null,
+    onFocused: ((Boolean) -> Unit)? = null,
+    onValueChange: (String) -> Unit
+) {
+    AppBaseTextField(
+        modifier = modifier.fillMaxWidth(),
+        value = value,
+        label = label,
+        singleLine = true,
+        isError = isError,
+        errorText = errorText,
+        readOnly = readOnly,
+        onValueChange = onValueChange,
+        trailingIcon = @Composable {
+            if (value.isNotEmpty()) AppButtonIcon(icon = Icons.Default.Close) {
+                onValueChange("")
+                onFocused?.invoke(true)
+            }
+        },
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+        onFocused = {
+            onFocused?.invoke(it)
+        }
+    )
+}
+@Composable
+fun AppSingleTextField(
+    modifier: Modifier = Modifier,
+    value: String,
+    label: AnnotatedString,
     readOnly: Boolean = false,
     isError: Boolean = false,
     errorText: String? = null,
