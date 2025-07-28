@@ -25,9 +25,9 @@ object BankUtil {
 
     fun getBankByAccountNumber(accountNumber: String): Bank? {
         val accountNumber = accountNumber.trim().replace(" ", "").uppercase()
-        return Bank.entries.find { bank ->
-            accountNumber.startsWith(bank.accountPrefix)
-        }
+        if (accountNumber.validateMellatBankAccount())
+            return Bank.MELLAT
+        return null
     }
 
     fun getBankBySheba(iban: String): Bank? {
@@ -86,10 +86,9 @@ object BankUtil {
                 value.length == 24
             }
 
-
-            value.length in 6..10 -> {
-                maxLength?.invoke(20)
-                return true
+            this.validateMellatBankAccount() -> {
+                maxLength?.invoke(24)
+                true
             }
 
             else -> {
@@ -127,13 +126,16 @@ object BankUtil {
                         // 2. شبا: با IR شروع می‌شه و بعدش 24 رقم
                         val shebaRegex = Regex("\\bIR\\d{24}\\b", RegexOption.IGNORE_CASE)
                         shebaRegex.find(id)?.value?.let {
-                            return result(BankIdentifierNumberType.IBAN, it.uppercase())
+                            return result(
+                                BankIdentifierNumberType.IBAN,
+                                it.uppercase()
+                            )
                         }
                     }
 
                     BankIdentifierNumberType.ACCOUNT -> {
                         // 3. حساب: مثلاً 6 تا 10 رقم (بسته به سیستم بانک‌ها)
-                        if (id.length in 6..10)
+                        if (id.validateMellatBankAccount())
                             return result(BankIdentifierNumberType.ACCOUNT, id)
                     }
                 }
@@ -142,7 +144,7 @@ object BankUtil {
     }
 }
 
-fun String.extractAllLongNumbers(minLength: Int = 6): List<String> {
+fun String.extractAllLongNumbers(minLength: Int = 5): List<String> {
     val cleanText = convertPersianDigitsToEnglish()
         .replace("""[\s\-_,.]""".toRegex(), "")
 
@@ -152,6 +154,51 @@ fun String.extractAllLongNumbers(minLength: Int = 6): List<String> {
             val number = match.value
             if (number.length == 24) "IR$number" else number
         }.toList()
+}
+
+fun String.validateMellatBankAccount(): Boolean {
+    // مرحله 1: اعتبارسنجی ورودی
+    if (this.length !in 4..10) {
+        println("Error: Account number must be between 4 and 10 digits.")
+        return false
+    }
+
+    if (!this.all { it.isDigit() }) {
+        println("Error: Account number must contain only digits.")
+        return false
+    }
+
+    // مرحله 2: استخراج دو رقم آخر
+    val lastTwoDigitsStr = this.takeLast(2)
+    val lastTwoDigits = lastTwoDigitsStr.toIntOrNull()
+    if (lastTwoDigits == null) {
+        println("Error: Cannot convert last two digits to integer.")
+        return false
+    }
+
+    // مرحله 3: گرفتن ارقام باقی‌مانده
+    val remainingDigitsStr = this.dropLast(2)
+    if (remainingDigitsStr.isEmpty()) {
+        println("Error: Not enough digits after removing last two.")
+        return false
+    }
+
+    // مرحله 4: ضرب ارقام به صورت متناوب در 7 و 3 از راست به چپ
+    val digits = remainingDigitsStr.map { it.toString().toInt() }.reversed()
+    var sum = 0
+    digits.forEachIndexed { index, digit ->
+        val multiplier = if (index % 2 == 0) 7 else 3
+        sum += digit * multiplier
+    }
+
+    // مرحله 5: افزودن 101 به مجموع
+    sum += 101
+
+    // مرحله 6: محاسبه باقی‌مانده تقسیم بر 97
+    val remainder = sum % 97
+
+    // مرحله 7: بررسی برابری باقی‌مانده با دو رقم آخر
+    return remainder == lastTwoDigits
 }
 
 
