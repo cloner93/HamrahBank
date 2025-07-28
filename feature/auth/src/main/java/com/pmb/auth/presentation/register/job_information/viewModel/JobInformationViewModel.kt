@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.viewModelScope
+import com.pmb.compressor.compression.ImageCompressor
 import com.pmb.core.fileManager.FileManager
 import com.pmb.core.permissions.PermissionDispatcher
 import com.pmb.core.platform.AlertModelState
@@ -24,6 +25,7 @@ import javax.inject.Inject
 @HiltViewModel
 class JobInformationViewModel @Inject constructor(
     initialState: JobInformationViewState,
+    private val imageCompressor: ImageCompressor,
     private val accountArchiveJobDocUseCase: AccountArchiveJobDocUseCase,
     private val permissionDispatcher: PermissionDispatcher,
     private val fileManager: FileManager,
@@ -68,6 +70,11 @@ class JobInformationViewModel @Inject constructor(
             }
 
             is JobInformationViewActions.UploadArchiveDoc -> {
+                setState {
+                    it.copy(
+                        hasCameraPermission = false,
+                    )
+                }
                 handleUploadArchiveJob(action)
             }
         }
@@ -103,7 +110,8 @@ class JobInformationViewModel @Inject constructor(
                             setState {
                                 it.copy(
                                     isLoading = false,
-                                    hasCameraPermission = false
+                                    hasCameraPermission = false,
+                                    isTookPhoto = false
                                 )
                             }
                             delay(50)
@@ -179,8 +187,12 @@ class JobInformationViewModel @Inject constructor(
     }
 
     private fun requestCameraPermission(action: JobInformationViewActions.RequestCameraPermission) {
-        viewModelScope.launch {
 
+        viewModelScope.launch {
+            setState { state ->
+                state.copy(hasCameraPermission = false)
+            }
+            delay(10)
             permissionDispatcher.initialize(action.managedActivityResultLauncher)
             permissionDispatcher.requestSinglePermission(
                 permission = android.Manifest.permission.CAMERA,
@@ -201,10 +213,17 @@ class JobInformationViewModel @Inject constructor(
     }
 
     private fun tookPhoto() {
-        setState {
-            it.copy(
-                isTookPhoto = true
-            )
+        viewModelScope.launch {
+            val compressedFilePath = viewState.value.fileUri?.path?.let {
+                imageCompressor.compressAndReplaceImage(
+                    it, 1024, 1024, compressionPercentage = 50
+                )
+            }
+            setState {
+                it.copy(
+                    isTookPhoto =  true
+                )
+            }
         }
     }
 

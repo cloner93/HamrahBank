@@ -130,7 +130,10 @@ fun DepositInformationScreen(
                     },
                     isChecked = viewState.isChecked
                 ) {
-                    viewModel.handle(DepositInformationViewActions.FetchCommitment)
+                    if (viewState.isChecked)
+                        viewModel.handle(DepositInformationViewActions.SelectRules)
+                    else
+                        viewModel.handle(DepositInformationViewActions.FetchCommitment)
                 }
                 Spacer(modifier = Modifier.size(22.dp))
                 AppButton(
@@ -167,7 +170,7 @@ fun DepositInformationScreen(
                 options = viewState.fetchAccountTypeResponse?.provinceList?.map { it.provinceName },
                 labelString = "استان شعبه مورد نظر",
                 displayText = province.takeIf { it.isNotEmpty() }
-                    ?: run {viewState.province?.provinceName ?: ""},
+                    ?: run { viewState.province?.provinceName ?: "" },
                 isEnabled = viewState.fetchAccountTypeResponse?.provinceList?.isNotEmpty() == true,
                 onSearchValue = {
                     province = it
@@ -186,7 +189,7 @@ fun DepositInformationScreen(
                 options = viewState.cityList?.map { it.cityName },
                 labelString = "شهر شعبه مورد نظر",
                 displayText = city.takeIf { it.isNotEmpty() }
-                    ?: run {viewState.city?.cityName ?: ""},
+                    ?: run { viewState.city?.cityName ?: "" },
                 isEnabled = viewState.cityList?.isNotEmpty() == true,
                 onSearchValue = {
                     city = it
