@@ -5,4 +5,5 @@ import com.pmb.domain.model.UserData
 interface UserDataStore {
     suspend fun setUserData(userData: UserData)
     suspend fun getUserData(): UserData?
+    suspend fun logoutUser(): Boolean
 }

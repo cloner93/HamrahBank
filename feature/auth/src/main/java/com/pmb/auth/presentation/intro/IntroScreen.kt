@@ -1,5 +1,7 @@
 package com.pmb.auth.presentation.intro
 
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -17,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -38,6 +41,10 @@ import com.pmb.navigation.moduleScreen.RegisterScreens
 fun IntroScreen(
     viewModel: IntroViewModel,
 ) {
+    val context = LocalContext.current
+    BackHandler {
+        (context as? ComponentActivity)?.finish()
+    }
     val navigationManager: NavigationManager = LocalNavigationManager.current
     val viewState = viewModel.viewState.collectAsStateWithLifecycle()
     val color = AppTheme.colorScheme.onForegroundNeutralDefault

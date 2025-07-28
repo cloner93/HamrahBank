@@ -39,6 +39,7 @@ import com.pmb.ballon.models.TextStyle
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.ballon.ui.theme.HamrahBankTheme
 import com.pmb.navigation.manager.LocalNavigationManager
+import com.pmb.navigation.moduleScreen.AuthScreens
 import com.pmb.navigation.moduleScreen.ProfileScreens
 import com.pmb.profile.R
 import com.pmb.profile.presentaion.profile.viewModel.ProfileViewActions
@@ -56,6 +57,7 @@ fun ProfileScreen(viewModel: ProfileViewModel) {
         viewModel.viewEvent.collect { event ->
             when (event) {
                 ProfileViewEvents.LogoutAccountSucceed -> {
+                    navigationManager.navigate(AuthScreens.Auth)
                 }
 
                 ProfileViewEvents.NavigateToThemeScreen -> {
@@ -246,7 +248,7 @@ fun ProfileScreen(viewModel: ProfileViewModel) {
                     endIconStyle = IconStyle(tint = AppTheme.colorScheme.foregroundNeutralRest),
                     clickable = true,
                     onItemClick = {
-//                        viewModel.handle(ProfileViewActions.LogoutAccount)
+                        viewModel.handle(ProfileViewActions.LogoutAccount)
                     })
             }
         }

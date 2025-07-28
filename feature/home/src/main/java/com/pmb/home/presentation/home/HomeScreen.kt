@@ -1,5 +1,7 @@
 package com.pmb.home.presentation.home
 
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,6 +20,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -42,6 +45,10 @@ import com.pmb.navigation.moduleScreen.ChargeScreens
 fun HomeScreen(
     viewModel: HomeViewModel
 ) {
+    val context = LocalContext.current
+    BackHandler {
+        (context as? ComponentActivity)?.finish()
+    }
     val navigationManager = LocalNavigationManager.current
     val viewState by viewModel.viewState.collectAsState()
     AppContent(
@@ -57,7 +64,7 @@ fun HomeScreen(
                     modifier = Modifier.align(Alignment.CenterStart),
                     icon = painterResource(com.pmb.ballon.R.drawable.ic_help),
                     onClick = {
-                        navigationManager.navigate(ChargeScreens.Charge)
+
                     }
                 )
                 Row(modifier = Modifier.align(Alignment.CenterEnd)) {
