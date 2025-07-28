@@ -1,14 +1,15 @@
 package com.pmb.transfer.presentation.transfer_receipt.viewmodel
 
 import androidx.compose.ui.unit.LayoutDirection
+import com.pmb.calender.formatInReceipt
 import com.pmb.core.platform.BaseViewModel
-import com.pmb.core.utils.Convert
 import com.pmb.core.utils.toCurrency
 import com.pmb.receipt.model.RowData
 import com.pmb.transfer.domain.entity.TransferReceiptEntity
 import com.pmb.transfer.domain.entity.TransferSourceEntity
 import com.pmb.transfer.utils.BankUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
+import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
@@ -47,11 +48,13 @@ class TransferReceiptViewModel @Inject constructor() :
                     ),
                     RowData.TwoText(
                         title = "زمان",
-                        subtitle = Convert.timestampToPersianDate(receipt.date),
+                        subtitle = Date().formatInReceipt(),
                     ),
                     RowData.TwoText(
                         subtitle = when (receipt.source) {
-                            is TransferSourceEntity.Account -> receipt.source.account.accountHolderName?:""
+                            is TransferSourceEntity.Account -> receipt.source.account.accountHolderName
+                                ?: ""
+
                             is TransferSourceEntity.Card -> receipt.source.card.cardHolderName
                         },
                         title = "شخص انتقال دهنده",
@@ -68,7 +71,9 @@ class TransferReceiptViewModel @Inject constructor() :
                         subtitle =
                             when (receipt.source) {
                                 is TransferSourceEntity.Account ->
-                                    BankUtil.formatMaskAccountBankNumber(receipt.source.account.accountNumber?: "")
+                                    BankUtil.formatMaskAccountBankNumber(
+                                        receipt.source.account.accountNumber ?: ""
+                                    )
 
                                 is TransferSourceEntity.Card ->
                                     BankUtil.formatMaskCardNumber(receipt.source.card.cardNumber)

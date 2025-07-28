@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.pmb.ballon.component.MenuItem
@@ -32,10 +33,8 @@ import com.pmb.transfer.domain.entity.ReasonEntity
 @Composable
 fun AccountBanksComponent(
     defaultAccountBank: AccountBankEntity,
-    defaultReason: ReasonEntity?,
     sourceAccountBanks: List<AccountBankEntity>,
     selectedAccountBank: (AccountBankEntity) -> Unit,
-    selectedTransferReason: (ReasonEntity?) -> Unit
 ) {
     var showBottomSheet by remember { mutableStateOf(false) }
 
@@ -57,7 +56,8 @@ fun AccountBanksComponent(
         endIcon = com.pmb.ballon.R.drawable.ic_drrow_down,
         titleStyle = TextStyle(
             color = AppTheme.colorScheme.foregroundNeutralDefault,
-            typography = AppTheme.typography.bodyMedium
+            typography = AppTheme.typography.bodyMedium,
+//            overflow = TextOverflow.Ellipsis,
         ),
         subtitleStyle = TextStyle(
             color = AppTheme.colorScheme.onBackgroundNeutralDefault,
@@ -67,31 +67,8 @@ fun AccountBanksComponent(
         endIconStyle = IconStyle(
             tint = AppTheme.colorScheme.onBackgroundNeutralDefault, size = Size.FIX(24.dp)
         ),
-        titleLayoutDirection = LayoutDirection.Ltr,
+//        titleLayoutDirection = LayoutDirection.Ltr,
         onItemClick = { showBottomSheet = true })
-
-    Spacer(modifier = Modifier.size(24.dp))
-    MenuItem(
-        modifier = Modifier
-            .clip(RoundedCornerShape(12.dp))
-            .background(color = Color.Transparent)
-            .border(
-                border = BorderStroke(1.dp, AppTheme.colorScheme.strokeNeutral1Default),
-                shape = RoundedCornerShape(12.dp)
-            ),
-        title = defaultReason?.title ?: stringResource(R.string.cause_of_transfer),
-        endIcon = com.pmb.ballon.R.drawable.ic_drrow_down,
-        titleStyle = TextStyle(
-            color = AppTheme.colorScheme.foregroundNeutralDefault,
-            typography = AppTheme.typography.bodyMedium
-        ),
-        innerPadding = MenuItemDefaults.innerPadding.copy(start = 16.dp),
-        endIconStyle = IconStyle(
-            tint = AppTheme.colorScheme.onBackgroundNeutralDefault, size = Size.FIX(24.dp)
-        ),
-        onItemClick = {
-            selectedTransferReason.invoke(defaultReason)
-        })
 
     if (showBottomSheet)
         AccountBanksBottomSheet(

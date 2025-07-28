@@ -38,6 +38,7 @@ fun ProfileAndThumbnail(
                 .crossfade(true)
                 .build(),
             placeholder = painterResource(com.pmb.ballon.R.drawable.profile),
+            error = painterResource(com.pmb.ballon.R.drawable.profile),
             contentDescription = "ProfileImageHeader",
             contentScale = ContentScale.Crop
         )
