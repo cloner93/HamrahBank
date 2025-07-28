@@ -115,15 +115,19 @@ fun ForgetPasswordScreen(
                     if (phone.isDigitsOnly() || phone.isEmpty())
                         mobile = phone
                 }
-                )
+            )
 
             Spacer(modifier = Modifier.height(24.dp))
 
             AppNationalIdTextField(
                 value = nationalId,
                 label = stringResource(R.string.national_id),
-                onValidate = { isNationalId = it },
-                onValueChange = { nationalId = it })
+                onValidate = { },
+                onValueChange = {
+                    if (nationalId.isDigitsOnly() || nationalId.isEmpty())
+                        nationalId = it
+                }
+            )
 
             Spacer(modifier = Modifier.height(24.dp))
 
