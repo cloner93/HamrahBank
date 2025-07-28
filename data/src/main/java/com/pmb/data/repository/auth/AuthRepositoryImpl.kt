@@ -10,6 +10,7 @@ import com.pmb.domain.model.SendOtpRequest
 import com.pmb.domain.model.SendOtpResponse
 import com.pmb.domain.model.UserData
 import com.pmb.domain.model.openAccount.AccountArchiveJobDocResponse
+import com.pmb.domain.model.openAccount.CheckPostalCodeResponse
 import com.pmb.domain.model.openAccount.FetchAdmittanceTextResponse
 import com.pmb.domain.model.openAccount.FetchCommitmentResponse
 import com.pmb.domain.model.openAccount.RegisterOpenAccountRequest
@@ -176,5 +177,11 @@ class AuthRepositoryImpl @Inject constructor(
         return remoteServiceProvider.getAuthService()
             .registerOpenAccount(registerOpenAccountRequest)
             .mapApiResult { it.second }
+    }
+
+    override fun checkPostalCode(postCode: Int): Flow<Result<CheckPostalCodeResponse>> {
+        return remoteServiceProvider.getAuthService().checkPostCode(postCode).mapApiResult {
+            it.second
+        }
     }
 }

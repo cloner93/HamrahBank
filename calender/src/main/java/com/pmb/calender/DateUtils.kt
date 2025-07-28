@@ -1,8 +1,15 @@
 package com.pmb.calender
 
 import com.pmb.calender.utils.Calendar
+import com.pmb.calender.utils.getDayOfWeekName
+import com.pmb.calender.utils.persianCalendarDayOfWeekInPersian
 import com.pmb.calender.utils.persianCalendarMonthsInPersian
+import com.pmb.calender.utils.toCivilDate
+import com.pmb.calender.utils.toGregorianCalendar
 import io.github.persiancalendar.calendar.PersianDate
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 
 fun today(): PersianDate = Jdn.today().toPersianDate()
@@ -31,6 +38,23 @@ fun firstDayOfMonth(date: PersianDate): PersianDate = date.monthStartOfMonthsDis
 
 fun PersianDate.monthName(): String =
     persianCalendarMonthsInPersian[this.month - 1]
+
+fun PersianDate.dayOfWeekName(): String =
+    persianCalendarDayOfWeekInPersian[this.dayOfMonth - 1]
+
+fun Date.formatInReceipt(): String {
+    val sdf = SimpleDateFormat("HH:mm", Locale.getDefault())
+    val currentTime = sdf.format(this)
+
+    val calendar = java.util.Calendar.getInstance()
+    calendar.time = this
+
+    val dayOfWeek = calendar.get(java.util.Calendar.DAY_OF_WEEK) // 1=Sunday, 7=Saturday
+
+    Jdn(this.toGregorianCalendar().toCivilDate()).toPersianDate().let { persianDate ->
+        return "${getDayOfWeekName(dayOfWeek)} ${persianDate.dayOfMonth} ${persianDate.monthName()} ${persianDate.year}، ساعت $currentTime"
+    }
+}
 
 fun Int.monthName(): String =
     persianCalendarMonthsInPersian[this - 1]

@@ -13,7 +13,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
@@ -128,18 +127,6 @@ fun DestinationInputScreen(
                         navigationManager.navigate(TransferScreens.TransferSelectFavorite)
                     })
 
-            if (viewState.showAccount)
-                viewState.accountDetail?.let {
-                    Box(modifier = Modifier.padding(vertical = 12.dp)) {
-                        ClientBankInfoTypeRow(
-                            info = it,
-                            background = Color(0xFFF3F3F7),
-                            onClick = {
-                                selectedAccount.invoke(it)
-                                navigationManager.navigate(TransferScreens.TransferAmount)
-                            })
-                    }
-                }
             if (viewState.showClipboard) {
                 Spacer(modifier = Modifier.height(8.dp))
                 viewState.clipboardTextType?.let { type ->
@@ -157,21 +144,34 @@ fun DestinationInputScreen(
                     )
                     Spacer(modifier = Modifier.height(12.dp))
                 }
-
-                AppButton(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 12.dp),
-                    title = viewState.identifierNumberClipboard,
-                    colors = AppButton.buttonColors().copy(
-                        containerColor = AppTheme.colorScheme.stateLayerNeutralHovered,
-                        contentColor = AppTheme.colorScheme.foregroundNeutralDefault
-                    ),
-                    layoutDirection = LayoutDirection.Ltr,
-                    onClick = {
-                        viewModel.handle(TransferDestinationInputViewActions.ClickedOnClipboard)
-                    })
+                if (!viewState.showAccount)
+                    AppButton(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 12.dp),
+                        title = viewState.identifierNumberClipboard,
+                        colors = AppButton.buttonColors().copy(
+                            containerColor = AppTheme.colorScheme.stateLayerNeutralHovered,
+                            contentColor = AppTheme.colorScheme.foregroundNeutralDefault
+                        ),
+                        layoutDirection = LayoutDirection.Ltr,
+                        onClick = {
+                            viewModel.handle(TransferDestinationInputViewActions.ClickedOnClipboard)
+                        })
             }
+
+            if (viewState.showAccount)
+                viewState.accountDetail?.let {
+                    Box(modifier = Modifier.padding(vertical = 12.dp)) {
+                        ClientBankInfoTypeRow(
+                            info = it,
+                            background = AppTheme.colorScheme.stateLayerPrimaryHovered,
+                            onClick = {
+                                selectedAccount.invoke(it)
+                                navigationManager.navigate(TransferScreens.TransferAmount)
+                            })
+                    }
+                }
         }
     }
     if (viewState.loading) AppLoading()

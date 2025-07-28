@@ -26,6 +26,7 @@ fun ProfileHeader(profileUrl: String, title: String) {
                 .crossfade(true)
                 .build(),
             placeholder = painterResource(com.pmb.ballon.R.drawable.profile_placeholder),
+            error = painterResource(com.pmb.ballon.R.drawable.profile_placeholder),
             contentDescription = "ProfileImageHeader",
             contentScale = ContentScale.Crop
         )

@@ -1,15 +1,8 @@
 package com.pmb.auth.presentation.register.account_opening.viewModel
 
-import androidx.lifecycle.viewModelScope
-import com.pmb.core.platform.AlertModelState
 import com.pmb.core.platform.BaseViewModel
-import com.pmb.core.platform.Result
-import com.pmb.domain.usecae.auth.openAccount.GenerateCodeParams
 import com.pmb.domain.usecae.auth.openAccount.GenerateCodeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.github.persiancalendar.calendar.PersianDate
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -54,50 +47,7 @@ class OpeningAccountViewModel @Inject constructor(
     private fun handleSendOpeningAccountData(
 
     ) {
-        viewModelScope.launch {
-            generateCodeUseCase.invoke(
-                GenerateCodeParams(
-                    nationalCode = viewState.value.nationalId ?: "",
-                    mobileNo = viewState.value.phoneNumber ?: "",
-                    birthDate = "${viewState.value.birthDateYear}${viewState.value.birthDateMonth}${viewState.value.birthDateDay}"
-                )
-            ).collectLatest { result ->
-                when (result) {
-                    is Result.Loading -> {
-                        setState {
-                            it.copy(
-                                isLoading = true
-                            )
-                        }
-                    }
-
-                    is Result.Success -> {
-                        setState {
-                            it.copy(
-                                isLoading = false
-                            )
-                        }
-                        postEvent(OpeningAccountViewEvents.SendOpeningAccountViewSucceed)
-                    }
-
-                    is Result.Error -> {
-                        setState {
-                            it.copy(
-                                isLoading = false,
-                                alertModelState = AlertModelState.Dialog(
-                                    title = "خطا",
-                                    description = " ${result.message}",
-                                    positiveButtonTitle = "تایید",
-                                    onPositiveClick = {
-                                        setState { state -> state.copy(alertModelState = null) }
-                                    }
-                                )
-                            )
-                        }
-                    }
-                }
-            }
-        }
+        postEvent(OpeningAccountViewEvents.SendOpeningAccountViewSucceed)
     }
 
     private fun handleShowBottomSheet(isVisible: Boolean) {

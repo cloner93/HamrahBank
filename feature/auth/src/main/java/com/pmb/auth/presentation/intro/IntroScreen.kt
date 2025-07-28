@@ -113,7 +113,7 @@ fun IntroScreen(
                     modifier = Modifier.fillMaxWidth(),
                     title = stringResource(R.string.account_opening),
                     onClick = {
-                        navigationManager.navigate(RegisterScreens.Preparation)
+                        navigationManager.navigate(RegisterScreens.CheckPostalCode)
                     }
                 )
 

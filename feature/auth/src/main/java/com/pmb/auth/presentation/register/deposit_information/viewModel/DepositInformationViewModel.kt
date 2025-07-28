@@ -171,7 +171,7 @@ class DepositInformationViewModel @Inject constructor(
     private fun handleSelectRules() {
         setState {
             it.copy(
-                isChecked = true
+                isChecked = !it.isChecked
             )
         }
     }
