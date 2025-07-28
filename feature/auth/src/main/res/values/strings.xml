@@ -9,6 +9,7 @@
     <string name="password">رمز عبور</string>
     <string name="login">ورود</string>
     <string name="forget_password">فراموشی رمز عبور</string>
+    <string name="forget_login_password">فراموشی رمز ورود</string>
     <string name="phone_number">شماره موبایل</string>
     <string name="mobile_number">شماره تلفن همراه</string>
     <string name="national_id">کد ملی</string>
