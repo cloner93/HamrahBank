@@ -6,6 +6,7 @@ import com.pmb.core.platform.AlertModelState
 import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.platform.Result
 import com.pmb.domain.usecae.auth.GetUserDataUseCase
+import com.pmb.domain.usecae.auth.LogoutUserUseCase
 import com.pmb.profile.domain.profile.useCase.ProfileUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -14,7 +15,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     initialState: ProfileViewState,
-    private val profileUseCase: ProfileUseCase,
+    private val logoutUserUseCase: LogoutUserUseCase,
     private val getUserDataUseCase: GetUserDataUseCase
 ) : BaseViewModel<ProfileViewActions, ProfileViewState, ProfileViewEvents>(initialState) {
 
@@ -42,13 +43,13 @@ class ProfileViewModel @Inject constructor(
 
     private fun handleLogoutAccount() {
         viewModelScope.launch {
-            profileUseCase.invoke(Unit).collect { result ->
+            logoutUserUseCase.invoke(Unit).collect { result ->
                 when (result) {
                     is Result.Success -> {
                         setState {
                             it.copy(
                                 loading = false, alertModelState = AlertModelState.SnackBar(
-                                    message = result.data,
+                                    message = "",
                                     onActionPerformed = {
                                         setState { state -> state.copy(alertModelState = null) }
                                     },

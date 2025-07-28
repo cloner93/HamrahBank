@@ -39,6 +39,16 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun logoutUser(): Flow<Result<Boolean>> = flow {
+        emit(Result.Loading)
+        try {
+            val result = localServiceProvider.getUserDataStore().logoutUser()
+            emit(Result.Success(result))
+        }catch (e:Exception){
+            emit(Result.Error(message = e.message ?: "Unknown error", exception = e))
+        }
+    }
+
     override suspend fun sendOtp(sendOtpRequest: SendOtpRequest): Flow<Result<SendOtpResponse>> {
         return remoteServiceProvider.getAuthService().sendOtp(sendOtpRequest).mapApiResult {
             if (it.first?.statusMessage == "موفق") {

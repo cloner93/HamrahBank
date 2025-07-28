@@ -53,4 +53,19 @@ class UserDataStoreImpl @Inject constructor(
             null
         }
     }
+
+    override suspend fun logoutUser(): Boolean {
+        return try {
+            context.dataStore.edit { preferences ->
+                preferences.remove(customerUserKey)
+                preferences.remove(usernameKey)
+                preferences.remove(firstNameKey)
+                preferences.remove(lastNameKey)
+                preferences.remove(phoneNumberKey)
+            }
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
 }
