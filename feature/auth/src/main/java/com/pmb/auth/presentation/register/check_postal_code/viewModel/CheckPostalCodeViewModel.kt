@@ -8,6 +8,7 @@ import com.pmb.auth.domain.register.check_postal_code.useCase.SendAddressUseCase
 import com.pmb.core.platform.AlertModelState
 import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.platform.Result
+import com.pmb.domain.usecae.auth.openAccount.CheckPostCodeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -15,7 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CheckPostalCodeViewModel @Inject constructor(
     initialState: CheckPostalCodeViewState,
-    private val checkPostalCodeUseCase: CheckPostalCodeUseCase,
+    private val checkPostCodeUseCase: CheckPostCodeUseCase,
     private val sendAddressUseCase: SendAddressUseCase
 ) : BaseViewModel<CheckPostalCodeViewActions, CheckPostalCodeViewState, CheckPostalCodeViewEvents>(
     initialState
@@ -87,10 +88,8 @@ class CheckPostalCodeViewModel @Inject constructor(
 
     private fun handlePostalCode(action: CheckPostalCodeViewActions.CheckPostalCode) {
         viewModelScope.launch {
-            checkPostalCodeUseCase.invoke(
-                CheckPostalCodeRequest(
-                    postalCode = action.postalCode,
-                )
+            checkPostCodeUseCase.invoke(
+                action.postalCode.toInt()
             ).collect { result ->
                 when (result) {
                     is Result.Loading -> {

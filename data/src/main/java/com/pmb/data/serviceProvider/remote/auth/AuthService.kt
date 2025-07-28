@@ -5,6 +5,7 @@ import com.pmb.domain.model.LoginResponse
 import com.pmb.domain.model.RegisterVerifyResponse
 import com.pmb.domain.model.SendOtpRequest
 import com.pmb.domain.model.openAccount.AccountArchiveJobDocResponse
+import com.pmb.domain.model.openAccount.CheckPostalCodeResponse
 import com.pmb.domain.model.openAccount.FetchAdmittanceTextResponse
 import com.pmb.domain.model.openAccount.FetchCommitmentResponse
 import com.pmb.domain.model.openAccount.RegisterOpenAccountRequest
@@ -61,5 +62,7 @@ interface AuthService {
     fun fetchAdmittanceText(): Flow<Result<SuccessData<FetchAdmittanceTextResponse>>>
 
     fun registerOpenAccount(registerOpenAccountRequest: RegisterOpenAccountRequest): Flow<Result<SuccessData<RegisterOpenAccountResponse>>>
+
+    fun checkPostCode(postCode: Int): Flow<Result<SuccessData<CheckPostalCodeResponse>>>
 
 }
