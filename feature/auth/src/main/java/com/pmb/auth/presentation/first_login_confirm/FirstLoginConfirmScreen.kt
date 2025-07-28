@@ -125,6 +125,7 @@ fun FirstLoginConfirmScreen(
                 if (otp.length <= 6) otp = it
             },
         )
+
         Spacer(modifier = Modifier.size(32.dp))
         AppButton(
             modifier = Modifier.fillMaxWidth(),
