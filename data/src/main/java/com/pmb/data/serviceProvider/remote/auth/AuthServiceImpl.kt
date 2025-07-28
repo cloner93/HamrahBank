@@ -9,6 +9,8 @@ import com.pmb.domain.model.RegisterVerifyResponse
 import com.pmb.domain.model.SendOtpRequest
 import com.pmb.domain.model.openAccount.AccountArchiveJobDocRequest
 import com.pmb.domain.model.openAccount.AccountArchiveJobDocResponse
+import com.pmb.domain.model.openAccount.CheckPostCodeRequest
+import com.pmb.domain.model.openAccount.CheckPostalCodeResponse
 import com.pmb.domain.model.openAccount.FetchCommitmentRequest
 import com.pmb.domain.model.openAccount.FetchCommitmentResponse
 import com.pmb.domain.model.openAccount.GenerateCodeRequest
@@ -147,6 +149,13 @@ class AuthServiceImpl @Inject constructor(
     override fun registerOpenAccount(registerOpenAccountRequest: RegisterOpenAccountRequest): Flow<Result<SuccessData<RegisterOpenAccountResponse>>> {
         return client.request<RegisterOpenAccountRequest,RegisterOpenAccountResponse>(
             "openAccount/registerRequest", registerOpenAccountRequest
+        )
+    }
+
+    override fun checkPostCode(postCode: Int): Flow<Result<SuccessData<CheckPostalCodeResponse>>> {
+        val req = CheckPostCodeRequest(postcode = postCode)
+        return client.request<CheckPostCodeRequest,CheckPostalCodeResponse>(
+            "openAccount/postCodeInquiry", req
         )
     }
 

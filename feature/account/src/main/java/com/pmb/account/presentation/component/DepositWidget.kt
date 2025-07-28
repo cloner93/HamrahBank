@@ -32,6 +32,7 @@ import com.pmb.ballon.component.base.BodySmallText
 import com.pmb.ballon.component.base.CaptionText
 import com.pmb.ballon.component.base.ChipWithIcon
 import com.pmb.ballon.component.base.Headline2Text
+import com.pmb.ballon.component.base.Headline4Text
 import com.pmb.ballon.models.IconStyle
 import com.pmb.ballon.models.Size
 import com.pmb.ballon.ui.theme.AppTheme
@@ -88,7 +89,7 @@ fun DepositWidget(
                     assetColor = AppTheme.colorScheme.onBackgroundTintPrimaryDefault
                 )
             }
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(8.dp))
             BodyMediumText(
                 text = item.depositNumber,
                 color = AppTheme.colorScheme.onBackgroundNeutralDefault
@@ -101,7 +102,7 @@ fun DepositWidget(
             Spacer(modifier = Modifier.height(8.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
                 if (isAmountVisible) {
-                    Headline2Text(
+                    Headline4Text(
                         text = item.amount.toCurrency(),
                         color = AppTheme.colorScheme.onBackgroundNeutralDefault
                     )

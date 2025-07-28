@@ -483,6 +483,7 @@ class RegisterCapturingVideoViewModel @Inject constructor(
                             cameraHasError = null
                         )
                     }
+                    handleAdmittanceText()
                 } else {
                     setState {
                         it.copy(

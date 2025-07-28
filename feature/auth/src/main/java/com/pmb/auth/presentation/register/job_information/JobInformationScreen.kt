@@ -144,6 +144,7 @@ fun JobInformationScreen(
                     Icon(
                         imageVector = Icons.Default.KeyboardArrowDown,
                         contentDescription = "down Icon",
+                        tint = AppTheme.colorScheme.onBackgroundNeutralDefault
                     )
                 },
             )

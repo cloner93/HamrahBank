@@ -82,6 +82,7 @@ fun NavGraphBuilder.registerScreenHandler() {
             val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
             RegisterNationalIdScreen(
                 viewModel = hiltViewModel<RegisterNationalIdViewModel>(),
+                sharedState.value
             ) { childState ->
                 Log.d("Masoud Tag", "registerScreenHandler child state : $childState")
                 Log.d("Masoud Tag", "registerScreenHandler shared state : $sharedState")
@@ -256,7 +257,7 @@ fun NavGraphBuilder.registerScreenHandler() {
             val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
             RegisterFacePhotoCaptureScreen(
                 viewModel = hiltViewModel<RegisterFacePhotoCapturedViewModel>()
-            ){childState->
+            ) { childState ->
                 sharedViewModel.updateState {
                     sharedState.value.copy(
                         authImage = childState
@@ -273,7 +274,7 @@ fun NavGraphBuilder.registerScreenHandler() {
             RegisterVideoScreen(
                 viewModel = hiltViewModel<RegisterCapturingVideoViewModel>(),
                 sharedState.value
-            ){childState->
+            ) { childState ->
                 sharedViewModel.updateState {
                     sharedState.value.copy(
                         refId = childState

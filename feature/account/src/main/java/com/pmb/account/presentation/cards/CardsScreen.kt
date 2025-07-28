@@ -22,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -30,9 +31,11 @@ import com.pmb.account.presentation.cards.viewmodel.CardsViewActions
 import com.pmb.account.presentation.cards.viewmodel.CardsViewEvents
 import com.pmb.account.presentation.cards.viewmodel.CardsViewModel
 import com.pmb.account.presentation.component.CardInfo
+import com.pmb.ballon.component.EmptyList
 import com.pmb.ballon.component.MenuBottomSheet
 import com.pmb.ballon.component.base.AppButtonIcon
 import com.pmb.ballon.component.base.AppFAB
+import com.pmb.ballon.component.base.IconType
 import com.pmb.ballon.models.IconStyle
 import com.pmb.ballon.models.MenuSheetModel
 import com.pmb.ballon.ui.theme.AppTheme
@@ -106,6 +109,7 @@ fun CardsScreen() {
                     })
             }
 
+            if (viewState.cards.isNotEmpty())
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize(),
@@ -122,6 +126,13 @@ fun CardsScreen() {
                     })
                 }
             }
+            else
+                EmptyList(
+                    modifier = Modifier.fillMaxWidth(),
+                    iconType = IconType.Painter(painterResource(R.drawable.ic_add_card)),
+                    message = "هنوز کارتی اضافه نکرده\u200Cاید.\n" +
+                            "روی دکمه + در پایین صفحه بزنید و کارت بانکی خود را اضافه کنید."
+                )
         }
     }
 

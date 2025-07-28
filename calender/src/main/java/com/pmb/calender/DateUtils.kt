@@ -136,6 +136,8 @@ fun String?.toPersianDateString(): String {
 }
 
 fun Long.longToString(): Triple<String, String, String>? {
+    if (this == 0L) return null
+
     val dateStr = this.toString().padStart(8, '0')
     return if (dateStr.length == 8) {
         val year = dateStr.substring(0, 4)

@@ -30,6 +30,7 @@ android {
     compileSdk = 35
 
     defaultConfig {
+        targetSdk = 35 // in new devices it returns a dialog which his this app uses old version of sdk and it is not good for your device
         applicationId = "com.pmb.mobile"
         minSdk = 24
         versionCode = 1

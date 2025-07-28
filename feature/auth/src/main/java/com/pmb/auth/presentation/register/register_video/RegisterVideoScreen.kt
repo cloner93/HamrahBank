@@ -137,6 +137,7 @@ fun RegisterVideoScreen(
                             .align(Alignment.Center)
                             .padding(bottom = 16.dp)
                             .size(66.dp),
+                        enabled = viewState.admittanceTextResponse?.admittanceText?.isEmpty() == false,
                         onClick = {
                             viewModel.handle(VideoViewActions.VideoCaptured)
                         }

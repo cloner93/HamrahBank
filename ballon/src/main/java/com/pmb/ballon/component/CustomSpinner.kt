@@ -49,6 +49,7 @@ fun CustomSpinner(
                 Icon(
                     imageVector = if (expanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
                     contentDescription = "Dropdown Icon",
+                    tint = AppTheme.colorScheme.onBackgroundNeutralDefault
                 )
             },
             modifier = modifier
@@ -110,6 +111,7 @@ fun CustomSearchSpinner(
             Icon(
                 imageVector = if (expanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
                 contentDescription = "Dropdown Icon",
+                tint = AppTheme.colorScheme.onBackgroundNeutralDefault
             )
         }, modifier = modifier
             .menuAnchor(MenuAnchorType.PrimaryNotEditable, true)
