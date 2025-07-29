@@ -120,7 +120,7 @@ fun RegisterConfirmScreen(
             modifier = Modifier.fillMaxWidth(),
             value = otp,
             label = stringResource(R.string.otp),
-            onValueChange = { otp = it },
+            onValueChange = {  if (it.length <= 6) otp = it },
         )
         Spacer(modifier = Modifier.size(32.dp))
         AppButton(
@@ -143,6 +143,11 @@ fun RegisterConfirmScreen(
             enable = viewState.timerState?.get(TimerTypeId.RESEND_TIMER)?.timerStatus == TimerStatus.IS_FINISHED,
             title = title,
             onClick = {
+                viewModel.handle(RegisterConfirmViewActions.ResendVerifyInfo(
+                    mobileNumber = sharedState.value.mobileNo?:"",
+                    nationalCode = sharedState.value.nationalCode?:"",
+                    birthDate = sharedState.value.birthDate?:""
+                ))
             })
     }
     if (viewState.isLoading) {

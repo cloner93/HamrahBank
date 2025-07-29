@@ -122,7 +122,7 @@ fun FirstLoginConfirmScreen(
             value = otp,
             label = stringResource(R.string.otp),
             onValueChange = {
-                if (otp.length <= 6) otp = it
+                if (it.length < 6) otp = it
             },
         )
         Spacer(modifier = Modifier.size(32.dp))
