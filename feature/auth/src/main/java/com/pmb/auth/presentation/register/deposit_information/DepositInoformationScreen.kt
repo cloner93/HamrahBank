@@ -140,7 +140,7 @@ fun DepositInformationScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(start = 16.dp, end = 16.dp, top = 16.dp),
-                    enable = !viewState.isLoading && viewState.accType != null && viewState.province != null && viewState.isChecked,
+                    enable = !viewState.isLoading && viewState.accType != null && viewState.province != null && viewState.isChecked && viewState.city !=null && viewState.branch !=null,
                     title = stringResource(R.string._continue),
                     onClick = {
                         updateSharedState(viewState)
