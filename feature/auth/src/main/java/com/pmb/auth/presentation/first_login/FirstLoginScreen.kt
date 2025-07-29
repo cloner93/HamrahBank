@@ -61,7 +61,7 @@ fun FirstLoginScreen(
     )
     val secondaryStyle = SpanStyle(
         color = AppTheme.colorScheme.onBackgroundNeutralDefault,
-        fontSize = 12.sp,
+        fontSize = 8.sp,
         fontWeight = FontWeight(416)
     )
     var isError by remember { mutableStateOf(false) }

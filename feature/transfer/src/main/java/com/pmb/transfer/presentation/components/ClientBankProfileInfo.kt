@@ -24,8 +24,8 @@ import com.pmb.transfer.utils.BankUtil
 @Composable
 fun ClientBankProfileInfo(
     item: TransactionClientBankEntity,
-    profileSize: Dp = 44.dp,
-    iconSize: Dp = 22.dp
+    profileSize: Dp = 64.dp,
+    iconSize: Dp = 24.dp
 ) {
     Column(
         modifier = Modifier
@@ -39,12 +39,14 @@ fun ClientBankProfileInfo(
             iconSize = iconSize
         )
         Spacer(modifier = Modifier.size(12.dp))
-        Headline6Text(
-            text = item.clientBankEntity.name,
-            color = AppTheme.colorScheme.foregroundNeutralDefault,
-            textAlign = TextAlign.Center
-        )
-        Spacer(modifier = Modifier.size(4.dp))
+        if (item.clientBankEntity.name.isNotEmpty()) {
+            Headline6Text(
+                text = item.clientBankEntity.name,
+                color = AppTheme.colorScheme.foregroundNeutralDefault,
+                textAlign = TextAlign.Center
+            )
+            Spacer(modifier = Modifier.size(4.dp))
+        }
         CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
             BodyMediumText(
                 text = when (item.type) {

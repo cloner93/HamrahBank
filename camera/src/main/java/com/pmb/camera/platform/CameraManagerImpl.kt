@@ -67,8 +67,8 @@ class CameraManagerImpl @Inject constructor(
             ContextCompat.getMainExecutor(context),
             object : ImageCapture.OnImageSavedCallback {
                 override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
-                    if (isFrontCamera())
-                        mirrorImage(outputFile)
+//                    if (isFrontCamera())
+//                        mirrorImage(outputFile)
                     onCaptured(true)
                 }
 
@@ -77,17 +77,17 @@ class CameraManagerImpl @Inject constructor(
                 }
             })
     }
-    private fun mirrorImage(file: File) {
-        try {
-            val bitmap = BitmapFactory.decodeFile(file.absolutePath)
-            val matrix = Matrix().apply { preScale(-1f, 1f) }
-            val mirroredBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
-
-            FileOutputStream(file).use { out ->
-                mirroredBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
-            }
-        } catch (e: Exception) {
-            Log.e("CameraManager", "Error mirroring image: ${e.message}", e)
-        }
-    }
+//    private fun mirrorImage(file: File) {
+//        try {
+//            val bitmap = BitmapFactory.decodeFile(file.absolutePath)
+//            val matrix = Matrix().apply { preScale(-1f, 1f) }
+//            val mirroredBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+//
+//            FileOutputStream(file).use { out ->
+//                mirroredBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
+//            }
+//        } catch (e: Exception) {
+//            Log.e("CameraManager", "Error mirroring image: ${e.message}", e)
+//        }
+//    }
 }

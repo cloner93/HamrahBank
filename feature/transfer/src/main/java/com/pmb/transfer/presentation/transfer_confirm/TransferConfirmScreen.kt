@@ -114,7 +114,7 @@ fun TransferConfirmScreen(
     ) {
         Spacer(modifier = Modifier.size(24.dp))
         if (account != null) {
-            ClientBankProfileInfo(item = account, profileSize = 64.dp, iconSize = 32.dp)
+            ClientBankProfileInfo(item = account)
         }
         Spacer(modifier = Modifier.size(24.dp))
         BodySmallText(

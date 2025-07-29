@@ -14,5 +14,8 @@ data class ClientBankEntity(
     val cardNumberFormated: String
         get() = cardNumber.formatGropedWithSeparator(separator = "  ")
     val ibanFormated: String
-        get() = iban.formatGropedWithSeparator()
+        get() {
+            val normalizedIban = if (iban.startsWith("IR", ignoreCase = true)) iban else "IR$iban"
+            return normalizedIban.formatGropedWithSeparator()
+        }
 }

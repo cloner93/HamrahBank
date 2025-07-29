@@ -73,7 +73,8 @@ class ImageCompressorImpl @Inject constructor(
             options.inJustDecodeBounds = false
 
             var bitmap = BitmapFactory.decodeFile(imagePath, options)
-            bitmap = bitmap?.let { rotateBitmapIfRequired(imagePath, it) }
+            bitmap =
+                bitmap?.let { rotateBitmapIfRequired(imagePath, it) }
 
             bitmap?.let {
                 ByteArrayOutputStream().apply {

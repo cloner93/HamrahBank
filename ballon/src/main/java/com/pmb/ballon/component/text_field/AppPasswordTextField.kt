@@ -60,7 +60,7 @@ fun AppPasswordTextField(
             },
             visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = @Composable {
-                AppButtonIcon(icon = if (passwordVisible) Icons.Outlined.VisibilityOff else Icons.Outlined.Visibility) {
+                AppButtonIcon(icon = if (!passwordVisible) Icons.Outlined.VisibilityOff else Icons.Outlined.Visibility) {
                     passwordVisible = !passwordVisible
                 }
             },

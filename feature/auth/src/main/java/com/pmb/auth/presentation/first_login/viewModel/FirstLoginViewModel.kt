@@ -1,5 +1,6 @@
 package com.pmb.auth.presentation.first_login.viewModel
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.pmb.core.platform.AlertModelState
 import com.pmb.core.platform.BaseViewModel
@@ -18,7 +19,9 @@ class FirstLoginViewModel @Inject constructor(
         when (action) {
             FirstLoginViewActions.ClearAlert -> setState { it.copy(loading = false) }
             is FirstLoginViewActions.FirstLoginStepConfirm -> handleFirstLoginStepConfirm()
-            is FirstLoginViewActions.UpdatePassword -> setState { it.copy(password = action.value) }
+            is FirstLoginViewActions.UpdatePassword -> setState {
+                Log.d("FirstLoginViewModel", "handle: ${action.value}")
+                it.copy(password = action.value) }
             is FirstLoginViewActions.UpdatePhoneNumber -> setState { it.copy(phoneNumber = action.value) }
             is FirstLoginViewActions.UpdateUsername -> setState { it.copy(username = action.value) }
         }
