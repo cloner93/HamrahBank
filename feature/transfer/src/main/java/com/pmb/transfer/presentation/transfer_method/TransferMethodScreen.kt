@@ -74,9 +74,11 @@ fun TransferMethodScreen(
                             subtitle = item.detail + if (item.fee > 0.0) " | کارمزد: ${item.fee.toCurrency()} ریال " else "",
                             enable = item.active,
                             startIcon =
-                                if (item.paymentType == PaymentType.CARD_TO_CARD)
-                                    com.pmb.ballon.R.drawable.ic_bank_card_swap
-                                else com.pmb.ballon.R.drawable.ic_university,
+                                when (item.paymentType) {
+                                    PaymentType.CARD_TO_CARD -> com.pmb.ballon.R.drawable.ic_bank_card_swap
+                                    PaymentType.MELLAT_TO_MELLAT -> com.pmb.ballon.R.drawable.ic_mellat_to_mellat
+                                    else -> com.pmb.ballon.R.drawable.ic_university
+                                },
                             onClick = {
                                 viewModel.handle(TransferMethodViewActions.SelectPaymentType(item))
                             })

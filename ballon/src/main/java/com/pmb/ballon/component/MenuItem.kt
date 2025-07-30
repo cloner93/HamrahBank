@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.HorizontalDivider
@@ -126,40 +127,44 @@ fun MenuItem(
                 .padding(innerPadding.toPaddingValues()),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            startIcon?.let {
-                AppIcon(
-                    modifier = modifier.padding(startIconPadding.toPaddingValues()),
-                    icon = it,
-                    style = startIconStyle
-                )
-            }
-
-            Column(horizontalAlignment = Alignment.Start) {
-                CompositionLocalProvider(LocalLayoutDirection provides titleLayoutDirection) {
-                    BaseAppText(title = title, style = titleStyle)
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)) {
+                startIcon?.let {
+                    AppIcon(
+                        modifier = modifier.padding(startIconPadding.toPaddingValues()),
+                        icon = it,
+                        style = startIconStyle
+                    )
                 }
 
-                subtitle?.let {
-                    CompositionLocalProvider(LocalLayoutDirection provides subTitleLayoutDirection) {
-                        BodySmallText(
-                            text = it,
-                            color = subtitleStyle?.color
-                                ?: AppTheme.colorScheme.onForegroundNeutralDisabled
-                        )
+                Column(horizontalAlignment = Alignment.Start) {
+                    CompositionLocalProvider(LocalLayoutDirection provides titleLayoutDirection) {
+                        BaseAppText(title = title, style = titleStyle)
+                    }
+
+                    subtitle?.let {
+                        CompositionLocalProvider(LocalLayoutDirection provides subTitleLayoutDirection) {
+                            BodySmallText(
+                                text = it,
+                                color = subtitleStyle?.color
+                                    ?: AppTheme.colorScheme.onForegroundNeutralDisabled
+                            )
+                        }
                     }
                 }
             }
 
-            Spacer(modifier = Modifier.weight(1f))
-            endContent?.invoke()
-            endIcon?.let {
-                AppIcon(
-                    modifier = Modifier.padding(endIconPadding.toPaddingValues()),
-                    icon = endIcon,
-                    style = endIconStyle
-                )
+            Row {
+                endContent?.invoke()
+                endIcon?.let {
+                    AppIcon(
+                        modifier = Modifier.padding(endIconPadding.toPaddingValues()),
+                        icon = endIcon,
+                        style = endIconStyle
+                    )
+                }
             }
-
         }
         if (bottomDivider) {
             HorizontalDivider(
@@ -187,7 +192,7 @@ fun ImageItemRow(
         color = AppTheme.colorScheme.onBackgroundNeutralSubdued
     ),
     titleLayoutDirection: LayoutDirection = LayoutDirection.Rtl,
-    textWeight : Float =1f,
+    textWeight: Float = 1f,
     subTitleLayoutDirection: LayoutDirection = LayoutDirection.Rtl,
     startImageStyle: ImageStyle = ImageStyle(),
     endContent: @Composable () -> Unit = {},
@@ -212,7 +217,7 @@ fun ImageItemRow(
                 Spacer(modifier = Modifier.size(16.dp))
             }
 
-            Column(modifier = Modifier.weight(textWeight),horizontalAlignment = Alignment.Start) {
+            Column(modifier = Modifier.weight(textWeight), horizontalAlignment = Alignment.Start) {
                 CompositionLocalProvider(LocalLayoutDirection provides titleLayoutDirection) {
                     BaseAppText(title = title, style = titleStyle)
                 }

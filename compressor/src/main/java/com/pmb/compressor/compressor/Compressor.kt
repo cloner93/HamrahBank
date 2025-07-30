@@ -8,6 +8,7 @@ import android.os.Build
 import android.util.Log
 import com.pmb.compressor.config.Configuration
 import com.pmb.compressor.listeners.CompressionProgressListener
+import com.pmb.compressor.utils.CompressorUtils.alignTo16
 import com.pmb.compressor.utils.CompressorUtils.findTrack
 import com.pmb.compressor.utils.CompressorUtils.getBitrate
 import com.pmb.compressor.utils.CompressorUtils.hasQTI
@@ -26,7 +27,6 @@ import kotlinx.coroutines.withContext
 import java.io.File
 import java.nio.ByteBuffer
 
-
 object Compressor {
 
     // 2Mbps
@@ -37,8 +37,7 @@ object Compressor {
     private const val MEDIACODEC_TIMEOUT_DEFAULT = 100L
 
     private const val INVALID_BITRATE =
-        "The provided bitrate is smaller than what is needed for compression " +
-                "try to set isMinBitRateEnabled to false"
+        "The provided bitrate is smaller than what is needed for compression " + "try to set isMinBitRateEnabled to false"
 
     var isRunning = true
 
@@ -58,8 +57,7 @@ object Compressor {
         } catch (exception: Exception) {
             printException(exception)
             return@withContext Result(
-                success = false,
-                failureMessage = "${exception.message}"
+                success = false, failureMessage = "${exception.message}"
             )
         }
 
@@ -68,7 +66,6 @@ object Compressor {
         }
 
         val height: Double = prepareVideoHeight(mediaMetadataRetriever)
-
         val width: Double = prepareVideoWidth(mediaMetadataRetriever)
 
         val rotationData =
@@ -79,7 +76,6 @@ object Compressor {
 
         val durationData =
             mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
-
 
         if (rotationData.isNullOrEmpty() || bitrateData.isNullOrEmpty() || durationData.isNullOrEmpty()) {
             // Exit execution
@@ -100,28 +96,33 @@ object Compressor {
 
         // Check for a min video bitrate before compression
         // Note: this is an experimental value
-        if (configuration.isMinBitrateCheckEnabled && bitrate <= MIN_BITRATE)
-            return@withContext Result(success = false, failureMessage = INVALID_BITRATE)
+        if (configuration.isMinBitrateCheckEnabled && bitrate <= MIN_BITRATE) return@withContext Result(
+            success = false,
+            failureMessage = INVALID_BITRATE
+        )
 
-        //Handle new bitrate value
-        val newBitrate: Int =
+        //Handle new bitrate value and clamp to a safe range for stricter encoders (Huawei)
+        val targetBitrate =
             if (configuration.videoBitrateInMbps == null) getBitrate(bitrate, configuration.quality)
-            else configuration.videoBitrateInMbps!! * 1000000
+            else configuration.videoBitrateInMbps!! * 1_000_000
+        val newBitrate: Int = targetBitrate.coerceIn(500_000, 10_000_000)
 
         //Handle new width and height values
-        val target =
-            Pair(width, height)
+        val target = Pair(width, height)
 
-        Log.i("newSize","new width is ${target.first}")
-        Log.i("newSize","new height is ${target.second}")
-        Log.i("newSize","old width is ${width}")
-        Log.i("newSize","old height is ${height}")
+        Log.i("newSize", "new width is ${target.first}")
+        Log.i("newSize", "new height is ${target.second}")
+        Log.i("newSize", "old width is ${width}")
+        Log.i("newSize", "old height is ${height}")
         var newWidth = roundDimension(target.first)
         var newHeight = roundDimension(target.second)
 
+        // Align to 16px blocks for HiSilicon/Huawei stability
+        newWidth = alignTo16(newWidth)
+        newHeight = alignTo16(newHeight)
+
         //Handle rotation values and swapping height and width if needed
         rotation = 0
-
 
         return@withContext start(
             newWidth,
@@ -278,8 +279,7 @@ object Compressor {
 
                                 compressionProgressListener.onProgressCancelled()
                                 return Result(
-                                    success = false,
-                                    failureMessage = "The compression has stopped!"
+                                    success = false, failureMessage = "The compression has stopped!"
                                 )
                             }
 
@@ -293,8 +293,8 @@ object Compressor {
 
                                 encoderStatus == MediaCodec.INFO_OUTPUT_FORMAT_CHANGED -> {
                                     val newFormat = encoder.outputFormat
-                                    if (videoTrackIndex == -5)
-                                        videoTrackIndex = mediaMuxer.addTrack(newFormat, false)
+                                    if (videoTrackIndex == -5) videoTrackIndex =
+                                        mediaMuxer.addTrack(newFormat, false)
                                 }
 
                                 encoderStatus == MediaCodec.INFO_OUTPUT_BUFFERS_CHANGED -> {
@@ -309,8 +309,7 @@ object Compressor {
                                     if (bufferInfo.size > 1) {
                                         if ((bufferInfo.flags and MediaCodec.BUFFER_FLAG_CODEC_CONFIG) == 0) {
                                             mediaMuxer.writeSampleData(
-                                                videoTrackIndex,
-                                                encodedData, bufferInfo, false
+                                                videoTrackIndex, encodedData, bufferInfo, false
                                             )
                                         }
 
@@ -382,12 +381,7 @@ object Compressor {
                 }
 
                 dispose(
-                    videoIndex,
-                    decoder,
-                    encoder,
-                    inputSurface,
-                    outputSurface,
-                    extractor
+                    videoIndex, decoder, encoder, inputSurface, outputSurface, extractor
                 )
 
                 processAudio(
@@ -408,19 +402,15 @@ object Compressor {
                 printException(exception)
             }
 
-            var resultFile = cacheFile
+            val resultFile = cacheFile
 
             return Result(
-                success = true,
-                failureMessage = null,
-                size = resultFile.length(),
-                resultFile.path
+                success = true, failureMessage = null, size = resultFile.length(), resultFile.path
             )
         }
 
         return Result(
-            success = false,
-            failureMessage = "Something went wrong, please try again"
+            success = false, failureMessage = "Something went wrong, please try again"
         )
     }
 
@@ -479,54 +469,56 @@ object Compressor {
     }
 
     private fun prepareEncoder(outputFormat: MediaFormat, hasQTI: Boolean): MediaCodec {
-
-        // This seems to cause an issue with certain phones
-        // val encoderName = MediaCodecList(REGULAR_CODECS).findEncoderForFormat(outputFormat)
-        // val encoder: MediaCodec = MediaCodec.createByCodecName(encoderName)
-        // Log.i("encoderName", encoder.name)
-        // c2.qti.avc.encoder results in a corrupted .mp4 video that does not play in
-        // Mac and iphones
-        var encoder = if (hasQTI) {
-            MediaCodec.createByCodecName("c2.android.avc.encoder")
-        } else {
-            MediaCodec.createEncoderByType(MIME_TYPE)
+        // Ensure output dimensions are aligned (safety double-check)
+        if (outputFormat.containsKey(MediaFormat.KEY_WIDTH)) {
+            val w = outputFormat.getInteger(MediaFormat.KEY_WIDTH)
+            outputFormat.setInteger(MediaFormat.KEY_WIDTH, alignTo16(w))
+        }
+        if (outputFormat.containsKey(MediaFormat.KEY_HEIGHT)) {
+            val h = outputFormat.getInteger(MediaFormat.KEY_HEIGHT)
+            outputFormat.setInteger(MediaFormat.KEY_HEIGHT, alignTo16(h))
         }
 
+        // Configure using a safe encoder choice:
+        // - On QTI devices, prefer Google's software encoder to avoid c2.qti corruption issues
+        // - On Huawei (HiSilicon), avoid OMX.hisi by falling back to c2.android on failure or detection
+        var encoder: MediaCodec? = null
         try {
-            encoder.configure(
-                outputFormat, null, null,
-                MediaCodec.CONFIGURE_FLAG_ENCODE
-            )
+            encoder = if (hasQTI) {
+                MediaCodec.createByCodecName("c2.android.avc.encoder")
+            } else {
+                // Start with the default encoder for MIME type (may be OMX.hisi on Huawei)
+                MediaCodec.createEncoderByType(MIME_TYPE)
+            }
+
+            encoder.configure(outputFormat, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE)
+            // If we reached here, configuration succeeded.
+            return encoder
         } catch (e: Exception) {
-            encoder = MediaCodec.createEncoderByType(MIME_TYPE)
-            encoder.configure(
-                outputFormat, null, null,
-                MediaCodec.CONFIGURE_FLAG_ENCODE
+            // Release if partially created
+            try {
+                encoder?.release()
+            } catch (_: Throwable) {
+            }
+            Log.e(
+                "Compressor",
+                "Primary encoder configure failed; trying c2.android.avc.encoder",
+                e
             )
         }
 
-        return encoder
+        // Fallback: Google's software encoder
+        val fallback = MediaCodec.createByCodecName("c2.android.avc.encoder")
+        fallback.configure(outputFormat, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE)
+        return fallback
     }
 
     private fun prepareDecoder(
         inputFormat: MediaFormat,
         outputSurface: OutputSurface,
     ): MediaCodec {
-        // This seems to cause an issue with certain phones
-        // val decoderName =
-        //    MediaCodecList(REGULAR_CODECS).findDecoderForFormat(inputFormat)
-        // val decoder = MediaCodec.createByCodecName(decoderName)
-        // Log.i("decoderName", decoder.name)
-
-        // val decoder = if (hasQTI) {
-        // MediaCodec.createByCodecName("c2.android.avc.decoder")
-        //} else {
-
         val decoder = MediaCodec.createDecoderByType(inputFormat.getString(MediaFormat.KEY_MIME)!!)
-        //}
-
         decoder.configure(inputFormat, outputSurface.getSurface(), null, 0)
-
         return decoder
     }
 
