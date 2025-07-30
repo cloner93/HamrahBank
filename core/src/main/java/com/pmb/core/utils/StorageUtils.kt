@@ -55,7 +55,7 @@ fun shareImage(context: Context, uri: Uri) {
 }
 
 fun getImageUri(context: Context, imageFile: File): Uri {
-    return FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", imageFile)
+    return FileProvider.getUriForFile(context, "${context.packageName}.provider", imageFile)
 }
 
 fun saveBitmapToCache(context: Context, bitmap: Bitmap): File {

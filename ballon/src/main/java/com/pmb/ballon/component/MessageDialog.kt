@@ -1,8 +1,13 @@
 package com.pmb.ballon.component
 
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.AlertDialog
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.pmb.ballon.component.base.AppButton
+import com.pmb.ballon.component.base.AppTextButton
 import com.pmb.ballon.component.base.BodyLargeText
 import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.ui.theme.AppTheme
@@ -39,16 +44,22 @@ fun MessageDialog(
         },
         confirmButton = {
             onConfirm?.let {
-                AppButton(title = positiveButtonTitle, onClick = {
+                AppButton(
+                    modifier = Modifier,
+                    title = positiveButtonTitle, onClick = {
                     onConfirm()
                 })
             }
         },
         dismissButton = {
             onDismiss?.let {
-                AppButton(title = negativeButtonTitle, onClick = {
-                    onDismiss()
-                })
+                AppTextButton(
+                    modifier = Modifier.padding(horizontal = 8.dp),
+                    title = negativeButtonTitle,
+                    onClick = {
+                        onDismiss()
+                    })
             }
         })
+
 }
