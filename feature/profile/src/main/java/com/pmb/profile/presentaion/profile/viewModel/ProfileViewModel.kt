@@ -42,22 +42,32 @@ class ProfileViewModel @Inject constructor(
     }
 
     private fun handleLogoutAccount() {
+        setState {
+            it.copy(
+                loading = false,
+                alertModelState  = AlertModelState.Dialog(
+                    title = "پیام",
+                    description = "آیا از خروج اطمینان دارید؟",
+                    positiveButtonTitle = "یله",
+                    negativeButtonTitle = "خیر",
+                    onPositiveClick = {
+                        setState { state -> state.copy(alertModelState = null) }
+                        logoutAccount()
+                    },
+                    onNegativeClick = {
+                        setState { state -> state.copy(alertModelState = null) }
+                    }
+                )
+            )
+        }
+    }
+
+    private fun logoutAccount() {
         viewModelScope.launch {
             logoutUserUseCase.invoke(Unit).collect { result ->
                 when (result) {
                     is Result.Success -> {
-                        setState {
-                            it.copy(
-                                loading = false, alertModelState = AlertModelState.SnackBar(
-                                    message = "",
-                                    onActionPerformed = {
-                                        setState { state -> state.copy(alertModelState = null) }
-                                    },
-                                    onDismissed = {
-                                        setState { state -> state.copy(alertModelState = null) }
-                                    }
-                                ), userData = null)
-                        }
+                        setState { it.copy(loading = false,) }
                         postEvent(ProfileViewEvents.LogoutAccountSucceed)
                     }
 

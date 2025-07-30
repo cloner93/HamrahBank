@@ -7,12 +7,6 @@ import com.pmb.profile.domain.entity.PersonalInfoEntity
 data class PersonalInfoViewState(
     val loading: Boolean = false,
     val alertState: AlertModelState? = null,
+    val showPersonalInfo: Boolean = true,
     val personalInfo: PersonalInfoEntity = PersonalInfoEntity(),
-) : BaseViewState {
-    val showPersonalInfo: Boolean
-        get() = personalInfo.safeUsername.isNotEmpty() ||
-                personalInfo.safePhoneNumber.isNotEmpty() ||
-                personalInfo.safeAddressEntity.isNotEmpty() ||
-                personalInfo.safeJobEntity.isNotEmpty() ||
-                personalInfo.safeEducation.isNotEmpty()
-}
+) : BaseViewState

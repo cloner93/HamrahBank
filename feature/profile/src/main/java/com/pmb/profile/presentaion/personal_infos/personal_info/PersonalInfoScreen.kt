@@ -107,7 +107,7 @@ private fun ProfileInfoItemsComponent(viewModel: PersonalInfoViewModel) {
                 title = stringResource(R.string.change_username),
                 startIcon = com.pmb.ballon.R.drawable.ic_edit_username,
                 endIcon = com.pmb.ballon.R.drawable.ic_arrow_left,
-                bottomDivider = true,
+                bottomDivider = false,
                 titleStyle = TextStyle(color = AppTheme.colorScheme.foregroundNeutralDefault),
                 startIconStyle = IconStyle(tint = AppTheme.colorScheme.onBackgroundPrimaryCTA),
                 endContent = {
