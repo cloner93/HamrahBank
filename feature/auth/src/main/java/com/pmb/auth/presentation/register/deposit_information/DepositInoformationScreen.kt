@@ -28,6 +28,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.pmb.auth.R
 import com.pmb.auth.presentation.register.RegisterSharedViewState
+import com.pmb.auth.presentation.register.authentication_information.viewModel.AuthenticationInformationViewActions
 import com.pmb.auth.presentation.register.deposit_information.viewModel.DepositInformationViewActions
 import com.pmb.auth.presentation.register.deposit_information.viewModel.DepositInformationViewEvents
 import com.pmb.auth.presentation.register.deposit_information.viewModel.DepositInformationViewModel
@@ -105,6 +106,21 @@ fun DepositInformationScreen(
             viewModel.handle(DepositInformationViewActions.SetOpeningBranch(it))
         }
     }
+    LaunchedEffect(sharedViewState.cityOfDeposit) {
+        if (sharedViewState.cityOfDeposit != null) {
+            city = sharedViewState.cityOfDeposit?.cityName ?: ""
+            viewModel.handle(DepositInformationViewActions.SetCity(sharedViewState.cityOfDeposit!!))
+        }
+    }
+    LaunchedEffect(sharedViewState.provinceOfDeposit) {
+        if (sharedViewState.provinceOfDeposit != null) {
+            province = sharedViewState.provinceOfDeposit?.provinceName ?: ""
+            viewModel.handle(DepositInformationViewActions.SetProvince(sharedViewState.provinceOfDeposit!!))
+        }
+    }
+
+
+
     if (!showBottomSheet) {
         AppContent(
             modifier = Modifier.padding(horizontal = 16.dp),
