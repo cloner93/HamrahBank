@@ -1,6 +1,7 @@
 package com.pmb.auth.presentation.register.account_opening
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -14,6 +15,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -50,8 +54,35 @@ fun AccountOpeningScreen(
 ) {
     val viewState by viewModel.viewState.collectAsStateWithLifecycle()
     val navigationManager: NavigationManager = LocalNavigationManager.current
-
+//    sharedState.value.mobileNo?.let { viewModel.handle(OpeningAccountViewActions.SetPhoneNumber(it)) }
+//    val focusManager = LocalFocusManager.current
+//    val buttonFocusRequester = remember { FocusRequester() }
     var isError by remember { mutableStateOf(false) }
+    LaunchedEffect(sharedState.value.mobileNo) {
+        sharedState.value.mobileNo?.let {
+            viewModel.handle(
+                OpeningAccountViewActions.SetPhoneNumber(
+                    it
+                )
+            )
+        }
+        sharedState.value.nationalCode?.let {
+            viewModel.handle(
+                OpeningAccountViewActions.SetNationalId(
+                    it
+                )
+            )
+        }
+        sharedState.value.birthDate?.let { input ->
+            viewModel.handle(
+                OpeningAccountViewActions.SetBirthday(
+                    input.substring(0, 4),
+                    input.substring(4, 6),
+                    input.substring(6, 8)
+                )
+            )
+        }
+    }
     LaunchedEffect(Unit) {
         viewModel.viewEvent.collect { event ->
             when (event) {
@@ -75,7 +106,9 @@ fun AccountOpeningScreen(
             AppButton(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp, top = 16.dp),
+                    .padding(start = 16.dp, end = 16.dp, top = 16.dp)
+//                    .focusRequester(buttonFocusRequester)
+                    .focusable(),
                 enable = !isError && !viewState.phoneNumber.isNullOrEmpty() && !viewState.nationalId.isNullOrEmpty() && viewState.birthDateDay != null,
                 title = stringResource(R.string._continue),
                 onClick = {
@@ -149,6 +182,8 @@ fun AccountOpeningScreen(
             } ?: run { Jdn.today() },
             onDismiss = { viewModel.handle(OpeningAccountViewActions.ShowBottomSheet(false)) },
             onChangeValue = { year, month, day ->
+//                focusManager.clearFocus(force = true)
+//                buttonFocusRequester.requestFocus()
                 viewModel.handle(
                     OpeningAccountViewActions.SetBirthday(
                         year,

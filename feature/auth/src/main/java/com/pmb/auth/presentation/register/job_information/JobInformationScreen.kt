@@ -126,7 +126,7 @@ fun JobInformationScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 16.dp, end = 16.dp, top = 16.dp),
-                enable = !viewState.isLoading && viewState.data != null,
+                enable = !viewState.isLoading && viewState.data != null && viewState.jobInformation !=null,
                 title = stringResource(R.string._continue),
                 onClick = {
                     viewModel.handle(JobInformationViewActions.UploadArchiveDoc(sharedState.value.nationalCode ?:""))

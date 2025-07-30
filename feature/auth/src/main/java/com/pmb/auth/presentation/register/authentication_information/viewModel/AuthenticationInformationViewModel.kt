@@ -13,6 +13,7 @@ class AuthenticationInformationViewModel @Inject constructor(
     initialState
 ) {
     private val educationList = listOf(
+        Education(0, "تحصیلات"),
         Education(1, "دیپلم"),
         Education(2, "فوق دیپلم"),
         Education(3, "لیسانس"),
@@ -23,6 +24,8 @@ class AuthenticationInformationViewModel @Inject constructor(
     )
 
     fun getEducationList() = educationList
+
+    fun getEducation(id: Int) = educationList.find { it.id == id }
 
     override fun handle(action: AuthenticationInformationViewActions) {
         when (action) {

@@ -1,6 +1,7 @@
 package com.pmb.auth.presentation.register.register_face_photo.viewModel
 
 import android.util.Log
+import androidx.camera.core.CameraSelector
 import androidx.lifecycle.viewModelScope
 import com.pmb.auth.domain.ekyc.face_photo.entity.FacePhotoParams
 import com.pmb.auth.domain.ekyc.face_photo.useCase.SendFacePhotoUseCase
@@ -30,7 +31,7 @@ class RegisterFacePhotoCapturedViewModel @Inject constructor(
     initialState
 ) {
     init {
-        cameraManager.toggleCamera()
+        cameraManager.toggleCamera(CameraSelector.DEFAULT_FRONT_CAMERA)
     }
     override fun handle(action: PhotoViewActions) {
         when (action) {

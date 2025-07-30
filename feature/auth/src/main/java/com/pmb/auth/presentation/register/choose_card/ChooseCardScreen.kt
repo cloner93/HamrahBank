@@ -81,9 +81,7 @@ fun ChooseCardScreen() {
             orientationSelected = it
         }
         Spacer(modifier = Modifier.padding(top = 16.dp))
-        FlipToggle(sideSelected) {
-            sideSelected = !sideSelected
-        }
+        FlipToggle()
         Spacer(modifier = Modifier.padding(top = 16.dp))
         Box(
             modifier = Modifier.fillMaxWidth(),
@@ -101,6 +99,9 @@ fun ChooseCardScreen() {
                         if (orientationSelected == Orientation.Horizontal) R.drawable.ic_horizontal_back_card else
                             R.drawable.ic_back_card, orientationSelected == Orientation.Horizontal
                     )
+                },
+                onClick = {
+                    sideSelected = !sideSelected
                 },
                 isBack = sideSelected
             )
@@ -121,7 +122,7 @@ fun ChooseCardScreen() {
             items = if (orientationSelected == Orientation.Horizontal)
                 horizontalItems
             else
-                verticalItems, selectedIndex,orientationSelected == Orientation.Horizontal
+                verticalItems, selectedIndex, orientationSelected == Orientation.Horizontal
         ) {
             selectedIndex = it
         }

@@ -1,10 +1,13 @@
 package com.pmb.domain.model.openAccount.accountVerifyCode
 
 import android.annotation.SuppressLint
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 
 @SuppressLint("UnsafeOptInUsageError")
 @Serializable
+@Parcelize
 data class CityOfBirthInfoDTO(
     val cityCode: Int,
     val cityLatinName: String?=null,
@@ -18,4 +21,4 @@ data class CityOfBirthInfoDTO(
     val statusDate: Int,
     val time: String?=null,
     val userId: String?=null
-)
+): Parcelable

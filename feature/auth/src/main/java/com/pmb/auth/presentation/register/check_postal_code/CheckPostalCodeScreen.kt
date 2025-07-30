@@ -16,6 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.pmb.auth.R
+import com.pmb.auth.presentation.register.RegisterSharedViewState
 import com.pmb.auth.presentation.register.check_postal_code.viewModel.CheckPostalCodeViewActions
 import com.pmb.auth.presentation.register.check_postal_code.viewModel.CheckPostalCodeViewEvents
 import com.pmb.auth.presentation.register.check_postal_code.viewModel.CheckPostalCodeViewModel
@@ -34,15 +35,16 @@ import com.pmb.navigation.moduleScreen.RegisterScreens
 @Composable
 fun CheckPostalCodeScreen(
     viewModel: CheckPostalCodeViewModel,
+    sharedState: RegisterSharedViewState,
     updateState:(String,String)-> Unit
 ) {
     val navigationManager: NavigationManager = LocalNavigationManager.current
     val viewState by viewModel.viewState.collectAsState()
     var postalCode by remember {
-        mutableStateOf("")
+        mutableStateOf(sharedState.postcode?.toString() ?:"")
     }
     var address by remember {
-        mutableStateOf("")
+        mutableStateOf(sharedState.address ?:"")
     }
     LaunchedEffect(Unit) {
         viewModel.viewEvent.collect { event ->
@@ -95,7 +97,7 @@ fun CheckPostalCodeScreen(
             value = postalCode,
             label = stringResource(R.string.postal_code),
             onValueChange = {
-                if (postalCode.length <= 10) postalCode = it
+                if (it.length <= 10) postalCode = it
             },
             trailingIcon = {
                 AppButton(

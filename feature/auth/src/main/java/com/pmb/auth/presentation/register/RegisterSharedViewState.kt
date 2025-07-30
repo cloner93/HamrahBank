@@ -1,7 +1,9 @@
 package com.pmb.auth.presentation.register
 
+import com.pmb.domain.model.openAccount.cityName.City
 import com.pmb.core.platform.BaseSharedState
 import com.pmb.domain.model.openAccount.FetchAdmittanceTextResponse
+import com.pmb.domain.model.openAccount.accountType.Province
 import com.pmb.domain.model.openAccount.accountVerifyCode.CityOfBirthInfoDTO
 import com.pmb.domain.model.openAccount.accountVerifyCode.VerifyCodeResponse
 
@@ -34,5 +36,11 @@ data class RegisterSharedViewState(
     val tel: String? = null,//
     val authImage: String? = null,
     val authVideo: String? = null,
-    val refId :String?=null
+    val refId :String?=null,
+    val provinceList : List<Province>? = emptyList(),
+    val cityList : List<City>?=emptyList(),
+    val birthDatePlaceCity : CityOfBirthInfoDTO ?=null,
+    val issuePlaceCity : CityOfBirthInfoDTO ?=null,
+    val cityOfDeposit : City ?=null,
+    val provinceOfDeposit : Province ?=null,
 ) : BaseSharedState
