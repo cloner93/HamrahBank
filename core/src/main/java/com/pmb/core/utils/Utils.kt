@@ -2,9 +2,9 @@ package com.pmb.core.utils
 
 import android.content.Context
 import android.content.Intent
-import android.database.Cursor
 import android.net.Uri
 import android.provider.ContactsContract
+import android.provider.Settings
 import androidx.core.net.toUri
 
 fun Context.openApp(packageName: String, url: String) {
@@ -46,7 +46,7 @@ fun Context.fetchContactPhoneNumber(contactUri: Uri?): String? {
         cursor?.use { c ->
             if (c.moveToFirst()) {
                 val idIndex = c.getColumnIndex(ContactsContract.Contacts._ID)
-                val nameIndex = c.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)
+                c.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)
 
                 val contactId = c.getString(idIndex)
 
@@ -70,8 +70,12 @@ fun Context.fetchContactPhoneNumber(contactUri: Uri?): String? {
             }
         }
 
-      return  null
+        return null
     } ?: run {
         null
     }
 }
+
+fun Context.getAndroidId(): String =
+    Settings.Secure.getString(this.contentResolver, Settings.Secure.ANDROID_ID)
+
