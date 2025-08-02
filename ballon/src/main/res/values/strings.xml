@@ -48,4 +48,5 @@
     <string name="front_of_card">جلوی کارت</string>
     <string name="back_side_of_card">پشت کارت</string>
     <string name="choose_card">انتخاب کارت</string>
+    <string name="tap_on_card">برای نمایش پشت کارت، ضربه بزنید.</string>
 </resources>

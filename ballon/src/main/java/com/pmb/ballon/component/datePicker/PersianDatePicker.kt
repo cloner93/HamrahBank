@@ -49,7 +49,7 @@ fun PersianDatePicker(calendar: Calendar = Calendar.SHAMSI, jdn: Jdn, setJdn: (J
     }
     val monthsFormat = remember(calendar, date.year) {
         val months = yearMonthNameOfDate(date);
-        { item: Int -> months[item - 1] + " / " + item.toString() }
+        { item: Int -> months[item - 1]  }
     }
     val todayYear = remember(calendar) { Jdn.today().on(calendar).year }
     val startYear = remember(calendar) { todayYear - 200 }

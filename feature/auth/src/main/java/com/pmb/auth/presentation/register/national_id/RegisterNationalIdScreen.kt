@@ -107,8 +107,12 @@ fun RegisterNationalIdScreen(
                     isError = false
             },
             onValueChange = {
+                if(it.length<10){
+                    isError = false
+                }
                 if (it.length <= 10 && it.allowOnlyEnglishLettersAndDigits())
                     viewModel.handle(RegisterNationalIdViewActions.SetNationalIdSerial(it))
+
             },
         )
         Spacer(modifier = Modifier.size(32.dp))

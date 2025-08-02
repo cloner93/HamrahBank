@@ -15,7 +15,7 @@ data class RegisterCapturingVideoViewState(
     val timerState: Map<TimerTypeId, TimerState>? = null,
 //    val videoFileBase64: String? = null,
 //    val videoFileBase64Uri: Uri? = null,
-//    val videoFileBase64File: File? = null,
+    val videoFileBase64File: File? = null,
     val refId: String? = null,
     override val hasCameraPermission: Boolean = false,
 //    override val hasFilePermissions: Boolean = false,

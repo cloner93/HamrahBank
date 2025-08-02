@@ -29,4 +29,8 @@ abstract class CameraManagerPrincipleImpl : CameraManager {
             CameraSelector.DEFAULT_BACK_CAMERA
         }
     }
+
+    override fun toggleCamera(cameraSelector: CameraSelector) {
+        this.cameraSelector =cameraSelector
+    }
 }

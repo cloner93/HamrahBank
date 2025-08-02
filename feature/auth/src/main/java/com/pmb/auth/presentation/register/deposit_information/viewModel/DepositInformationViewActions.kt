@@ -10,8 +10,9 @@ sealed interface DepositInformationViewActions : BaseViewAction {
     data object ClearAlert : DepositInformationViewActions
 
 
-    data class SetOpeningBranch(val openingBranchId: Branch) : DepositInformationViewActions
+    data class SetOpeningBranch(val openingBranchId: Branch?) : DepositInformationViewActions
     data object SelectRules : DepositInformationViewActions
+    data object AcceptRules : DepositInformationViewActions
 
 
     data class FetchAccountType(val nationalCode: String, val mobileNo: String) :
@@ -19,7 +20,7 @@ sealed interface DepositInformationViewActions : BaseViewAction {
 
     data class SetAccountType(val accType: AccType) : DepositInformationViewActions
     data class SetProvince(val province: Province) : DepositInformationViewActions
-    data class SetCity(val city: City) : DepositInformationViewActions
+    data class SetCity(val city: City?) : DepositInformationViewActions
     data object FetchCommitment : DepositInformationViewActions
 }
 

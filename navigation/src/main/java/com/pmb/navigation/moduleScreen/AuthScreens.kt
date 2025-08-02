@@ -86,4 +86,8 @@ sealed class RegisterScreens(route: String, arguments: Map<String, String> = emp
         fun createRoute(componentName: String, listId: String) =
             "select_city/$componentName/$listId"
     }
+    data object SelectBirthDatePlace : RegisterScreens(route = "select_birth_date_place")
+    data object SelectIssuePlace : RegisterScreens(route = "select_issue_place")
+    data object SelectCityPlace : RegisterScreens(route = "select_city_place")
+    data object SelectProvincePlace : RegisterScreens(route = "select_province_place")
 }

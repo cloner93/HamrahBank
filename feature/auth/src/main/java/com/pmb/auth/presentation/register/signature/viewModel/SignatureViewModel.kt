@@ -3,6 +3,7 @@ package com.pmb.auth.presentation.register.signature.viewModel
 import android.Manifest
 import android.content.Context
 import android.util.Log
+import androidx.camera.core.CameraSelector
 import androidx.lifecycle.viewModelScope
 import com.pmb.auth.domain.ekyc.signature.entity.SignatureParams
 import com.pmb.auth.domain.ekyc.signature.useCase.SendSignaturePhotoUseCase
@@ -32,7 +33,7 @@ class SignatureViewModel @Inject constructor(
     @ApplicationContext private val context: Context
 ) : BaseViewModel<PhotoViewActions, SignatureViewState, SignatureViewEvents>(initialSate) {
     init {
-        cameraManager.toggleCamera()
+        cameraManager.toggleCamera(CameraSelector.DEFAULT_BACK_CAMERA)
     }
     override fun handle(action: PhotoViewActions) {
         when (action) {
