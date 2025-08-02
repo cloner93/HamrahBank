@@ -1,6 +1,7 @@
 package com.pmb.auth.presentation.register.account_opening
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -14,9 +15,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.pmb.auth.R
 import com.pmb.auth.presentation.register.RegisterSharedViewState
@@ -36,6 +41,7 @@ import com.pmb.ballon.component.base.IconType
 import com.pmb.ballon.component.datePicker.ShowPersianDatePickerBottomSheet
 import com.pmb.calender.Jdn
 import com.pmb.calender.utils.Calendar
+import com.pmb.core.utils.validatePhone
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.manager.NavigationManager
 import com.pmb.navigation.moduleScreen.RegisterScreens
@@ -48,9 +54,35 @@ fun AccountOpeningScreen(
 ) {
     val viewState by viewModel.viewState.collectAsStateWithLifecycle()
     val navigationManager: NavigationManager = LocalNavigationManager.current
-
-    var isMobile by remember { mutableStateOf(false) }
-    var isNationalId by remember { mutableStateOf(false) }
+//    sharedState.value.mobileNo?.let { viewModel.handle(OpeningAccountViewActions.SetPhoneNumber(it)) }
+//    val focusManager = LocalFocusManager.current
+//    val buttonFocusRequester = remember { FocusRequester() }
+    var isError by remember { mutableStateOf(false) }
+    LaunchedEffect(sharedState.value.mobileNo) {
+        sharedState.value.mobileNo?.let {
+            viewModel.handle(
+                OpeningAccountViewActions.SetPhoneNumber(
+                    it
+                )
+            )
+        }
+        sharedState.value.nationalCode?.let {
+            viewModel.handle(
+                OpeningAccountViewActions.SetNationalId(
+                    it
+                )
+            )
+        }
+        sharedState.value.birthDate?.let { input ->
+            viewModel.handle(
+                OpeningAccountViewActions.SetBirthday(
+                    input.substring(0, 4),
+                    input.substring(4, 6),
+                    input.substring(6, 8)
+                )
+            )
+        }
+    }
     LaunchedEffect(Unit) {
         viewModel.viewEvent.collect { event ->
             when (event) {
@@ -74,8 +106,10 @@ fun AccountOpeningScreen(
             AppButton(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp, top = 16.dp),
-                enable = !viewState.phoneNumber.isNullOrEmpty() && !viewState.nationalId.isNullOrEmpty() && viewState.birthDateDay != null,
+                    .padding(start = 16.dp, end = 16.dp, top = 16.dp)
+//                    .focusRequester(buttonFocusRequester)
+                    .focusable(),
+                enable = !isError && !viewState.phoneNumber.isNullOrEmpty() && !viewState.nationalId.isNullOrEmpty() && viewState.birthDateDay != null,
                 title = stringResource(R.string._continue),
                 onClick = {
                     viewModel.handle(
@@ -95,20 +129,32 @@ fun AccountOpeningScreen(
         AppMobileTextField(
             value = viewState.phoneNumber ?: "",
             label = stringResource(R.string.mobile_number),
-            onValidate = { isMobile = it },
-            onValueChange = {
-                viewModel.handle(OpeningAccountViewActions.SetPhoneNumber(it))
+            onFocused = { focused ->
+                isError = if (!focused && !viewState.phoneNumber.isNullOrEmpty()) {
+                    !viewState.phoneNumber.validatePhone()
+                } else {
+                    false
+                }
+            },
+            isError = isError,
+            errorText = stringResource(R.string.validate_phone_number),
+            onValueChange = { phone ->
+                if (phone.isDigitsOnly() || phone.isEmpty())
+                    viewModel.handle(OpeningAccountViewActions.SetPhoneNumber(phone))
             })
         Spacer(modifier = Modifier.size(24.dp))
         AppNationalIdTextField(
             value = viewState.nationalId ?: "",
             label = stringResource(R.string.national_id),
-            onValidate = { isNationalId = it },
-            onValueChange = { viewModel.handle(OpeningAccountViewActions.SetNationalId(it)) })
+            onValidate = { },
+            onValueChange = { nationalId ->
+                if (nationalId.isDigitsOnly() || nationalId.isEmpty())
+                    viewModel.handle(OpeningAccountViewActions.SetNationalId(nationalId))
+            })
         Spacer(modifier = Modifier.size(24.dp))
         AppClickableReadOnlyTextField(
             value = viewState.birthDateYear?.let { "${it}/${viewState.birthDateMonth}/${viewState.birthDateDay}" }
-                ?: run { stringResource(R.string.birthday) },
+                ?: run { "" },
             label = stringResource(R.string.birthday),
             trailingIcon = {
                 AppButtonIcon(
@@ -126,19 +172,23 @@ fun AccountOpeningScreen(
     if (viewState.isShowingBottomSheet) {
         ShowPersianDatePickerBottomSheet(
             title = stringResource(R.string.birthday),
-            defaultDate = viewState.birthDateYear?.let  { Jdn(
-                Calendar.SHAMSI,
-                it.toInt(),
-                viewState.birthDateMonth?.toInt() ?:1,
-                viewState.birthDateMonth?.toInt() ?:1
-            ) } ?: run { Jdn.today() },
+            defaultDate = viewState.birthDateYear?.let {
+                Jdn(
+                    Calendar.SHAMSI,
+                    it.toInt(),
+                    viewState.birthDateMonth?.toInt() ?: 1,
+                    viewState.birthDateDay?.toInt() ?: 1
+                )
+            } ?: run { Jdn.today() },
             onDismiss = { viewModel.handle(OpeningAccountViewActions.ShowBottomSheet(false)) },
             onChangeValue = { year, month, day ->
+//                focusManager.clearFocus(force = true)
+//                buttonFocusRequester.requestFocus()
                 viewModel.handle(
                     OpeningAccountViewActions.SetBirthday(
-                            year,
-                            month,
-                            day
+                        year,
+                        month,
+                        day
                     )
                 )
                 viewModel.handle(OpeningAccountViewActions.ShowBottomSheet(false))

@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
@@ -36,7 +38,7 @@ fun ShowPersianDatePickerBottomSheet(
     title: String
 ) {
     var isVisible by remember { mutableStateOf(true) }
-
+    val scrollState = rememberScrollState()
     var selectedDate by remember { mutableStateOf(defaultDate) }
 
     AppBottomSheet(
@@ -49,6 +51,7 @@ fun ShowPersianDatePickerBottomSheet(
                     .fillMaxWidth()
                     .background(color = AppTheme.colorScheme.onForegroundNeutralDefault)
                     .padding(24.dp)
+                    .verticalScroll(scrollState)
                     .nestedScroll(nestedConnection),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {

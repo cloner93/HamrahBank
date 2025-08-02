@@ -3,29 +3,65 @@ package com.pmb.core.utils
 fun String.isMobile(): MobileValidationResult {
     var validFormat = false
     val length = when {
-        startsWith("0098") -> {
-            validFormat = true
-            14
-        }
-
-        startsWith("+98") -> {
-            validFormat = true
-            13
-        }
-
         startsWith("09") -> {
             validFormat = true
             11
         }
 
-        startsWith("98") -> {
+        startsWith("9") -> {
             validFormat = true
-            11
+            10
         }
 
-        else -> 14
+        else -> 11
     }
     return MobileValidationResult(length = length, isValid = validFormat && this.length == length)
+}
+
+fun String?.validatePhone(): Boolean {
+    return (this?.matches(Regex("^\\+?[0-9]{10,13}$"))
+        ?: false) && (this.startsWith("09") || this.startsWith("9"))
+}
+
+fun String.setMobileValidator(): String {
+    val trimmed = this.trim().filter { it.isDigit() }
+
+    return if (trimmed.startsWith("9") && trimmed.length == 10) {
+        "0$trimmed"
+    } else {
+        trimmed
+    }
+}
+fun String.allowOnlyEnglishLettersAndDigits(): Boolean {
+    return this.all { it.isDigit() || it in 'a'..'z' || it in 'A'..'Z' }
+}
+fun String.allowOnlyEnglishLettersDigitsAndSymbols(): Boolean {
+    return this.all {
+        it.code in 32..126 // ASCII printable characters: includes letters, digits, symbols
+    }
+}
+fun String.isValidCustomInput(): Boolean {
+    if (this.length != 10) return false
+
+    val allDigits = this.all { it.isDigit() }
+    if (allDigits) return true
+
+    val firstIsDigit = this[0].isDigit()
+    val secondIsEnglishLetter = this[1] in 'a'..'z' || this[1] in 'A'..'Z'
+    val remainingAreDigits = this.substring(2).all { it.isDigit() }
+
+    return firstIsDigit && secondIsEnglishLetter && remainingAreDigits
+}
+fun String.setNationalCodeValidator(): String {
+    val trimmed = this.trim().filter { it.isDigit() }
+
+    return if (trimmed.length == 8) {
+        "00$trimmed"
+    } else if (trimmed.length == 9) {
+        "0$trimmed"
+    } else {
+        trimmed
+    }
 }
 
 fun String.isIranianNationalId(): Boolean {

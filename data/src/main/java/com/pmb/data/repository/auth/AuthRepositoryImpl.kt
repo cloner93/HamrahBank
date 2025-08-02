@@ -10,6 +10,7 @@ import com.pmb.domain.model.SendOtpRequest
 import com.pmb.domain.model.SendOtpResponse
 import com.pmb.domain.model.UserData
 import com.pmb.domain.model.openAccount.AccountArchiveJobDocResponse
+import com.pmb.domain.model.openAccount.CheckPostalCodeResponse
 import com.pmb.domain.model.openAccount.FetchAdmittanceTextResponse
 import com.pmb.domain.model.openAccount.FetchCommitmentResponse
 import com.pmb.domain.model.openAccount.RegisterOpenAccountRequest
@@ -35,6 +36,16 @@ class AuthRepositoryImpl @Inject constructor(
             val userData = localServiceProvider.getUserDataStore().getUserData()
             emit(Result.Success(userData))
         } catch (e: Exception) {
+            emit(Result.Error(message = e.message ?: "Unknown error", exception = e))
+        }
+    }
+
+    override suspend fun logoutUser(): Flow<Result<Boolean>> = flow {
+        emit(Result.Loading)
+        try {
+            val result = localServiceProvider.getUserDataStore().logoutUser()
+            emit(Result.Success(result))
+        }catch (e:Exception){
             emit(Result.Error(message = e.message ?: "Unknown error", exception = e))
         }
     }
@@ -182,5 +193,11 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun setFingerPrintState(state: Boolean) {
         localServiceProvider.getBiometric().setBiometricState(state)
+    }
+
+    override fun checkPostalCode(postCode: Int): Flow<Result<CheckPostalCodeResponse>> {
+        return remoteServiceProvider.getAuthService().checkPostCode(postCode).mapApiResult {
+            it.second
+        }
     }
 }

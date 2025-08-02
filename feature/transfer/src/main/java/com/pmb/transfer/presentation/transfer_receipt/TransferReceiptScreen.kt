@@ -65,6 +65,35 @@ fun TransferReceiptScreen(
         viewModel.handle(TransferReceiptViewActions.UpdateTransferReceipt(transferReceipt))
     }
 
+
+    if (shareReceipt || downloadReceipt) {
+        ComposeToBitmap(
+            modifier = Modifier,
+            onBitmapReady = { bitmap ->
+                if (shareReceipt)
+                    shareImage(context, getImageUri(context, saveBitmapToCache(context, bitmap)))
+                else if (downloadReceipt) saveBitmapToGallery(context, bitmap)
+                shareReceipt = false
+                downloadReceipt = false
+            },
+            content = {
+                val configuration = LocalConfiguration.current
+                val screenWidthDp = configuration.screenWidthDp.dp
+
+                ReceiptComponent(
+                    modifier = Modifier
+                        .width(screenWidthDp)
+                        .background(color = AppTheme.colorScheme.background1Neutral)
+                        .padding(16.dp),
+                    rowTypes = viewState.rows.map { it.mapToRowType() },
+                    captureMode = true,
+                    headerContent = {
+                        ReceiptHeaderComponent(viewState.receipt)
+                    })
+            }
+        )
+    }
+
     AppContent(
         backgroundColor = AppTheme.colorScheme.background1Neutral,
         scrollState = null,
@@ -98,35 +127,6 @@ fun TransferReceiptScreen(
 
     if (viewState.loading) AppLoading()
     viewState.alertState?.let { AlertComponent(it) }
-
-
-    if (shareReceipt || downloadReceipt) {
-        ComposeToBitmap(
-            modifier = Modifier,
-            onBitmapReady = { bitmap ->
-                if (shareReceipt)
-                    shareImage(context, getImageUri(context, saveBitmapToCache(context, bitmap)))
-                else if (downloadReceipt) saveBitmapToGallery(context, bitmap)
-                shareReceipt = false
-                downloadReceipt = false
-            },
-            content = {
-                val configuration = LocalConfiguration.current
-                val screenWidthDp = configuration.screenWidthDp.dp
-
-                ReceiptComponent(
-                    modifier = Modifier
-                        .width(screenWidthDp)
-                        .background(color = AppTheme.colorScheme.background1Neutral)
-                        .padding(16.dp),
-                    rowTypes = viewState.rows.map { it.mapToRowType() },
-                    captureMode = true,
-                    headerContent = {
-                        ReceiptHeaderComponent(viewState.receipt)
-                    })
-            }
-        )
-    }
 
     if (viewState.showShareBottomSheet) {
         MenuBottomSheet(

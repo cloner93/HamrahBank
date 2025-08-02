@@ -14,6 +14,8 @@ import com.pmb.domain.usecae.auth.FirstLoginConfirmUseCase
 import com.pmb.domain.usecae.auth.FirstLoginStepRequest
 import com.pmb.domain.usecae.auth.FirstLoginUseCase
 import com.pmb.domain.usecae.auth.openAccount.AccountVerifyCodeUseCase
+import com.pmb.domain.usecae.auth.openAccount.GenerateCodeParams
+import com.pmb.domain.usecae.auth.openAccount.GenerateCodeUseCase
 import com.pmb.domain.usecae.auth.openAccount.VerifyCodeParams
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -31,7 +33,7 @@ import javax.inject.Inject
 @HiltViewModel
 class RegisterConfirmViewModel @Inject constructor(
     private val firstLoginUseCase: FirstLoginUseCase,
-    private val firstLoginConfirmUseCase: FirstLoginConfirmUseCase,
+    private val generateCodeUseCase: GenerateCodeUseCase,
     private val verifyCodeUseCase: AccountVerifyCodeUseCase
 ) :
     BaseViewModel<RegisterConfirmViewActions, RegisterConfirmViewState, RegisterConfirmViewEvents>(
@@ -116,11 +118,11 @@ class RegisterConfirmViewModel @Inject constructor(
 
     private fun handleResendFirstLoginInfo(action: RegisterConfirmViewActions.ResendVerifyInfo) {
         viewModelScope.launch {
-            firstLoginUseCase.invoke(
-                FirstLoginStepRequest(
-                    mobileNumber = action.mobileNumber,
-                    userName = action.userName,
-                    password = action.password
+            generateCodeUseCase.invoke(
+                GenerateCodeParams(
+                    mobileNo = action.mobileNumber,
+                    nationalCode = action.nationalCode,
+                    birthDate = action.birthDate
                 )
             ).collect { result ->
                 when (result) {

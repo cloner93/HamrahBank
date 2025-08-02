@@ -95,7 +95,7 @@ fun RegisterConfirmScreen(
         modifier = Modifier.padding(horizontal = 16.dp),
         topBar = {
             AppTopBar(
-                title = stringResource(R.string.otp),
+                title = stringResource(R.string.confirm_code),
                 onBack = {
                     navigationManager.navigateBack()
                 })
@@ -119,14 +119,14 @@ fun RegisterConfirmScreen(
         AppNumberTextField(
             modifier = Modifier.fillMaxWidth(),
             value = otp,
-            label = stringResource(R.string.otp),
-            onValueChange = { otp = it },
+            label = stringResource(R.string.confirm_code),
+            onValueChange = {  if (it.length <= 6) otp = it },
         )
         Spacer(modifier = Modifier.size(32.dp))
         AppButton(
             modifier = Modifier.fillMaxWidth(),
             enable = otp.isNotEmpty(),
-            title = stringResource(R.string.login),
+            title = stringResource(R.string._continue),
             onClick = {
                 viewModel.handle(
                     RegisterConfirmViewActions.ConfirmVerify(
@@ -143,6 +143,11 @@ fun RegisterConfirmScreen(
             enable = viewState.timerState?.get(TimerTypeId.RESEND_TIMER)?.timerStatus == TimerStatus.IS_FINISHED,
             title = title,
             onClick = {
+                viewModel.handle(RegisterConfirmViewActions.ResendVerifyInfo(
+                    mobileNumber = sharedState.value.mobileNo?:"",
+                    nationalCode = sharedState.value.nationalCode?:"",
+                    birthDate = sharedState.value.birthDate?:""
+                ))
             })
     }
     if (viewState.isLoading) {

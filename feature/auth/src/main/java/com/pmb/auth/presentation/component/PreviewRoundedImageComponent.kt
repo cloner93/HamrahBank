@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -22,18 +23,16 @@ import com.pmb.ballon.component.base.AppImage
 
 @Composable
 fun PreviewRoundedImageComponent(
-    modifier: Modifier = Modifier,
-    fileUrl: String?,
-    onClickListener: () -> Unit
+    modifier: Modifier = Modifier, fileUrl: String?, newScaleX: Float= -1f, onClickListener: () -> Unit
 ) {
     Box(
         modifier = modifier
     ) {
         AsyncImage(
-            modifier = Modifier.fillMaxSize(),
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(fileUrl)
-                .crossfade(true)
+            modifier = Modifier
+                .fillMaxSize()
+                .graphicsLayer { scaleX = newScaleX },
+            model = ImageRequest.Builder(LocalContext.current).data(fileUrl).crossfade(true)
                 .build(),
             contentDescription = "SignatureImage",
             contentScale = ContentScale.Crop
@@ -42,14 +41,12 @@ fun PreviewRoundedImageComponent(
             modifier = Modifier
                 .align(Alignment.BottomStart)
                 .padding(8.dp)
-                .size(48.dp),
-            onClick = {
+                .size(48.dp), onClick = {
                 onClickListener.invoke()
 
-            }
-        ) {
+            }) {
             AppImage(
-                image = painterResource(com.pmb.ballon.R.drawable.ic_rounded_delete),
+                image = painterResource(R.drawable.ic_rounded_delete),
             )
         }
     }
@@ -57,43 +54,39 @@ fun PreviewRoundedImageComponent(
 
 @Composable
 fun PreviewRoundedImageComponent(
-    modifier: Modifier = Modifier,
-    fileUrl: Uri?,
-    onClickListener: () -> Unit
+    modifier: Modifier = Modifier, fileUrl: Uri?, onClickListener: () -> Unit
 ) {
     Box(
         modifier = modifier
     ) {
         if (fileUrl.toString().endsWith(".jpg") || fileUrl.toString().contains("image")) {
             AsyncImage(
-                modifier = Modifier.fillMaxSize(),
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(fileUrl)
-                    .crossfade(true)
+                modifier = Modifier
+                    .fillMaxSize()
+                    .graphicsLayer { scaleX = -1f },
+                model = ImageRequest.Builder(LocalContext.current).data(fileUrl).crossfade(true)
                     .build(),
                 contentDescription = "SignatureImage",
-                contentScale = ContentScale.FillBounds
+                contentScale = ContentScale.Crop
             )
         } else {
             Icon(
                 painter = painterResource(R.drawable.ic_pdf),
                 contentDescription = "PDF File",
                 tint = Color.Unspecified,
-                modifier = Modifier.size(156.dp)
+                modifier = Modifier.size(156.dp).align(Alignment.Center)
             )
         }
         IconButton(
             modifier = Modifier
                 .align(Alignment.BottomStart)
                 .padding(8.dp)
-                .size(48.dp),
-            onClick = {
+                .size(48.dp), onClick = {
                 onClickListener.invoke()
 
-            }
-        ) {
+            }) {
             AppImage(
-                image = painterResource(com.pmb.ballon.R.drawable.ic_rounded_delete),
+                image = painterResource(R.drawable.ic_rounded_delete),
             )
         }
     }

@@ -108,9 +108,9 @@ class LoginViewModel @Inject constructor(
                         setState {
                             it.copy(
                                 isLoading = false, alert = AlertModelState.Dialog(
-                                    title = "خطا در ورود به حساب",
+                                    title = "خطا",
                                     description = result.message,
-                                    positiveButtonTitle = "okay",
+                                    positiveButtonTitle = "تایید",
                                     onPositiveClick = {
                                         setState { state -> state.copy(alert = null) }
                                     }

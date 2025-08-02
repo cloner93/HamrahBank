@@ -12,13 +12,17 @@ import androidx.navigation.navigation
 import com.pmb.auth.presentation.register.account_opening.AccountOpeningScreen
 import com.pmb.auth.presentation.register.account_opening.viewModel.OpeningAccountViewModel
 import com.pmb.auth.presentation.register.authentication_information.AuthenticationInformationScreen
+import com.pmb.auth.presentation.register.authentication_information.BirthDatePlaceScreen
+import com.pmb.auth.presentation.register.authentication_information.IssueCityPlace
 import com.pmb.auth.presentation.register.authentication_information.viewModel.AuthenticationInformationViewModel
 import com.pmb.auth.presentation.register.authentication_select_services.AuthenticationSelectServicesScreen
 import com.pmb.auth.presentation.register.authentication_select_services.viewModel.AuthenticationSelectServicesViewModel
 import com.pmb.auth.presentation.register.check_postal_code.CheckPostalCodeScreen
 import com.pmb.auth.presentation.register.check_postal_code.viewModel.CheckPostalCodeViewModel
 import com.pmb.auth.presentation.register.choose_card.ChooseCardScreen
+import com.pmb.auth.presentation.register.deposit_information.CitySearchScreen
 import com.pmb.auth.presentation.register.deposit_information.DepositInformationScreen
+import com.pmb.auth.presentation.register.deposit_information.ProvinceSearchScreen
 import com.pmb.auth.presentation.register.deposit_information.viewModel.DepositInformationViewModel
 import com.pmb.auth.presentation.register.fee_details.FeeDetailsScreen
 import com.pmb.auth.presentation.register.fee_details.viewModel.FeeDetailsViewModel
@@ -82,6 +86,7 @@ fun NavGraphBuilder.registerScreenHandler() {
             val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
             RegisterNationalIdScreen(
                 viewModel = hiltViewModel<RegisterNationalIdViewModel>(),
+                sharedState.value
             ) { childState ->
                 Log.d("Masoud Tag", "registerScreenHandler child state : $childState")
                 Log.d("Masoud Tag", "registerScreenHandler shared state : $sharedState")
@@ -131,8 +136,64 @@ fun NavGraphBuilder.registerScreenHandler() {
                         tel = childState.tel,
                         education = childState.education?.id,
                         issueCityCode = childState.issuePlace?.cityCode,
-                        issueRgnCode = childState.issuePlace?.provinceCode,
+                        issueRgnCode = childState.issueCode,
                         issueDate = "${childState.issueDateYear}${childState.issueDateMonth}${childState.issueDateDay}"
+                    )
+                }
+            }
+        }
+        composable(route = RegisterScreens.SelectBirthDatePlace.route) {
+            val sharedViewModel =
+                it.navigationManager.retrieveSharedViewModel<RegisterSharedViewModel>(
+                    screen = RegisterScreens.RegisterGraph, navBackStackEntry = it
+                )
+            val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
+            BirthDatePlaceScreen(sharedState.value){
+                sharedViewModel.updateState {
+                    sharedState.value.copy(
+                        birthDatePlaceCity = it
+                    )
+                }
+            }
+        }
+        composable(route = RegisterScreens.SelectIssuePlace.route) {
+            val sharedViewModel =
+                it.navigationManager.retrieveSharedViewModel<RegisterSharedViewModel>(
+                    screen = RegisterScreens.RegisterGraph, navBackStackEntry = it
+                )
+            val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
+            IssueCityPlace(sharedState.value){
+                sharedViewModel.updateState {
+                    sharedState.value.copy(
+                        issuePlaceCity = it
+                    )
+                }
+            }
+        }
+        composable(route = RegisterScreens.SelectCityPlace.route) {
+            val sharedViewModel =
+                it.navigationManager.retrieveSharedViewModel<RegisterSharedViewModel>(
+                    screen = RegisterScreens.RegisterGraph, navBackStackEntry = it
+                )
+            val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
+            CitySearchScreen(sharedState.value){
+                sharedViewModel.updateState {
+                    sharedState.value.copy(
+                        cityOfDeposit = it
+                    )
+                }
+            }
+        }
+        composable(route = RegisterScreens.SelectProvincePlace.route) {
+            val sharedViewModel =
+                it.navigationManager.retrieveSharedViewModel<RegisterSharedViewModel>(
+                    screen = RegisterScreens.RegisterGraph, navBackStackEntry = it
+                )
+            val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
+            ProvinceSearchScreen(sharedState.value){
+                sharedViewModel.updateState {
+                    sharedState.value.copy(
+                        provinceOfDeposit = it
                     )
                 }
             }
@@ -169,7 +230,8 @@ fun NavGraphBuilder.registerScreenHandler() {
                 )
             val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
             CheckPostalCodeScreen(
-                viewModel = hiltViewModel<CheckPostalCodeViewModel>()
+                viewModel = hiltViewModel<CheckPostalCodeViewModel>(),
+                sharedState.value
             ) { post, address ->
                 sharedViewModel.updateState {
                     sharedState.value.copy(
@@ -187,7 +249,22 @@ fun NavGraphBuilder.registerScreenHandler() {
             val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
             DepositInformationScreen(
                 viewModel = hiltViewModel<DepositInformationViewModel>(),
-                sharedState.value
+                sharedState.value,
+                setProvince ={
+                    sharedViewModel.updateState {
+                        sharedState.value.copy(
+                            provinceList = it,
+                            cityOfDeposit = null
+                        )
+                    }
+                },
+                setCity = {
+                    sharedViewModel.updateState {
+                        sharedState.value.copy(
+                            cityList = it
+                        )
+                    }
+                }
             ) { childState ->
                 sharedViewModel.updateState {
                     sharedState.value.copy(
@@ -256,7 +333,7 @@ fun NavGraphBuilder.registerScreenHandler() {
             val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
             RegisterFacePhotoCaptureScreen(
                 viewModel = hiltViewModel<RegisterFacePhotoCapturedViewModel>()
-            ){childState->
+            ) { childState ->
                 sharedViewModel.updateState {
                     sharedState.value.copy(
                         authImage = childState
@@ -273,7 +350,7 @@ fun NavGraphBuilder.registerScreenHandler() {
             RegisterVideoScreen(
                 viewModel = hiltViewModel<RegisterCapturingVideoViewModel>(),
                 sharedState.value
-            ){childState->
+            ) { childState ->
                 sharedViewModel.updateState {
                     sharedState.value.copy(
                         refId = childState

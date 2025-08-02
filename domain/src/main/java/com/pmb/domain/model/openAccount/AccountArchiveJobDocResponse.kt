@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 @SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class AccountArchiveJobDocResponse(
-    val ids:String
+    val ids:String?
 )

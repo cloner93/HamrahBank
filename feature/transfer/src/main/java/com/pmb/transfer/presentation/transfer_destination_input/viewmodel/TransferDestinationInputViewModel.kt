@@ -14,7 +14,7 @@ import com.pmb.transfer.utils.BankUtil.formatGropedWithSeparator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.invoke
+
 
 @HiltViewModel
 class TransferDestinationInputViewModel @Inject constructor(

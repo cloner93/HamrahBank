@@ -49,6 +49,7 @@ fun CustomSpinner(
                 Icon(
                     imageVector = if (expanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
                     contentDescription = "Dropdown Icon",
+                    tint = AppTheme.colorScheme.onBackgroundNeutralDefault
                 )
             },
             modifier = modifier
@@ -102,7 +103,7 @@ fun CustomSearchSpinner(
         expanded = expanded, onExpandedChange = {
             if (isEnabled) expanded = it
         }) {
-        AppBaseTextField(value = displayText, onValueChange = {
+        AppBaseTextField(singleLine = true, value = displayText, onValueChange = {
             searchQuery = it
             onSearchValue(it)
             expanded = true
@@ -110,6 +111,7 @@ fun CustomSearchSpinner(
             Icon(
                 imageVector = if (expanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
                 contentDescription = "Dropdown Icon",
+                tint = AppTheme.colorScheme.onBackgroundNeutralDefault
             )
         }, modifier = modifier
             .menuAnchor(MenuAnchorType.PrimaryNotEditable, true)

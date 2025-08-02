@@ -21,6 +21,7 @@ import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.ui.theme.AppTheme
+import com.pmb.core.utils.toCurrency
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.moduleScreen.TransferScreens
 import com.pmb.transfer.R
@@ -70,12 +71,14 @@ fun TransferMethodScreen(
                         val item = viewState.transferMethods[index]
                         ItemVerticalTextIcon(
                             title = item.title,
-                            subtitle = item.detail,
+                            subtitle = item.detail + if (item.fee > 0.0) " | کارمزد: ${item.fee.toCurrency()} ریال " else "",
                             enable = item.active,
                             startIcon =
-                                if (item.paymentType == PaymentType.CARD_TO_CARD)
-                                    com.pmb.ballon.R.drawable.ic_bank_card_swap
-                                else com.pmb.ballon.R.drawable.ic_university,
+                                when (item.paymentType) {
+                                    PaymentType.CARD_TO_CARD -> com.pmb.ballon.R.drawable.ic_bank_card_swap
+                                    PaymentType.MELLAT_TO_MELLAT -> com.pmb.ballon.R.drawable.ic_mellat_to_mellat
+                                    else -> com.pmb.ballon.R.drawable.ic_university
+                                },
                             onClick = {
                                 viewModel.handle(TransferMethodViewActions.SelectPaymentType(item))
                             })
@@ -85,6 +88,8 @@ fun TransferMethodScreen(
             }
         }
     }
+
+    "انتقال در لحظه | کارمزد: ۵٬۰۰۰ ریال"
 
     if (viewState.loading) AppLoading()
     viewState.alertState?.let { AlertComponent(it) }

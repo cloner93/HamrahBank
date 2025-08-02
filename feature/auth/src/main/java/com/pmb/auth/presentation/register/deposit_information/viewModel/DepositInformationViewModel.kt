@@ -33,7 +33,6 @@ class DepositInformationViewModel @Inject constructor(
                     )
                 }
             }
-
             is DepositInformationViewActions.SetAccountType -> {
                 setState {
                     it.copy(
@@ -73,6 +72,13 @@ class DepositInformationViewModel @Inject constructor(
             is DepositInformationViewActions.SelectRules -> {
                 handleSelectRules()
             }
+            is DepositInformationViewActions.AcceptRules -> {
+                setState {
+                    it.copy(
+                        isChecked = true
+                    )
+                }
+            }
 
             is DepositInformationViewActions.FetchCommitment -> {
                 handleFetchCommitment()
@@ -90,7 +96,7 @@ class DepositInformationViewModel @Inject constructor(
                         is Result.Success -> {
                             setState {
                                 it.copy(
-                                    isLoading = false, commitmentText = result.data.text
+                                    isLoading = false, commitmentText = result.data.admittanceText
                                 )
                             }
                             postEvent(DepositInformationViewEvents.GetCommitmentTextSucceed)
@@ -171,7 +177,7 @@ class DepositInformationViewModel @Inject constructor(
     private fun handleSelectRules() {
         setState {
             it.copy(
-                isChecked = true
+                isChecked = !it.isChecked
             )
         }
     }
@@ -221,7 +227,7 @@ class DepositInformationViewModel @Inject constructor(
     private fun handleSetOpeningBranch(action: DepositInformationViewActions.SetOpeningBranch) {
         setState {
             it.copy(
-                branch = action.openingBranchId
+                branch = action.openingBranchId,
             )
         }
     }

@@ -56,6 +56,7 @@ dependencies {
     implementation(project(":domain"))
     implementation(project(":model"))
     implementation(project(":data"))
+    implementation(project(":calender"))
     // DI > Hilt
     implementation(libs.android.hilt)
     kapt(libs.android.hilt.compiler)

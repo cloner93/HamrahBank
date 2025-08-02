@@ -6,6 +6,7 @@ import com.pmb.domain.model.SendOtpRequest
 import com.pmb.domain.model.SendOtpResponse
 import com.pmb.domain.model.UserData
 import com.pmb.domain.model.openAccount.AccountArchiveJobDocResponse
+import com.pmb.domain.model.openAccount.CheckPostalCodeResponse
 import com.pmb.domain.model.openAccount.FetchAdmittanceTextResponse
 import com.pmb.domain.model.openAccount.FetchCommitmentResponse
 import com.pmb.domain.model.openAccount.RegisterOpenAccountRequest
@@ -20,6 +21,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface AuthRepository {
     suspend fun getUserData(): Flow<Result<UserData?>>
+    suspend fun logoutUser(): Flow<Result<Boolean>>
     suspend fun sendOtp(sendOtpRequest: SendOtpRequest): Flow<Result<SendOtpResponse>>
     suspend fun login(
         customerId: String,
@@ -64,4 +66,6 @@ interface AuthRepository {
     suspend fun getFingerPrintState(): Boolean
 
     suspend fun setFingerPrintState(state: Boolean)
+
+    fun checkPostalCode(postCode: Int): Flow<Result<CheckPostalCodeResponse>>
 }

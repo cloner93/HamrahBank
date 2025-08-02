@@ -143,10 +143,7 @@ fun AppTextButton(
         enabled = enable,
         onClick = onClick
     ) {
-        ButtonLargeText(
-            text = title,
-            color = AppTheme.colorScheme.onBackgroundNeutralDefault,
-        )
+        ButtonLargeText(text = title)
     }
 }
 

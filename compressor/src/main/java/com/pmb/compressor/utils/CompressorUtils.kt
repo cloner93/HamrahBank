@@ -5,7 +5,6 @@ import android.media.MediaCodecList
 import android.media.MediaExtractor
 import android.media.MediaFormat
 import android.media.MediaMetadataRetriever
-import android.os.Build
 import android.util.Log
 import com.pmb.compressor.compression.VideoQuality
 import com.pmb.compressor.video.Mp4Movie
@@ -44,6 +43,12 @@ object CompressorUtils {
         }
     }
 
+    /** Round to nearest Int (existing external function also imported by caller). */
+    fun roundDimension(value: Double): Int = value.roundToInt()
+
+    /** Align a dimension to a multiple of 16 for encoder compatibility (Huawei/HiSilicon). */
+    fun alignTo16(value: Int): Int = (value + 15) / 16 * 16
+
     /**
      * Setup movie with the height, width, and rotation values
      * @param rotation video rotation
@@ -64,7 +69,8 @@ object CompressorUtils {
     }
 
     /**
-     * Set output parameters like bitrate and frame rate
+     * Set output parameters like bitrate and frame rate.
+     * NOTE: Force Baseline profile for broader device compatibility (Huawei-safe).
      */
     fun setOutputFileParameters(
         inputFormat: MediaFormat,
@@ -74,53 +80,36 @@ object CompressorUtils {
         val newFrameRate = getFrameRate(inputFormat)
         val iFrameInterval = getIFrameIntervalRate(inputFormat)
         outputFormat.apply {
-
-            // according to https://developer.android.com/media/optimize/sharing#b-frames_and_encoding_profiles
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                val type = outputFormat.getString(MediaFormat.KEY_MIME)
-                val higherLevel = getHighestCodecProfileLevel(type)
-                Log.i("Output file parameters", "Selected CodecProfileLevel: $higherLevel")
-                setInteger(MediaFormat.KEY_PROFILE, higherLevel)
-            } else {
-                setInteger(
-                    MediaFormat.KEY_PROFILE,
-                    MediaCodecInfo.CodecProfileLevel.AVCProfileBaseline
-                )
-            }
+            // Force Baseline (Huawei encoders can fail with High/Main)
+            setInteger(
+                MediaFormat.KEY_PROFILE, MediaCodecInfo.CodecProfileLevel.AVCProfileBaseline
+            )
 
             setInteger(
-                MediaFormat.KEY_COLOR_FORMAT,
-                MediaCodecInfo.CodecCapabilities.COLOR_FormatSurface
+                MediaFormat.KEY_COLOR_FORMAT, MediaCodecInfo.CodecCapabilities.COLOR_FormatSurface
             )
 
             setInteger(MediaFormat.KEY_FRAME_RATE, newFrameRate)
             setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, iFrameInterval)
+
             // expected bps
             setInteger(MediaFormat.KEY_BIT_RATE, newBitrate)
             setInteger(
-                MediaFormat.KEY_BITRATE_MODE,
-                MediaCodecInfo.EncoderCapabilities.BITRATE_MODE_CBR
+                MediaFormat.KEY_BITRATE_MODE, MediaCodecInfo.EncoderCapabilities.BITRATE_MODE_CBR
             )
 
-
-
+            // Keep color info if present (safe no-ops on most devices)
             getColorStandard(inputFormat)?.let {
                 setInteger(MediaFormat.KEY_COLOR_STANDARD, it)
             }
-
             getColorTransfer(inputFormat)?.let {
                 setInteger(MediaFormat.KEY_COLOR_TRANSFER, it)
             }
-
             getColorRange(inputFormat)?.let {
                 setInteger(MediaFormat.KEY_COLOR_RANGE, it)
             }
 
-
-            Log.i(
-                "Output file parameters",
-                "videoFormat: $this"
-            )
+            Log.i("Output file parameters", "videoFormat: $this")
         }
     }
 
@@ -137,23 +126,17 @@ object CompressorUtils {
     }
 
     private fun getColorStandard(format: MediaFormat): Int? {
-        return if (format.containsKey(MediaFormat.KEY_COLOR_STANDARD)) format.getInteger(
-            MediaFormat.KEY_COLOR_STANDARD
-        )
+        return if (format.containsKey(MediaFormat.KEY_COLOR_STANDARD)) format.getInteger(MediaFormat.KEY_COLOR_STANDARD)
         else null
     }
 
     private fun getColorTransfer(format: MediaFormat): Int? {
-        return if (format.containsKey(MediaFormat.KEY_COLOR_TRANSFER)) format.getInteger(
-            MediaFormat.KEY_COLOR_TRANSFER
-        )
+        return if (format.containsKey(MediaFormat.KEY_COLOR_TRANSFER)) format.getInteger(MediaFormat.KEY_COLOR_TRANSFER)
         else null
     }
 
     private fun getColorRange(format: MediaFormat): Int? {
-        return if (format.containsKey(MediaFormat.KEY_COLOR_RANGE)) format.getInteger(
-            MediaFormat.KEY_COLOR_RANGE
-        )
+        return if (format.containsKey(MediaFormat.KEY_COLOR_RANGE)) format.getInteger(MediaFormat.KEY_COLOR_RANGE)
         else null
     }
 
@@ -172,9 +155,9 @@ object CompressorUtils {
             val format = extractor.getTrackFormat(i)
             val mime = format.getString(MediaFormat.KEY_MIME)
             if (isVideo) {
-                if (mime?.startsWith("video/")!!) return i
+                if (mime?.startsWith("video/") == true) return i
             } else {
-                if (mime?.startsWith("audio/")!!) return i
+                if (mime?.startsWith("audio/") == true) return i
             }
         }
         return -5
@@ -234,15 +217,16 @@ object CompressorUtils {
 
     /**
      * Get the highest profile level supported by the AVC encoder: High > Main > Baseline
+     * (Kept for reference, not used now because we force Baseline for compatibility.)
      */
     private fun getHighestCodecProfileLevel(type: String?): Int {
         if (type == null) {
             return MediaCodecInfo.CodecProfileLevel.AVCProfileBaseline
         }
         val list = MediaCodecList(MediaCodecList.REGULAR_CODECS).codecInfos
-        val capabilities = list
-            .filter { codec -> type in codec.supportedTypes && codec.name.contains("encoder") }
-            .mapNotNull { codec -> codec.getCapabilitiesForType(type) }
+        val capabilities =
+            list.filter { codec -> type in codec.supportedTypes && codec.name.contains("encoder") }
+                .mapNotNull { codec -> codec.getCapabilitiesForType(type) }
 
         capabilities.forEach { capabilitiesForType ->
             val levels = capabilitiesForType.profileLevels.map { it.profile }
@@ -256,4 +240,3 @@ object CompressorUtils {
         return MediaCodecInfo.CodecProfileLevel.AVCProfileBaseline
     }
 }
-

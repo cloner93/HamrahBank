@@ -1,8 +1,8 @@
 package com.pmb.auth.presentation.register.register_video
 
-import android.view.Gravity
-import android.widget.FrameLayout
-import android.widget.VideoView
+import android.media.MediaPlayer
+import android.view.Surface
+import android.view.TextureView
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.view.PreviewView
@@ -20,7 +20,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -45,6 +44,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.net.toUri
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.pmb.auth.R
 import com.pmb.auth.presentation.first_login_confirm.viewModel.TimerStatus
@@ -71,8 +71,8 @@ import com.pmb.navigation.moduleScreen.RegisterScreens
 @Composable
 fun RegisterVideoScreen(
     viewModel: RegisterCapturingVideoViewModel,
-    sharedState:RegisterSharedViewState,
-    updateState:(String?)->Unit
+    sharedState: RegisterSharedViewState,
+    updateState: (String?) -> Unit
 ) {
     val navigationManager: NavigationManager = LocalNavigationManager.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -88,8 +88,12 @@ fun RegisterVideoScreen(
             }/00:20"
         } else ""
     LaunchedEffect(viewState.hasAudioPermissions) {
-        if (viewState.hasAudioPermissions)
-            viewModel.handle(VideoViewActions.PreviewCamera(previewView, lifecycleOwner))
+        if (viewState.hasAudioPermissions) viewModel.handle(
+            VideoViewActions.PreviewCamera(
+                previewView,
+                lifecycleOwner
+            )
+        )
     }
     val permissionAudioLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
@@ -108,7 +112,8 @@ fun RegisterVideoScreen(
                     updateState(viewState.refId)
                     navigationManager.navigateAndClearStack(RegisterScreens.RegisterConfirmStep)
                 }
-                else->{
+
+                else -> {
 
                 }
             }
@@ -118,11 +123,9 @@ fun RegisterVideoScreen(
         modifier = Modifier.padding(horizontal = 16.dp),
         topBar = {
             AppTopBar(
-                title = stringResource(R.string.video_authentication),
-                onBack = {
+                title = stringResource(R.string.video_authentication), onBack = {
                     navigationManager.navigateBack()
-                }
-            )
+                })
         },
         footer = {
             Spacer(modifier = Modifier.size(10.dp))
@@ -136,11 +139,9 @@ fun RegisterVideoScreen(
                         modifier = Modifier
                             .align(Alignment.Center)
                             .padding(bottom = 16.dp)
-                            .size(66.dp),
-                        onClick = {
+                            .size(66.dp), onClick = {
                             viewModel.handle(VideoViewActions.VideoCaptured)
-                        }
-                    ) {
+                        }) {
                         AppImage(
                             image = painterResource(com.pmb.ballon.R.drawable.ic_video_camera),
                         )
@@ -169,8 +170,7 @@ fun RegisterVideoScreen(
                                 .padding(bottom = 3.dp)
                                 .size(8.dp)
                                 .background(
-                                    AppTheme.colorScheme.foregroundPrimaryDefault,
-                                    CircleShape
+                                    AppTheme.colorScheme.foregroundPrimaryDefault, CircleShape
                                 )
                         )
                     }
@@ -180,11 +180,9 @@ fun RegisterVideoScreen(
                             modifier = Modifier
                                 .align(Alignment.Center)
                                 .padding(bottom = 16.dp)
-                                .size(66.dp),
-                            onClick = {
+                                .size(66.dp), onClick = {
                                 viewModel.handle(RegisterCapturingVideoViewActions.FinishTimer)
-                            },
-                            enabled = !viewState.isCompressing
+                            }, enabled = !viewState.isCompressing
                         ) {
                             AppImage(
                                 image = painterResource(com.pmb.ballon.R.drawable.ic_video_stop)
@@ -204,8 +202,7 @@ fun RegisterVideoScreen(
                         title = stringResource(R.string.record_again),
                         onClick = {
                             viewModel.handle(RegisterCapturingVideoViewActions.ClearVideo)
-                        }
-                    )
+                        })
                     Spacer(modifier = Modifier.size(10.dp))
                     AppButton(
                         modifier = Modifier
@@ -222,18 +219,17 @@ fun RegisterVideoScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Spacer(modifier = Modifier.size(24.dp))
-        if (!viewState.videoCaptured && !viewState.isCapturingVideo)
-            BodyMediumText(
-                modifier = Modifier.fillMaxWidth(),
-                text = buildAnnotatedString {
-                    append("پس از فشردن علامت فیلمبرداری،")
-                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append(" یک جمله ")
-                    }
-                    append("برای شما نمایش داده می شود که باید آن را بخوانید.")
-                },
-                color = AppTheme.colorScheme.onBackgroundPrimarySubdued,
-            )
+        if (!viewState.videoCaptured && !viewState.isCapturingVideo) BodyMediumText(
+            modifier = Modifier.fillMaxWidth(),
+            text = buildAnnotatedString {
+                append("پس از فشردن علامت فیلمبرداری،")
+                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                    append(" یک جمله ")
+                }
+                append("برای شما نمایش داده می شود که باید آن را بخوانید.")
+            },
+            color = AppTheme.colorScheme.onBackgroundPrimarySubdued,
+        )
         else {
             BodyMediumText(
                 text = if (viewState.isCapturingVideo && !viewState.videoCaptured) stringResource(
@@ -245,46 +241,48 @@ fun RegisterVideoScreen(
                 color = AppTheme.colorScheme.onBackgroundPrimarySubdued
 
             )
-            if (viewState.isCapturingVideo && !viewState.videoCaptured)
-                viewState.admittanceTextResponse?.admittanceText?.let {
-                    Headline4Text(
-                        text = it,
-                        textAlign = TextAlign.Center,
-                        color = AppTheme.colorScheme.foregroundPrimaryDefault
-                    )
-                }
+            if (viewState.isCapturingVideo && !viewState.videoCaptured) viewState.admittanceTextResponse?.admittanceText?.let {
+                Headline4Text(
+                    text = it,
+                    textAlign = TextAlign.Center,
+                    color = AppTheme.colorScheme.foregroundPrimaryDefault
+                )
+            }
         }
         Spacer(modifier = Modifier.size(44.dp))
         if (viewState.savedFileUri != null && viewState.videoCaptured) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .heightIn(max = 312.dp)
+                    .height(312.dp)
                     .background(Color.White, RoundedCornerShape(size = 16.dp))
             ) {
                 AndroidView(
                     factory = { ctx ->
-                        VideoView(ctx).apply {
-                            layoutParams = FrameLayout.LayoutParams(
-                                FrameLayout.LayoutParams.MATCH_PARENT,
-                                FrameLayout.LayoutParams.MATCH_PARENT
-                            ).apply { gravity = Gravity.CENTER }
-                            setVideoPath(viewState.savedFileUri)
-                            setOnPreparedListener { mediaPlayer ->
-                                mediaPlayer.start()
-                            }
+                        val textureView = TextureView(ctx).apply {
+                            scaleX = -1f
+                            scaleY = 1.6f
                         }
+                        MediaPlayer().apply {
+                            setDataSource(ctx, viewState.savedFileUri!!.toUri())
+                            setOnPreparedListener {
+                                textureView.surfaceTexture?.let { surfaceTexture ->
+                                    setSurface(Surface(surfaceTexture))
+                                    start()
+                                }
+                            }
+                            prepareAsync()
+                        }
+                        textureView
                     },
                     modifier = Modifier
                         .fillMaxWidth()
+                        .height(312.dp)
                         .clip(RoundedCornerShape(16.dp))
                         .border(
-                            1.dp,
-                            AppTheme.colorScheme.strokeNeutral3Rest,
-                            RoundedCornerShape(16.dp)
+                            1.dp, AppTheme.colorScheme.strokeNeutral3Rest, RoundedCornerShape(16.dp)
                         )
                 )
-
             }
         } else {
             Box(
@@ -294,7 +292,7 @@ fun RegisterVideoScreen(
                     .background(Color.White, RoundedCornerShape(size = 16.dp))
             ) {
                 AndroidView(
-                    factory = { context ->
+                    factory = {
                         previewView
                     },
                     modifier = Modifier
@@ -302,9 +300,7 @@ fun RegisterVideoScreen(
                         .height(312.dp)
                         .clip(RoundedCornerShape(16.dp))
                         .border(
-                            1.dp,
-                            AppTheme.colorScheme.strokeNeutral3Rest,
-                            RoundedCornerShape(16.dp)
+                            1.dp, AppTheme.colorScheme.strokeNeutral3Rest, RoundedCornerShape(16.dp)
                         )
                 )
             }
