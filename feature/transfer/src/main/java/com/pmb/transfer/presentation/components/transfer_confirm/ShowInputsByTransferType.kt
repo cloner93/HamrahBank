@@ -83,6 +83,7 @@ fun ShowInputsByTransferType(
         when (transferMethod.paymentType) {
             PaymentType.CARD_TO_CARD,
             PaymentType.MELLAT_TO_MELLAT -> Unit
+
             PaymentType.INTERNAL_SATNA,
             PaymentType.INTERNAL_PAYA,
             PaymentType.INTERNAL_BRIDGE -> {
@@ -117,7 +118,7 @@ fun ShowInputsByTransferType(
             value = depositId,
             label = stringResource(R.string.deposit_id_optional),
             onValueChange = {
-                if (it.isDigitsOnly()) onDepositIdChange.invoke(it)
+                if (it.isDigitsOnly() && it.length <= 18) onDepositIdChange.invoke(it)
             })
 
     }
