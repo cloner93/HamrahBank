@@ -6,12 +6,12 @@ import com.pmb.domain.model.SendOtpRequest
 import com.pmb.domain.model.SendOtpResponse
 import com.pmb.domain.model.UserData
 import com.pmb.domain.model.openAccount.AccountArchiveJobDocResponse
-import com.pmb.domain.model.openAccount.FetchCommitmentResponse
-import com.pmb.domain.model.openAccount.accountType.FetchAccountTypeResponse
-import com.pmb.domain.model.openAccount.accountVerifyCode.VerifyCodeResponse
 import com.pmb.domain.model.openAccount.FetchAdmittanceTextResponse
+import com.pmb.domain.model.openAccount.FetchCommitmentResponse
 import com.pmb.domain.model.openAccount.RegisterOpenAccountRequest
 import com.pmb.domain.model.openAccount.RegisterOpenAccountResponse
+import com.pmb.domain.model.openAccount.accountType.FetchAccountTypeResponse
+import com.pmb.domain.model.openAccount.accountVerifyCode.VerifyCodeResponse
 import com.pmb.domain.model.openAccount.branchName.Branch
 import com.pmb.domain.model.openAccount.cityName.City
 import com.pmb.domain.model.openAccount.comissionFee.FetchCommissionFeeResponse
@@ -21,7 +21,13 @@ import kotlinx.coroutines.flow.Flow
 interface AuthRepository {
     suspend fun getUserData(): Flow<Result<UserData?>>
     suspend fun sendOtp(sendOtpRequest: SendOtpRequest): Flow<Result<SendOtpResponse>>
-    fun login(customerId: String, username: String, password: String): Flow<Result<LoginResponse>>
+    suspend fun login(
+        customerId: String,
+        username: String,
+        password: String,
+        useFinger: Boolean
+    ): Flow<Result<LoginResponse>>
+
     fun register(customerId: String, username: String, password: String): Flow<Result<Boolean>>
     fun generateCode(
         nationalCode: String, mobileNo: String, birthDate: String
@@ -38,13 +44,13 @@ interface AuthRepository {
     fun fetchJobLevel(): Flow<Result<List<JobLevel>>>
 
     fun fetchAccountType(
-         nationalCode: String, mobileNo: String
+        nationalCode: String, mobileNo: String
     ): Flow<Result<FetchAccountTypeResponse>>
 
     fun fetchCityList(stateCode: Int): Flow<Result<List<City>>>
 
     fun fetchBranchList(
-       stateCode: Int, cityCode: Int
+        stateCode: Int, cityCode: Int
     ): Flow<Result<List<Branch>>>
 
     fun fetchCommitment(accType: Int): Flow<Result<FetchCommitmentResponse>>
@@ -55,4 +61,7 @@ interface AuthRepository {
 
     fun registerOpenAccount(registerOpenAccountRequest: RegisterOpenAccountRequest): Flow<Result<RegisterOpenAccountResponse>>
 
+    suspend fun getFingerPrintState(): Boolean
+
+    suspend fun setFingerPrintState(state: Boolean)
 }
