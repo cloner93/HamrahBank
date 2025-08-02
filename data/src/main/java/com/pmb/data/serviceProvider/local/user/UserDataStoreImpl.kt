@@ -4,9 +4,13 @@ import android.content.Context
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.pmb.data.SecurityManager
 import com.pmb.domain.model.UserData
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.first
+import kotlinx.serialization.json.Json
+import java.net.URLDecoder
+import java.net.URLEncoder
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -14,43 +18,40 @@ private val Context.dataStore by preferencesDataStore(name = "user_prefs")
 
 @Singleton
 class UserDataStoreImpl @Inject constructor(
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
+    private val securityManager: SecurityManager
 ) : UserDataStore {
 
-    private val customerUserKey = stringPreferencesKey("customer_id")
-    private val usernameKey = stringPreferencesKey("username")
-    private val firstNameKey = stringPreferencesKey("firstName")
-    private val lastNameKey = stringPreferencesKey("lastName")
-    private val phoneNumberKey = stringPreferencesKey("phoneNumber")
+    private val encryptedJson = stringPreferencesKey("encryptedJson")
+    private val encryptedIv = stringPreferencesKey("encryptedIv")
 
     override suspend fun setUserData(userData: UserData) {
         context.dataStore.edit { preferences ->
-            preferences[customerUserKey] = userData.customerId
-            preferences[usernameKey] = userData.username
-            preferences[firstNameKey] = userData.firstName
-            preferences[lastNameKey] = userData.lastName
-            preferences[phoneNumberKey] = userData.phoneNumber
+
+            val json = Json { ignoreUnknownKeys = true }
+            val transactionJson = json.encodeToString(userData)
+            val userDataJson = URLEncoder.encode(transactionJson, "UTF-8")
+
+            val encrypted = securityManager.encrypt(userDataJson)
+
+            preferences[encryptedJson] = encrypted.ciphertext
+            preferences[encryptedIv] = encrypted.iv
         }
     }
 
-    override suspend fun getUserData(): UserData? {
+    override suspend fun getUserData(): UserData {
         val preferences = context.dataStore.data.first()
-        val customerId = preferences[customerUserKey]
-        val username = preferences[usernameKey]
-        val firstName = preferences[firstNameKey]
-        val lastName = preferences[lastNameKey]
-        val phoneNumber = preferences[phoneNumberKey]
 
-        return if (customerId != null && username != null) {
-            UserData(
-                customerId = customerId,
-                username = username,
-                firstName = firstName ?: "",
-                lastName = lastName ?: "",
-                phoneNumber = phoneNumber ?: ""
-            )
-        } else {
-            null
-        }
+        val encryptedData = preferences[encryptedJson] ?: ""
+        val iv = preferences[encryptedIv] ?: ""
+
+        val encrypted = SecurityManager.EncryptedData(encryptedData, iv)
+        val decryptedData = securityManager.decrypt(encrypted)
+
+        val jsonO = Json { ignoreUnknownKeys = true }
+        val jsonString = URLDecoder.decode(decryptedData, "UTF-8")
+        val userData = jsonO.decodeFromString<UserData>(jsonString)
+
+        return userData
     }
 }
