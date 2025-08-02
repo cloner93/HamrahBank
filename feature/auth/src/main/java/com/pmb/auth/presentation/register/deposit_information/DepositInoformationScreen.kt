@@ -101,7 +101,7 @@ fun DepositInformationScreen(
         it.takeIf {
             it != null
         }?.also {
-                viewModel.handle(DepositInformationViewActions.SetOpeningBranch(it))
+            viewModel.handle(DepositInformationViewActions.SetOpeningBranch(it))
         }
     }
     LaunchedEffect(sharedViewState.cityOfDeposit) {
