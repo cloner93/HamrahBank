@@ -27,6 +27,8 @@ import com.pmb.profile.presentaion.personal_infos.select_job.SelectJobScreen
 import com.pmb.profile.presentaion.personal_infos.select_job.viewmodel.SelectJobViewModel
 import com.pmb.profile.presentaion.privacyAndSecurity.PrivacySecurityScreen
 import com.pmb.profile.presentaion.privacyAndSecurity.changePassword.ChangePasswordScreen
+import com.pmb.profile.presentaion.privacyAndSecurity.enableFingerprint.EnableFingerprintScreen
+import com.pmb.profile.presentaion.privacyAndSecurity.enableFingerprint.viewmodel.EnableFingerprintViewModel
 import com.pmb.profile.presentaion.profile.ProfileScreen
 import com.pmb.profile.presentaion.profile.viewModel.ProfileViewModel
 import com.pmb.profile.presentaion.themeScreen.ThemeScreen
@@ -192,7 +194,9 @@ fun NavGraphBuilder.profileScreensHandle() {
         composable(route = ProfileScreens.PrivacyAndSecurity.ChangePasswordScreen.route) {
             ChangePasswordScreen()
         }
-        composable(route = ProfileScreens.PrivacyAndSecurity.UserAuthenticationScreen.route) {}
+        composable(route = ProfileScreens.PrivacyAndSecurity.EnableFingerprintScreen.route) {
+            EnableFingerprintScreen(hiltViewModel<EnableFingerprintViewModel>())
+        }
     }
 
     navigation(
