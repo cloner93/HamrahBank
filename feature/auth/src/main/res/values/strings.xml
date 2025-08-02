@@ -87,6 +87,7 @@
     <string name="opening_branches_list">لیست شعب بانک ملت</string>
     <string name="search_job_description">جستجو در مشاغل</string>
     <string name="enter_face_detection">ورود با اسکن چهره</string>
+    <string name="enter_finger_detection">ورود با اثر انگشت</string>
     <string name="face_detection_description">لطغا دوربین رو مقابل صورت خود قرار دهید.</string>
     <string name="scan_card_description">لطفا روی کارت بانکی خود را اسکن کنید.</string>
     <string name="authentication_type_password_description"> جهت تعریف رمز ورود جدید، یکی از روش های زیر را انتخاب نمایید:</string>
