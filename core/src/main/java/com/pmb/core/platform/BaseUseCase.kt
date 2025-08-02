@@ -17,7 +17,12 @@ abstract class BaseUseCase<in Params, Output> {
             emit(result) // Emit each result from the Flow returned by execute
         }
     }.catch { e ->
-        emit(Result.Error("An error occurred", e)) // Catch exceptions and emit as Result.Error
+        emit(
+            Result.Error(
+                "An error occurred: " + e.message,
+                e
+            )
+        ) // Catch exceptions and emit as Result.Error
     }
 
 

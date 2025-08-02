@@ -33,6 +33,8 @@ kotlinx-serialization = "1.8.1"
 
 persiancalendar-calendar = "9619b0e1a4aa8d72f2d084370e7b5b5647111b6d"
 
+biometric = "1.1.0"
+
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -89,6 +91,8 @@ kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serializa
 androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "paging" }
 androidx-paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "paging" }
 androidx-paging-common-android = { group = "androidx.paging", name = "paging-common-android", version.ref = "paging" }
+
+androidx-biometric = { group = "androidx.biometric", name = "biometric", version.ref = "biometric" }
 
 [bundles]
 androix-camera-bundle = ["androidx-camera-core", "androidx-camera", "androidx-camera-view", "androidx-camera-lifecycle", "androidx-camera-video", "androidx-camera-extensions"]
