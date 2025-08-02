@@ -27,7 +27,7 @@ import com.pmb.auth.presentation.register.authentication_information.viewModel.A
 import com.pmb.auth.presentation.register.authentication_information.viewModel.AuthenticationInformationViewModel
 import com.pmb.auth.presentation.register.authentication_information.viewModel.AuthenticationInformationViewState
 import com.pmb.ballon.component.AlertComponent
-import com.pmb.ballon.component.CustomSearchSpinner
+import com.pmb.ballon.component.CustomSpinner
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppButtonIcon
 import com.pmb.ballon.component.base.AppClickableReadOnlyTextField
@@ -93,11 +93,15 @@ fun AuthenticationInformationScreen(
             ?: run { sharedState.value.verifyCodeResponse?.tel?.takeIf { it.isNotEmpty() } ?: "" })
     }
     var education by remember {
-        mutableStateOf(viewModel.getEducation(sharedState.value.education?.takeIf { it > 0 }
-            ?: 0)?.education ?: run {
-            viewModel.getEducation(sharedState.value.verifyCodeResponse?.education?.takeIf { it > 0 }
-                ?: 0)?.education ?: ""
-        })
+        mutableStateOf(
+            if (sharedState.value.education != null && (sharedState.value?.education ?: 0) > 0) {
+                viewModel.getEducation(
+                    sharedState.value.education ?: 0
+                )?.education ?: ""
+            } else {
+                viewModel.getEducation(sharedState.value.verifyCodeResponse?.education?.takeIf { it > 0 }
+                    ?: 0)?.education ?: ""
+            })
     }
     LaunchedEffect(Unit) {
         viewModel.viewEvent.collect { event ->
@@ -122,6 +126,12 @@ fun AuthenticationInformationScreen(
             viewModel.handle(AuthenticationInformationViewActions.SetIdentifyPlaceId(sharedState.value.birthDatePlaceCity!!))
         }
     }
+    LaunchedEffect(sharedState.value.issueRgnCode) {
+        if (sharedState.value.issueRgnCode != null) {
+            identifyArea = sharedState.value.issueRgnCode?.toString() ?: ""
+            viewModel.handle(AuthenticationInformationViewActions.SetIssueRegion(sharedState.value.issueRgnCode ?:0))
+        }
+    }
 
     AppContent(modifier = Modifier.padding(horizontal = 16.dp), topBar = {
         AppTopBar(
@@ -137,6 +147,7 @@ fun AuthenticationInformationScreen(
             enable = identifyArea.isNotEmpty() && tel.isNotEmpty() && education.isNotEmpty(),
             title = stringResource(R.string._continue),
             onClick = {
+                viewModel.handle(AuthenticationInformationViewActions.SetIssueRegion(identifyArea.toInt()))
                 viewModel.handle(
                     AuthenticationInformationViewActions.SetAuthenticationData(
                         sharedState.value
@@ -234,7 +245,12 @@ fun AuthenticationInformationScreen(
             modifier = Modifier.fillMaxWidth(),
             value = identifyArea,
             label = stringResource(R.string.issue_region),
-            onValueChange = { identifyArea = it },
+            onValueChange = {
+                if (it.length <= 2) {
+                    identifyArea = it
+
+                }
+            },
         )
         Spacer(modifier = Modifier.size(24.dp))
         AppMobileTextField(value = tel, label = stringResource(R.string.tel), onValueChange = {
@@ -242,18 +258,24 @@ fun AuthenticationInformationScreen(
             viewModel.handle(AuthenticationInformationViewActions.SetPhoneNumber(it))
         })
         Spacer(modifier = Modifier.size(24.dp))
-        CustomSearchSpinner(
+        CustomSpinner(
             modifier = Modifier.fillMaxWidth(),
             options = viewModel.getEducationList().map { it.education },
             labelString = stringResource(R.string.education),
             displayText = education,
             isEnabled = true,
-            onSearchValue = {
-                education = it
-            }) { type ->
-            val education = viewModel.getEducationList().find { it.education == type }
-            education?.let { viewModel.handle(AuthenticationInformationViewActions.SetEducation(it)) }
-        }
+            onOptionSelected = { type ->
+                education = type
+                val newEducation = viewModel.getEducationList().find { it.education == type }
+                newEducation?.let {
+                    viewModel.handle(
+                        AuthenticationInformationViewActions.SetEducation(
+                            it
+                        )
+                    )
+                }
+            },
+        )
         if (showBirthdayPicker) {
             ShowPersianDatePickerBottomSheet(
                 title = stringResource(R.string.birthday),

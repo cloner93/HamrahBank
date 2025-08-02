@@ -15,5 +15,6 @@ data class AuthenticationInformationViewState(
     val issueDateDay: String? = null ,
     val issueCode: Int? = null,
     val tel: String? = null,
-    val education: Education? = null
+    val education: Education? = null,
+    val issueRgnCode : Int?=null
 ) : BaseViewState

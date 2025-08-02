@@ -49,7 +49,7 @@ import com.pmb.navigation.moduleScreen.RegisterScreens
 @Composable
 fun JobInformationScreen(
     viewModel: JobInformationViewModel,
-    sharedState :State<RegisterSharedViewState>,
+    sharedState: State<RegisterSharedViewState>,
     updateState: (JobInformationViewState) -> Unit
 ) {
     val navigationManager: NavigationManager = LocalNavigationManager.current
@@ -126,51 +126,63 @@ fun JobInformationScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 16.dp, end = 16.dp, top = 16.dp),
-                enable = !viewState.isLoading && viewState.data != null && viewState.jobInformation !=null,
+                enable = !viewState.isLoading && viewState.data != null && viewState.jobInformation != null,
                 title = stringResource(R.string._continue),
                 onClick = {
-                    viewModel.handle(JobInformationViewActions.UploadArchiveDoc(sharedState.value.nationalCode ?:""))
                     updateState(viewState)
-                    navigationManager.navigate(RegisterScreens.CheckPostalCode)
+                    if (viewState.isTookPhoto)
+                        viewModel.handle(
+                            JobInformationViewActions.UploadArchiveDoc(
+                                sharedState.value.nationalCode ?: ""
+                            )
+                        )
+                    else{
+                        navigationManager.navigate(RegisterScreens.CheckPostalCode)
+                    }
+
+
                 })
         }) {
-            AppClickableReadOnlyTextField(
-                onClick = {
-                    navigationManager.navigate(RegisterScreens.SelectJobInformation)
-                },
-                value = viewState.jobInformation?.jobName ?: "",
-                label = "انتخاب شغل",
-                trailingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.KeyboardArrowDown,
-                        contentDescription = "down Icon",
-                        tint = AppTheme.colorScheme.onBackgroundNeutralDefault
-                    )
-                },
-            )
-            Spacer(modifier = Modifier.size(24.dp))
-            CustomSpinner(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                options = sharedState.value.verifyCodeResponse?.annualIncomeTypes?.map { it.incomePredictDescription?:"" },
-                labelString = "پیش بینی درآمد سالیانه",
-                displayText = viewState.data?.let {
-                    it.incomePredictDescription
-                } ?: "",
-                isEnabled = true
-            ) { type ->
-                val annualIncomeTypes = sharedState.value.verifyCodeResponse?.annualIncomeTypes?.findLast { it.incomePredictDescription == type }
-                annualIncomeTypes?.let { viewModel.handle(JobInformationViewActions.SetAnnualIncome(it)) }
+        AppClickableReadOnlyTextField(
+            onClick = {
+                navigationManager.navigate(RegisterScreens.SelectJobInformation)
+            },
+            value = viewState.jobInformation?.jobName ?: "",
+            label = "انتخاب شغل",
+            trailingIcon = {
+                Icon(
+                    imageVector = Icons.Default.KeyboardArrowDown,
+                    contentDescription = "down Icon",
+                    tint = AppTheme.colorScheme.onBackgroundNeutralDefault
+                )
+            },
+        )
+        Spacer(modifier = Modifier.size(24.dp))
+        CustomSpinner(
+            modifier = Modifier
+                .fillMaxWidth(),
+            options = sharedState.value.verifyCodeResponse?.annualIncomeTypes?.map {
+                it.incomePredictDescription ?: ""
+            },
+            labelString = "پیش بینی درآمد سالیانه",
+            displayText = viewState.data?.let {
+                it.incomePredictDescription
+            } ?: "",
+            isEnabled = true
+        ) { type ->
+            val annualIncomeTypes =
+                sharedState.value.verifyCodeResponse?.annualIncomeTypes?.findLast { it.incomePredictDescription == type }
+            annualIncomeTypes?.let { viewModel.handle(JobInformationViewActions.SetAnnualIncome(it)) }
+        }
+        UploadDocumentsSection(
+            images = if (viewState.isTookPhoto) viewState.fileUri else null,
+            onAddClicked = {
+                showShareBottomSheet = true
+            },
+            onRemoveImage = {
+                viewModel.handle(JobInformationViewActions.ClearPhoto)
             }
-            UploadDocumentsSection(
-                images = if (viewState.isTookPhoto) viewState.fileUri else null,
-                onAddClicked = {
-                    showShareBottomSheet = true
-                },
-                onRemoveImage = {
-                    viewModel.handle(JobInformationViewActions.ClearPhoto)
-                }
-            )
+        )
     }
     if (viewState.isLoading) {
         AppLoading()

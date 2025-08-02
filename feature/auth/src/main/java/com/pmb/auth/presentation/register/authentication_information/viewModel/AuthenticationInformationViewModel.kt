@@ -25,7 +25,7 @@ class AuthenticationInformationViewModel @Inject constructor(
 
     fun getEducationList() = educationList
 
-    fun getEducation(id: Int) = educationList.find { it.id == id }
+    fun getEducation(id: Int) : Education?= educationList.find { it.id == id }
 
     override fun handle(action: AuthenticationInformationViewActions) {
         when (action) {
@@ -36,7 +36,6 @@ class AuthenticationInformationViewModel @Inject constructor(
                     )
                 }
             }
-
             is AuthenticationInformationViewActions.SetAuthenticationData -> {
                 handleAuthenticationData(action)
             }

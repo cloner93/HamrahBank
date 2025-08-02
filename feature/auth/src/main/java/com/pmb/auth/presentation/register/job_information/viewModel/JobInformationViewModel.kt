@@ -171,8 +171,8 @@ class JobInformationViewModel @Inject constructor(
         viewModelScope.launch {
 
             val deleteFile = fileManager.deleteFileFromUri(viewState.value.fileUri)
-            if (deleteFile) {
-                delay(500)
+//            if (deleteFile) {
+                delay(10)
                 setState {
                     it.copy(
                         hasCameraPermission = false,
@@ -181,7 +181,7 @@ class JobInformationViewModel @Inject constructor(
                         fileUri = null
                     )
                 }
-            }
+//            }
 
         }
     }
@@ -221,6 +221,7 @@ class JobInformationViewModel @Inject constructor(
             }
             setState {
                 it.copy(
+                    hasCameraPermission = false,
                     isTookPhoto =  true
                 )
             }

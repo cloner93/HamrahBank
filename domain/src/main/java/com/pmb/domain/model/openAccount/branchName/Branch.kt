@@ -12,10 +12,10 @@ data class Branch(
     val branchCode: Int,
     val organizationType: Int,
     val branchName: String,
-    val tel: String,
-    val fax: String,
-    val telCode: Int,
-    val hajCityCode: Int,
-    val hajProvinceCode: Int,
+    val tel: String?,
+    val fax: String?,
+    val telCode: Int?,
+    val hajCityCode: Int?,
+    val hajProvinceCode: Int?,
     val address: String
 ):Parcelable

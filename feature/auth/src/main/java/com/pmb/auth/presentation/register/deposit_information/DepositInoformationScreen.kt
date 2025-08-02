@@ -28,13 +28,11 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.pmb.auth.R
 import com.pmb.auth.presentation.register.RegisterSharedViewState
-import com.pmb.auth.presentation.register.authentication_information.viewModel.AuthenticationInformationViewActions
 import com.pmb.auth.presentation.register.deposit_information.viewModel.DepositInformationViewActions
 import com.pmb.auth.presentation.register.deposit_information.viewModel.DepositInformationViewEvents
 import com.pmb.auth.presentation.register.deposit_information.viewModel.DepositInformationViewModel
 import com.pmb.auth.presentation.register.deposit_information.viewModel.DepositInformationViewState
 import com.pmb.ballon.component.AlertComponent
-import com.pmb.ballon.component.CustomSearchSpinner
 import com.pmb.ballon.component.CustomSpinner
 import com.pmb.ballon.component.RoundedCornerCheckboxComponent
 import com.pmb.ballon.component.base.AppButton
@@ -46,7 +44,7 @@ import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.component.base.ClickableIcon
 import com.pmb.ballon.component.base.IconType
 import com.pmb.ballon.ui.theme.AppTheme
-import com.pmb.core.utils.CollectAsEffect
+import com.pmb.core.utils.CollectOnce
 import com.pmb.domain.model.openAccount.accountType.Province
 import com.pmb.domain.model.openAccount.branchName.Branch
 import com.pmb.domain.model.openAccount.cityName.City
@@ -99,11 +97,11 @@ fun DepositInformationScreen(
     navigationManager.getCurrentScreenFlowData<Branch?>(
         "openingBranch",
         null
-    )?.CollectAsEffect {
+    )?.CollectOnce {
         it.takeIf {
             it != null
         }?.also {
-            viewModel.handle(DepositInformationViewActions.SetOpeningBranch(it))
+                viewModel.handle(DepositInformationViewActions.SetOpeningBranch(it))
         }
     }
     LaunchedEffect(sharedViewState.cityOfDeposit) {
@@ -190,6 +188,9 @@ fun DepositInformationScreen(
             Spacer(modifier = Modifier.size(12.dp))
             AppClickableReadOnlyTextField(
                 onClick = {
+                    city = ""
+                    viewModel.handle(DepositInformationViewActions.SetOpeningBranch(null))
+                    viewModel.handle(DepositInformationViewActions.SetCity(null))
                     setProvince(viewState.fetchAccountTypeResponse?.provinceList)
                     navigationManager.navigate(RegisterScreens.SelectProvincePlace)
                 },
@@ -203,28 +204,11 @@ fun DepositInformationScreen(
                     )
                 },
             )
-//            CustomSearchSpinner(
-//                modifier = Modifier
-//                    .fillMaxWidth(),
-//                options = viewState.fetchAccountTypeResponse?.provinceList?.map { it.provinceName },
-//                labelString = "استان شعبه مورد نظر",
-//                displayText = province.takeIf { it.isNotEmpty() }
-//                    ?: run { viewState.province?.provinceName ?: "" },
-//                isEnabled = viewState.fetchAccountTypeResponse?.provinceList?.isNotEmpty() == true,
-//                onSearchValue = {
-//                    province = it
-//                }
-//            ) { type ->
-//                val province =
-//                    viewState.fetchAccountTypeResponse?.provinceList?.find { it.provinceName == type }
-//                province?.let {
-//                    viewModel.handle(DepositInformationViewActions.SetProvince(it))
-//                }
-//            }
             Spacer(modifier = Modifier.size(12.dp))
 
             AppClickableReadOnlyTextField(
                 onClick = {
+                    viewModel.handle(DepositInformationViewActions.SetOpeningBranch(null))
                     setCity(viewState.cityList)
                     navigationManager.navigate(RegisterScreens.SelectCityPlace)
                 },
@@ -238,25 +222,6 @@ fun DepositInformationScreen(
                     )
                 },
             )
-
-
-            CustomSearchSpinner(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                options = viewState.cityList?.map { it.cityName },
-                labelString = "شهر شعبه مورد نظر",
-                displayText = city.takeIf { it.isNotEmpty() }
-                    ?: run { viewState.city?.cityName ?: "" },
-                isEnabled = viewState.cityList?.isNotEmpty() == true,
-                onSearchValue = {
-                    city = it
-                }
-            ) { type ->
-                val city = viewState.cityList?.find { it.cityName == type }
-                city?.let {
-                    viewModel.handle(DepositInformationViewActions.SetCity(it))
-                }
-            }
             Spacer(modifier = Modifier.size(12.dp))
 
             AppClickableReadOnlyTextField(
@@ -316,7 +281,7 @@ fun DepositInformationScreen(
                 title = stringResource(R.string.accept),
                 onClick = {
                     showBottomSheet = false
-                    viewModel.handle(DepositInformationViewActions.SelectRules)
+                    viewModel.handle(DepositInformationViewActions.AcceptRules)
                 })
         }
 

@@ -136,7 +136,7 @@ fun NavGraphBuilder.registerScreenHandler() {
                         tel = childState.tel,
                         education = childState.education?.id,
                         issueCityCode = childState.issuePlace?.cityCode,
-                        issueRgnCode = childState.issuePlace?.provinceCode,
+                        issueRgnCode = childState.issueCode,
                         issueDate = "${childState.issueDateYear}${childState.issueDateMonth}${childState.issueDateDay}"
                     )
                 }
@@ -253,7 +253,8 @@ fun NavGraphBuilder.registerScreenHandler() {
                 setProvince ={
                     sharedViewModel.updateState {
                         sharedState.value.copy(
-                            provinceList = it
+                            provinceList = it,
+                            cityOfDeposit = null
                         )
                     }
                 },

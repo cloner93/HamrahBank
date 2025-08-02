@@ -36,15 +36,15 @@ import com.pmb.navigation.moduleScreen.RegisterScreens
 fun CheckPostalCodeScreen(
     viewModel: CheckPostalCodeViewModel,
     sharedState: RegisterSharedViewState,
-    updateState:(String,String)-> Unit
+    updateState: (String, String) -> Unit
 ) {
     val navigationManager: NavigationManager = LocalNavigationManager.current
     val viewState by viewModel.viewState.collectAsState()
     var postalCode by remember {
-        mutableStateOf(sharedState.postcode?.toString() ?:"")
+        mutableStateOf(sharedState.postcode?.toString() ?: "")
     }
     var address by remember {
-        mutableStateOf(sharedState.address ?:"")
+        mutableStateOf(sharedState.address ?: "")
     }
     LaunchedEffect(Unit) {
         viewModel.viewEvent.collect { event ->
