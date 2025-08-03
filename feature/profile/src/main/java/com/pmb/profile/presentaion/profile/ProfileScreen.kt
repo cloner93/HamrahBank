@@ -69,13 +69,20 @@ fun ProfileScreen(viewModel: ProfileViewModel) {
                 ProfileViewEvents.NavigateToUpdate -> {
                     navigationManager.navigate(ProfileScreens.Update.Graph)
                 }
+
+                ProfileViewEvents.NavigateToAboutApp -> {
+                    navigationManager.navigate(ProfileScreens.AboutAppScreen)
+                }
+
+                ProfileViewEvents.NavigateToCommentsSuggestions -> {
+
+                }
             }
         }
     }
 
     AppContent(
-        modifier = Modifier
-            .padding(horizontal = 16.dp),
+        modifier = Modifier.padding(horizontal = 16.dp),
         backgroundColor = AppTheme.colorScheme.background3Neutral,
         scrollState = rememberScrollState(),
         topBar = {
@@ -85,16 +92,14 @@ fun ProfileScreen(viewModel: ProfileViewModel) {
                     .padding(16.dp),
             ) {
                 AppButtonIcon(
-                    modifier = Modifier
-                        .align(Alignment.Companion.TopStart),
+                    modifier = Modifier.align(Alignment.Companion.TopStart),
                     icon = Icons.Outlined.HelpOutline,
                     style = IconStyle(tint = AppTheme.colorScheme.onBackgroundNeutralDefault),
                     onClick = {
 
                     })
                 Row(
-                    modifier = Modifier
-                        .align(Alignment.Companion.Center)
+                    modifier = Modifier.align(Alignment.Companion.Center)
                 ) {
                     TextImage(
                         image = R.drawable.ic_profile,
@@ -214,7 +219,7 @@ fun ProfileScreen(viewModel: ProfileViewModel) {
                     endIconStyle = IconStyle(tint = AppTheme.colorScheme.foregroundNeutralRest),
                     clickable = true,
                     onItemClick = {
-
+                        viewModel.handle(ProfileViewActions.AboutAppClicked)
                     })
 
                 MenuItem(
@@ -256,14 +261,12 @@ fun ProfileScreen(viewModel: ProfileViewModel) {
     }
     if (viewState.loading) AppLoading()
     viewState.alertModelState?.let { AlertComponent(it) }
-    if (viewState.showSupportBottomSheet)
-        ShowSupportBottomSheet(onDismiss = {
-            viewModel.handle(ProfileViewActions.ShowSupportBottomSheet(false))
-        })
-    if (viewState.showInviteFriendBottomSheet)
-        ShowInviteFriendBottomSheet(onDismiss = {
-            viewModel.handle(ProfileViewActions.ShowInviteFriendBottomSheet(false))
-        })
+    if (viewState.showSupportBottomSheet) ShowSupportBottomSheet(onDismiss = {
+        viewModel.handle(ProfileViewActions.ShowSupportBottomSheet(false))
+    })
+    if (viewState.showInviteFriendBottomSheet) ShowInviteFriendBottomSheet(onDismiss = {
+        viewModel.handle(ProfileViewActions.ShowInviteFriendBottomSheet(false))
+    })
 }
 
 

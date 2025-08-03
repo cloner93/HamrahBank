@@ -6,6 +6,7 @@ sealed class ProfileScreens(route: String, arguments: Map<String, String> = empt
     Screen(baseRoute = route, arguments = arguments) {
     data object Profile : ProfileScreens(route = "profile")
     data object ThemeScreen : ProfileScreens(route = "themeScreen")
+    data object AboutAppScreen : ProfileScreens(route = "aboutAppScreen")
 
     sealed class PersonalInfo(route: String) : ProfileScreens(route) {
         data object Graph : PersonalInfo(route = "profile_personal_info_graph")

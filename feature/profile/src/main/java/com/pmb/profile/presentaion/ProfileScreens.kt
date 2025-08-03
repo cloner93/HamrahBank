@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.pmb.navigation.manager.navigationManager
 import com.pmb.navigation.moduleScreen.ProfileScreens
+import com.pmb.profile.presentaion.about_app.AboutAppScreen
 import com.pmb.profile.presentaion.personal_infos.PersonalInfoSharedViewModel
 import com.pmb.profile.presentaion.personal_infos.change_address.ChangeAddressScreen
 import com.pmb.profile.presentaion.personal_infos.change_address.viewmodel.ChangeAddressViewModel
@@ -50,6 +51,10 @@ fun NavGraphBuilder.profileScreensHandle() {
         ThemeScreen(
             viewModel = hiltViewModel<ThemeScreenViewModel>()
         )
+    }
+
+    composable(route = ProfileScreens.AboutAppScreen.route) {
+        AboutAppScreen()
     }
 
     navigation(
