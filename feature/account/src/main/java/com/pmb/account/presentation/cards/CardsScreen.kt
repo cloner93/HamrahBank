@@ -153,28 +153,21 @@ fun CardsScreen() {
         ),
         MenuSheetModel(
             title = stringResource(R.string.deactivating_the_card),
-            icon = com.pmb.ballon.R.drawable.ic_credit_card_lock_circe,
+            icon = com.pmb.ballon.R.drawable.ic_disable_card,
             onClicked = {
 
             }
         ),
         MenuSheetModel(
             title = stringResource(R.string.password_management),
-            icon = com.pmb.ballon.R.drawable.ic_credit_card_lock_circe,
-            onClicked = {
-
-            }
-        ),
-        MenuSheetModel(
-            title = stringResource(R.string.cardless_withdrawal),
-            icon = com.pmb.ballon.R.drawable.ic_key_password,
+            icon = com.pmb.ballon.R.drawable.ic_password_manage,
             onClicked = {
 
             }
         ),
         MenuSheetModel(
             title = stringResource(R.string.card_cancellation),
-            icon = com.pmb.ballon.R.drawable.ic_money_banknote_hand,
+            icon = com.pmb.ballon.R.drawable.ic_trash_delete_red,
             textColor = { Color(0xFFBA1A1A) },
             iconTint = { Color(0xFFBA1A1A) },
             onClicked = {

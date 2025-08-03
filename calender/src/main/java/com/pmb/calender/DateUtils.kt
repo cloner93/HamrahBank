@@ -106,29 +106,28 @@ fun formatPersianDateForDisplay(date: String, time: String?): String {
     time?.let {
         val hour = time.substring(0, 2).toInt()
         val minute = time.substring(2, 4).toInt()
-        val second = time.substring(4, 6).toInt()
+        time.substring(4, 6).toInt()
 
-        timeStr = "ساعت $hour:$minute:$second"
+        timeStr = "$hour:$minute"
     }
-
 
     return when {
         transactionDate.year == now.year && transactionDate.month == now.month && transactionDate.dayOfMonth == now.dayOfMonth -> {
-            "امروز $timeStr"
+            "امروز | $timeStr"
         }
 
         transactionDate.year == yesterday.year && transactionDate.month == yesterday.month && transactionDate.dayOfMonth == yesterday.dayOfMonth -> {
-            "دیروز $timeStr"
+            "دیروز | $timeStr"
         }
 
         transactionDate.year == now.year -> {
             val monthName = transactionDate.monthName()
-            "${transactionDate.dayOfMonth} $monthName $timeStr"
+            "${Jdn(transactionDate).weekDayName} ${transactionDate.dayOfMonth} $monthName | $timeStr"
         }
 
         else -> {
             val monthName = transactionDate.monthName()
-            "${transactionDate.dayOfMonth} $monthName ${transactionDate.year} $timeStr"
+            "${Jdn(transactionDate).weekDayName} ${transactionDate.dayOfMonth} $monthName ${transactionDate.year} | $timeStr"
         }
     }
 }

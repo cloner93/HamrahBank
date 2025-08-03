@@ -146,37 +146,24 @@ fun CardInfo(item: CardModel, onClick: (CardModel) -> Unit) {
                             )
 
                             Spacer(modifier = Modifier.width(6.dp))
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
 
-                                Headline6Text(
-                                    text = item.cardType.cardType,
-                                    color = textColor
-                                )
-                                item.placeholder?.let {
-                                    Spacer(modifier = Modifier.width(4.dp))
-                                    ButtonSmallText(
-                                        text = "(" + item.placeholder + ")",
-                                        color = textColor
-                                    )
-                                }
-                            }
+                            Headline6Text(
+                                text = item.cardType.cardType,
+                                color = textColor
+                            )
                         }
-                        if (item.amount != 0.0) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Headline6Text(
-                                    text = item.amount.toCurrency(),
-                                    color = textColor
-                                )
-                                Spacer(modifier = Modifier.width(6.dp))
-                                ButtonSmallText(
-                                    text = item.currency,
-                                    color = textColor
-                                )
-                            }
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Headline6Text(
+                                text = item.amount.toCurrency(),
+                                color = textColor
+                            )
+                            Spacer(modifier = Modifier.width(6.dp))
+                            ButtonSmallText(
+                                text = item.currency,
+                                color = textColor
+                            )
                         }
                     }
 
@@ -206,8 +193,15 @@ fun CardInfo(item: CardModel, onClick: (CardModel) -> Unit) {
 
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center
+                        horizontalArrangement = Arrangement.End
                     ) {
+                        item.placeholder?.let {
+                            ButtonMediumText(
+                                modifier = Modifier.weight(1f),
+                                text = it,
+                                color = textColor
+                            )
+                        }
                         ButtonMediumText(
                             text = "انقضاء " + item.expiredDate,
                             color = textColor

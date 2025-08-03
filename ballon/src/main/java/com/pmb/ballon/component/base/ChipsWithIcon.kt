@@ -86,6 +86,7 @@ fun ChipWithIcon(
 fun PreviewChipDefault() {
         HamrahBankTheme {
             Column(
+                modifier = Modifier.background(AppTheme.colorScheme.background1Neutral),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 ChipWithIcon(
