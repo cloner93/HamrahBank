@@ -1,6 +1,5 @@
 package com.pmb.auth.presentation.register
 
-import android.util.Log
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
@@ -68,7 +67,6 @@ fun NavGraphBuilder.registerScreenHandler() {
                 viewModel = hiltViewModel<OpeningAccountViewModel>(),
                 sharedState = sharedState
             ) { childState ->
-                Log.d("Masoud Tag", "registerScreenHandler: $childState")
                 sharedViewModel.updateState {
                     sharedState.value.copy(
                         mobileNo = childState.phoneNumber,
@@ -88,8 +86,6 @@ fun NavGraphBuilder.registerScreenHandler() {
                 viewModel = hiltViewModel<RegisterNationalIdViewModel>(),
                 sharedState.value
             ) { childState ->
-                Log.d("Masoud Tag", "registerScreenHandler child state : $childState")
-                Log.d("Masoud Tag", "registerScreenHandler shared state : $sharedState")
                 childState.nationalSerialId?.let { serial ->
                     sharedViewModel.updateState {
                         sharedState.value.copy(
@@ -106,13 +102,10 @@ fun NavGraphBuilder.registerScreenHandler() {
                     screen = RegisterScreens.RegisterGraph, navBackStackEntry = it
                 )
             val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
-            Log.d("Masoud Tag", "registerScreenHandler shared state : $sharedState")
-
             RegisterConfirmScreen(
                 sharedState = sharedState,
                 viewModel = hiltViewModel<RegisterConfirmViewModel>(),
             ) { childState ->
-                Log.d("Masoud Tag", "registerScreenHandler child state : $childState")
                 sharedViewModel.updateState {
                     sharedState.value.copy(
                         verifyCodeResponse = childState.verifyCodeResponse

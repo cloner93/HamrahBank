@@ -6,4 +6,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface DepositsRepository {
     fun getDepositList(): Flow<Result<List<DepositModel>>>
+    fun getDefaultDeposit(): Flow<Result<DepositModel?>>
+    fun setDefaultDeposit(depositModel: DepositModel): Flow<Result<Boolean>>
 }
