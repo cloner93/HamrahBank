@@ -4,11 +4,13 @@ import android.content.Context
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import com.pmb.domain.model.DepositModel
 import com.pmb.data.SecurityManager
+import com.pmb.domain.model.DepositModel
 import com.pmb.domain.model.UserData
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import java.net.URLDecoder
 import java.net.URLEncoder
@@ -23,11 +25,6 @@ class UserDataStoreImpl @Inject constructor(
     private val securityManager: SecurityManager
 ) : UserDataStore {
 
-    private val customerUserKey = stringPreferencesKey("customer_id")
-    private val usernameKey = stringPreferencesKey("username")
-    private val firstNameKey = stringPreferencesKey("firstName")
-    private val lastNameKey = stringPreferencesKey("lastName")
-    private val phoneNumberKey = stringPreferencesKey("phoneNumber")
     private val mainDepositKey = stringPreferencesKey("mainDepositKey")
     private val encryptedJson = stringPreferencesKey("encryptedJson")
     private val encryptedIv = stringPreferencesKey("encryptedIv")
@@ -56,7 +53,9 @@ class UserDataStoreImpl @Inject constructor(
         val decryptedData = securityManager.decrypt(encrypted)
 
         val jsonO = Json { ignoreUnknownKeys = true }
-        val jsonString = URLDecoder.decode(decryptedData, "UTF-8")
+        val jsonString = withContext(Dispatchers.IO) {
+            URLDecoder.decode(decryptedData, "UTF-8")
+        }
         val userData = jsonO.decodeFromString<UserData>(jsonString)
 
         return userData
