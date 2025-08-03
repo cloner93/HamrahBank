@@ -6,7 +6,6 @@ import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.platform.Result
 import com.pmb.data.serviceProvider.local.LocalServiceProvider
 import com.pmb.profile.domain.use_case.ChangeUsernameUseCase
-import com.pmb.profile.presentaion.personal_infos.PersonalInfoSharedState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -21,18 +20,10 @@ class ChangeUsernameViewModel @Inject constructor(
 
     override fun handle(action: ChangeUsernameViewActions) {
         when (action) {
-            is ChangeUsernameViewActions.UpdateShareState -> handleUpdateShareState(action.sharedState)
+            is ChangeUsernameViewActions.UpdateShareState -> Unit
             ChangeUsernameViewActions.ClearAlert -> setState { it.copy(alertState = null) }
             is ChangeUsernameViewActions.UsernameChanged -> handleUsernameChanged(action.username)
             ChangeUsernameViewActions.SubmitUsername -> updateUsername()
-        }
-    }
-
-    private fun handleUpdateShareState(sharedState: PersonalInfoSharedState) {
-        viewModelScope.launch {
-            localProvider.getUserDataStore().getUserData()?.username?.let { username ->
-                setState { it.copy(username = username) }
-            }
         }
     }
 
@@ -50,14 +41,14 @@ class ChangeUsernameViewModel @Inject constructor(
                         setState {
                             it.copy(
                                 loading = false,
-                                alertState = AlertModelState.SnackBar(
-                                    message = result.message,
-                                    onActionPerformed = {
-                                        setState { it.copy(loading = false) }
-                                    },
-                                    onDismissed = {
-                                        setState { it.copy(loading = false) }
-                                    })
+                                alertState = AlertModelState.Dialog(
+                                    title = "خطا",
+                                    description = " ${result.message}",
+                                    positiveButtonTitle = "تایید",
+                                    onPositiveClick = {
+                                        setState { state -> state.copy(alertState = null) }
+                                    }
+                                )
                             )
                         }
                     }

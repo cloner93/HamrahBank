@@ -51,7 +51,7 @@ fun PrivacySecurityScreen() {
             ) {
 
                 MenuItem(
-                    title = "تغییر رمز عبور",
+                    title = "تغییر رمز ورود",
                     startIcon = R.drawable.ic_change_pass,
                     endIcon = com.pmb.ballon.R.drawable.ic_arrow_left,
                     bottomDivider = true,

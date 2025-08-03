@@ -117,7 +117,9 @@ fun AppBaseTextField(
             }
         },
         visualTransformation = visualTransformation,
-        keyboardOptions = keyboardOptions,
+        keyboardOptions = keyboardOptions.copy(
+            autoCorrectEnabled = false
+        ),
         keyboardActions = keyboardActions,
         textStyle = textStyle,
         leadingIcon = leadingIcon,
@@ -145,6 +147,7 @@ fun AppBaseTextField(
         interactionSource = interactionSource,
     )
 }
+
 @Composable
 fun AppBaseTextField(
     modifier: Modifier = Modifier,
@@ -212,7 +215,9 @@ fun AppBaseTextField(
             }
         },
         visualTransformation = visualTransformation,
-        keyboardOptions = keyboardOptions,
+        keyboardOptions = keyboardOptions.copy(
+            autoCorrectEnabled = false
+        ),
         keyboardActions = keyboardActions,
         textStyle = textStyle,
         leadingIcon = leadingIcon,
@@ -451,7 +456,9 @@ fun AppNumberTextField(
         },
         onFocused = onFocused,
         trailingIcon = _trallingIcon,
-        keyboardOptions = keyboardOptions,
+        keyboardOptions = keyboardOptions.copy(
+            autoCorrectEnabled = false
+        ),
         visualTransformation = visualTransformation
     )
 }
