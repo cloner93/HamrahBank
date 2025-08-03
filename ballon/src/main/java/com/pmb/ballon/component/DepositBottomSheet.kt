@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.outlined.Circle
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -34,9 +35,12 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.pmb.ballon.R
 import com.pmb.ballon.component.base.AppBottomSheet
+import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.component.base.CaptionText
+import com.pmb.ballon.component.base.ClickableIcon
 import com.pmb.ballon.component.base.Headline6Text
+import com.pmb.ballon.component.base.IconType
 import com.pmb.ballon.models.DepositBottomSheetModel
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.core.utils.toCurrency
@@ -50,6 +54,7 @@ fun DepositBottomSheet(
     onSelect: (DepositBottomSheetModel) -> Unit
 ) {
     var isVisible by remember { mutableStateOf(true) }
+
     AppBottomSheet(
         isVisible = isVisible,
         cancelable = true,
@@ -59,7 +64,14 @@ fun DepositBottomSheet(
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                title?.let { Headline6Text(text = it) }
+                title?.let {
+                    AppTopBar(
+                        title = it, startIcon = ClickableIcon(
+                            icon = IconType.ImageVector(Icons.Default.Close), onClick = {
+                                onDismiss.invoke()
+                            })
+                    )
+                }
                 LazyColumn {
                     items(items) { item ->
                         DepositRow(item, onClick = { selectedItem ->
@@ -74,16 +86,12 @@ fun DepositBottomSheet(
 
 @Composable
 private fun DepositRow(
-    deposit: DepositBottomSheetModel,
-    onClick: (DepositBottomSheetModel) -> Unit = {}
+    deposit: DepositBottomSheetModel, onClick: (DepositBottomSheetModel) -> Unit = {}
 ) {
     var checkBoxState by remember { mutableStateOf(deposit.selected) }
 
-    val color =
-        if (deposit.state == 1)
-            AppTheme.colorScheme.onBackgroundNeutralDefault
-        else
-            AppTheme.colorScheme.onBackgroundNeutralDisabled
+    val color = if (deposit.state == 1) AppTheme.colorScheme.onBackgroundNeutralDefault
+    else AppTheme.colorScheme.onBackgroundNeutralDisabled
 
     Row(
         modifier = Modifier
@@ -91,8 +99,7 @@ private fun DepositRow(
             .clickable(deposit.state == 1) {
                 checkBoxState = !checkBoxState
                 onClick(deposit.copy(selected = checkBoxState))
-            },
-        verticalAlignment = Alignment.CenterVertically
+            }, verticalAlignment = Alignment.CenterVertically
     ) {
         CircleCheckbox(selected = checkBoxState, onChecked = {
             checkBoxState = !checkBoxState
@@ -107,8 +114,7 @@ private fun DepositRow(
 
         Column(horizontalAlignment = Alignment.End) {
             BodyMediumText(
-                text = deposit.depositNumber,
-                color = color
+                text = deposit.depositNumber, color = color
             )
             Spacer(modifier = Modifier.height(4.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -123,15 +129,11 @@ private fun DepositRow(
 @Composable
 fun CircleCheckbox(selected: Boolean, enabled: Boolean = false, onChecked: () -> Unit) {
     val imageVector = if (selected) Icons.Filled.CheckCircle else Icons.Outlined.Circle
-    val tint =
-        if (selected)
-            AppTheme.colorScheme.onBackgroundNeutralCTA
-        else
-            AppTheme.colorScheme.onBackgroundNeutralSubdued
+    val tint = if (selected) AppTheme.colorScheme.onBackgroundNeutralCTA
+    else AppTheme.colorScheme.onBackgroundNeutralSubdued
 
     IconButton(
-        onClick = { onChecked() },
-        enabled = enabled
+        onClick = { onChecked() }, enabled = enabled
     ) {
         Icon(
             imageVector = imageVector,

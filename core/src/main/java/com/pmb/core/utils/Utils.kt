@@ -1,5 +1,7 @@
 package com.pmb.core.utils
 
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -82,6 +84,12 @@ fun Context.fetchContactPhoneNumber(contactUri: Uri?): String? {
     } ?: run {
         null
     }
+}
+
+fun Context.copyToClipboard(text: String) {
+    val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+    val clip = ClipData.newPlainText("Deposit Info", text)
+    clipboard.setPrimaryClip(clip)
 }
 
 fun Context.getAndroidId(): String =

@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -15,12 +17,16 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.pmb.account.R
 import com.pmb.ballon.component.MenuItemDefaults.horizontalDividerPadding
 import com.pmb.ballon.component.annotation.AppPreview
 import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.BodyLargeText
+import com.pmb.ballon.component.base.ClickableIcon
+import com.pmb.ballon.component.base.IconType
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.ballon.ui.theme.HamrahBankTheme
 import com.pmb.calender.toPersianDateString
@@ -32,16 +38,16 @@ fun DepositDetailsScreen(viewModel: DepositDetailsViewModel) {
     val navigationManager = LocalNavigationManager.current
 
     AppContent(
-        modifier = Modifier
-            .padding(horizontal = 16.dp),
+        modifier = Modifier.padding(horizontal = 16.dp),
         backgroundColor = AppTheme.colorScheme.background3Neutral,
         scrollState = rememberScrollState(),
         topBar = {
             AppTopBar(
-                title = "جزییات حساب",
-                onBack = {
-                    navigationManager.navigateBack()
-                })
+                title = stringResource(R.string.deposit_details), startIcon = ClickableIcon(
+                    icon = IconType.ImageVector(Icons.Default.Close), onClick = {
+                        navigationManager.navigateBack()
+                    })
+            )
         },
     ) {
         Card(
@@ -70,8 +76,7 @@ private fun Content(
 ) {
     depositDetail.branchName?.let {
         Item(
-            "شعبه افتتاح کننده",
-            it
+            "شعبه افتتاح کننده", it
         )
         HorizontalDivider(
             modifier = Modifier.padding(horizontalDividerPadding.toPaddingValues()),
@@ -80,8 +85,7 @@ private fun Content(
     }
     depositDetail.lastTransactionDate?.let {
         Item(
-            "تاریخ آخرین گردش",
-            it.toPersianDateString()
+            "تاریخ آخرین گردش", it.toPersianDateString()
         )
         HorizontalDivider(
             modifier = Modifier.padding(horizontalDividerPadding.toPaddingValues()),
@@ -90,8 +94,7 @@ private fun Content(
     }
     depositDetail.ibanCode?.let {
         Item(
-            "شماره شبا",
-            it
+            "شماره شبا", it
         )
         HorizontalDivider(
             modifier = Modifier.padding(horizontalDividerPadding.toPaddingValues()),
@@ -100,8 +103,7 @@ private fun Content(
     }
     depositDetail.accountType?.let {
         Item(
-            "نوع حساب",
-            it
+            "نوع حساب", it
         )
         HorizontalDivider(
             modifier = Modifier.padding(horizontalDividerPadding.toPaddingValues()),
@@ -110,31 +112,26 @@ private fun Content(
     }
     depositDetail.interestRate?.let {
         Item(
-            "نرخ سود",
-            "$it %"
+            "نرخ سود", "$it %"
         )
     }
 }
 
 @Composable
 fun Item(
-    title: String,
-    value: String
+    title: String, value: String
 ) {
     Column(
-        modifier =
-            Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
     ) {
         BodyLargeText(
-            text = title,
-            color = AppTheme.colorScheme.onBackgroundNeutralSubdued
+            text = title, color = AppTheme.colorScheme.onBackgroundNeutralSubdued
         )
         Spacer(modifier = Modifier.height(8.dp))
         BodyLargeText(
-            text = value,
-            color = AppTheme.colorScheme.onBackgroundNeutralDefault
+            text = value, color = AppTheme.colorScheme.onBackgroundNeutralDefault
         )
     }
 }
@@ -145,8 +142,7 @@ private fun ItemPreview() {
     HamrahBankTheme {
         Column {
             Item(
-                "شعبه افتتاح کننده",
-                "شادمان"
+                "شعبه افتتاح کننده", "شادمان"
             )
         }
     }
