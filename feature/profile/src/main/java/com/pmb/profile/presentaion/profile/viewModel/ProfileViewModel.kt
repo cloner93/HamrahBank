@@ -1,13 +1,11 @@
 package com.pmb.profile.presentaion.profile.viewModel
 
 import androidx.lifecycle.viewModelScope
-import com.pmb.ballon.models.AccountSampleModel
 import com.pmb.core.platform.AlertModelState
 import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.platform.Result
 import com.pmb.domain.usecae.auth.GetUserDataUseCase
 import com.pmb.domain.usecae.auth.LogoutUserUseCase
-import com.pmb.profile.domain.profile.useCase.ProfileUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -38,6 +36,11 @@ class ProfileViewModel @Inject constructor(
             ProfileViewActions.LogoutAccount -> handleLogoutAccount()
             ProfileViewActions.NavigateToThemeScreen -> postEvent(ProfileViewEvents.NavigateToThemeScreen)
             ProfileViewActions.NavigateToUpdate -> postEvent(ProfileViewEvents.NavigateToUpdate)
+            is ProfileViewActions.ShowSupportBottomSheet ->
+                setState { it.copy(showSupportBottomSheet = action.show) }
+
+            is ProfileViewActions.ShowInviteFriendBottomSheet ->
+                setState { it.copy(showInviteFriendBottomSheet = action.show) }
         }
     }
 
@@ -45,7 +48,7 @@ class ProfileViewModel @Inject constructor(
         setState {
             it.copy(
                 loading = false,
-                alertModelState  = AlertModelState.Dialog(
+                alertModelState = AlertModelState.Dialog(
                     title = "پیام",
                     description = "آیا از خروج اطمینان دارید؟",
                     positiveButtonTitle = "یله",
@@ -67,7 +70,7 @@ class ProfileViewModel @Inject constructor(
             logoutUserUseCase.invoke(Unit).collect { result ->
                 when (result) {
                     is Result.Success -> {
-                        setState { it.copy(loading = false,) }
+                        setState { it.copy(loading = false) }
                         postEvent(ProfileViewEvents.LogoutAccountSucceed)
                     }
 

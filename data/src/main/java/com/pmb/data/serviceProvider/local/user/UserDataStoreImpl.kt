@@ -5,9 +5,12 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.pmb.data.SecurityManager
+import com.pmb.domain.model.DepositModel
 import com.pmb.domain.model.UserData
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import java.net.URLDecoder
 import java.net.URLEncoder
@@ -22,6 +25,7 @@ class UserDataStoreImpl @Inject constructor(
     private val securityManager: SecurityManager
 ) : UserDataStore {
 
+    private val mainDepositKey = stringPreferencesKey("mainDepositKey")
     private val encryptedJson = stringPreferencesKey("encryptedJson")
     private val encryptedIv = stringPreferencesKey("encryptedIv")
 
@@ -49,7 +53,9 @@ class UserDataStoreImpl @Inject constructor(
         val decryptedData = securityManager.decrypt(encrypted)
 
         val jsonO = Json { ignoreUnknownKeys = true }
-        val jsonString = URLDecoder.decode(decryptedData, "UTF-8")
+        val jsonString = withContext(Dispatchers.IO) {
+            URLDecoder.decode(decryptedData, "UTF-8")
+        }
         val userData = jsonO.decodeFromString<UserData>(jsonString)
 
         return userData
@@ -65,5 +71,37 @@ class UserDataStoreImpl @Inject constructor(
         } catch (e: Exception) {
             false
         }
+    }
+
+    override suspend fun setDepositAsMainDeposit(deposit: DepositModel): Boolean {
+        return try{
+            context.dataStore.edit { prefs ->
+                val json = Json { ignoreUnknownKeys = true }
+                val mainDepositString = json.encodeToString(deposit)
+                val e = URLEncoder.encode(mainDepositString, "UTF-8")
+                prefs[mainDepositKey] = e
+            }
+            true
+        }catch (e:Exception){
+            false
+        }
+    }
+
+    override suspend fun getMainDeposit(): DepositModel? {
+         try {
+            val preferences = context.dataStore.data.first()
+            val mainDepositString = preferences[mainDepositKey]
+            mainDepositString?.let {
+                val json = Json { ignoreUnknownKeys = true }
+                val jsonString = URLDecoder.decode(mainDepositString, "UTF-8")
+                val deposit = json.decodeFromString<DepositModel>(jsonString)
+                return deposit
+            }?.run {
+                return null
+            }
+        } catch (e: Exception) {
+            return null
+        }
+        return null
     }
 }

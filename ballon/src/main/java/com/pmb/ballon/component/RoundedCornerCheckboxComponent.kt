@@ -31,6 +31,7 @@ import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.component.base.CaptionText
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.ballon.ui.theme.HamrahBankTheme
+
 @Composable
 fun RoundedCornerCheckboxComponent(
     modifier: Modifier = Modifier,
@@ -41,12 +42,27 @@ fun RoundedCornerCheckboxComponent(
     checkedColor: Color = AppTheme.colorScheme.foregroundPrimaryDefault,
     uncheckedBorderColor: Color = AppTheme.colorScheme.onBackgroundNeutralSubdued,
     uncheckedColor: Color = AppTheme.colorScheme.background1Neutral,
+    checkboxClickable: Boolean = true, // false for just show checkbox
     onValueChange: (Boolean) -> Unit
 ) {
     val checkboxColor: Color by animateColorAsState(if (isChecked) checkedColor else uncheckedColor)
     val checkBorderColor: Color by animateColorAsState(if (isChecked) checkedColor else uncheckedBorderColor)
     val density = LocalDensity.current
     val duration = 100
+    val baseModifier = Modifier
+        .size(size.dp)
+        .background(color = checkboxColor, shape = RoundedCornerShape(6.dp))
+        .border(width = 1.5.dp, color = checkBorderColor, shape = RoundedCornerShape(6.dp))
+
+    val boxModifier = if (checkboxClickable) {
+        baseModifier.toggleable(
+            value = isChecked,
+            role = Role.Checkbox,
+            onValueChange = onValueChange
+        )
+    } else {
+        baseModifier
+    }
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -55,15 +71,7 @@ fun RoundedCornerCheckboxComponent(
 
     ) {
         Box(
-            modifier = Modifier
-                .size(size.dp)
-                .background(color = checkboxColor, shape = RoundedCornerShape(6.dp))
-                .border(width = 1.5.dp, color = checkBorderColor, shape = RoundedCornerShape(6.dp))
-                .toggleable(
-                    value = isChecked,
-                    role = Role.Checkbox,
-                    onValueChange = onValueChange
-                ),
+            modifier = boxModifier,
             contentAlignment = Alignment.Center
         ) {
             androidx.compose.animation.AnimatedVisibility(
@@ -113,12 +121,28 @@ fun RoundedCornerCheckboxComponent(
     checkedColor: Color = AppTheme.colorScheme.foregroundPrimaryDefault,
     uncheckedBorderColor: Color = AppTheme.colorScheme.onBackgroundNeutralSubdued,
     uncheckedColor: Color = AppTheme.colorScheme.background1Neutral,
+    checkboxClickable: Boolean = true,
     onValueChange: (Boolean) -> Unit
 ) {
     val checkboxColor: Color by animateColorAsState(if (isChecked) checkedColor else uncheckedColor)
     val checkBorderColor: Color by animateColorAsState(if (isChecked) checkedColor else uncheckedBorderColor)
     val density = LocalDensity.current
     val duration = 100
+
+    val baseModifier = Modifier
+        .size(size.dp)
+        .background(color = checkboxColor, shape = RoundedCornerShape(6.dp))
+        .border(width = 1.5.dp, color = checkBorderColor, shape = RoundedCornerShape(6.dp))
+
+    val boxModifier = if (checkboxClickable) {
+        baseModifier.toggleable(
+            value = isChecked,
+            role = Role.Checkbox,
+            onValueChange = onValueChange
+        )
+    } else {
+        baseModifier
+    }
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -127,15 +151,7 @@ fun RoundedCornerCheckboxComponent(
 
     ) {
         Box(
-            modifier = Modifier
-                .size(size.dp)
-                .background(color = checkboxColor, shape = RoundedCornerShape(6.dp))
-                .border(width = 1.5.dp, color = checkBorderColor, shape = RoundedCornerShape(6.dp))
-                .toggleable(
-                    value = isChecked,
-                    role = Role.Checkbox,
-                    onValueChange = onValueChange
-                ),
+            modifier = boxModifier,
             contentAlignment = Alignment.Center
         ) {
             androidx.compose.animation.AnimatedVisibility(

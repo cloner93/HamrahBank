@@ -54,7 +54,6 @@ fun AppPasswordTextField(
             singleLine = true,
             onValueChange = {
                 result = it.isPassword()
-//                if (it.length <= 8 || result.isValid)
                 onValueChange(it)
                 onValidate?.invoke(result)
             },
@@ -99,9 +98,9 @@ private fun PasswordConditions(result: PasswordValidationResult) {
             title = stringResource(R.string.digit),
             icon = if (result.digit) checked else unchecked
         )
-//        TextIcon(
-//            title = stringResource(R.string.special_char),
-//            icon = if (result.specialChar) checked else unchecked
-//        )
+        TextIcon(
+            title = stringResource(R.string.special_char),
+            icon = if (result.specialChar) checked else unchecked
+        )
     }
 }

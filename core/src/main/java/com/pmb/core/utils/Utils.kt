@@ -1,5 +1,7 @@
 package com.pmb.core.utils
 
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -14,6 +16,13 @@ fun Context.openApp(packageName: String, url: String) {
     } else {
         openWebPage(url)
     }
+}
+
+fun Context.actionCall(phoneNumber: String) {
+    val intent = Intent(Intent.ACTION_DIAL).apply {
+        data = "tel:$phoneNumber".toUri()
+    }
+    startActivity(intent)
 }
 
 fun Context.openWebPage(url: String) {
@@ -61,7 +70,8 @@ fun Context.fetchContactPhoneNumber(contactUri: Uri?): String? {
 
                 phonesCursor?.use { phoneC ->
                     if (phoneC.moveToFirst()) {
-                        val phoneNumberIndex = phoneC.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
+                        val phoneNumberIndex =
+                            phoneC.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
                         val phoneNumber = phoneC.getString(phoneNumberIndex)
 
                         return phoneNumber
@@ -74,6 +84,12 @@ fun Context.fetchContactPhoneNumber(contactUri: Uri?): String? {
     } ?: run {
         null
     }
+}
+
+fun Context.copyToClipboard(text: String) {
+    val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+    val clip = ClipData.newPlainText("Deposit Info", text)
+    clipboard.setPrimaryClip(clip)
 }
 
 fun Context.getAndroidId(): String =

@@ -43,14 +43,14 @@ import com.pmb.ballon.models.ImageStyle
 import com.pmb.ballon.models.Size
 import com.pmb.ballon.models.TextStyle
 import com.pmb.ballon.ui.theme.AppTheme
+import com.pmb.ballon.ui.theme.AppTypography
 import com.pmb.ballon.ui.theme.HamrahBankTheme
 import com.pmb.domain.model.DepositModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ShareDepositBottomSheet(
-    content: @Composable ColumnScope.(NestedScrollConnection) -> Unit,
-    onDismiss: () -> Unit
+    content: @Composable ColumnScope.(NestedScrollConnection) -> Unit, onDismiss: () -> Unit
 ) {
     var isVisible by remember { mutableStateOf(true) }
     AppBottomSheet(
@@ -72,8 +72,7 @@ fun ShareDepositBottomSheetContent(
     Column(
         modifier = Modifier
             .background(color = AppTheme.colorScheme.background1Neutral)
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally
     ) {
         TextImage(
             image = IconType.Painter(painterResource(R.drawable.card_info)),
@@ -81,15 +80,14 @@ fun ShareDepositBottomSheetContent(
             imageStyle = ImageStyle(size = Size.FIX(80.dp)),
             textStyle = TextStyle(
                 color = AppTheme.colorScheme.onBackgroundNeutralDefault,
+                typography = AppTypography.headline6
             )
         )
 
         Spacer(modifier = Modifier.height(32.dp))
 
         Column(
-            modifier = Modifier
-                .fillMaxWidth(),
-            verticalArrangement = Arrangement.SpaceEvenly
+            modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.SpaceEvenly
         ) {
             Row(
                 modifier = modifier.padding(vertical = 12.dp),
@@ -195,8 +193,7 @@ fun ShareDepositBottomSheetContent(
             }
 
             Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -222,7 +219,7 @@ fun ShareDepositBottomSheetContent(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Icon(
-                            painter = painterResource(com.pmb.ballon.R.drawable.ic_copy),
+                            painter = painterResource(com.pmb.ballon.R.drawable.ic_copy_filled),
                             tint = AppTheme.colorScheme.onBackgroundTintNeutralDefault,
                             contentDescription = null
                         )

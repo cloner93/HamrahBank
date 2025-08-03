@@ -29,7 +29,6 @@ class ThemeScreenViewModel @Inject constructor(
             is ThemeScreenViewActions.SelectTheme -> {
                 setState { it.copy(themeMode = action.mode) }
                 saveSelectedTheme(action.mode)
-
             }
         }
     }

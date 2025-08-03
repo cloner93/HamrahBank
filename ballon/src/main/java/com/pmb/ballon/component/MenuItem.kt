@@ -155,7 +155,7 @@ fun MenuItem(
                 }
             }
 
-            Row {
+            Row(verticalAlignment = Alignment.CenterVertically) {
                 endContent?.invoke()
                 endIcon?.let {
                     AppIcon(

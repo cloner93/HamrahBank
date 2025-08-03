@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import com.pmb.account.R
 import com.pmb.account.presentation.account.TransactionLazyList
+import com.pmb.account.presentation.deposits.TransactionLazyList
 import com.pmb.account.presentation.transactions.filterScreen.DateType
 import com.pmb.account.presentation.transactions.filterScreen.viewmodel.entity.TransactionFilter
 import com.pmb.ballon.component.base.ButtonMediumText
