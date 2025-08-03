@@ -8,5 +8,7 @@ data class ProfileViewState(
     val loading: Boolean = false,
     val alertModelState: AlertModelState? = null,
     val userData: UserData? = null,
-    val isUserSignedIn: Boolean = false
+    val isUserSignedIn: Boolean = false,
+    val showSupportBottomSheet: Boolean = false,
+    val showInviteFriendBottomSheet: Boolean = false
 ) : BaseViewState

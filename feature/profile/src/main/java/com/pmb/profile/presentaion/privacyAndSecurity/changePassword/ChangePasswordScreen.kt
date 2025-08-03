@@ -54,7 +54,7 @@ fun ChangePasswordScreen() {
         backgroundColor = AppTheme.colorScheme.background1Neutral,
         topBar = {
             AppTopBar(
-                title = "تغییر رمز عبور",
+                title = "تغییر رمز ورود",
                 onBack = {
                     navigationManager.navigateBack()
                 })
@@ -79,7 +79,7 @@ fun ChangePasswordScreen() {
 
         AppPasswordTextField(
             value = viewState.oldPassword,
-            label = "رمز عبور فعلی",
+            label = "رمز ورود فعلی",
             onValueChange = {
                 viewModel.handle(ChangePasswordViewActions.SetOldPassword(it))
             })
@@ -88,7 +88,7 @@ fun ChangePasswordScreen() {
 
         AppPasswordTextField(
             value = viewState.newPassword,
-            label = "رمز عبور جدید",
+            label = "رمز ورود جدید",
             conditionMessage = true,
             onValidate = {
                 viewModel.handle(ChangePasswordViewActions.SetNewPasswordValid(it.isValid))
@@ -101,7 +101,7 @@ fun ChangePasswordScreen() {
 
         AppPasswordTextField(
             value = viewState.renewPassword,
-            label = "تکرار رمز عبور جدید",
+            label = "تکرار رمز ورود جدید",
             onValueChange = {
                 viewModel.handle(ChangePasswordViewActions.SetRenewPassword(it))
             })

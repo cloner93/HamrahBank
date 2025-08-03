@@ -40,14 +40,14 @@ class UpdateStatusViewModel @Inject constructor(
                         setState {
                             it.copy(
                                 loading = false,
-                                alert = AlertModelState.SnackBar(
-                                    message = result.message,
-                                    onActionPerformed = {
-                                        setState { it.copy(loading = false) }
-                                    },
-                                    onDismissed = {
-                                        setState { it.copy(loading = false) }
-                                    })
+                                alert  = AlertModelState.Dialog(
+                                    title = "خطا",
+                                    description = " ${result.message}",
+                                    positiveButtonTitle = "تایید",
+                                    onPositiveClick = {
+                                        setState { state -> state.copy(alert = null) }
+                                    }
+                                )
                             )
                         }
                     }
@@ -77,14 +77,14 @@ class UpdateStatusViewModel @Inject constructor(
                         setState {
                             it.copy(
                                 loading = false,
-                                alert = AlertModelState.SnackBar(
-                                    message = result.message,
-                                    onActionPerformed = {
-                                        setState { it.copy(loading = false) }
-                                    },
-                                    onDismissed = {
-                                        setState { it.copy(loading = false) }
-                                    })
+                                alert = AlertModelState.Dialog(
+                                    title = "خطا",
+                                    description = " ${result.message}",
+                                    positiveButtonTitle = "تایید",
+                                    onPositiveClick = {
+                                        setState { state -> state.copy(alert = null) }
+                                    }
+                                )
                             )
                         }
                     }

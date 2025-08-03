@@ -33,15 +33,10 @@ import com.pmb.profile.presentaion.themeScreen.viewmodel.ThemeScreenViewModel
 
 @Composable
 fun ThemeScreen(viewModel: ThemeScreenViewModel) {
-    /**
-    TODO checkList ThemeScreen.kt
-     *
-     * - use viewmodel to handle state, event and actions.
-     * - store theme in dataStore.
-     */
-
     val navigationManager = LocalNavigationManager.current
     val viewState by viewModel.viewState.collectAsState()
+
+
 
     AppContent(
         modifier = Modifier
@@ -64,10 +59,11 @@ fun ThemeScreen(viewModel: ThemeScreenViewModel) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 20.dp, horizontal = 16.dp),
+                    .padding(vertical = 8.dp, horizontal = 16.dp),
                 horizontalAlignment = Alignment.Start
             ) {
                 BodyMediumText(
+                    modifier = Modifier.padding(top = 12.dp),
                     text = "نوع تراکنش",
                     color = AppTheme.colorScheme.onBackgroundNeutralSubdued
                 )
@@ -90,8 +86,10 @@ fun ThemeScreen(viewModel: ThemeScreenViewModel) {
                             modifier = Modifier
                                 .padding(vertical = 12.dp, horizontal = 8.dp),
                             title = "روشن",
-                            isChecked = viewState.themeMode == ThemeMode.LIGHT
-                        ) { }
+                            isChecked = viewState.themeMode == ThemeMode.LIGHT,
+                            checkboxClickable = false
+                        ) {
+                        }
                     }
                     Column(modifier = Modifier.clickable {
                         viewModel.handle(ThemeScreenViewActions.SelectTheme(ThemeMode.DARK))
@@ -105,7 +103,8 @@ fun ThemeScreen(viewModel: ThemeScreenViewModel) {
                             modifier = Modifier
                                 .padding(vertical = 12.dp, horizontal = 8.dp),
                             title = "تیره",
-                            isChecked = viewState.themeMode == ThemeMode.DARK
+                            isChecked = viewState.themeMode == ThemeMode.DARK,
+                            checkboxClickable = false
                         ) { }
                     }
                 }
@@ -116,11 +115,16 @@ fun ThemeScreen(viewModel: ThemeScreenViewModel) {
                 )
 
                 RoundedCornerCheckboxComponent(
-                    modifier = Modifier.padding(vertical = 12.dp, horizontal = 8.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            viewModel.handle(ThemeScreenViewActions.SelectTheme(ThemeMode.SYSTEM))
+                        }
+                        .padding(vertical = 12.dp, horizontal = 8.dp),
                     title = "مطابق دستگاه",
-                    isChecked = viewState.themeMode == ThemeMode.SYSTEM
+                    isChecked = viewState.themeMode == ThemeMode.SYSTEM,
+                    checkboxClickable = false
                 ) {
-                    viewModel.handle(ThemeScreenViewActions.SelectTheme(ThemeMode.SYSTEM))
                 }
             }
         }

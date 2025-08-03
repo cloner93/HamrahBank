@@ -42,6 +42,8 @@ import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.moduleScreen.AuthScreens
 import com.pmb.navigation.moduleScreen.ProfileScreens
 import com.pmb.profile.R
+import com.pmb.profile.presentaion.component.ShowInviteFriendBottomSheet
+import com.pmb.profile.presentaion.component.ShowSupportBottomSheet
 import com.pmb.profile.presentaion.profile.viewModel.ProfileViewActions
 import com.pmb.profile.presentaion.profile.viewModel.ProfileViewEvents
 import com.pmb.profile.presentaion.profile.viewModel.ProfileViewModel
@@ -77,7 +79,6 @@ fun ProfileScreen(viewModel: ProfileViewModel) {
         backgroundColor = AppTheme.colorScheme.background3Neutral,
         scrollState = rememberScrollState(),
         topBar = {
-
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -184,13 +185,12 @@ fun ProfileScreen(viewModel: ProfileViewModel) {
                     title = stringResource(R.string.support),
                     startIcon = R.drawable.ic_support,
                     endIcon = com.pmb.ballon.R.drawable.ic_arrow_left,
-
                     bottomDivider = true,
                     startIconStyle = IconStyle(tint = AppTheme.colorScheme.onBackgroundNeutralCTA),
                     endIconStyle = IconStyle(tint = AppTheme.colorScheme.foregroundNeutralRest),
                     clickable = true,
                     onItemClick = {
-
+                        viewModel.handle(ProfileViewActions.ShowSupportBottomSheet(true))
                     })
 
                 MenuItem(
@@ -202,7 +202,7 @@ fun ProfileScreen(viewModel: ProfileViewModel) {
                     endIconStyle = IconStyle(tint = AppTheme.colorScheme.foregroundNeutralRest),
                     clickable = true,
                     onItemClick = {
-
+                        viewModel.handle(ProfileViewActions.ShowInviteFriendBottomSheet(true))
                     })
 
                 MenuItem(
@@ -252,12 +252,20 @@ fun ProfileScreen(viewModel: ProfileViewModel) {
                     })
             }
         }
-
         Spacer(modifier = Modifier.height(24.dp))
     }
     if (viewState.loading) AppLoading()
     viewState.alertModelState?.let { AlertComponent(it) }
+    if (viewState.showSupportBottomSheet)
+        ShowSupportBottomSheet(onDismiss = {
+            viewModel.handle(ProfileViewActions.ShowSupportBottomSheet(false))
+        })
+    if (viewState.showInviteFriendBottomSheet)
+        ShowInviteFriendBottomSheet(onDismiss = {
+            viewModel.handle(ProfileViewActions.ShowInviteFriendBottomSheet(false))
+        })
 }
+
 
 @AppPreview
 @Composable

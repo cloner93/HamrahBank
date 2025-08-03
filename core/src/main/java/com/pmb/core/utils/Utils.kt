@@ -16,6 +16,13 @@ fun Context.openApp(packageName: String, url: String) {
     }
 }
 
+fun Context.actionCall(phoneNumber: String) {
+    val intent = Intent(Intent.ACTION_DIAL).apply {
+        data = "tel:$phoneNumber".toUri()
+    }
+    startActivity(intent)
+}
+
 fun Context.openWebPage(url: String) {
     val intent = Intent(Intent.ACTION_VIEW, url.toUri())
     startActivity(intent)
@@ -61,7 +68,8 @@ fun Context.fetchContactPhoneNumber(contactUri: Uri?): String? {
 
                 phonesCursor?.use { phoneC ->
                     if (phoneC.moveToFirst()) {
-                        val phoneNumberIndex = phoneC.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
+                        val phoneNumberIndex =
+                            phoneC.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
                         val phoneNumber = phoneC.getString(phoneNumberIndex)
 
                         return phoneNumber

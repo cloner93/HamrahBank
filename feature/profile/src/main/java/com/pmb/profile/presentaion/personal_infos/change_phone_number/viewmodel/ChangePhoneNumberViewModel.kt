@@ -46,14 +46,14 @@ class ChangePhoneNumberViewModel @Inject constructor(
                         setState {
                             it.copy(
                                 loading = false,
-                                alertState = AlertModelState.SnackBar(
-                                    message = result.message,
-                                    onActionPerformed = {
-                                        setState { it.copy(loading = false) }
-                                    },
-                                    onDismissed = {
-                                        setState { it.copy(loading = false) }
-                                    })
+                                alertState = AlertModelState.Dialog(
+                                    title = "خطا",
+                                    description = " ${result.message}",
+                                    positiveButtonTitle = "تایید",
+                                    onPositiveClick = {
+                                        setState { state -> state.copy(alertState = null) }
+                                    }
+                                )
                             )
                         }
                     }

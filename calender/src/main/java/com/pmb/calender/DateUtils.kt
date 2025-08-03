@@ -56,6 +56,12 @@ fun Date.formatInReceipt(): String {
     }
 }
 
+fun Date.formatSimple(): String {
+    Jdn(this.toGregorianCalendar().toCivilDate()).toPersianDate().let { persianDate ->
+        return "${persianDate.dayOfMonth} ${persianDate.monthName()} ${persianDate.year}"
+    }
+}
+
 fun Int.monthName(): String =
     persianCalendarMonthsInPersian[this - 1]
 
