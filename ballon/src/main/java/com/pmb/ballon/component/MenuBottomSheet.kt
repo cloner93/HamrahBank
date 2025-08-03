@@ -68,7 +68,7 @@ private fun ItemRow(item: MenuSheetModel, onClick: () -> Unit) {
         modifier = Modifier.height(52.dp),
         title = item.title,
         horizontalDividerPadding = MenuItemDefaults.horizontalDividerPadding.copy(end = 16.dp),
-        startIconStyle = IconStyle(tint = AppTheme.colorScheme.onBackgroundNeutralCTA),
+        startIconStyle = IconStyle(tint = item.iconTint()),
         endIconStyle = IconStyle(tint = AppTheme.colorScheme.foregroundNeutralRest),
         startIcon = item.icon,
         endIcon = if (item.showEndIcon) R.drawable.ic_arrow_left else null,

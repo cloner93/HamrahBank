@@ -2,9 +2,9 @@ package com.pmb.network
 
 import android.content.Context
 import android.os.Build
-import android.provider.Settings
 import android.util.Log
 import com.pmb.core.platform.Result
+import com.pmb.core.utils.getAndroidId
 import com.pmb.model.MobileApiRequest
 import com.pmb.model.RequestMetaData
 import com.pmb.model.SuccessData
@@ -110,7 +110,7 @@ class NetworkManger @Inject constructor(
             // this data is temporary
             metaData = RequestMetaData(
                 initialVec = "",
-                imei = getAndroidId(context),
+                imei = context.getAndroidId(),
                 osType = 7,
                 osVersion = Build.VERSION.RELEASE.toIntOrNull() ?: 1,
                 deviceName = "${Build.MANUFACTURER} ${Build.MODEL}"
@@ -133,8 +133,6 @@ class NetworkManger @Inject constructor(
     }
 }
 
-fun getAndroidId(context: Context): String =
-    Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
 
 
 class SessionCookieStorage : CookiesStorage {

@@ -2,6 +2,8 @@ package com.pmb.data.di
 
 import com.pmb.data.serviceProvider.local.LocalServiceProvider
 import com.pmb.data.serviceProvider.local.LocalServiceProviderImpl
+import com.pmb.data.serviceProvider.local.biometric.BiometricDataStore
+import com.pmb.data.serviceProvider.local.biometric.BiometricDataStoreImpl
 import com.pmb.data.serviceProvider.local.user.UserDataStore
 import com.pmb.data.serviceProvider.local.user.UserDataStoreImpl
 import dagger.Binds
@@ -15,6 +17,9 @@ abstract class LocalServiceProviderModule {
 
     @Binds
     abstract fun bindUserDataStore(userDataStoreImpl: UserDataStoreImpl): UserDataStore
+
+    @Binds
+    abstract fun bindBiometricDataStore(biometricDataStore: BiometricDataStoreImpl): BiometricDataStore
 
     @Binds
     abstract fun bindLocalServiceProvider(localDataProvider: LocalServiceProviderImpl): LocalServiceProvider

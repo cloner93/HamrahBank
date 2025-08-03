@@ -189,38 +189,38 @@ fun TransactionsScreen(
 
             1 -> {
                 SummarizeSection(
+                    "مجموع برداشت ها",
                     viewState.totalSendTransactions,
-                    viewState.sendTransactions,
-                    onTransactionClick = {
-
-                        updateSummarize(it, viewState.selectedDeposit)
-
-                        navigationManager.navigate(AccountScreens.Transactions.DetailedTransactionList)
-                    },
+                    loading = viewState.isLoadingSendTransactions,
+                    viewState.sendTransactions[viewState.currentSendMonth] ?: emptyList(),
                     currentMonth = viewState.currentSendMonth,
-                    selectedMonth = {
+                    {
                         viewModel.handle(TransactionsViewActions.SelectSendMonth(it))
-                    },
-                    "مجموع برداشت ها"
-                )
+                    }
+                ) {
+
+                    updateSummarize(it, viewState.selectedDeposit)
+
+                    navigationManager.navigate(AccountScreens.Transactions.DetailedTransactionList)
+                }
             }
 
             2 -> {
                 SummarizeSection(
+                    "مجموع واریز ها",
                     viewState.totalReceiveTransactions,
-                    viewState.receiveTransactions,
-                    onTransactionClick = {
-
-                        updateSummarize(it, viewState.selectedDeposit)
-
-                        navigationManager.navigate(AccountScreens.Transactions.DetailedTransactionList)
-                    },
+                    loading = viewState.isLoadingReceiveTransactions,
+                    viewState.receiveTransactions[viewState.currentReceiveMonth] ?: emptyList(),
                     currentMonth = viewState.currentReceiveMonth,
-                    selectedMonth = {
+                    {
                         viewModel.handle(TransactionsViewActions.SelectReceiveMonth(it))
-                    },
-                    "مجموع واریز ها"
-                )
+                    }
+                ) {
+
+                    updateSummarize(it, viewState.selectedDeposit)
+
+                    navigationManager.navigate(AccountScreens.Transactions.DetailedTransactionList)
+                }
             }
         }
 

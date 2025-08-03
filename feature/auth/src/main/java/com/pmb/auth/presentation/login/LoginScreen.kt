@@ -1,5 +1,6 @@
 package com.pmb.auth.presentation.login
 
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,10 +15,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.fragment.app.FragmentActivity
 import com.pmb.auth.presentation.login.viewmodel.LoginViewActions
 import com.pmb.auth.presentation.login.viewmodel.LoginViewEvents
 import com.pmb.auth.presentation.login.viewmodel.LoginViewModel
@@ -28,13 +31,13 @@ import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppImage
 import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.component.base.AppTextButton
-import com.pmb.ballon.component.base.BodySmallText
 import com.pmb.ballon.component.base.IconType
 import com.pmb.ballon.component.text_field.AppPasswordTextField
 import com.pmb.ballon.models.ImageStyle
 import com.pmb.ballon.models.Size
 import com.pmb.ballon.models.TextStyle
 import com.pmb.ballon.ui.theme.AppTheme
+import com.pmb.core.BiometricPromptHelper
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.manager.NavigationManager
 import com.pmb.navigation.moduleScreen.AuthScreens
@@ -47,12 +50,34 @@ fun LoginScreen(viewModel: LoginViewModel) {
 
     val viewState by viewModel.viewState.collectAsState()
 
+    val activity = LocalContext.current as? FragmentActivity
+
     // Handle one-time events such as navigation or showing toasts
     LaunchedEffect(Unit) {
         viewModel.viewEvent.collect { event ->
             when (event) {
                 LoginViewEvents.LoginSuccess -> {
                     navigationManager.navigate(HomeScreens.Home)
+                }
+
+                is LoginViewEvents.ShowBiometricPrompt -> {
+                    if (event.biometricState)
+                        activity?.let { it ->
+                            BiometricPromptHelper.showBiometricPrompt(
+                                it,
+                                onSuccess = {
+                                    viewModel.handle(
+                                        LoginViewActions.Login(useFinger = true)
+                                    )
+                                },
+                                onError = {
+                                    Log.d("TAG", "LoginScreen: error $it")
+                                },
+                                onCancel = {
+                                    Log.d("TAG", "LoginScreen: cancel")
+                                }
+                            )
+                        }
                 }
             }
         }
@@ -89,11 +114,7 @@ fun LoginScreen(viewModel: LoginViewModel) {
                 textAlign = TextAlign.Center
             )
         )
-//        Spacer(modifier = Modifier.size(8.dp))
-//        BodySmallText(
-//            text = "${stringResource(com.pmb.auth.R.string.username)}: ${viewState.userData?.username}",
-//            color = AppTheme.colorScheme.onBackgroundPrimarySubdued
-//        )
+
         Spacer(modifier = Modifier.size(32.dp))
         AppPasswordTextField(
             value = password,
@@ -107,15 +128,17 @@ fun LoginScreen(viewModel: LoginViewModel) {
         AppButtonWithIcon(
             modifier = Modifier
                 .fillMaxWidth(),
-            title = if (password.isEmpty()) stringResource(com.pmb.auth.R.string.enter_face_detection) else stringResource(
+            title = if (password.isEmpty() && viewState.biometricState) stringResource(com.pmb.auth.R.string.enter_finger_detection) else stringResource(
                 com.pmb.auth.R.string.login
             ),
-            icon = if (password.isEmpty()) com.pmb.ballon.R.drawable.ic_face_id else null,
+            icon = if (password.isEmpty() && viewState.biometricState) com.pmb.ballon.R.drawable.ic_fingerprint else null,
             enable = true
         ) {
-            if (password.isEmpty())
-                navigationManager.navigate(AuthScreens.ReentryFaceDetection)
-            else viewModel.handle(
+            if (password.isEmpty() && viewState.biometricState) {
+                viewModel.handle(
+                    LoginViewActions.LoginWithFinger
+                )
+            } else viewModel.handle(
                 LoginViewActions.Login(
                     viewState.userData?.customerId ?: "",
                     viewState.userData?.username ?: "",
@@ -133,10 +156,12 @@ fun LoginScreen(viewModel: LoginViewModel) {
                 navigationManager.navigate(AuthScreens.ForgetPassword)
             })
     }
+
     if (viewState.isLoading) {
         AppLoading()
     }
-    if (viewState.alert != null) {
+
+    viewState.alert?.let {
         AlertComponent(viewState.alert!!)
     }
 }

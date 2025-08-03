@@ -45,6 +45,9 @@ dependencies {
     api(libs.material)
     api(libs.navigation.compose)
     api(libs.androidx.exifinterface)
+
+    implementation(libs.androidx.biometric)
+
     // DI > Hilt
     api(libs.android.hilt)
     kapt(libs.android.hilt.compiler)

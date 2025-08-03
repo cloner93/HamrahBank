@@ -78,12 +78,21 @@ fun generateShiftedMonthList(
 ): List<Pair<PersianDate, PersianDate>> {
     val list = mutableListOf<Pair<PersianDate, PersianDate>>()
 
-    for (i in 10 downTo -1) {
-        val startDate = currentDate.monthStartOfMonthsDistance(-i)  // 1404 04 01
-        val endDate = lastDayOfMonth(startDate)                                     // 1404 04 31
+    for (i in 10 downTo 1) {
+        val startDate = currentDate.monthStartOfMonthsDistance(-i)  // xxxx xx 01
+        val endDate = lastDayOfMonth(startDate)                                     // xxxx xx 31
 
         list.add(startDate to endDate)
     }
+
+    // current month from xxxx.xx.01 to xxxx.xx.today
+    list.add(currentMonthPair())
+
+    // next month
+    val startDate = currentDate.monthStartOfMonthsDistance(1)  // xxxx xx 01
+    val endDate = lastDayOfMonth(startDate)                                     // xxxx xx 31
+    list.add(startDate to endDate)
+
     return list
 }
 

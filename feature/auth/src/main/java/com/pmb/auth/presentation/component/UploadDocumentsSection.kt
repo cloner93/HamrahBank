@@ -100,7 +100,7 @@ fun AddDocumentItem(onClick: () -> Unit) {
         Icon(
             imageVector = Icons.Default.Add,
             contentDescription = "Add Document",
-            tint = AppTheme.colorScheme.strokeNeutral1Default,
+            tint = AppTheme.colorScheme.onBackgroundNeutralDefault,
             modifier = Modifier.size(36.dp)
         )
     }

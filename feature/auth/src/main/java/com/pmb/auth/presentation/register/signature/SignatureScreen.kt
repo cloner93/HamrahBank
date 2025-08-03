@@ -220,7 +220,8 @@ fun SignatureScreen(
                         1.dp,
                         AppTheme.colorScheme.strokeNeutral3Rest,
                         RoundedCornerShape(16.dp)
-                    ), fileUrl = viewState.savedFileUri
+                    ), fileUrl = viewState.savedFileUri,
+                newScaleX = 1f
             ) {
                 viewModel.handle(PhotoViewActions.ClearPhoto)
             }

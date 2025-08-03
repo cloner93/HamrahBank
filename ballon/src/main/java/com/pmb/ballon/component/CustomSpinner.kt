@@ -103,7 +103,7 @@ fun CustomSearchSpinner(
         expanded = expanded, onExpandedChange = {
             if (isEnabled) expanded = it
         }) {
-        AppBaseTextField(value = displayText, onValueChange = {
+        AppBaseTextField(singleLine = true, value = displayText, onValueChange = {
             searchQuery = it
             onSearchValue(it)
             expanded = true

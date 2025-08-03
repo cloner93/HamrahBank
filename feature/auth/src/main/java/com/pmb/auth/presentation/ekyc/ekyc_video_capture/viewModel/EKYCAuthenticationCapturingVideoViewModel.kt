@@ -324,41 +324,41 @@ class EKYCAuthenticationCapturingVideoViewModel @Inject constructor(
                         isMinBitrateCheckEnabled = false,
                         keepOriginalResolution = true,
                     ),
-                    listener = object : CompressionListener {
-                        override fun onProgress(percent: Float) {
-                        }
-
-                        override fun onStart() {
-                            setState { state ->
-                                state.copy(
-                                    isLoading = true,
-                                    isCompressing = true
-                                )
-                            }
-
-                        }
-
-                        override fun onSuccess(size: Long, path: String?) {
-                            setState { state ->
-                                state.copy(
-                                    isLoading = false,
-                                    isCapturingVideo = false,
-                                    videoCaptured = true,
-                                    isCompressing = false,
-                                    savedFileUri = path,
-                                    cameraHasError = null
-                                )
-                            }
-                        }
-
-                        override fun onFailure(failureMessage: String) {
-                            Log.wtf("failureMessage", failureMessage)
-                        }
-
-                        override fun onCancelled() {
-                            Log.wtf("TAG", "compression has been cancelled")
-                        }
-                    },
+//                    listener = object : CompressionListener {
+//                        override fun onProgress(percent: Float) {
+//                        }
+//
+//                        override fun onStart() {
+//                            setState { state ->
+//                                state.copy(
+//                                    isLoading = true,
+//                                    isCompressing = true
+//                                )
+//                            }
+//
+//                        }
+//
+//                        override fun onSuccess(size: Long, path: String?) {
+//                            setState { state ->
+//                                state.copy(
+//                                    isLoading = false,
+//                                    isCapturingVideo = false,
+//                                    videoCaptured = true,
+//                                    isCompressing = false,
+//                                    savedFileUri = path,
+//                                    cameraHasError = null
+//                                )
+//                            }
+//                        }
+//
+//                        override fun onFailure(failureMessage: String) {
+//                            Log.wtf("failureMessage", failureMessage)
+//                        }
+//
+//                        override fun onCancelled() {
+//                            Log.wtf("TAG", "compression has been cancelled")
+//                        }
+//                    },
                 )
             }
         }, onError = { error ->

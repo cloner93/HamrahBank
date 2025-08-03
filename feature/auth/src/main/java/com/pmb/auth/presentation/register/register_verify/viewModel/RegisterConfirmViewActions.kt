@@ -14,8 +14,8 @@ sealed interface RegisterConfirmViewActions : BaseViewAction{
 
     data class ResendVerifyInfo(
         val mobileNumber: String,
-        val userName: String,
-        val password: String
+        val nationalCode: String,
+        val birthDate: String
     ) : RegisterConfirmViewActions
 
 }

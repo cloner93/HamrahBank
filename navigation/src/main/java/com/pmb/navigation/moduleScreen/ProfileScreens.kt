@@ -25,8 +25,9 @@ sealed class ProfileScreens(route: String, arguments: Map<String, String> = empt
 
         data object PrivacySecurityScreen : PrivacyAndSecurity(route = "profile_privacy_security")
         data object ChangePasswordScreen : PrivacyAndSecurity(route = "profile_change_password")
-        data object UserAuthenticationScreen :
-            PrivacyAndSecurity(route = "profile_user_authentication")
+        data object EnableFingerprintScreen :
+            PrivacyAndSecurity(route = "enable_fingerprint_screen")
+
     }
 
     sealed class Update(route: String) : ProfileScreens(route) {

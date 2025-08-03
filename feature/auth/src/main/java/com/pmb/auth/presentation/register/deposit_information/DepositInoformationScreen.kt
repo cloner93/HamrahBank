@@ -33,7 +33,6 @@ import com.pmb.auth.presentation.register.deposit_information.viewModel.DepositI
 import com.pmb.auth.presentation.register.deposit_information.viewModel.DepositInformationViewModel
 import com.pmb.auth.presentation.register.deposit_information.viewModel.DepositInformationViewState
 import com.pmb.ballon.component.AlertComponent
-import com.pmb.ballon.component.CustomSearchSpinner
 import com.pmb.ballon.component.CustomSpinner
 import com.pmb.ballon.component.RoundedCornerCheckboxComponent
 import com.pmb.ballon.component.base.AppButton
@@ -45,8 +44,10 @@ import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.component.base.ClickableIcon
 import com.pmb.ballon.component.base.IconType
 import com.pmb.ballon.ui.theme.AppTheme
-import com.pmb.core.utils.CollectAsEffect
+import com.pmb.core.utils.CollectOnce
+import com.pmb.domain.model.openAccount.accountType.Province
 import com.pmb.domain.model.openAccount.branchName.Branch
+import com.pmb.domain.model.openAccount.cityName.City
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.manager.NavigationManager
 import com.pmb.navigation.moduleScreen.RegisterScreens
@@ -55,12 +56,18 @@ import com.pmb.navigation.moduleScreen.RegisterScreens
 fun DepositInformationScreen(
     viewModel: DepositInformationViewModel,
     sharedViewState: RegisterSharedViewState,
+    setProvince: (List<Province>?) -> Unit,
+    setCity: (List<City>?) -> Unit,
     updateSharedState: (DepositInformationViewState) -> Unit
 ) {
     val navigationManager: NavigationManager = LocalNavigationManager.current
     val viewState by viewModel.viewState.collectAsState()
-    var city by remember { mutableStateOf("") }
-    var province by remember { mutableStateOf("") }
+    var city by remember { mutableStateOf(sharedViewState.cityOfDeposit?.cityName ?: "") }
+    var province by remember {
+        mutableStateOf(
+            sharedViewState.provinceOfDeposit?.provinceName ?: ""
+        )
+    }
     LaunchedEffect(Unit) {
         if (viewState.fetchAccountTypeResponse == null)
             viewModel.handle(
@@ -90,13 +97,28 @@ fun DepositInformationScreen(
     navigationManager.getCurrentScreenFlowData<Branch?>(
         "openingBranch",
         null
-    )?.CollectAsEffect {
+    )?.CollectOnce {
         it.takeIf {
             it != null
         }?.also {
             viewModel.handle(DepositInformationViewActions.SetOpeningBranch(it))
         }
     }
+    LaunchedEffect(sharedViewState.cityOfDeposit) {
+        if (sharedViewState.cityOfDeposit != null) {
+            city = sharedViewState.cityOfDeposit?.cityName ?: ""
+            viewModel.handle(DepositInformationViewActions.SetCity(sharedViewState.cityOfDeposit!!))
+        }
+    }
+    LaunchedEffect(sharedViewState.provinceOfDeposit) {
+        if (sharedViewState.provinceOfDeposit != null) {
+            province = sharedViewState.provinceOfDeposit?.provinceName ?: ""
+            viewModel.handle(DepositInformationViewActions.SetProvince(sharedViewState.provinceOfDeposit!!))
+        }
+    }
+
+
+
     if (!showBottomSheet) {
         AppContent(
             modifier = Modifier.padding(horizontal = 16.dp),
@@ -140,7 +162,7 @@ fun DepositInformationScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(start = 16.dp, end = 16.dp, top = 16.dp),
-                    enable = !viewState.isLoading && viewState.accType != null && viewState.province != null && viewState.isChecked,
+                    enable = !viewState.isLoading && viewState.accType != null && viewState.province != null && viewState.isChecked && viewState.city != null && viewState.branch != null,
                     title = stringResource(R.string._continue),
                     onClick = {
                         updateSharedState(viewState)
@@ -164,42 +186,42 @@ fun DepositInformationScreen(
                 }
             }
             Spacer(modifier = Modifier.size(12.dp))
-            CustomSearchSpinner(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                options = viewState.fetchAccountTypeResponse?.provinceList?.map { it.provinceName },
-                labelString = "استان شعبه مورد نظر",
-                displayText = province.takeIf { it.isNotEmpty() }
-                    ?: run { viewState.province?.provinceName ?: "" },
-                isEnabled = viewState.fetchAccountTypeResponse?.provinceList?.isNotEmpty() == true,
-                onSearchValue = {
-                    province = it
-                }
-            ) { type ->
-                val province =
-                    viewState.fetchAccountTypeResponse?.provinceList?.find { it.provinceName == type }
-                province?.let {
-                    viewModel.handle(DepositInformationViewActions.SetProvince(it))
-                }
-            }
+            AppClickableReadOnlyTextField(
+                onClick = {
+                    city = ""
+                    viewModel.handle(DepositInformationViewActions.SetOpeningBranch(null))
+                    viewModel.handle(DepositInformationViewActions.SetCity(null))
+                    setProvince(viewState.fetchAccountTypeResponse?.provinceList)
+                    navigationManager.navigate(RegisterScreens.SelectProvincePlace)
+                },
+                value = province,
+                label = "استان شعبه مورد نظر",
+                trailingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.KeyboardArrowDown,
+                        contentDescription = "down Icon",
+                        tint = AppTheme.colorScheme.onBackgroundNeutralDefault
+                    )
+                },
+            )
             Spacer(modifier = Modifier.size(12.dp))
-            CustomSearchSpinner(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                options = viewState.cityList?.map { it.cityName },
-                labelString = "شهر شعبه مورد نظر",
-                displayText = city.takeIf { it.isNotEmpty() }
-                    ?: run { viewState.city?.cityName ?: "" },
-                isEnabled = viewState.cityList?.isNotEmpty() == true,
-                onSearchValue = {
-                    city = it
-                }
-            ) { type ->
-                val city = viewState.cityList?.find { it.cityName == type }
-                city?.let {
-                    viewModel.handle(DepositInformationViewActions.SetCity(it))
-                }
-            }
+
+            AppClickableReadOnlyTextField(
+                onClick = {
+                    viewModel.handle(DepositInformationViewActions.SetOpeningBranch(null))
+                    setCity(viewState.cityList)
+                    navigationManager.navigate(RegisterScreens.SelectCityPlace)
+                },
+                value = city,
+                label = "شهر شعبه مورد نظر",
+                trailingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.KeyboardArrowDown,
+                        contentDescription = "down Icon",
+                        tint = AppTheme.colorScheme.onBackgroundNeutralDefault
+                    )
+                },
+            )
             Spacer(modifier = Modifier.size(12.dp))
 
             AppClickableReadOnlyTextField(
@@ -259,7 +281,7 @@ fun DepositInformationScreen(
                 title = stringResource(R.string.accept),
                 onClick = {
                     showBottomSheet = false
-                    viewModel.handle(DepositInformationViewActions.SelectRules)
+                    viewModel.handle(DepositInformationViewActions.AcceptRules)
                 })
         }
 

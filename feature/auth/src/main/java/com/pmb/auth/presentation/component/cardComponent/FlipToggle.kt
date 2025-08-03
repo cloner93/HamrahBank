@@ -24,24 +24,22 @@ import com.pmb.ballon.ui.theme.HamrahBankTheme
 
 @Composable
 fun FlipToggle(
-    isBackSide: Boolean,
-    onClick: () -> Unit
 ) {
     Row(
         modifier = Modifier
-            .clickable { onClick() }
+//            .clickable { onClick() }
             .padding(horizontal = 12.dp, vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(
-            painter = painterResource(R.drawable.ric_swipe_phone),
-            contentDescription = null,
-            tint = AppTheme.colorScheme.onBackgroundNeutralDefault
-        )
-        Spacer(modifier = Modifier.width(4.dp))
+//        Icon(
+//            painter = painterResource(R.drawable.ric_swipe_phone),
+//            contentDescription = null,
+//            tint = AppTheme.colorScheme.onBackgroundNeutralDefault
+//        )
+//        Spacer(modifier = Modifier.width(4.dp))
         Text(
             style = AppTheme.typography.headline6,
-            text = if (isBackSide) stringResource(R.string.back_side_of_card) else stringResource(R.string.front_of_card),
+            text = stringResource(R.string.tap_on_card) ,
             color = AppTheme.colorScheme.onBackgroundNeutralDefault
         )
     }
@@ -53,8 +51,6 @@ fun FlipTogglePreview() {
     var selected by remember { mutableStateOf(false) }
 
     HamrahBankTheme {
-        FlipToggle(selected) {
-            selected = !selected
-        }
+        FlipToggle()
     }
 }

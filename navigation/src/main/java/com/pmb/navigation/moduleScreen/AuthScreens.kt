@@ -14,6 +14,7 @@ sealed class AuthScreens(route: String, arguments: Map<String, String> = emptyMa
     }
 
     data object Login : AuthScreens(route = "login")
+    data object EnableFingerprint : AuthScreens(route = "enable_fingerprint")
 
     data object ForgetPassword : AuthScreens(route = "forget_password")
     data object ForgetPasswordAuth : AuthScreens(route = "forget_password_auth")
@@ -86,4 +87,8 @@ sealed class RegisterScreens(route: String, arguments: Map<String, String> = emp
         fun createRoute(componentName: String, listId: String) =
             "select_city/$componentName/$listId"
     }
+    data object SelectBirthDatePlace : RegisterScreens(route = "select_birth_date_place")
+    data object SelectIssuePlace : RegisterScreens(route = "select_issue_place")
+    data object SelectCityPlace : RegisterScreens(route = "select_city_place")
+    data object SelectProvincePlace : RegisterScreens(route = "select_province_place")
 }

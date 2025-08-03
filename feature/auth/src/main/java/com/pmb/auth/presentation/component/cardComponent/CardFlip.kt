@@ -4,6 +4,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,11 +25,13 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import kotlin.Unit
 
 @Composable
 fun CardFlip(
     front: @Composable () -> Unit,
     back: @Composable () -> Unit,
+    onClick: () -> Unit,
     isBack: Boolean
 ) {
     val rotation by animateFloatAsState(
@@ -46,6 +49,9 @@ fun CardFlip(
             .graphicsLayer {
                 rotationY = rotation
                 this.cameraDistance = cameraDistancePx
+            }
+            .clickable {
+                    onClick.invoke()
             }
 
     ) {

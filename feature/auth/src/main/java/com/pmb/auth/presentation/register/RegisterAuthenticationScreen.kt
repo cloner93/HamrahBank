@@ -88,7 +88,7 @@ fun RegisterAuthenticationScreen() {
                 withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
                     append(" ماسک و عینک ")
                 }
-                append("بر روی صورت نداشته باشید.")
+                append("بر روی صورت خود نداشته باشید.")
             },
             color = AppTheme.colorScheme.onBackgroundPrimarySubdued,
         )

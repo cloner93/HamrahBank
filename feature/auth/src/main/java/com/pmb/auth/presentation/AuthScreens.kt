@@ -1,11 +1,9 @@
 package com.pmb.auth.presentation
 
-import androidx.compose.ui.graphics.BlendMode
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.navigation
 import androidx.navigation.navigation
 import com.pmb.auth.AuthSharedViewModel
 import com.pmb.auth.presentation.activation.activationScreenHandler
@@ -15,6 +13,8 @@ import com.pmb.auth.presentation.ekyc.authentication_confirm.viewModel.Authentic
 import com.pmb.auth.presentation.ekyc.ekycScreenHandler
 import com.pmb.auth.presentation.ekyc.open_account.OpenAccountScreen
 import com.pmb.auth.presentation.ekyc.open_account.viewModel.OpenAccountViewModel
+import com.pmb.auth.presentation.fingerprint.EnableFingerprintScreen
+import com.pmb.auth.presentation.fingerprint.viewmodel.EnableFingerprintViewModel
 import com.pmb.auth.presentation.first_login.FirstLoginScreen
 import com.pmb.auth.presentation.first_login.viewModel.FirstLoginViewModel
 import com.pmb.auth.presentation.first_login_confirm.FirstLoginConfirmScreen
@@ -35,7 +35,6 @@ import com.pmb.auth.presentation.scan_card_info.cardScreenHandler
 import com.pmb.navigation.manager.navigationManager
 import com.pmb.navigation.moduleScreen.AuthScreens
 import com.pmb.navigation.moduleScreen.SharedAuthAndActivationScopeGraph
-import com.pmb.navigation.screen.Screen
 
 
 fun NavGraphBuilder.authScreensHandle(
@@ -92,6 +91,11 @@ fun NavGraphBuilder.authScreensHandle(
         composable(route = AuthScreens.Login.route) {
             LoginScreen(
                 viewModel = hiltViewModel<LoginViewModel>()
+            )
+        }
+        composable(route = AuthScreens.EnableFingerprint.route) {
+            EnableFingerprintScreen(
+                viewModel = hiltViewModel<EnableFingerprintViewModel>()
             )
         }
 

@@ -9,7 +9,7 @@ data class MenuSheetModel(
     val title: String,
     @DrawableRes val icon: Int,
     val textColor: @Composable () -> Color = { AppTheme.colorScheme.foregroundNeutralDefault },
-    val iconTint: @Composable () -> Color = { AppTheme.colorScheme.iconColor },
+    val iconTint: @Composable () -> Color = { AppTheme.colorScheme.onBackgroundNeutralCTA },
     val showEndIcon: Boolean = true,
     val onClicked: () -> Unit
 )

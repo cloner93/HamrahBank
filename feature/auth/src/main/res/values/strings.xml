@@ -35,6 +35,7 @@
     <string name="activation">فعالسازی</string>
     <string name="msg_first_login_confirm_header">کد ورود به شماره تلفن همراه شما ارسال شد. لطفا آن را وارد نمایید.</string>
     <string name="otp">کد ورود</string>
+    <string name="confirm_code">کد ورود</string>
     <string name="re_send">ارسال مجدد</string>
     <string name="resend_request"> امکان درخواست مجدد تا %s:%s</string>
     <string name="msg_could_not_login">ورود امکان پذیر نیست!</string>
@@ -60,7 +61,7 @@
     <string name="address">آدرس</string>
     <string name="take_your_face_photo_continue">در صورتی که تصویر، مورد تاییدتان است، دکمه ادامه را فشار بدهید.</string>
     <string name="take_your_video_continue">در صورتی که ویدئو مورد تاییدتان است، دکمه ادامه را فشار بدهید در غیر این صورت دکمه ضبط مجدد را فشار دهید.</string>
-    <string name="start_authentication_description">در این مرحله، باید یک تصویر و ویدئو از چهره خود بگیرید. لطفا پیش از شروع این فرآیند، به نکات زیر توجه فرمایید :</string>
+    <string name="start_authentication_description">در این مرحله، باید یک تصویر و ویدئو از چهره خود بگیرید. لطفا پیش از شروع این فرآیند، به نکات زیر توجه کنید :</string>
     <string name="services_total">مجموع کارمزدها : %s ریال</string>
     <string name="tax_amount"> %s ریال کارمزد</string>
     <string name="interception_number">  شماره پیگیری : %s</string>
@@ -89,6 +90,7 @@
     <string name="opening_branches_list">لیست شعب بانک ملت</string>
     <string name="search_job_description">جستجو در مشاغل</string>
     <string name="enter_face_detection">ورود با اسکن چهره</string>
+    <string name="enter_finger_detection">ورود با اثر انگشت</string>
     <string name="face_detection_description">لطغا دوربین رو مقابل صورت خود قرار دهید.</string>
     <string name="scan_card_description">لطفا روی کارت بانکی خود را اسکن کنید.</string>
     <string name="authentication_type_password_description"> جهت تعریف رمز ورود جدید، یکی از روش های زیر را انتخاب نمایید:</string>

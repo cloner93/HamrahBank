@@ -23,7 +23,7 @@ import com.pmb.ballon.component.base.AppImage
 
 @Composable
 fun PreviewRoundedImageComponent(
-    modifier: Modifier = Modifier, fileUrl: String?, onClickListener: () -> Unit
+    modifier: Modifier = Modifier, fileUrl: String?, newScaleX: Float= -1f, onClickListener: () -> Unit
 ) {
     Box(
         modifier = modifier
@@ -31,7 +31,7 @@ fun PreviewRoundedImageComponent(
         AsyncImage(
             modifier = Modifier
                 .fillMaxSize()
-                .graphicsLayer { scaleX = -1f },
+                .graphicsLayer { scaleX = newScaleX },
             model = ImageRequest.Builder(LocalContext.current).data(fileUrl).crossfade(true)
                 .build(),
             contentDescription = "SignatureImage",
