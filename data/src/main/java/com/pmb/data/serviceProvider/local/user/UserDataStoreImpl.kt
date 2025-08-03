@@ -4,9 +4,13 @@ import android.content.Context
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.pmb.domain.model.DepositModel
 import com.pmb.domain.model.UserData
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.first
+import kotlinx.serialization.json.Json
+import java.net.URLDecoder
+import java.net.URLEncoder
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -22,6 +26,7 @@ class UserDataStoreImpl @Inject constructor(
     private val firstNameKey = stringPreferencesKey("firstName")
     private val lastNameKey = stringPreferencesKey("lastName")
     private val phoneNumberKey = stringPreferencesKey("phoneNumber")
+    private val mainDepositKey = stringPreferencesKey("mainDepositKey")
 
     override suspend fun setUserData(userData: UserData) {
         context.dataStore.edit { preferences ->
@@ -67,5 +72,37 @@ class UserDataStoreImpl @Inject constructor(
         } catch (e: Exception) {
             false
         }
+    }
+
+    override suspend fun setDepositAsMainDeposit(deposit: DepositModel): Boolean {
+        return try{
+            context.dataStore.edit { prefs ->
+                val json = Json { ignoreUnknownKeys = true }
+                val mainDepositString = json.encodeToString(deposit)
+                val e = URLEncoder.encode(mainDepositString, "UTF-8")
+                prefs[mainDepositKey] = e
+            }
+            true
+        }catch (e:Exception){
+            false
+        }
+    }
+
+    override suspend fun getMainDeposit(): DepositModel? {
+         try {
+            val preferences = context.dataStore.data.first()
+            val mainDepositString = preferences[mainDepositKey]
+            mainDepositString?.let {
+                val json = Json { ignoreUnknownKeys = true }
+                val jsonString = URLDecoder.decode(mainDepositString, "UTF-8")
+                val deposit = json.decodeFromString<DepositModel>(jsonString)
+                return deposit
+            }?.run {
+                return null
+            }
+        } catch (e: Exception) {
+            return null
+        }
+        return null
     }
 }

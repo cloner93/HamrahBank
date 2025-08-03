@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.pmb.account.R
 import com.pmb.account.presentation.cards.CardsScreen
+import com.pmb.account.presentation.deposits.DepositsScreen
 import com.pmb.account.presentation.deposits.viewmodel.DepositsViewModel
 import com.pmb.ballon.component.DynamicTabSelector
 

@@ -1,4 +1,4 @@
-package com.pmb.account.presentation.account
+package com.pmb.account.presentation.deposits
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -25,7 +25,6 @@ import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.rememberBackdropScaffoldState
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -71,15 +70,13 @@ import com.pmb.domain.model.TransactionModel
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.moduleScreen.AccountScreens
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DepositsScreen(
     viewModel: DepositsViewModel
 ) {
     val viewState by viewModel.viewState.collectAsState()
     val navigationManager = LocalNavigationManager.current
-    val backdropState: BackdropScaffoldState =
-        rememberBackdropScaffoldState(BackdropValue.Revealed)
+    val backdropState: BackdropScaffoldState = rememberBackdropScaffoldState(BackdropValue.Revealed)
 
     LocalContext.current
 
@@ -96,8 +93,7 @@ fun DepositsScreen(
                 is DepositsViewEvents.NavigateToTransactionDetails -> {
                     navigationManager.navigateWithString(
                         AccountScreens.TransactionReceipt.createRoute(
-                            viewState.selectedDeposit?.depositNumber ?: "",
-                            event.transaction
+                            viewState.selectedDeposit?.depositNumber ?: "", event.transaction
                         )
                     )
                 }
@@ -204,8 +200,7 @@ fun DepositsScreen(
         },
         backLayerBackgroundColor = Color(0xFFC11332),
         frontLayerShape = MaterialTheme.shapes.large.copy(
-            topStart = CornerSize(20.dp),
-            topEnd = CornerSize(20.dp)
+            topStart = CornerSize(20.dp), topEnd = CornerSize(20.dp)
         ),
         frontLayerScrimColor = Color.Unspecified,
         frontLayerContent = {
@@ -268,82 +263,77 @@ fun DepositsScreen(
                 }
             }
         },
-        appBar = {
-        },
+        appBar = {},
         peekHeight = 92.dp,
     )
 
-    if (viewState.showShareDepositInfoBottomSheet)
-        ShareDepositBottomSheet(
-            content = {
-                ShareDepositBottomSheetContent(
-                    info = viewState.selectedDeposit!!,
-                    onCopyAllClick = {
-                        viewModel.handle(DepositsViewActions.CloseShareBottomSheet(it)) // TODO: clipboard
-                    },
-                    onShareClick = {
-                        viewModel.handle(DepositsViewActions.CloseShareBottomSheet(it)) // TODO: share menu
-                    }
-                )
-            },
-            onDismiss = {
-                viewModel.handle(DepositsViewActions.CloseShareBottomSheet(null))
-            }
-        )
+    if (viewState.showShareDepositInfoBottomSheet) ShareDepositBottomSheet(content = {
+        ShareDepositBottomSheetContent(info = viewState.selectedDeposit!!, onCopyAllClick = {
+            viewModel.handle(DepositsViewActions.CloseShareBottomSheet(it)) // TODO: clipboard
+        }, onShareClick = {
+            viewModel.handle(DepositsViewActions.CloseShareBottomSheet(it)) // TODO: share menu
+        })
+    }, onDismiss = {
+        viewModel.handle(DepositsViewActions.CloseShareBottomSheet(null))
+    })
 
-    if (viewState.showMoreBottomSheet)
+    if (viewState.showMoreBottomSheet) {
+        val isSelectedAccountSameAsDefault =
+            viewState.defaultDepositAccount != null && viewState.defaultDepositAccount?.depositNumber == viewState.selectedDeposit?.depositNumber
         MenuBottomSheet(
-            title = viewState.selectedDeposit?.title,
+            title = viewState.selectedDeposit?.depositNumber,
             items = listOf(
                 MenuSheetModel(
                     title = stringResource(R.string.select_for_main_deposit),
                     icon = com.pmb.ballon.R.drawable.ic_pin,
+                    showEndIcon = isSelectedAccountSameAsDefault,
+                    iconTint = {
+                        if (!isSelectedAccountSameAsDefault) {
+                            AppTheme.colorScheme.onBackgroundNeutralSubdued
+                        } else {
+                            AppTheme.colorScheme.onBackgroundNeutralCTA
+                        }
+                    },
                     onClicked = {
-
-                    }
-                ), MenuSheetModel(
+                        viewModel.handle(DepositsViewActions.SetDepositAsMain(viewState.selectedDeposit))
+                    }),
+                MenuSheetModel(
                     title = stringResource(R.string.cards_connected_to_the_deposit),
                     icon = com.pmb.ballon.R.drawable.ic_credit_cards,
                     onClicked = {
 
-                    }
-                ), MenuSheetModel(
+                    }),
+                MenuSheetModel(
                     title = stringResource(R.string.request_to_issue_a_card_for_deposit),
                     icon = com.pmb.ballon.R.drawable.ic_credit_card,
                     onClicked = {
 
-                    }
-                ), MenuSheetModel(
+                    }),
+                MenuSheetModel(
                     title = stringResource(R.string.edit_deposit_title),
                     icon = com.pmb.ballon.R.drawable.ic_edit,
                     onClicked = {
 
-                    }
-                ), MenuSheetModel(
+                    }),
+                MenuSheetModel(
                     title = stringResource(R.string.deposit_details),
                     icon = com.pmb.ballon.R.drawable.ic_deposit_details,
                     onClicked = {
                         viewModel.handle(DepositsViewActions.OpenDepositDetailsScreen)
-                    }
-                )
+                    })
             ),
-            onDismiss = { viewModel.handle(DepositsViewActions.CloseDepositMoreActionBottomSheet) }
-        )
-
-    if (viewState.showDepositListBottomSheet)
-        DepositBottomSheet(
-            title = "سپرده ها",
-            items = viewState.deposits.mapToDepositMenu(),
-            onDismiss = {
-                viewModel.handle(DepositsViewActions.CloseDepositListBottomSheet(null))
-            }
-        ) {
-            viewModel.handle(
-                DepositsViewActions.CloseDepositListBottomSheet(
-                    it.mapToDepositModel()
-                )
+            onDismiss = { viewModel.handle(DepositsViewActions.CloseDepositMoreActionBottomSheet) })
+    }
+    if (viewState.showDepositListBottomSheet) DepositBottomSheet(
+        title = "سپرده ها", items = viewState.deposits.mapToDepositMenu(), onDismiss = {
+            viewModel.handle(DepositsViewActions.CloseDepositListBottomSheet(null))
+        }) {
+        viewModel.handle(
+            DepositsViewActions.CloseDepositListBottomSheet(
+                it.mapToDepositModel()
             )
-        }
+        )
+    }
 }
 
 @Composable
@@ -357,8 +347,7 @@ fun TransactionLazyList(
     when {
         loadState.refresh is LoadState.Loading -> {
             Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
+                modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
             ) {
                 CircularProgressIndicator()
             }
@@ -367,8 +356,7 @@ fun TransactionLazyList(
         loadState.refresh is LoadState.Error -> {
             val error = loadState.refresh as LoadState.Error
             Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
+                modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     EmptyList(
@@ -402,8 +390,7 @@ fun TransactionLazyList(
                         TransactionRow(
                             item = item,
                             isAmountVisible = amountVisible,
-                            onClick = { onItemClick(item) }
-                        )
+                            onClick = { onItemClick(item) })
                     }
                 }
 

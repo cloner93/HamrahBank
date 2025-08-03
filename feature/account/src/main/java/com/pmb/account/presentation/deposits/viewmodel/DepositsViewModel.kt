@@ -10,7 +10,9 @@ import com.pmb.core.platform.Result
 import com.pmb.domain.model.DepositModel
 import com.pmb.domain.model.TransactionModel
 import com.pmb.domain.model.TransactionRequest
+import com.pmb.domain.usecae.deposit.GetDefaultDepositUseCase
 import com.pmb.domain.usecae.deposit.GetUserDepositListUseCase
+import com.pmb.domain.usecae.deposit.SetDefaultDepositUseCase
 import com.pmb.domain.usecae.transactions.TransactionsByCountPagingUsaCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,12 +30,13 @@ open class DepositsViewModel @Inject constructor(
     initialState: DepositsViewState,
     private val getDepositsUseCase: GetUserDepositListUseCase,
     private val getTransactionsPaging: TransactionsByCountPagingUsaCase,
-
-    ) : BaseViewModel<DepositsViewActions, DepositsViewState, DepositsViewEvents>(initialState) {
+    private val getDefaultDepositUseCase: GetDefaultDepositUseCase,
+    private val setDefaultDepositUseCase: SetDefaultDepositUseCase
+) : BaseViewModel<DepositsViewActions, DepositsViewState, DepositsViewEvents>(initialState) {
 
     // we cont handle paging flow inside of ViewState.
-    private val _transactionFlow = MutableStateFlow<
-            PagingData<TransactionModel>>(PagingData.empty())
+    private val _transactionFlow =
+        MutableStateFlow<PagingData<TransactionModel>>(PagingData.empty())
     val transactionFlow: StateFlow<PagingData<TransactionModel>> = _transactionFlow
 
     init {
@@ -74,6 +77,7 @@ open class DepositsViewModel @Inject constructor(
 
             is DepositsViewActions.ShowDepositMoreActionBottomSheet -> {
                 setState { it.copy(showMoreBottomSheet = true) }
+
             }
 
             is DepositsViewActions.SetAmountVisibility -> {
@@ -81,7 +85,7 @@ open class DepositsViewModel @Inject constructor(
             }
 
             is DepositsViewActions.ShowDepositListBottomSheet -> {
-                setState { it.copy(showDepositListBottomSheet = true) }
+                getDefaultDeposit()
             }
 
             is DepositsViewActions.CloseDepositListBottomSheet -> {
@@ -107,20 +111,26 @@ open class DepositsViewModel @Inject constructor(
                     postEvent(DepositsViewEvents.NavigateToDetailsScreen(e))
                 }
             }
+
+            is DepositsViewActions.SetDepositAsMain -> {
+                action.model?.let {
+                    viewModelScope.launch {
+                        setDefaultDepositUseCase.invoke(action.model).collect{}
+                    }
+                }
+            }
         }
     }
 
     private fun loadDeposits() {
         viewModelScope.launch {
 
-            getDepositsUseCase.invoke(Unit)
-                .collect { result ->
+            getDepositsUseCase.invoke(Unit).collect { result ->
                     when (result) {
                         is Result.Error -> {
                             setState {
                                 it.copy(
-                                    errorMessage = result.message,
-                                    isLoading = false
+                                    errorMessage = result.message, isLoading = false
                                 )
                             }
                             postEvent(DepositsViewEvents.ShowError(result.message))
@@ -130,9 +140,9 @@ open class DepositsViewModel @Inject constructor(
                             setState { it.copy(isLoading = true) }
                         }
 
-                        is Result.Success<*> -> {
+                        is Result.Success -> {
                             val listOfDeposits: List<DepositModel> =
-                                (result.data as List<DepositModel>).mapIndexed { index, deposit ->
+                                result.data.mapIndexed { index, deposit ->
                                     deposit.copy(isSelected = index == 0)
                                 }
                             val selectedDeposit = listOfDeposits.firstOrNull()
@@ -166,8 +176,7 @@ open class DepositsViewModel @Inject constructor(
                 count = 10,
                 categoryCode = deposit.categoryCode
             )
-        ).cachedIn(viewModelScope)
-            .onEach { pagingData ->
+        ).cachedIn(viewModelScope).onEach { pagingData ->
                 _transactionFlow.value = pagingData
             }.launchIn(viewModelScope)
 
@@ -215,18 +224,41 @@ open class DepositsViewModel @Inject constructor(
          }
      }*/
 
-    fun selectDeposit(deposit: DepositModel) {
+    private fun getDefaultDeposit() {
+        viewModelScope.launch {
+            getDefaultDepositUseCase.invoke(Unit).collect { result ->
+                    when (result) {
+                        is Result.Success -> {
+                            val defaultDeposit = result.data
+                            defaultDeposit?.let {
+                                setState {
+                                    it.copy(
+                                        defaultDepositAccount = defaultDeposit,
+                                        showDepositListBottomSheet = true
+                                    )
+                                }
+                            }
+                        }
+                        is Result.Error ->{
+                            setState { it.copy(showDepositListBottomSheet = true) }
+                        }
+                        else -> Unit
+                    }
+                }
+        }
+    }
+
+    private fun selectDeposit(deposit: DepositModel) {
         val selectedDeposit =
             viewState.value.deposits.find { it.depositNumber == deposit.depositNumber }
 
         setState {
             it.copy(
-                deposits = viewState.value.deposits
-                    .map {
-                        if (it.depositNumber == deposit.depositNumber) {
-                            it.copy(isSelected = true)
+                deposits = viewState.value.deposits.map { depositModel ->
+                    if (depositModel.depositNumber == deposit.depositNumber) {
+                            depositModel.copy(isSelected = true)
                         } else {
-                            it.copy(isSelected = false)
+                            depositModel.copy(isSelected = false)
                         }
                     }
 
