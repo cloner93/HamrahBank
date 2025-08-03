@@ -2,7 +2,6 @@ package com.pmb.core.utils
 
 import android.content.Context
 import android.content.Intent
-import android.database.Cursor
 import android.net.Uri
 import android.provider.ContactsContract
 import androidx.core.net.toUri
@@ -14,6 +13,13 @@ fun Context.openApp(packageName: String, url: String) {
     } else {
         openWebPage(url)
     }
+}
+
+fun Context.actionCall(phoneNumber: String) {
+    val intent = Intent(Intent.ACTION_DIAL).apply {
+        data = "tel:$phoneNumber".toUri()
+    }
+    startActivity(intent)
 }
 
 fun Context.openWebPage(url: String) {
@@ -61,7 +67,8 @@ fun Context.fetchContactPhoneNumber(contactUri: Uri?): String? {
 
                 phonesCursor?.use { phoneC ->
                     if (phoneC.moveToFirst()) {
-                        val phoneNumberIndex = phoneC.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
+                        val phoneNumberIndex =
+                            phoneC.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
                         val phoneNumber = phoneC.getString(phoneNumberIndex)
 
                         return phoneNumber
@@ -70,7 +77,7 @@ fun Context.fetchContactPhoneNumber(contactUri: Uri?): String? {
             }
         }
 
-      return  null
+        return null
     } ?: run {
         null
     }

@@ -7,4 +7,6 @@ sealed interface ProfileViewActions : BaseViewAction {
     data object LogoutAccount : ProfileViewActions
     object NavigateToThemeScreen : ProfileViewActions
     object NavigateToUpdate : ProfileViewActions
+    data class ShowSupportBottomSheet(val show: Boolean) : ProfileViewActions
+    data class ShowInviteFriendBottomSheet(val show: Boolean) : ProfileViewActions
 }
