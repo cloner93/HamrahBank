@@ -12,4 +12,6 @@ sealed interface ProfileViewActions : BaseViewAction {
 
     data class ShowSupportBottomSheet(val show: Boolean) : ProfileViewActions
     data class ShowInviteFriendBottomSheet(val show: Boolean) : ProfileViewActions
+    object AboutAppClicked : ProfileViewActions
+    object CommentsSuggestionsClicked : ProfileViewActions
 }

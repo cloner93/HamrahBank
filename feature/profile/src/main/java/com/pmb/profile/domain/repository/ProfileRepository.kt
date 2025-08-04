@@ -8,6 +8,7 @@ import com.pmb.profile.domain.entity.OtpEntity
 import com.pmb.profile.domain.entity.PersonalInfoEntity
 import com.pmb.profile.domain.entity.VersionEntity
 import com.pmb.profile.domain.use_case.PersonalInfoUseCase
+import com.pmb.profile.domain.use_case.SubmitCommentsSuggestionsUseCase
 import kotlinx.coroutines.flow.Flow
 
 interface ProfileRepository {
@@ -43,4 +44,6 @@ interface ProfileRepository {
         oldPassword: String,
         newPassword: String
     ): Flow<Result<PersonalInfoEntity>>
+
+    suspend fun submitCommentsSuggestions(params: SubmitCommentsSuggestionsUseCase.Params): Flow<Result<Unit>>
 }
