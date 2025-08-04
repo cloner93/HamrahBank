@@ -82,18 +82,18 @@ class CardsViewModel @Inject constructor(
 }
 
 sealed interface CardsViewEvents : BaseViewEvent {
-    object NavigateToBalance : CardsViewEvents
-    object ShowHelp : CardsViewEvents
+    data object NavigateToBalance : CardsViewEvents
+    data object ShowHelp : CardsViewEvents
 
     class ShowError(val error: String) : CardsViewEvents
 }
 
 sealed interface CardsViewActions : BaseViewAction {
-    object NavigateToBalanceScreen : CardsViewActions
-    object ShowHelp : CardsViewActions
+    data object NavigateToBalanceScreen : CardsViewActions
+    data object ShowHelp : CardsViewActions
 
     class ShowDetailCardBottomSheetBottomSheet(val model: CardModel?) : CardsViewActions
-    object ShowFabBottomSheet : CardsViewActions
+    data object ShowFabBottomSheet : CardsViewActions
 }
 
 data class CardsViewState(

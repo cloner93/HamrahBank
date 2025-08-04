@@ -10,5 +10,6 @@ data class ProfileViewState(
     val userData: UserData? = null,
     val isUserSignedIn: Boolean = false,
     val showSupportBottomSheet: Boolean = false,
-    val showInviteFriendBottomSheet: Boolean = false
+    val showInviteFriendBottomSheet: Boolean = false,
+    val showGuideBottomSheet: Boolean = false,
 ) : BaseViewState

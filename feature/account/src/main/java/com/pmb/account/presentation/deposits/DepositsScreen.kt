@@ -56,6 +56,7 @@ import com.pmb.account.utils.mapToDepositMenu
 import com.pmb.account.utils.mapToDepositModel
 import com.pmb.ballon.component.DepositBottomSheet
 import com.pmb.ballon.component.EmptyList
+import com.pmb.ballon.component.GuideBottomSheet
 import com.pmb.ballon.component.MenuBottomSheet
 import com.pmb.ballon.component.MenuItem
 import com.pmb.ballon.component.MenuItemDefaults
@@ -177,7 +178,7 @@ fun DepositsScreen(
                             icon = com.pmb.ballon.R.drawable.ic_help,
                             style = IconStyle(tint = AppTheme.colorScheme.onForegroundNeutralDefault),
                             onClick = {
-                                viewModel.handle(DepositsViewActions.ShowHelp)
+                                viewModel.handle(DepositsViewActions.ShowGuideBottomSheet)
                             })
 
                         AppButtonIcon(
@@ -327,6 +328,11 @@ fun DepositsScreen(
                     })
             ),
             onDismiss = { viewModel.handle(DepositsViewActions.CloseDepositMoreActionBottomSheet) })
+    }
+    if (viewState.showGuideBottomSheet){
+        GuideBottomSheet {
+            viewModel.handle(DepositsViewActions.CloseGuideBottomSheet)
+        }
     }
     if (viewState.showDepositListBottomSheet) DepositBottomSheet(
         title = "سپرده ها", items = viewState.deposits.mapToDepositMenu(), onDismiss = {

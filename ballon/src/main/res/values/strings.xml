@@ -49,4 +49,7 @@
     <string name="back_side_of_card">پشت کارت</string>
     <string name="choose_card">انتخاب کارت</string>
     <string name="tap_on_card">برای نمایش پشت کارت، ضربه بزنید.</string>
+    <string name="call">تماس\n</string>
+    <string name="common_questions">سوالات متداول</string>
+    <string name="feature_usage_guide">راهنمای استفاده از قابلیت ها</string>
 </resources>

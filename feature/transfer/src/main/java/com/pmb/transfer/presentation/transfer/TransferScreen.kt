@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.EmptyList
 import com.pmb.ballon.component.ExtendFAB
+import com.pmb.ballon.component.GuideBottomSheet
 import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.component.base.AppTopBar
@@ -72,7 +73,7 @@ fun TransferScreen(
                 startIcon = ClickableIcon(
                     icon = IconType.Painter(painterResource(com.pmb.ballon.R.drawable.ic_question_circle)),
                     onClick = {
-
+                        viewModel.handle(TransferViewActions.ShowGuideBottomSheet)
                     }),
                 endIcon = ClickableIcon(
                     icon = IconType.Painter(painterResource(com.pmb.ballon.R.drawable.ic_search)),
@@ -132,4 +133,9 @@ fun TransferScreen(
 
     if (viewState.loading) AppLoading()
     viewState.alertState?.let { AlertComponent(it) }
+    if (viewState.showGuideBottomSheet){
+        GuideBottomSheet {
+            viewModel.handle(TransferViewActions.CloseGuideBottomSheet)
+        }
+    }
 }
