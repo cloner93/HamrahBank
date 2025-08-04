@@ -114,22 +114,23 @@ fun MenuItem(
     clickable: Boolean = true,
     onItemClick: (() -> Unit)? = null
 ) {
-    val _modifier = if (clickable) modifier.clickable { onItemClick?.invoke() } else modifier
     Column(
-        modifier = _modifier,
+        modifier = modifier,
         verticalArrangement = Arrangement.Center
     ) {
         Row(
             modifier = Modifier
                 .clickable(enabled = onItemClick != null) {
-                    onItemClick?.invoke()
+                    if (clickable) onItemClick?.invoke()
                 }
                 .padding(innerPadding.toPaddingValues()),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Row(modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+            ) {
                 startIcon?.let {
                     AppIcon(
                         modifier = modifier.padding(startIconPadding.toPaddingValues()),
