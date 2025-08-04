@@ -5,7 +5,8 @@ import com.pmb.data.mapper.mapApiResult
 import com.pmb.data.serviceProvider.remote.RemoteServiceProvider
 import com.pmb.transfer.data.model.body.DestinationInfoRequest
 import com.pmb.transfer.data.model.body.TransferAmountRequest
-import com.pmb.transfer.data.model.body.TransferTypeMellatRequest
+import com.pmb.transfer.data.model.body.TransferReasonRequest
+import com.pmb.transfer.data.model.body.TransferRequest
 import com.pmb.transfer.data.source.local.Mock
 import com.pmb.transfer.data.source.remote.TransferServiceImpl
 import com.pmb.transfer.domain.entity.AccountBankEntity
@@ -26,6 +27,7 @@ import com.pmb.transfer.domain.param.AccountRemoveFavoriteParam
 import com.pmb.transfer.domain.repository.TransferRepository
 import com.pmb.transfer.domain.use_case.TransferAmountUseCase
 import com.pmb.transfer.domain.use_case.TransferConfirmUseCase
+import com.pmb.transfer.domain.use_case.TransferReasonUseCase
 import com.pmb.transfer.domain.use_case.TransferResendVerifyCardInfoUseCase
 import com.pmb.transfer.domain.use_case.TransferVerifyCardInfoUseCase
 import kotlinx.coroutines.delay
@@ -63,8 +65,7 @@ class TransferRepositoryImpl @Inject constructor(
                         cardNumber = params.value,
                         accountNumber = params.value,
                         iban = params.value,
-                    ),
-                    type = params.type
+                    ), type = params.type
                 )
             }
     }
@@ -75,8 +76,7 @@ class TransferRepositoryImpl @Inject constructor(
             delay(2000)
             emit(
                 Result.Success(
-                    transactionClientBankEntities.toMutableList()
-                        .apply { remove(params.item) })
+                    transactionClientBankEntities.toMutableList().apply { remove(params.item) })
             )
         }
 
@@ -97,67 +97,37 @@ class TransferRepositoryImpl @Inject constructor(
             emit(Result.Success(searchTransactionClientBanks(transactionClientBankEntities, value)))
         }
 
-    override suspend fun fetchTransferMethods(): Flow<Result<List<TransferMethodEntity>>> =
-        flow {
-            emit(Result.Loading)
-            delay(2000)
-            emit(Result.Success(Mock.transferMethods))
-        }
+    override suspend fun fetchTransferMethods(): Flow<Result<List<TransferMethodEntity>>> = flow {
+        emit(Result.Loading)
+        delay(2000)
+        emit(Result.Success(Mock.transferMethods))
+    }
 
     override suspend fun transferConfirm(params: TransferConfirmUseCase.Params): Flow<Result<TransferConfirmEntity>> =
-        when (params.transferMethod) {
-            PaymentType.CARD_TO_CARD,
-
-            PaymentType.INTERNAL_SATNA,
-            PaymentType.INTERNAL_PAYA,
-            PaymentType.INTERNAL_BRIDGE ->
-                flow {
-                    emit(Result.Loading)
-                    delay(2000)
-                    when (params.transferMethod) {
-                        PaymentType.CARD_TO_CARD -> emit(
-                            Result.Success(
-                                TransferConfirmEntity.CardVerificationRequired(
-                                    Mock.cardVerificationEntity
-                                )
-                            )
-                        )
-
-                        PaymentType.INTERNAL_SATNA,
-                        PaymentType.INTERNAL_PAYA,
-                        PaymentType.INTERNAL_BRIDGE,
-                        PaymentType.MELLAT_TO_MELLAT -> emit(
-                            Result.Success(
-                                TransferConfirmEntity.ReceiptConfirm(
-                                    Mock.transferReceiptSussesEntity
-                                )
-                            )
-                        )
-                    }
-                }
-
-            PaymentType.MELLAT_TO_MELLAT ->
-                service.transferTypeMellat(
-                    body = TransferTypeMellatRequest(
-                        source = params.sourceNumber,
-                        destination = params.destinationNumber,
-                        amount = params.amount.toLong(),
-                        payerId = -1,
-                        customerId = params.customerId.toLong(),
-                        saveFavorite = params.favoriteDestination
-                    )
-                ).mapApiResult {
-                    TransferConfirmEntity.ReceiptConfirm(
-                        receipt = TransferReceiptEntity(
-                            amount = params.amount,
-                            status = ReceiptStatus.SUCCESS,
-                            paymentType = params.transferMethod,
-                            trackingNumber = it.second.transNo,
-                        )
-                    )
-                }
+        service.transfer(
+            TransferRequest(
+                transferType = params.transferMethod.paymentType.id,
+                source = params.sourceNumber,
+                destination = params.destinationNumber,
+                amount = params.amount.toLong(),
+                payerId = params.depositId.trim().toLongOrNull() ?: 0L,
+                customerId = params.customerId.toLong(),
+                commissionFee = params.transferMethod.fee.toLong(),
+                reasonRowNo = params.reasonId ?: 0,
+                desc = params.desc ?: "",
+                descInfo = params.destinationInfo,
+                saveFavorite = params.favoriteDestination
+            )
+        ).mapApiResult {
+            TransferConfirmEntity.ReceiptConfirm(
+                receipt = TransferReceiptEntity(
+                    amount = params.amount,
+                    status = ReceiptStatus.SUCCESS,
+                    paymentType = params.transferMethod.paymentType,
+                    trackingNumber = it.second.transNo,
+                )
+            )
         }
-
 
     override suspend fun transferResendVerifyCardInfo(params: TransferResendVerifyCardInfoUseCase.Params): Flow<Result<CardVerificationEntity>> =
         flow {
@@ -196,18 +166,25 @@ class TransferRepositoryImpl @Inject constructor(
             }
         }
 
-    override suspend fun fetchReasons(): Flow<Result<List<ReasonEntity>>> =
-        flow {
-            emit(Result.Loading)
-            delay(2000)
-            emit(Result.Success(Mock.fakeReason))
+    override suspend fun fetchReasons(params: TransferReasonUseCase.Params): Flow<Result<List<ReasonEntity>>> =
+        service.reasons(
+            TransferReasonRequest(
+                transferType = params.transferType, destination = params.destination
+            )
+        ).mapApiResult {
+            it.second.map { response ->
+                ReasonEntity(
+                    id = response.rowNumber.toLong(),
+                    title = response.description,
+                    description = response.code
+                )
+            }
         }
 
     override suspend fun transferAmount(params: TransferAmountUseCase.Params): Flow<Result<List<TransferMethodEntity>>> =
         service.submitAmount(
             body = TransferAmountRequest(
-                amount = params.amount.toLong(),
-                destination = params.destination
+                amount = params.amount.toLong(), destination = params.destination
             )
         ).mapApiResult {
             it.second.map {
@@ -217,21 +194,21 @@ class TransferRepositoryImpl @Inject constructor(
                     fee = it.commissionFee.toDouble(),
                     active = it.enabled,
                     default = it.enabled,
-                    paymentType = PaymentType.convertToType(it.transferType)
+                    paymentType = PaymentType.fromId(it.transferType)
                 )
             }
         }
 
 
     private fun searchTransactionClientBanks(
-        list: List<TransactionClientBankEntity>,
-        query: String
+        list: List<TransactionClientBankEntity>, query: String
     ): List<TransactionClientBankEntity> {
         return list.filter { entity ->
-            entity.clientBankEntity.name.contains(query) ||
-                    entity.clientBankEntity.cardNumber.contains(query) ||
-                    entity.clientBankEntity.accountNumber.contains(query) ||
-                    entity.clientBankEntity.iban.contains(query)
+            entity.clientBankEntity.name.contains(query) || entity.clientBankEntity.cardNumber.contains(
+                query
+            ) || entity.clientBankEntity.accountNumber.contains(query) || entity.clientBankEntity.iban.contains(
+                query
+            )
         }
     }
 }
