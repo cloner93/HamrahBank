@@ -92,8 +92,12 @@ fun TransactionSearchScreen(
             }
         }
     ) {
+
         val list =
-            viewState.filteredTransactionList.ifEmpty { viewState.transactionList }
+            if (viewState.query == "")
+                viewState.transactionList
+            else
+                viewState.filteredTransactionList
 
         TransactionList(list) { transactionModel ->
             viewModel.handle(

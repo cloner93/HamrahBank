@@ -56,6 +56,7 @@ import com.pmb.account.utils.mapToDepositMenu
 import com.pmb.account.utils.mapToDepositModel
 import com.pmb.ballon.component.DepositBottomSheet
 import com.pmb.ballon.component.EmptyList
+import com.pmb.ballon.component.GuideBottomSheet
 import com.pmb.ballon.component.MenuBottomSheet
 import com.pmb.ballon.component.MenuItem
 import com.pmb.ballon.component.MenuItemDefaults
@@ -66,6 +67,8 @@ import com.pmb.ballon.models.IconStyle
 import com.pmb.ballon.models.MenuSheetModel
 import com.pmb.ballon.models.TextStyle
 import com.pmb.ballon.ui.theme.AppTheme
+import com.pmb.core.utils.copyToClipboard
+import com.pmb.core.utils.shareText
 import com.pmb.domain.model.TransactionModel
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.moduleScreen.AccountScreens
@@ -78,7 +81,7 @@ fun DepositsScreen(
     val navigationManager = LocalNavigationManager.current
     val backdropState: BackdropScaffoldState = rememberBackdropScaffoldState(BackdropValue.Revealed)
 
-    LocalContext.current
+    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         viewModel.viewEvent.collect { event ->
@@ -175,7 +178,7 @@ fun DepositsScreen(
                             icon = com.pmb.ballon.R.drawable.ic_help,
                             style = IconStyle(tint = AppTheme.colorScheme.onForegroundNeutralDefault),
                             onClick = {
-                                viewModel.handle(DepositsViewActions.ShowHelp)
+                                viewModel.handle(DepositsViewActions.ShowGuideBottomSheet)
                             })
 
                         AppButtonIcon(
@@ -269,9 +272,11 @@ fun DepositsScreen(
 
     if (viewState.showShareDepositInfoBottomSheet) ShareDepositBottomSheet(content = {
         ShareDepositBottomSheetContent(info = viewState.selectedDeposit!!, onCopyAllClick = {
-            viewModel.handle(DepositsViewActions.CloseShareBottomSheet(it)) // TODO: clipboard
+            viewModel.handle(DepositsViewActions.CloseShareBottomSheet(it))
+            context.copyToClipboard(it)
         }, onShareClick = {
-            viewModel.handle(DepositsViewActions.CloseShareBottomSheet(it)) // TODO: share menu
+            viewModel.handle(DepositsViewActions.CloseShareBottomSheet(it))
+            context.shareText(it)
         })
     }, onDismiss = {
         viewModel.handle(DepositsViewActions.CloseShareBottomSheet(null))
@@ -323,6 +328,11 @@ fun DepositsScreen(
                     })
             ),
             onDismiss = { viewModel.handle(DepositsViewActions.CloseDepositMoreActionBottomSheet) })
+    }
+    if (viewState.showGuideBottomSheet){
+        GuideBottomSheet {
+            viewModel.handle(DepositsViewActions.CloseGuideBottomSheet)
+        }
     }
     if (viewState.showDepositListBottomSheet) DepositBottomSheet(
         title = "سپرده ها", items = viewState.deposits.mapToDepositMenu(), onDismiss = {

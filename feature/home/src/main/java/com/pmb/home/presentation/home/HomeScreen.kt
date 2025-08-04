@@ -25,6 +25,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.pmb.ballon.component.AlertComponent
+import com.pmb.ballon.component.GuideBottomSheet
 import com.pmb.ballon.component.SliderPagerComponent
 import com.pmb.ballon.component.base.AppButtonIcon
 import com.pmb.ballon.component.base.AppContent
@@ -36,6 +37,7 @@ import com.pmb.ballon.models.ImageStyle
 import com.pmb.ballon.models.Size
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.home.domain.home.entity.HomeItemType
+import com.pmb.home.presentation.home.viewModel.HomeViewActions
 import com.pmb.home.presentation.home.viewModel.HomeViewModel
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.moduleScreen.BillScreens
@@ -64,7 +66,7 @@ fun HomeScreen(
                     modifier = Modifier.align(Alignment.CenterStart),
                     icon = painterResource(com.pmb.ballon.R.drawable.ic_help),
                     onClick = {
-
+                        viewModel.handle(HomeViewActions.ShowGuideBottomSheet)
                     }
                 )
                 Row(modifier = Modifier.align(Alignment.CenterEnd)) {
@@ -150,6 +152,11 @@ fun HomeScreen(
     }
     if (viewState.alertModelState != null) {
         AlertComponent(viewState.alertModelState!!)
+    }
+    if (viewState.isGuideBottomSheetVisible){
+        GuideBottomSheet {
+            viewModel.handle(HomeViewActions.CloseGuideBottomSheet)
+        }
     }
 }
 

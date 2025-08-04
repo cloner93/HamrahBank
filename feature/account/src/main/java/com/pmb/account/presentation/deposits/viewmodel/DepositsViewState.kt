@@ -21,5 +21,6 @@ data class DepositsViewState(
     val showShareDepositInfoBottomSheet: Boolean = false,
     val showMoreBottomSheet: Boolean = false,
     val showDepositListBottomSheet: Boolean = false,
-    val defaultDepositAccount: DepositModel? = null
-) : BaseViewState
+    val defaultDepositAccount: DepositModel? = null,
+    val showGuideBottomSheet: Boolean = false,
+    ) : BaseViewState

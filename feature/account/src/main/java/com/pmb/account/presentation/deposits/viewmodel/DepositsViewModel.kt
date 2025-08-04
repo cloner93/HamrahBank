@@ -85,7 +85,7 @@ open class DepositsViewModel @Inject constructor(
             }
 
             is DepositsViewActions.ShowDepositListBottomSheet -> {
-                getDefaultDeposit()
+                setState { it.copy(showDepositListBottomSheet = true) }
             }
 
             is DepositsViewActions.CloseDepositListBottomSheet -> {
@@ -101,15 +101,8 @@ open class DepositsViewModel @Inject constructor(
             }
 
             DepositsViewActions.OpenDepositDetailsScreen -> {
-                viewState.value.selectedDeposit?.let { depositModel ->
+                getDefaultDeposit()
 
-                    val json = Json { ignoreUnknownKeys = true }
-                    val deposit = json.encodeToString(depositModel)
-                    val e = URLEncoder.encode(deposit, "UTF-8")
-
-
-                    postEvent(DepositsViewEvents.NavigateToDetailsScreen(e))
-                }
             }
 
             is DepositsViewActions.SetDepositAsMain -> {
@@ -118,6 +111,13 @@ open class DepositsViewModel @Inject constructor(
                         setDefaultDepositUseCase.invoke(action.model).collect{}
                     }
                 }
+            }
+
+            DepositsViewActions.CloseGuideBottomSheet ->  {
+                setState { it.copy(showGuideBottomSheet = false) }
+            }
+            DepositsViewActions.ShowGuideBottomSheet ->  {
+                setState { it.copy(showGuideBottomSheet = true) }
             }
         }
     }
@@ -233,13 +233,30 @@ open class DepositsViewModel @Inject constructor(
                             defaultDeposit?.let {
                                 setState {
                                     it.copy(
-                                        defaultDepositAccount = defaultDeposit,
-                                        showDepositListBottomSheet = true
+                                        defaultDepositAccount = defaultDeposit
                                     )
+                                }
+                                viewState.value.selectedDeposit?.let { depositModel ->
+
+                                    val json = Json { ignoreUnknownKeys = true }
+                                    val deposit = json.encodeToString(depositModel)
+                                    val e = URLEncoder.encode(deposit, "UTF-8")
+
+
+                                    postEvent(DepositsViewEvents.NavigateToDetailsScreen(e))
                                 }
                             }
                         }
                         is Result.Error ->{
+                            viewState.value.selectedDeposit?.let { depositModel ->
+
+                                val json = Json { ignoreUnknownKeys = true }
+                                val deposit = json.encodeToString(depositModel)
+                                val e = URLEncoder.encode(deposit, "UTF-8")
+
+
+                                postEvent(DepositsViewEvents.NavigateToDetailsScreen(e))
+                            }
                             setState { it.copy(showDepositListBottomSheet = true) }
                         }
                         else -> Unit

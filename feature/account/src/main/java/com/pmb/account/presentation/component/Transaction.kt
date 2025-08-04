@@ -64,19 +64,19 @@ fun TransactionRow(
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 if (isAmountVisible) {
-                    Headline6Text(
+                    Headline6Text(//Color/On Background/Neutral/Subdued
                         text = item.amount.toCurrency(),
-                        color = AppTheme.colorScheme.foregroundNeutralDefault
+                        color = AppTheme.colorScheme.onBackgroundNeutralSubdued
                     )
                     Spacer(modifier = Modifier.width(6.dp))
                     CaptionText(
                         text = item.currency,
-                        color = AppTheme.colorScheme.foregroundNeutralDefault
+                        color = AppTheme.colorScheme.onBackgroundNeutralSubdued
                     )
                 } else {
                     Headline6Text(
                         text = "********",
-                        color = AppTheme.colorScheme.foregroundNeutralDefault
+                        color = AppTheme.colorScheme.onBackgroundNeutralSubdued
                     )
                 }
             }
@@ -93,6 +93,13 @@ fun TransactionRow(
 private fun TransactionRowPreview() {
     HamrahBankTheme {
 
-//        TransactionRow(item = d, isAmountVisible = true) {}
+        TransactionRow(
+            item = TransactionModel(
+                transactionId = "",
+                title = "",
+                amount = 111.1,
+                date = ""
+            ), isAmountVisible = true
+        ) {}
     }
 }

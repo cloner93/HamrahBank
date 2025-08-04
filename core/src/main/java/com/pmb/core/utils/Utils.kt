@@ -1,11 +1,15 @@
 package com.pmb.core.utils
 
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.ContactsContract
 import android.provider.Settings
+import android.widget.Toast
 import androidx.core.net.toUri
+import com.pmb.core.R
 
 fun Context.openApp(packageName: String, url: String) {
     val launchIntent = this.packageManager.getLaunchIntentForPackage(packageName)
@@ -82,6 +86,14 @@ fun Context.fetchContactPhoneNumber(contactUri: Uri?): String? {
     } ?: run {
         null
     }
+}
+
+fun Context.copyToClipboard(text: String) {
+    val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+    val clip = ClipData.newPlainText(getString(R.string.hamrah_bank_mellat), text)
+    clipboard.setPrimaryClip(clip)
+    Toast.makeText(this, getString(R.string.coppied_successfully), Toast.LENGTH_SHORT).show()
+
 }
 
 fun Context.getAndroidId(): String =

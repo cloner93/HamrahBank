@@ -24,4 +24,8 @@ sealed interface DepositsViewActions : BaseViewAction {
     data class SetDepositAsMain(val model: DepositModel?) : DepositsViewActions
 
     class CloseDepositListBottomSheet(val model: DepositModel?) : DepositsViewActions
+
+    data object ShowGuideBottomSheet : DepositsViewActions
+    data object CloseGuideBottomSheet : DepositsViewActions
+
 }

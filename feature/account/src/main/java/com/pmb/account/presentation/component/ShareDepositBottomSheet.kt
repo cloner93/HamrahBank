@@ -43,14 +43,14 @@ import com.pmb.ballon.models.ImageStyle
 import com.pmb.ballon.models.Size
 import com.pmb.ballon.models.TextStyle
 import com.pmb.ballon.ui.theme.AppTheme
+import com.pmb.ballon.ui.theme.AppTypography
 import com.pmb.ballon.ui.theme.HamrahBankTheme
 import com.pmb.domain.model.DepositModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ShareDepositBottomSheet(
-    content: @Composable ColumnScope.(NestedScrollConnection) -> Unit,
-    onDismiss: () -> Unit
+    content: @Composable ColumnScope.(NestedScrollConnection) -> Unit, onDismiss: () -> Unit
 ) {
     var isVisible by remember { mutableStateOf(true) }
     AppBottomSheet(
@@ -72,8 +72,7 @@ fun ShareDepositBottomSheetContent(
     Column(
         modifier = Modifier
             .background(color = AppTheme.colorScheme.background1Neutral)
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally
     ) {
         TextImage(
             image = IconType.Painter(painterResource(R.drawable.card_info)),
@@ -81,15 +80,14 @@ fun ShareDepositBottomSheetContent(
             imageStyle = ImageStyle(size = Size.FIX(80.dp)),
             textStyle = TextStyle(
                 color = AppTheme.colorScheme.onBackgroundNeutralDefault,
+                typography = AppTypography.headline6
             )
         )
 
         Spacer(modifier = Modifier.height(32.dp))
 
         Column(
-            modifier = Modifier
-                .fillMaxWidth(),
-            verticalArrangement = Arrangement.SpaceEvenly
+            modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.SpaceEvenly
         ) {
             Row(
                 modifier = modifier.padding(vertical = 12.dp),
@@ -125,38 +123,40 @@ fun ShareDepositBottomSheetContent(
                     )
                 }
             }
-            Row(
-                modifier = modifier.padding(vertical = 12.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column(modifier = Modifier.weight(1f)) {
-                    Headline6Text(
-                        text = stringResource(R.string.cart_number),
-                        color = AppTheme.colorScheme.foregroundNeutralDefault
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    CaptionText(
-                        text = info.cardNumber,
-                        color = AppTheme.colorScheme.onBackgroundNeutralSubdued
-                    )
-                }
-                Row {
+            if (info.cardNumber.isNotEmpty()){
+                Row(
+                    modifier = modifier.padding(vertical = 12.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Headline6Text(
+                            text = stringResource(R.string.cart_number),
+                            color = AppTheme.colorScheme.foregroundNeutralDefault
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        CaptionText(
+                            text = info.cardNumber,
+                            color = AppTheme.colorScheme.onBackgroundNeutralSubdued
+                        )
+                    }
+                    Row {
 
-                    AppIcon(
-                        modifier = Modifier
-                            .padding(8.dp)
-                            .clickable { onCopyAllClick(info.cardNumber) },
-                        icon = painterResource(com.pmb.ballon.R.drawable.ic_copy),
-                        style = IconStyle(tint = AppTheme.colorScheme.onBackgroundNeutralSubdued)
-                    )
-                    Spacer(modifier = modifier.width(4.dp))
-                    AppIcon(
-                        modifier = Modifier
-                            .padding(8.dp)
-                            .clickable { onShareClick(info.cardNumber) },
-                        icon = painterResource(com.pmb.ballon.R.drawable.ic_outline_share),
-                        style = IconStyle(tint = AppTheme.colorScheme.onBackgroundNeutralSubdued)
-                    )
+                        AppIcon(
+                            modifier = Modifier
+                                .padding(8.dp)
+                                .clickable { onCopyAllClick(info.cardNumber) },
+                            icon = painterResource(com.pmb.ballon.R.drawable.ic_copy),
+                            style = IconStyle(tint = AppTheme.colorScheme.onBackgroundNeutralSubdued)
+                        )
+                        Spacer(modifier = modifier.width(4.dp))
+                        AppIcon(
+                            modifier = Modifier
+                                .padding(8.dp)
+                                .clickable { onShareClick(info.cardNumber) },
+                            icon = painterResource(com.pmb.ballon.R.drawable.ic_outline_share),
+                            style = IconStyle(tint = AppTheme.colorScheme.onBackgroundNeutralSubdued)
+                        )
+                    }
                 }
             }
             Row(
@@ -195,17 +195,18 @@ fun ShareDepositBottomSheetContent(
             }
 
             Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 val allData = StringBuilder()
-                allData.append(stringResource(R.string.deposit_number) + "  " + info.depositNumber)
+                allData.append(stringResource(R.string.deposit_number) + ": " + info.depositNumber)
                 allData.append("\n")
-                allData.append(stringResource(R.string.cart_number) + "  " + info.cardNumber)
-                allData.append("\n")
-                allData.append(stringResource(R.string.iban_number) + "  " + info.ibanNumber)
+                if (info.cardNumber.isNotEmpty()){
+                    allData.append(stringResource(R.string.cart_number) + ": " + info.cardNumber)
+                    allData.append("\n")
+                }
+                allData.append(stringResource(R.string.iban_number) + ": " + info.ibanNumber)
 
                 Card(
                     modifier = Modifier
@@ -222,7 +223,7 @@ fun ShareDepositBottomSheetContent(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Icon(
-                            painter = painterResource(com.pmb.ballon.R.drawable.ic_copy),
+                            painter = painterResource(com.pmb.ballon.R.drawable.ic_copy_filled),
                             tint = AppTheme.colorScheme.onBackgroundTintNeutralDefault,
                             contentDescription = null
                         )

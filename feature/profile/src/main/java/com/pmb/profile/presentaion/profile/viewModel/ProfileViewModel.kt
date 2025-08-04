@@ -42,6 +42,9 @@ class ProfileViewModel @Inject constructor(
             is ProfileViewActions.ShowInviteFriendBottomSheet ->
                 setState { it.copy(showInviteFriendBottomSheet = action.show) }
 
+            ProfileViewActions.CloseGuideBottomSheet -> setState { it.copy(showGuideBottomSheet = false) }
+            ProfileViewActions.ShowGuideBottomSheet -> setState { it.copy(showGuideBottomSheet = true) }
+
             ProfileViewActions.AboutAppClicked -> postEvent(ProfileViewEvents.NavigateToAboutApp)
             ProfileViewActions.CommentsSuggestionsClicked -> postEvent(ProfileViewEvents.NavigateToCommentsSuggestions)
         }

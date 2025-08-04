@@ -26,6 +26,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.pmb.ballon.component.AlertComponent
+import com.pmb.ballon.component.GuideBottomSheet
 import com.pmb.ballon.component.MenuItem
 import com.pmb.ballon.component.TextImage
 import com.pmb.ballon.component.annotation.AppPreview
@@ -96,7 +97,7 @@ fun ProfileScreen(viewModel: ProfileViewModel) {
                     icon = Icons.Outlined.HelpOutline,
                     style = IconStyle(tint = AppTheme.colorScheme.onBackgroundNeutralDefault),
                     onClick = {
-
+                        viewModel.handle(ProfileViewActions.ShowGuideBottomSheet)
                     })
                 Row(
                     modifier = Modifier.align(Alignment.Companion.Center)
@@ -267,6 +268,12 @@ fun ProfileScreen(viewModel: ProfileViewModel) {
     if (viewState.showInviteFriendBottomSheet) ShowInviteFriendBottomSheet(onDismiss = {
         viewModel.handle(ProfileViewActions.ShowInviteFriendBottomSheet(false))
     })
+
+    if (viewState.showGuideBottomSheet){
+        GuideBottomSheet {
+            viewModel.handle(ProfileViewActions.CloseGuideBottomSheet)
+        }
+    }
 }
 
 

@@ -14,13 +14,14 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.outlined.Description
-import androidx.compose.material.icons.outlined.Tune
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
+import com.pmb.account.R
 import com.pmb.account.presentation.deposits.TransactionLazyList
 import com.pmb.account.presentation.transactions.filterScreen.DateType
 import com.pmb.account.presentation.transactions.filterScreen.viewmodel.entity.TransactionFilter
@@ -80,7 +81,7 @@ private fun StatementAndFilters(
                     .clickable { onFilterClick() },
             ) {
                 Icon(
-                    imageVector = Icons.Outlined.Tune,
+                    painter = painterResource(R.drawable.ic_filter),
                     tint = AppTheme.colorScheme.onBackgroundNeutralCTA,
                     contentDescription = null
                 )
