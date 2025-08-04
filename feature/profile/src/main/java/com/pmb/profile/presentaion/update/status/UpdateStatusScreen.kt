@@ -115,6 +115,7 @@ fun UpdateStatusScreen(viewModel: UpdateStatusViewModel, result: (VersionEntity)
                             typography = AppTheme.typography.bodyMedium
                         ),
                         endIconStyle = IconStyle(tint = AppTheme.colorScheme.foregroundNeutralRest),
+                        clickable = true,
                         onItemClick = {
                             viewModel.handle(action = UpdateStatusViewActions.ShowNewChanges)
                         }
@@ -128,6 +129,7 @@ fun UpdateStatusScreen(viewModel: UpdateStatusViewModel, result: (VersionEntity)
                             typography = AppTheme.typography.bodyMedium
                         ),
                         endIconStyle = IconStyle(tint = AppTheme.colorScheme.foregroundNeutralRest),
+                        clickable = true,
                         onItemClick = {
                             viewModel.handle(action = UpdateStatusViewActions.LatestVersion)
                         }

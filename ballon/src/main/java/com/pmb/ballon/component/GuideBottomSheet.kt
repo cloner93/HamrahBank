@@ -93,7 +93,7 @@ private fun ItemRow(item: MenuSheetModel, onClick: () -> Unit) {
         titleStyle = TextStyle(
             color = item.textColor(), typography = AppTheme.typography.headline6
         ),
-        clickable = false,
+        clickable = true,
         onItemClick = onClick
     )
 }

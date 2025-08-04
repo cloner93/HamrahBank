@@ -107,6 +107,7 @@ fun ShowInputsByTransferType(
                         tint = AppTheme.colorScheme.onBackgroundNeutralDefault,
                         size = Size.FIX(24.dp)
                     ),
+                    clickable = true,
                     onItemClick = {
                         selectedTransferReason.invoke(defaultReason)
                     })

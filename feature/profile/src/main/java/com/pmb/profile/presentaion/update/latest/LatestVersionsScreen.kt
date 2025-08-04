@@ -88,6 +88,7 @@ fun LatestVersionsScreen(viewModel: LatestVersionsViewModel, result: (VersionEnt
                                     color = AppTheme.colorScheme.onBackgroundNeutralSubdued
                                 )
                             },
+                            clickable = true,
                             onItemClick = {
                                 viewModel.handle(LatestVersionsViewActions.SelectVersion(item))
                             })

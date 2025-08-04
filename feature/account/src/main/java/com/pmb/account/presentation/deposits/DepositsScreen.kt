@@ -226,7 +226,7 @@ fun DepositsScreen(
                         typography = AppTheme.typography.buttonLarge
                     ),
                     startIconStyle = IconStyle(tint = AppTheme.colorScheme.onBackgroundNeutralSubdued),
-                    clickable = false,
+                    clickable = true,
                     onItemClick = {
                         viewModel.handle(DepositsViewActions.ShowShareBottomSheet)
                     })
@@ -247,7 +247,7 @@ fun DepositsScreen(
                     ),
                     startIconStyle = IconStyle(tint = AppTheme.colorScheme.onBackgroundNeutralSubdued),
                     endIconStyle = IconStyle(tint = AppTheme.colorScheme.onBackgroundNeutralSubdued),
-                    clickable = false,
+                    clickable = true,
                     onItemClick = {
                         viewModel.handle(DepositsViewActions.NavigateToTransactionScreen)
                     })
