@@ -28,6 +28,13 @@ class HomeViewModel @Inject constructor(
             HomeViewActions.GetData -> {
                 handleGetHomeData()
             }
+
+            HomeViewActions.CloseGuideBottomSheet -> setState { state ->
+                state.copy(isGuideBottomSheetVisible = false)
+            }
+            HomeViewActions.ShowGuideBottomSheet ->  setState { state ->
+                state.copy(isGuideBottomSheetVisible = true)
+            }
         }
     }
 

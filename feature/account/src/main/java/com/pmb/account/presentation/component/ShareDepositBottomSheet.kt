@@ -123,38 +123,40 @@ fun ShareDepositBottomSheetContent(
                     )
                 }
             }
-            Row(
-                modifier = modifier.padding(vertical = 12.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column(modifier = Modifier.weight(1f)) {
-                    Headline6Text(
-                        text = stringResource(R.string.cart_number),
-                        color = AppTheme.colorScheme.foregroundNeutralDefault
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    CaptionText(
-                        text = info.cardNumber,
-                        color = AppTheme.colorScheme.onBackgroundNeutralSubdued
-                    )
-                }
-                Row {
+            if (info.cardNumber.isNotEmpty()){
+                Row(
+                    modifier = modifier.padding(vertical = 12.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Headline6Text(
+                            text = stringResource(R.string.cart_number),
+                            color = AppTheme.colorScheme.foregroundNeutralDefault
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        CaptionText(
+                            text = info.cardNumber,
+                            color = AppTheme.colorScheme.onBackgroundNeutralSubdued
+                        )
+                    }
+                    Row {
 
-                    AppIcon(
-                        modifier = Modifier
-                            .padding(8.dp)
-                            .clickable { onCopyAllClick(info.cardNumber) },
-                        icon = painterResource(com.pmb.ballon.R.drawable.ic_copy),
-                        style = IconStyle(tint = AppTheme.colorScheme.onBackgroundNeutralSubdued)
-                    )
-                    Spacer(modifier = modifier.width(4.dp))
-                    AppIcon(
-                        modifier = Modifier
-                            .padding(8.dp)
-                            .clickable { onShareClick(info.cardNumber) },
-                        icon = painterResource(com.pmb.ballon.R.drawable.ic_outline_share),
-                        style = IconStyle(tint = AppTheme.colorScheme.onBackgroundNeutralSubdued)
-                    )
+                        AppIcon(
+                            modifier = Modifier
+                                .padding(8.dp)
+                                .clickable { onCopyAllClick(info.cardNumber) },
+                            icon = painterResource(com.pmb.ballon.R.drawable.ic_copy),
+                            style = IconStyle(tint = AppTheme.colorScheme.onBackgroundNeutralSubdued)
+                        )
+                        Spacer(modifier = modifier.width(4.dp))
+                        AppIcon(
+                            modifier = Modifier
+                                .padding(8.dp)
+                                .clickable { onShareClick(info.cardNumber) },
+                            icon = painterResource(com.pmb.ballon.R.drawable.ic_outline_share),
+                            style = IconStyle(tint = AppTheme.colorScheme.onBackgroundNeutralSubdued)
+                        )
+                    }
                 }
             }
             Row(
@@ -198,11 +200,13 @@ fun ShareDepositBottomSheetContent(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 val allData = StringBuilder()
-                allData.append(stringResource(R.string.deposit_number) + "  " + info.depositNumber)
+                allData.append(stringResource(R.string.deposit_number) + ": " + info.depositNumber)
                 allData.append("\n")
-                allData.append(stringResource(R.string.cart_number) + "  " + info.cardNumber)
-                allData.append("\n")
-                allData.append(stringResource(R.string.iban_number) + "  " + info.ibanNumber)
+                if (info.cardNumber.isNotEmpty()){
+                    allData.append(stringResource(R.string.cart_number) + ": " + info.cardNumber)
+                    allData.append("\n")
+                }
+                allData.append(stringResource(R.string.iban_number) + ": " + info.ibanNumber)
 
                 Card(
                     modifier = Modifier

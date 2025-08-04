@@ -7,5 +7,6 @@ import com.pmb.home.domain.home.entity.HomeEntity
 data class HomeViewState(
     val isLoading: Boolean = false,
     val alertModelState: AlertModelState? = null,
-    val homeData: HomeEntity? = null
+    val homeData: HomeEntity? = null,
+    val isGuideBottomSheetVisible: Boolean = false
 ) : BaseViewState

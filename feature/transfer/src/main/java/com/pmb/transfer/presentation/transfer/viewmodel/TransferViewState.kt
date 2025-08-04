@@ -9,4 +9,5 @@ data class TransferViewState(
     val alertState: AlertModelState? = null,
     val favoriteAccounts: List<TransactionClientBankEntity> = emptyList(),
     val accounts: List<TransactionClientBankEntity> = emptyList(),
+    val showGuideBottomSheet: Boolean = false,
 ) : BaseViewState

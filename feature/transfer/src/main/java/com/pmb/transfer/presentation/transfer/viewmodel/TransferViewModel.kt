@@ -27,6 +27,10 @@ class TransferViewModel @Inject constructor(
             is TransferViewActions.NavigateToDestinationInput -> handleDestinationInput()
             TransferViewActions.ClearAlert -> setState { it.copy(alertState = null) }
             is TransferViewActions.SelectAccount -> handleSelectAccount(action.item)
+            TransferViewActions.CloseGuideBottomSheet ->
+                setState { it.copy(showGuideBottomSheet = false) }
+            TransferViewActions.ShowGuideBottomSheet ->
+                setState { it.copy(showGuideBottomSheet = true) }
         }
     }
 

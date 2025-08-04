@@ -112,6 +112,13 @@ open class DepositsViewModel @Inject constructor(
                     }
                 }
             }
+
+            DepositsViewActions.CloseGuideBottomSheet ->  {
+                setState { it.copy(showGuideBottomSheet = false) }
+            }
+            DepositsViewActions.ShowGuideBottomSheet ->  {
+                setState { it.copy(showGuideBottomSheet = true) }
+            }
         }
     }
 
