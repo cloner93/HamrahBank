@@ -9,6 +9,8 @@ import androidx.navigation.compose.navigation
 import com.pmb.navigation.manager.navigationManager
 import com.pmb.navigation.moduleScreen.ProfileScreens
 import com.pmb.profile.presentaion.about_app.AboutAppScreen
+import com.pmb.profile.presentaion.comments_suggestions.CommentsSuggestionsScreen
+import com.pmb.profile.presentaion.comments_suggestions.viewmodel.CommentsSuggestionsViewModel
 import com.pmb.profile.presentaion.personal_infos.PersonalInfoSharedViewModel
 import com.pmb.profile.presentaion.personal_infos.change_address.ChangeAddressScreen
 import com.pmb.profile.presentaion.personal_infos.change_address.viewmodel.ChangeAddressViewModel
@@ -55,6 +57,12 @@ fun NavGraphBuilder.profileScreensHandle() {
 
     composable(route = ProfileScreens.AboutAppScreen.route) {
         AboutAppScreen()
+    }
+
+    composable(route = ProfileScreens.CommentsSuggestionsScreen.route) {
+        CommentsSuggestionsScreen(
+            viewModel = hiltViewModel<CommentsSuggestionsViewModel>()
+        )
     }
 
     navigation(

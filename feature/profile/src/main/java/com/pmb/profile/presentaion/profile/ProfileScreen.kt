@@ -76,7 +76,7 @@ fun ProfileScreen(viewModel: ProfileViewModel) {
                 }
 
                 ProfileViewEvents.NavigateToCommentsSuggestions -> {
-
+                    navigationManager.navigate(ProfileScreens.CommentsSuggestionsScreen)
                 }
             }
         }
@@ -231,7 +231,7 @@ fun ProfileScreen(viewModel: ProfileViewModel) {
                     endIconStyle = IconStyle(tint = AppTheme.colorScheme.foregroundNeutralRest),
                     clickable = true,
                     onItemClick = {
-
+                        viewModel.handle(ProfileViewActions.CommentsSuggestionsClicked)
                     })
             }
         }
