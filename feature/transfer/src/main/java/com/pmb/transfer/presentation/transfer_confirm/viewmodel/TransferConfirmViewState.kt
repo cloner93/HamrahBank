@@ -3,6 +3,7 @@ package com.pmb.transfer.presentation.transfer_confirm.viewmodel
 import com.pmb.core.platform.AlertModelState
 import com.pmb.core.platform.BaseViewState
 import com.pmb.transfer.domain.entity.AccountBankEntity
+import com.pmb.transfer.domain.entity.BankIdentifierNumberType
 import com.pmb.transfer.domain.entity.CardBankEntity
 import com.pmb.transfer.domain.entity.PaymentType
 import com.pmb.transfer.domain.entity.ReasonEntity
@@ -21,7 +22,8 @@ data class TransferConfirmViewState(
     val favoriteDestination: Boolean = false,
     val destinationAccount: TransactionClientBankEntity? = null,
     val destinationAmount: Double = 0.0,
-    val transferMethod: TransferMethodEntity? = null
+    val transferMethod: TransferMethodEntity? = null,
+    val reasons: List<ReasonEntity> = mutableListOf(),
 ) : BaseViewState {
     val enableConfirmButton: Boolean
         get() = when (transferMethod?.paymentType) {
@@ -36,4 +38,12 @@ data class TransferConfirmViewState(
 
             null -> false
         } && !loading
+
+    val destinationNumber: String
+        get() = when (destinationAccount?.type) {
+            BankIdentifierNumberType.ACCOUNT -> destinationAccount.clientBankEntity.accountNumber
+            BankIdentifierNumberType.CARD -> destinationAccount.clientBankEntity.cardNumber
+            BankIdentifierNumberType.IBAN -> destinationAccount.clientBankEntity.iban
+            null -> ""
+        }
 }

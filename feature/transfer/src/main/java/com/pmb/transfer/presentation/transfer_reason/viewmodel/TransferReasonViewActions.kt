@@ -5,5 +5,6 @@ import com.pmb.transfer.domain.entity.ReasonEntity
 
 sealed interface TransferReasonViewActions : BaseViewAction {
     data object ClearAlert : TransferReasonViewActions
+    data class UpdateReasons(val reasons: List<ReasonEntity>) : TransferReasonViewActions
     data class SelectReason(val reason: ReasonEntity) : TransferReasonViewActions
 }
