@@ -109,7 +109,9 @@ class TransactionsFilterViewModel @Inject constructor(
                         fromPrice = null,
                         toPrice = null,
                         dateType = null,
-                        transactionFilter = null
+                        transactionFilter = null,
+                        toDate = null,
+                        fromDate = null
                     )
                 }
             }

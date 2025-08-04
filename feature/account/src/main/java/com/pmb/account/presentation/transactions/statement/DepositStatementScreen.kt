@@ -75,10 +75,23 @@ fun DepositStatementScreen(
                     .padding(horizontal = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                val state = when (viewState.dateType) {
+                    null -> {
+                        false
+                    }
+
+                    DateType.CUSTOM -> {
+                        viewState.fromDate != null && viewState.toDate != null
+                    }
+
+                    else -> {
+                        true
+                    }
+                }
                 AppButton(
                     modifier = Modifier.fillMaxWidth(),
-                    enable = viewState.dateType != null,
-                    title = "اعمال فیلترها",
+                    enable = state,
+                    title = "دریافت",
                     onClick = {
                         viewModel.handle(DepositStatementViewActions.Apply)
                     })

@@ -18,7 +18,7 @@ fun List<Card>?.toDomain(): List<CardModel> {
         }
         val expireDate = with(it.expireDate.longToString()) {
             this?.let {
-                this.first + "/" + this.second
+                this.first.drop(2) + "/" + this.second
             } ?: run {
                 "00/00"
             }
