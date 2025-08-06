@@ -25,7 +25,7 @@ import com.pmb.account.R
 import com.pmb.account.presentation.deposits.TransactionLazyList
 import com.pmb.account.presentation.transactions.filterScreen.DateType
 import com.pmb.account.presentation.transactions.filterScreen.viewmodel.entity.TransactionFilter
-import com.pmb.ballon.component.base.ButtonMediumText
+import com.pmb.ballon.component.base.ButtonLargeText
 import com.pmb.ballon.component.base.ChipWithIcon
 import com.pmb.ballon.models.IconStyle
 import com.pmb.ballon.ui.theme.AppTheme
@@ -85,7 +85,7 @@ private fun StatementAndFilters(
                     tint = AppTheme.colorScheme.onBackgroundNeutralCTA,
                     contentDescription = null
                 )
-                ButtonMediumText(
+                ButtonLargeText(
                     modifier = Modifier.padding(horizontal = 8.dp),
                     text = "فیلترها",
                     color = AppTheme.colorScheme.onBackgroundNeutralCTA
@@ -101,7 +101,7 @@ private fun StatementAndFilters(
                     tint = AppTheme.colorScheme.onBackgroundNeutralCTA,
                     contentDescription = null
                 )
-                ButtonMediumText(
+                ButtonLargeText(
                     modifier = Modifier.padding(horizontal = 8.dp),
                     text = "صورتحساب",
                     color = AppTheme.colorScheme.onBackgroundNeutralCTA

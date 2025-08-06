@@ -32,6 +32,7 @@ import com.pmb.account.presentation.cards.viewmodel.CardsViewEvents
 import com.pmb.account.presentation.cards.viewmodel.CardsViewModel
 import com.pmb.account.presentation.component.CardInfo
 import com.pmb.ballon.component.EmptyList
+import com.pmb.ballon.component.GuideBottomSheet
 import com.pmb.ballon.component.MenuBottomSheet
 import com.pmb.ballon.component.base.AppButtonIcon
 import com.pmb.ballon.component.base.AppFAB
@@ -98,7 +99,7 @@ fun CardsScreen() {
                     icon = com.pmb.ballon.R.drawable.ic_help,
                     style = IconStyle(tint = AppTheme.colorScheme.foregroundNeutralDefault),
                     onClick = {
-                        viewModel.handle(CardsViewActions.ShowHelp)
+                        viewModel.handle(CardsViewActions.ShowGuideBottomSheet)
                     })
 
                 AppButtonIcon(
@@ -194,7 +195,6 @@ fun CardsScreen() {
         MenuSheetModel(
             title = stringResource(R.string.adding_and_activating_a_bank_card),
             icon = com.pmb.ballon.R.drawable.ic_add,
-            iconTint = { AppTheme.colorScheme.iconColor },
             onClicked = {
 
             }
@@ -206,4 +206,10 @@ fun CardsScreen() {
         onDismiss = {
             viewModel.handle(CardsViewActions.ShowFabBottomSheet)
         })
+
+    if (viewState.isGuideBottomSheetVisible) {
+        GuideBottomSheet {
+            viewModel.handle(CardsViewActions.CloseGuideBottomSheet)
+        }
+    }
 }

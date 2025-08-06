@@ -1,4 +1,4 @@
-package com.pmb.account.presentation.component
+package com.pmb.ballon.component
 
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
@@ -14,6 +14,11 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import com.pmb.ballon.ui.theme.AppTheme
+
+@Composable
+fun Modifier.loadingState(isLoading: Boolean) = this.then(
+    if (isLoading) this.shimmerLoading(color = AppTheme.colorScheme.onBackgroundNeutralSubdued) else this
+)
 
 @Composable
 fun Modifier.shimmerLoading(

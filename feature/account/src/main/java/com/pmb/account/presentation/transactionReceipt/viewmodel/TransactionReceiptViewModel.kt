@@ -112,4 +112,32 @@ data class TransactionReceiptViewState(
     val errorMessage: String? = null,
     val transaction: TransactionModel? = null,
     val rows: List<RowData> = emptyList(),
-) : BaseViewState
+) : BaseViewState {
+    val sharedText: String
+        get() {
+            val res = StringBuilder()
+
+            res.append("رسید تراکنش بانک ملت")
+            res.append("\n")
+
+            if (rows.isEmpty()) "" else rows.forEach {
+                val row: StringBuilder = StringBuilder(it.title)
+
+                when (it) {
+                    is RowData.Payment -> {
+                        row.append(": " + it.amount + " " + it.currency)
+                    }
+
+                    is RowData.Simple -> {
+                    }
+
+                    is RowData.TwoText -> {
+                        row.append(": " + it.subtitle)
+                    }
+                }
+                res.append(row).append("\n")
+            }
+
+            return res.toString()
+        }
+}

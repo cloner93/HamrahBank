@@ -194,7 +194,8 @@ fun DepositsScreen(
                         onMoreClick = { viewModel.handle(DepositsViewActions.ShowDepositMoreActionBottomSheet) },
                         onAmountVisibilityClick = { viewModel.handle(DepositsViewActions.SetAmountVisibility) },
                         onDepositListChipsClick = { viewModel.handle(DepositsViewActions.ShowDepositListBottomSheet) },
-                        isAmountVisible = viewState.isAmountVisible
+                        isAmountVisible = viewState.isAmountVisible,
+                        isLoading = viewState.depositLoading
                     )
 
                     Spacer(modifier = Modifier.height(24.dp))
@@ -329,11 +330,11 @@ fun DepositsScreen(
             ),
             onDismiss = { viewModel.handle(DepositsViewActions.CloseDepositMoreActionBottomSheet) })
     }
-    if (viewState.showGuideBottomSheet){
-        GuideBottomSheet {
-            viewModel.handle(DepositsViewActions.CloseGuideBottomSheet)
-        }
+
+    if (viewState.showGuideBottomSheet) GuideBottomSheet {
+        viewModel.handle(DepositsViewActions.CloseGuideBottomSheet)
     }
+
     if (viewState.showDepositListBottomSheet) DepositBottomSheet(
         title = "سپرده ها", items = viewState.deposits.mapToDepositMenu(), onDismiss = {
             viewModel.handle(DepositsViewActions.CloseDepositListBottomSheet(null))

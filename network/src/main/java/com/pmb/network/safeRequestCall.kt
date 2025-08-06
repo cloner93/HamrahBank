@@ -19,6 +19,7 @@ inline fun <reified Response> safeRequestCall(
         val message = response.metaData?.statusMessage ?: "خطای ناشناخته"
         throw ApiException(message)
     }
+//    delay(4000)
 
     emit(
         Result.Success(

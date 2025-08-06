@@ -18,6 +18,7 @@ import com.pmb.ballon.component.annotation.AppPreview
 import com.pmb.ballon.component.base.AppImage
 import com.pmb.ballon.component.base.CaptionText
 import com.pmb.ballon.component.base.Headline6Text
+import com.pmb.ballon.component.loadingState
 import com.pmb.ballon.models.ImageStyle
 import com.pmb.ballon.models.Size
 import com.pmb.ballon.ui.theme.AppTheme
@@ -88,18 +89,34 @@ fun TransactionRow(
     }
 }
 
+@Composable
+fun TransactionEmptyRow() {
+    Row(
+        modifier = Modifier
+            .background(color = AppTheme.colorScheme.background1Neutral)
+            .loadingState(true)
+            .height(48.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+
+    }
+}
+
 @AppPreview
 @Composable
 private fun TransactionRowPreview() {
     HamrahBankTheme {
-
-        TransactionRow(
-            item = TransactionModel(
-                transactionId = "",
-                title = "",
-                amount = 111.1,
-                date = ""
-            ), isAmountVisible = true
-        ) {}
+        Column {
+            TransactionEmptyRow()
+            Spacer(Modifier.height(8.dp))
+            TransactionRow(
+                item = TransactionModel(
+                    transactionId = "",
+                    title = "",
+                    amount = 111.1,
+                    date = ""
+                ), isAmountVisible = true
+            ) {}
+        }
     }
 }

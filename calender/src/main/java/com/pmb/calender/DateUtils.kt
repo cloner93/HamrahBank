@@ -128,7 +128,7 @@ fun formatPersianDateForDisplay(date: String, time: String?): String {
 
         transactionDate.year == now.year -> {
             val monthName = transactionDate.monthName()
-            "${Jdn(transactionDate).weekDayName} ${transactionDate.dayOfMonth} $monthName | $timeStr"
+            "${Jdn(transactionDate).weekDayName} ${transactionDate.dayOfMonth} $monthName ${transactionDate.year} | $timeStr"
         }
 
         else -> {

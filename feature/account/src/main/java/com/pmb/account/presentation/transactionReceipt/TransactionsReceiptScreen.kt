@@ -46,6 +46,7 @@ import com.pmb.core.utils.getImageUri
 import com.pmb.core.utils.saveBitmapToCache
 import com.pmb.core.utils.saveBitmapToGallery
 import com.pmb.core.utils.shareImage
+import com.pmb.core.utils.shareText
 import com.pmb.domain.model.TransactionType
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.receipt.component.ReceiptComponent
@@ -148,6 +149,7 @@ fun TransactionsReceiptScreen() {
                     iconTint = { AppTheme.colorScheme.onBackgroundNeutralCTA },
                     showEndIcon = false,
                     onClicked = {
+                        context.shareText(viewState.sharedText)
                     }
                 ),
                 MenuSheetModel(

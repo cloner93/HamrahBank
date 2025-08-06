@@ -46,7 +46,6 @@ import com.pmb.ballon.component.base.AppNumberTextField
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.component.base.ButtonLargeText
-import com.pmb.ballon.component.base.ButtonMediumText
 import com.pmb.ballon.component.base.ChipWithIcon
 import com.pmb.ballon.component.base.IconType
 import com.pmb.ballon.component.datePicker.ShowPersianDatePickerBottomSheet
@@ -127,13 +126,15 @@ fun TransactionFilterScreen(
                             .padding(horizontal = 10.dp, vertical = 8.dp)
                             .clickable {
                                 viewModel.handle(TransactionsFilterViewActions.ClearFilters)
-                            }) {
+                            },
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
                         Icon(
                             imageVector = Icons.Outlined.FilterAltOff,
                             contentDescription = null,
                             tint = AppTheme.colorScheme.onBackgroundErrorDefault
                         )
-                        ButtonMediumText(
+                        ButtonLargeText(
                             modifier = Modifier.padding(horizontal = 8.dp),
                             text = "حذف فیلترها",
                             color = AppTheme.colorScheme.onBackgroundErrorDefault
@@ -141,7 +142,7 @@ fun TransactionFilterScreen(
                     }
                 }
 
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
                 AppButton(
                     modifier = Modifier.fillMaxWidth(),

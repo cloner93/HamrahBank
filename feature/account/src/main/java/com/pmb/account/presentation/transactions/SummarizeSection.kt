@@ -20,10 +20,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.pmb.account.presentation.component.RowOfMonth
 import com.pmb.account.presentation.component.SingleRow
-import com.pmb.account.presentation.component.shimmerLoading
 import com.pmb.ballon.component.annotation.AppPreview
 import com.pmb.ballon.component.base.BodySmallText
 import com.pmb.ballon.component.base.Headline6Text
+import com.pmb.ballon.component.loadingState
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.ballon.ui.theme.HamrahBankTheme
 import com.pmb.calender.currentMonthPair
@@ -119,9 +119,7 @@ internal fun SummarizeSection(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .then(
-                    if (loading) Modifier.shimmerLoading() else Modifier
-                ),
+                .loadingState(loading),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             BodySmallText(

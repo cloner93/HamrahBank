@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.pmb.ballon.component.annotation.AppPreview
+import com.pmb.ballon.component.loadingState
 import com.pmb.ballon.models.TextStyle
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.ballon.ui.theme.HamrahBankTheme
@@ -101,10 +102,7 @@ internal fun MonthItem(
                 else AppTheme.colorScheme.backgroundTintNeutralDefault
             )
             .clickable { if (!(isLoading) && isEnabled) onClick() }
-            .then(
-                if (isSelected && isLoading) Modifier
-                    .shimmerLoading() else Modifier
-            )
+            .loadingState(isSelected && isLoading)
             .padding(
                 horizontal = 16.dp,
                 vertical = 8.dp
