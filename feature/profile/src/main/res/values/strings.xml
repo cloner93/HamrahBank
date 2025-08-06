@@ -40,4 +40,8 @@
     <string name="latest_version">نسخه‌‌های قبلی</string>
     <string name="version_param">نسخه %1$s</string>
     <string name="latest_versions">نسخه‌های قبلی</string>
+    <string name="registration">ثبت</string>
+    <string name="comments_suggestions_header">به منظور بالا بردن کیفیت خدمات همراه‌بانک ملت، لطفا نظرات، انتقادات و پیشنهادات خود را با ما در میان بگذارید.</string>
+    <string name="comment_text">"متن دیدگاه"</string>
+    <string name="back_to_profile">بازگشت به پروفایل</string>
 </resources>

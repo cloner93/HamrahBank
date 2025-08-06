@@ -313,13 +313,18 @@ fun AppSingleTextField(
 
 @Composable
 fun AppMultiTextField(
-    modifier: Modifier = Modifier, value: String, label: String, onValueChange: (String) -> Unit
+    modifier: Modifier = Modifier,
+    value: String,
+    label: String,
+    minLines: Int = 1,
+    onValueChange: (String) -> Unit
 ) {
     AppBaseTextField(
         modifier = modifier.fillMaxWidth(),
         value = value,
         label = label,
         onValueChange = onValueChange,
+        minLines = minLines,
         trailingIcon = @Composable {
             if (value.isNotEmpty()) AppButtonIcon(icon = Icons.Default.Close) { onValueChange("") }
         },

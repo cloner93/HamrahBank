@@ -22,4 +22,5 @@ sealed interface TransferConfirmViewActions : BaseViewAction {
     data class SelectAccountBank(val item: AccountBankEntity) : TransferConfirmViewActions
     data class UpdateFavoriteDestination(val favorite: Boolean) : TransferConfirmViewActions
     data class UpdateDepositId(val depositId: String) : TransferConfirmViewActions
+    data object SelectTransferReason : TransferConfirmViewActions
 }

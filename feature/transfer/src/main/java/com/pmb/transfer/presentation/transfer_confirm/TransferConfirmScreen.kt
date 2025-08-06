@@ -52,7 +52,8 @@ fun TransferConfirmScreen(
     result: (
         source: TransferSourceEntity?,
         receipt: TransferReceiptEntity?,
-        verificationInfo: CardVerificationEntity?
+        verificationInfo: CardVerificationEntity?,
+        reasons: List<ReasonEntity>?
     ) -> Unit
 ) {
     val viewState by viewModel.viewState.collectAsState()
@@ -64,7 +65,8 @@ fun TransferConfirmScreen(
                     result.invoke(
                         event.source,
                         null,
-                        event.verificationInfo
+                        event.verificationInfo,
+                        null
                     )
                     navigationManager.navigate(TransferScreens.TransferCardVerification)
                 }
@@ -73,9 +75,20 @@ fun TransferConfirmScreen(
                     result.invoke(
                         event.receipt.source,
                         event.receipt,
+                        null,
                         null
                     )
                     navigationManager.navigate(TransferScreens.TransferReceipt)
+                }
+
+                is TransferConfirmViewEvents.NavigateToReason -> {
+                    result.invoke(
+                        null,
+                        null,
+                        null,
+                        event.reasons
+                    )
+                    navigationManager.navigate(TransferScreens.TransferReason)
                 }
             }
         }
@@ -164,7 +177,7 @@ fun TransferConfirmScreen(
                     viewModel.handle(TransferConfirmViewActions.SelectAccountBank(accountBank))
                 },
                 selectedTransferReason = {
-                    navigationManager.navigate(TransferScreens.TransferReason)
+                    viewModel.handle(TransferConfirmViewActions.SelectTransferReason)
                 }
             )
         }

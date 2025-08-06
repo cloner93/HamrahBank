@@ -5,10 +5,12 @@ import com.pmb.model.SuccessData
 import com.pmb.network.NetworkManger
 import com.pmb.transfer.data.model.DestinationInfoResponse
 import com.pmb.transfer.data.model.TransferAmountResponse
+import com.pmb.transfer.data.model.TransferReasonResponse
 import com.pmb.transfer.data.model.TransferTypeMellatResponse
 import com.pmb.transfer.data.model.body.DestinationInfoRequest
 import com.pmb.transfer.data.model.body.TransferAmountRequest
-import com.pmb.transfer.data.model.body.TransferTypeMellatRequest
+import com.pmb.transfer.data.model.body.TransferReasonRequest
+import com.pmb.transfer.data.model.body.TransferRequest
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -17,7 +19,8 @@ private object Endpoints {
 
     const val DESTINATION_INFO = "${BASE_PATH}/destination-info"
     const val SUGGEST_TYPE = "${BASE_PATH}/suggest-type"
-    const val TRANSFER_MELLAT = "${BASE_PATH}/transfer-mellat"
+    const val TRANSFER_REASONS = "${BASE_PATH}/reasons"
+    const val TRANSFER = "${BASE_PATH}/transfer"
 
 }
 
@@ -38,9 +41,15 @@ class TransferServiceImpl @Inject constructor(
             data = body,
         )
 
-    override fun transferTypeMellat(body: TransferTypeMellatRequest): Flow<Result<SuccessData<TransferTypeMellatResponse>>> =
+    override fun transfer(body: TransferRequest): Flow<Result<SuccessData<TransferTypeMellatResponse>>> =
         client.request(
-            endpoint = Endpoints.TRANSFER_MELLAT,
+            endpoint = Endpoints.TRANSFER,
+            data = body,
+        )
+
+    override fun reasons(body: TransferReasonRequest): Flow<Result<SuccessData<List<TransferReasonResponse>>>> =
+        client.request(
+            endpoint = Endpoints.TRANSFER_REASONS,
             data = body,
         )
 

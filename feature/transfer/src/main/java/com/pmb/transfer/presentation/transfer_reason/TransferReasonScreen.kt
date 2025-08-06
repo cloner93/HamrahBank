@@ -27,6 +27,7 @@ import com.pmb.transfer.presentation.transfer_reason.viewmodel.TransferReasonVie
 @Composable
 fun TransferReasonScreen(
     viewModel: TransferReasonViewModel,
+    reasons: List<ReasonEntity>,
     selectedReason: (ReasonEntity?) -> Unit
 ) {
     val viewState by viewModel.viewState.collectAsState()
@@ -43,6 +44,9 @@ fun TransferReasonScreen(
         }
     }
 
+    LaunchedEffect(Unit) {
+        viewModel.handle(TransferReasonViewActions.UpdateReasons(reasons))
+    }
 
     AppContent(
         backgroundColor = AppTheme.colorScheme.background1Neutral,

@@ -84,8 +84,8 @@ data class MenuItemPadding(
         fun vertical(vertical: Dp) = MenuItemPadding(top = vertical, bottom = vertical)
 
         // تابع برای اعمال padding از هر چهار جهت
-        fun all(horizontal: Dp, vertical: Dp) =
-            MenuItemPadding(start = horizontal, end = horizontal, top = vertical, bottom = vertical)
+        fun all(all: Dp) =
+            MenuItemPadding(start = all, end = all, top = all, bottom = all)
     }
 }
 
