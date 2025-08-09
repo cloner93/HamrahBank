@@ -10,6 +10,8 @@ import com.pmb.core.platform.Result
 import com.pmb.domain.model.DepositModel
 import com.pmb.domain.model.TransactionModel
 import com.pmb.domain.model.TransactionRequest
+import com.pmb.domain.usecae.deposit.BalanceDepositUseCase
+import com.pmb.domain.usecae.deposit.BalanceParams
 import com.pmb.domain.usecae.deposit.GetDefaultDepositUseCase
 import com.pmb.domain.usecae.deposit.GetUserDepositListUseCase
 import com.pmb.domain.usecae.deposit.SetDefaultDepositUseCase
@@ -32,7 +34,8 @@ open class DepositsViewModel @Inject constructor(
     private val getDepositsUseCase: GetUserDepositListUseCase,
     private val getTransactionsPaging: TransactionsByCountPagingUsaCase,
     private val getDefaultDepositUseCase: GetDefaultDepositUseCase,
-    private val setDefaultDepositUseCase: SetDefaultDepositUseCase
+    private val setDefaultDepositUseCase: SetDefaultDepositUseCase,
+    private val getBalanceDepositUseCase: BalanceDepositUseCase,
 ) : BaseViewModel<DepositsViewActions, DepositsViewState, DepositsViewEvents>(initialState) {
 
     // we cont handle paging flow inside of ViewState.
@@ -121,6 +124,10 @@ open class DepositsViewModel @Inject constructor(
             DepositsViewActions.ShowGuideBottomSheet -> {
                 setState { it.copy(showGuideBottomSheet = true) }
             }
+
+            DepositsViewActions.RefreshDepositAmount -> {
+                loadBalanceOfDeposit()
+            }
         }
     }
 
@@ -167,6 +174,50 @@ open class DepositsViewModel @Inject constructor(
                             loadTransactions(
                                 it
                             )
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun loadBalanceOfDeposit() {
+        viewModelScope.launch {
+            viewState.value.selectedDeposit?.let { depositModel ->
+                getBalanceDepositUseCase.invoke(
+                    BalanceParams(
+                        depositModel.categoryCode,
+                        depositModel.depositNumber.toLong()
+                    )
+                ).collect { result ->
+                    when (result) {
+                        is Result.Error -> {
+                            setState {
+                                it.copy(
+                                    errorMessage = result.message,
+                                    depositLoading = false
+                                )
+                            }
+                            postEvent(DepositsViewEvents.ShowError(result.message))
+                        }
+
+                        Result.Loading -> {
+                            setState {
+                                it.copy(
+                                    depositLoading = true,
+                                    transactionLoading = true
+                                )
+                            }
+                        }
+
+                        is Result.Success -> {
+
+                            setState {
+                                it.copy(
+                                    selectedDeposit = depositModel.copy(amount = result.data.balance.toDouble()),
+                                    depositLoading = false
+                                )
+                            }
                         }
                     }
                 }

@@ -5,6 +5,8 @@ import com.pmb.data.mapper.depositService.toDomain
 import com.pmb.data.mapper.mapApiResult
 import com.pmb.data.serviceProvider.local.LocalServiceProvider
 import com.pmb.data.serviceProvider.remote.RemoteServiceProvider
+import com.pmb.domain.model.BalanceModel
+import com.pmb.domain.model.BalanceRequest
 import com.pmb.domain.model.DepositModel
 import com.pmb.domain.repository.deposit.DepositsRepository
 import jakarta.inject.Inject
@@ -26,17 +28,27 @@ class DepositRepositoryImpl @Inject constructor(
         val depositModel = localServiceProvider.getUserDataStore().getMainDeposit()
         depositModel?.let {
             emit(Result.Success(it))
-        }?:run {
+        } ?: run {
             emit(Result.Error(message = "No Default Deposit Account"))
+        }
+    }
+
+    override fun getBalanceOfDeposit(
+        category: Long,
+        accountId: Long
+    ): Flow<Result<BalanceModel>> {
+        val balance = BalanceRequest(category, accountId)
+        return remoteServiceProvider.getDepositService().getBalanceOfDeposit(balance).mapApiResult {
+            it.second
         }
     }
 
     override fun setDefaultDeposit(depositModel: DepositModel) = flow {
         emit(Result.Loading)
         val result = localServiceProvider.getUserDataStore().setDepositAsMainDeposit(depositModel)
-        if (result){
+        if (result) {
             emit(Result.Success(true))
-        }else{
+        } else {
             emit(Result.Error("couldn't set as main deposit"))
         }
     }
