@@ -1,20 +1,18 @@
 package com.pmb.receipt.model
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.LayoutDirection
 import com.pmb.ballon.models.RowType
 import com.pmb.ballon.models.TextStyle
+import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.ballon.ui.theme.AppTypography
 import com.pmb.ballon.ui.theme.CustomColors
-import com.pmb.ballon.ui.theme.darkColors
-import com.pmb.ballon.ui.theme.lightColors
 
 
 @Composable
 fun RowData.mapToRowType(
     styleProvider: RowStyleProvider = DefaultRowStyleProvider(
-        ReceiptStyle(if (isSystemInDarkTheme()) darkColors() else lightColors())
+        ReceiptStyle(AppTheme.colorScheme)
     )
 ): RowType {
     return when (this) {
@@ -66,7 +64,7 @@ interface RowStyleProvider {
     val currencyStyle: TextStyle
 }
 
-class DefaultRowStyleProvider(private val style: ReceiptStyle) : RowStyleProvider {
+class DefaultRowStyleProvider(style: ReceiptStyle) : RowStyleProvider {
     override val titleStyle = style.titleStyle
     override val subtitleStyle = style.subtitleStyle
     override val amountStyle = style.amountStyle
@@ -74,24 +72,24 @@ class DefaultRowStyleProvider(private val style: ReceiptStyle) : RowStyleProvide
 }
 
 
-class ReceiptStyle(colors: CustomColors) {
+class ReceiptStyle(colorScheme: CustomColors) {
     val titleStyle = TextStyle(
-        color = colors.onBackgroundNeutralSubdued,
+        color = colorScheme.onBackgroundNeutralSubdued,
         typography = AppTypography.bodySmall,
     )
 
     val amountStyle = TextStyle(
-        color = colors.onBackgroundNeutralDefault,
+        color = colorScheme.onBackgroundNeutralDefault,
         typography = AppTypography.headline3,
     )
 
     val currencyStyle = TextStyle(
-        color = colors.onBackgroundNeutralDefault,
+        color = colorScheme.onBackgroundNeutralDefault,
         typography = AppTypography.bodySmall,
     )
 
     val subtitleStyle = TextStyle(
-        color = colors.onBackgroundNeutralDefault,
+        color = colorScheme.onBackgroundNeutralDefault,
         typography = AppTypography.bodySmall,
     )
 }
