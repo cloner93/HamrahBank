@@ -8,20 +8,16 @@ import com.pmb.domain.repository.favorite.FavoriteRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class FetchFavoriteAccountsUseCase @Inject constructor(
+class FetchFavoriteTransferFavoriteAccountsUseCase @Inject constructor(
     private val favoriteRepository: FavoriteRepository
-) : BaseUseCase<FetchFavoriteAccountsParams,List<FetchFavoriteAccountResponse>>() {
-    override suspend fun execute(params: FetchFavoriteAccountsParams): Flow<Result<List<FetchFavoriteAccountResponse>>> {
+) : BaseUseCase<Unit, List<FetchFavoriteAccountResponse>>() {
+    override suspend fun execute(params: Unit): Flow<Result<List<FetchFavoriteAccountResponse>>> {
         return favoriteRepository.fetchFavoriteAccounts(
+            type = FetchFavoriteReturnType.Favorites,
             fetchFavoriteAccountRequest = FetchFavoriteAccountRequest(
-                favoriteType = params.favoriteType,
-                fetchFavoriteMode = params.fetchFavoriteMode
+                favoriteType = FetchFavoriteInputType.Transfer.type, fetchFavoriteMode = true
             )
         )
     }
 }
 
-data class FetchFavoriteAccountsParams (
-    val favoriteType: Int,
-    val fetchFavoriteMode: Boolean
-)

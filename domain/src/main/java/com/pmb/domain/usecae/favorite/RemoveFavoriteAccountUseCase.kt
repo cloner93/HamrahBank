@@ -9,8 +9,8 @@ import javax.inject.Inject
 
 class RemoveFavoriteAccountUseCase @Inject constructor(
     private val favoriteRepository: FavoriteRepository
-) : BaseUseCase<RemoveFavoriteAccountParams, Boolean>() {
-    override suspend fun execute(params: RemoveFavoriteAccountParams): Flow<Result<Boolean>> {
+) : BaseUseCase<RemoveFavoriteAccountParams, Any>() {
+    override suspend fun execute(params: RemoveFavoriteAccountParams): Flow<Result<Any>> {
         return favoriteRepository.removeFavoriteAccount(
             removeFavoriteAccountRequest = params.toRequest()
         )

@@ -1,6 +1,7 @@
 package com.pmb.data.serviceProvider.remote.favorite
 
 import com.pmb.core.platform.Result
+import com.pmb.data.model.AnyModel
 import com.pmb.domain.model.favorite.FetchFavoriteAccountRequest
 import com.pmb.domain.model.favorite.FetchFavoriteAccountResponse
 import com.pmb.domain.model.favorite.InsertFavoriteAccountRequest
@@ -19,14 +20,14 @@ class FavoriteServiceImpl @Inject constructor(
         )
     }
 
-    override fun insertFavoriteAccount(insertFavoriteAccount: InsertFavoriteAccountRequest): Flow<Result<SuccessData<Any>>> {
-        return client.request<InsertFavoriteAccountRequest, Any>(
+    override fun insertFavoriteAccount(insertFavoriteAccount: InsertFavoriteAccountRequest): Flow<Result<SuccessData<AnyModel>>> {
+        return client.request<InsertFavoriteAccountRequest, AnyModel>(
             endpoint = "favorite/insert_favorite", data = insertFavoriteAccount
         )
     }
 
-    override fun removeFavoriteAccount(removeFavoriteAccountRequest: RemoveFavoriteAccountRequest): Flow<Result<SuccessData<Any>>> {
-        return client.request<RemoveFavoriteAccountRequest, Any>(
+    override fun removeFavoriteAccount(removeFavoriteAccountRequest: RemoveFavoriteAccountRequest): Flow<Result<SuccessData<AnyModel>>> {
+        return client.request<RemoveFavoriteAccountRequest, AnyModel>(
             endpoint = "favorite/remove_favorite", data = removeFavoriteAccountRequest
         )
     }

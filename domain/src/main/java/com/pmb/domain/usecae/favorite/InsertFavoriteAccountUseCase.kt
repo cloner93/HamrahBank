@@ -9,8 +9,8 @@ import javax.inject.Inject
 
 class InsertFavoriteAccountUseCase @Inject constructor(
     private val favoriteRepository: FavoriteRepository
-) : BaseUseCase<InsertFavoriteAccountParams, Boolean>() {
-    override suspend fun execute(params: InsertFavoriteAccountParams): Flow<Result<Boolean>> {
+) : BaseUseCase<InsertFavoriteAccountParams, Unit>() {
+    override suspend fun execute(params: InsertFavoriteAccountParams): Flow<Result<Unit>> {
         return favoriteRepository.insertFavoriteAccount(
             insertFavoriteAccount = params.toRequest()
         )
