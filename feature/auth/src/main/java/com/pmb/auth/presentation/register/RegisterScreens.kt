@@ -1,6 +1,5 @@
 package com.pmb.auth.presentation.register
 
-import android.util.Log
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
@@ -144,7 +143,7 @@ fun NavGraphBuilder.registerScreenHandler() {
                     screen = RegisterScreens.RegisterGraph, navBackStackEntry = it
                 )
             val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
-            BirthDatePlaceScreen(sharedState.value){
+            BirthDatePlaceScreen(sharedState.value) {
                 sharedViewModel.updateState {
                     sharedState.value.copy(
                         birthDatePlaceCity = it
@@ -158,7 +157,7 @@ fun NavGraphBuilder.registerScreenHandler() {
                     screen = RegisterScreens.RegisterGraph, navBackStackEntry = it
                 )
             val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
-            IssueCityPlace(sharedState.value){
+            IssueCityPlace(sharedState.value) {
                 sharedViewModel.updateState {
                     sharedState.value.copy(
                         issuePlaceCity = it
@@ -172,7 +171,7 @@ fun NavGraphBuilder.registerScreenHandler() {
                     screen = RegisterScreens.RegisterGraph, navBackStackEntry = it
                 )
             val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
-            CitySearchScreen(sharedState.value){
+            CitySearchScreen(sharedState.value) {
                 sharedViewModel.updateState {
                     sharedState.value.copy(
                         cityOfDeposit = it
@@ -186,7 +185,7 @@ fun NavGraphBuilder.registerScreenHandler() {
                     screen = RegisterScreens.RegisterGraph, navBackStackEntry = it
                 )
             val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
-            ProvinceSearchScreen(sharedState.value){
+            ProvinceSearchScreen(sharedState.value) {
                 sharedViewModel.updateState {
                     sharedState.value.copy(
                         provinceOfDeposit = it
@@ -246,7 +245,7 @@ fun NavGraphBuilder.registerScreenHandler() {
             DepositInformationScreen(
                 viewModel = hiltViewModel<DepositInformationViewModel>(),
                 sharedState.value,
-                setProvince ={
+                setProvince = {
                     sharedViewModel.updateState {
                         sharedState.value.copy(
                             provinceList = it,
@@ -371,9 +370,20 @@ fun NavGraphBuilder.registerScreenHandler() {
             )
         }
         composable(route = RegisterScreens.RegisterChooseCard.route) {
+            val sharedViewModel =
+                it.navigationManager.retrieveSharedViewModel<RegisterSharedViewModel>(
+                    screen = RegisterScreens.RegisterGraph, navBackStackEntry = it
+                )
+            val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
             ChooseCardScreen(
                 viewModel = hiltViewModel<ChooseCardViewModel>()
-            )
+            ) { childState ->
+                sharedViewModel.updateState {
+                    sharedState.value.copy(
+                        cardFormatId = childState.selectedCard?.formatId
+                    )
+                }
+            }
         }
     }
 }
