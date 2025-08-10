@@ -27,6 +27,7 @@ import com.pmb.ballon.component.base.AppNumberTextField
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.ClickableIcon
 import com.pmb.ballon.component.base.IconType
+import com.pmb.ballon.models.AppBottomSheetDefaults
 import com.pmb.ballon.models.TextStyle
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.transfer.R
@@ -55,7 +56,7 @@ fun PaymentBottomSheet(
     AppBottomSheet(
         isVisible = isVisible,
         onDismiss = onDismiss,
-        dragHandle = { BottomSheetDefaults.DragHandle() },
+        dragHandle = { AppBottomSheetDefaults.DragHandle() },
         content = {
             Column(
                 modifier = Modifier

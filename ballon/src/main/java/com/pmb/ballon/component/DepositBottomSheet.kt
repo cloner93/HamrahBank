@@ -41,6 +41,7 @@ import com.pmb.ballon.component.base.CaptionText
 import com.pmb.ballon.component.base.ClickableIcon
 import com.pmb.ballon.component.base.Headline6Text
 import com.pmb.ballon.component.base.IconType
+import com.pmb.ballon.models.AppBottomSheetDefaults
 import com.pmb.ballon.models.DepositBottomSheetModel
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.core.utils.toCurrency
@@ -58,7 +59,7 @@ fun DepositBottomSheet(
     AppBottomSheet(
         isVisible = isVisible,
         cancelable = true,
-        dragHandle = { BottomSheetDefaults.DragHandle() },
+        dragHandle = { AppBottomSheetDefaults.DragHandle() },
         onDismiss = { onDismiss() },
         content = {
             Column(

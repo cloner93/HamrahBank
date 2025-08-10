@@ -58,8 +58,8 @@ class ChangeUsernameViewModel @Inject constructor(
                     }
 
                     is Result.Success -> {
-                        localProvider.getUserDataStore().getUserData()?.copy(username = username)
-                            ?.let {
+                        localProvider.getUserDataStore().getUserData().copy(username = username)
+                            .let {
                                 localProvider.getUserDataStore().setUserData(userData = it)
                             }
                         setState { it.copy(loading = false) }

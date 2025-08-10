@@ -20,6 +20,7 @@ sealed interface DepositsViewActions : BaseViewAction {
     data object SetAmountVisibility : DepositsViewActions
 
     data object ShowDepositListBottomSheet : DepositsViewActions
+    data object RefreshDepositAmount : DepositsViewActions
     data object OpenDepositDetailsScreen : DepositsViewActions
     data class SetDepositAsMain(val model: DepositModel?) : DepositsViewActions
 

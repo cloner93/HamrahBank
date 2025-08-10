@@ -97,7 +97,7 @@ fun String.isIranianNationalId(): Boolean {
 }
 
 fun String.isPassword(): PasswordValidationResult = PasswordValidationResult(
-    minLen = length >= 8,
+    minLen = length >= 10,
     lowercase = contains(Regex("[a-z]")),
     uppercase = contains(Regex("[A-Z]")),
     digit = contains(Regex("[0-9]")),
@@ -118,7 +118,7 @@ data class PasswordValidationResult(
     val space: Boolean = false
 ) {
     val isValid: Boolean
-        get() = minLen && lowercase && uppercase && digit && specialChar && !space
+        get() = minLen && lowercase && uppercase && digit && !specialChar && !space
 }
 
 data class UsernameValidationResult(
