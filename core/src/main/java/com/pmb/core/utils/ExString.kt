@@ -103,8 +103,6 @@ fun String.isPassword(): PasswordValidationResult = PasswordValidationResult(
     lowercase = contains(Regex("[a-z]")),
     uppercase = contains(Regex("[A-Z]")),
     digit = contains(Regex("[0-9]")),
-    specialChar = contains(Regex("[!@#\$%^&*()_+\\-=\\[\\]{};':\"|,.<>/?]")),
-    space = contains(Regex("\\s"))
 )
 
 data class MobileValidationResult(
@@ -116,11 +114,9 @@ data class PasswordValidationResult(
     val lowercase: Boolean = false,
     val uppercase: Boolean = false,
     val digit: Boolean = false,
-    val specialChar: Boolean = false,
-    val space: Boolean = false
 ) {
     val isValid: Boolean
-        get() = minLen && lowercase && uppercase && digit && !specialChar && !space
+        get() = minLen && lowercase && uppercase && digit
 }
 
 data class UsernameValidationResult(
