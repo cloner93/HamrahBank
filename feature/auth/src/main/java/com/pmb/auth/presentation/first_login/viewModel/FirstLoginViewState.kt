@@ -12,5 +12,5 @@ data class FirstLoginViewState(
     val password: String = "",
 ) : BaseViewState {
     val enableButton: Boolean
-        get() = phoneNumber.isMobile().isValid && username.isNotEmpty() && password.length >= 4
+        get() = phoneNumber.isMobile().isValid && username.isNotEmpty() && password.length >= 10
 }
