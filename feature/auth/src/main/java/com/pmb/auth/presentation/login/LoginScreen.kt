@@ -41,6 +41,7 @@ import com.pmb.ballon.models.Size
 import com.pmb.ballon.models.TextStyle
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.core.BiometricPromptHelper
+import com.pmb.core.utils.allowOnlyEnglishLettersAndDigits
 import com.pmb.core.utils.isValidChars
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.manager.NavigationManager
@@ -131,18 +132,18 @@ fun LoginScreen(viewModel: LoginViewModel) {
 //                isPassword = it.isValid
             },
             onValueChange = {
-                if (it.length <= 10 && it.isValidChars() || it.isEmpty())
+                if (it.length <= 10 && it.allowOnlyEnglishLettersAndDigits() || it.isEmpty())
                 password = it
                 else if (it.length > 10) {
                     scope.launch {
                         snackBarHostState.showSnackbar(
-                            message = "رمز عبور حداکثر 20 کاراگتر باشد"
+                            message = "رمز عبور حداکثر 10 کاراگتر باشد"
                         )
                     }
                 } else if (!it.isValidChars()) {
                     scope.launch {
                         snackBarHostState.showSnackbar(
-                            message = "رمز عبور فقط می تواند شامل عدد و حروف انگلیسی و حروف خاص  @  -  _  .  می باشد"
+                            message = "رمز عبور فقط می تواند شامل عدد و حروف انگلیسی می باشد"
                         )
                     }
                 }
