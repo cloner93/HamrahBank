@@ -18,7 +18,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.pmb.auth.R
-import com.pmb.auth.domain.register.search_opening_branch.entity.OpeningBranch
 import com.pmb.auth.presentation.register.search_opening_branch.viewModel.SearchOpeningBranchViewActions
 import com.pmb.auth.presentation.register.search_opening_branch.viewModel.SearchOpeningBranchViewModel
 import com.pmb.ballon.component.AlertComponent
@@ -116,7 +115,7 @@ fun SearchOpeningBranchScreen(
                 viewModel.handle(SearchOpeningBranchViewActions.SelectOpeningBranchId(openingBranch))
             }
             Spacer(modifier = Modifier.size(16.dp))
-        }?:run {
+        } ?: run {
             BodyMediumText(
                 text = "نتیجه ای یافت نشد",
                 modifier = Modifier,
