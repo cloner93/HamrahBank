@@ -20,6 +20,7 @@ import com.pmb.ballon.R
 import com.pmb.ballon.component.base.AppBottomSheet
 import com.pmb.ballon.component.base.AppButtonWithIcon
 import com.pmb.ballon.component.base.Headline5Text
+import com.pmb.ballon.models.AppBottomSheetDefaults
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.core.utils.actionCall
 
@@ -32,7 +33,7 @@ fun ShowSupportBottomSheet(onDismiss: () -> Unit) {
         isVisible = isVisible,
         cancelable = true,
         onDismiss = { onDismiss() },
-        dragHandle = { BottomSheetDefaults.DragHandle() },
+        dragHandle = { AppBottomSheetDefaults.DragHandle() },
         content = {
             Column(
                 modifier = Modifier

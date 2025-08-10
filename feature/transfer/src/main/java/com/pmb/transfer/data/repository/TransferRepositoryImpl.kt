@@ -115,7 +115,7 @@ class TransferRepositoryImpl @Inject constructor(
                 commissionFee = params.transferMethod.fee.toLong(),
                 reasonRowNo = params.reasonId ?: 0,
                 desc = params.desc ?: "",
-                descInfo = params.destinationInfo,
+                destInfo = params.destinationInfo,
                 saveFavorite = params.favoriteDestination
             )
         ).mapApiResult {

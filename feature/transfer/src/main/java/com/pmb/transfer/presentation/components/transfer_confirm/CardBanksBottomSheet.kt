@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -21,6 +20,7 @@ import com.pmb.ballon.component.base.AppBottomSheet
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.ClickableIcon
 import com.pmb.ballon.component.base.IconType
+import com.pmb.ballon.models.AppBottomSheetDefaults
 import com.pmb.core.utils.toCurrency
 import com.pmb.transfer.R
 import com.pmb.transfer.domain.entity.AccountStatus
@@ -38,7 +38,7 @@ fun CardBanksBottomSheet(
     AppBottomSheet(
         isVisible = isVisible,
         cancelable = true,
-        dragHandle = { BottomSheetDefaults.DragHandle() },
+        dragHandle = { AppBottomSheetDefaults.DragHandle() },
         onDismiss = { onDismiss() },
         content = {
             Column(
@@ -53,8 +53,12 @@ fun CardBanksBottomSheet(
                 LazyColumn {
                     items(items.size) { index ->
                         val item = items[index]
-                        ItemCheckRow(title = item.cardNumberFormated,
-                            titleMore = stringResource(com.pmb.ballon.R.string.price_in_real_currency, item.cardBalance.toCurrency()),
+                        ItemCheckRow(
+                            title = item.cardNumberFormated,
+                            titleMore = stringResource(
+                                com.pmb.ballon.R.string.price_in_real_currency,
+                                item.cardBalance.toCurrency()
+                            ),
                             checked = defaultCardBank.id == item.id,
                             enabled = item.cardStatus == AccountStatus.ACTIVE,
                             titleLayoutDirection = LayoutDirection.Ltr,

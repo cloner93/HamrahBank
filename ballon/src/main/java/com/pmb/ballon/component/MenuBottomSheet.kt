@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -17,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import com.pmb.ballon.R
 import com.pmb.ballon.component.base.AppBottomSheet
 import com.pmb.ballon.component.base.Headline6Text
+import com.pmb.ballon.models.AppBottomSheetDefaults
 import com.pmb.ballon.models.IconStyle
 import com.pmb.ballon.models.MenuSheetModel
 import com.pmb.ballon.models.TextStyle
@@ -34,7 +34,7 @@ fun MenuBottomSheet(
     AppBottomSheet(
         isVisible = isVisible,
         cancelable = true,
-        dragHandle = { BottomSheetDefaults.DragHandle() },
+        dragHandle = { AppBottomSheetDefaults.DragHandle() },
         onDismiss = { onDismiss() },
         content = {
             Column(
