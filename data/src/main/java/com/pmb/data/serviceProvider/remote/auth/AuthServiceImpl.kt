@@ -2,11 +2,17 @@ package com.pmb.data.serviceProvider.remote.auth
 
 import com.pmb.core.platform.Result
 import com.pmb.data.mapper.authService.toData
+import com.pmb.data.model.AnyModel
 import com.pmb.domain.model.LoginRequest
 import com.pmb.domain.model.LoginResponse
 import com.pmb.domain.model.RegisterRequest
 import com.pmb.domain.model.RegisterVerifyResponse
 import com.pmb.domain.model.SendOtpRequest
+import com.pmb.domain.model.changePassword.NewPasswordRequest
+import com.pmb.domain.model.changePassword.NewPasswordWithEKYCRequest
+import com.pmb.domain.model.changePassword.NewPasswordWithEKYCResponse
+import com.pmb.domain.model.changePassword.NewPasswordWithVerifyRequest
+import com.pmb.domain.model.changePassword.NewPasswordWithVerifyResponse
 import com.pmb.domain.model.openAccount.AccountArchiveJobDocRequest
 import com.pmb.domain.model.openAccount.AccountArchiveJobDocResponse
 import com.pmb.domain.model.openAccount.CheckPostCodeRequest
@@ -156,6 +162,30 @@ class AuthServiceImpl @Inject constructor(
         val req = CheckPostCodeRequest(postcode = postCode)
         return client.request<CheckPostCodeRequest,CheckPostalCodeResponse>(
             "openAccount/postCodeInquiry", req
+        )
+    }
+
+    override fun newPassword(newPasswordRequest: NewPasswordRequest): Flow<Result<SuccessData<AnyModel>>> {
+        return client.request<NewPasswordRequest,AnyModel>(
+            "changePassword/newPassword", newPasswordRequest
+        )
+    }
+
+    override fun newPasswordFetchAdmittanceText(): Flow<Result<SuccessData<FetchAdmittanceTextResponse>>> {
+        return client.request<Unit, FetchAdmittanceTextResponse>(
+            "changePassword/fetchAdmittanceText"
+        )
+    }
+
+    override fun newPasswordWithEKYC(newPasswordWithEKYCRequest: NewPasswordWithEKYCRequest): Flow<Result<SuccessData<NewPasswordWithEKYCResponse>>> {
+        return client.request<NewPasswordWithEKYCRequest, NewPasswordWithEKYCResponse>(
+            "changePassword/withEkyc"
+        )
+    }
+
+    override fun newPasswordWithVerify(newPasswordWithVerifyRequest: NewPasswordWithVerifyRequest): Flow<Result<SuccessData<NewPasswordWithVerifyResponse>>> {
+        return client.request<NewPasswordWithVerifyRequest, NewPasswordWithVerifyResponse>(
+            "changePassword/withVerify"
         )
     }
 

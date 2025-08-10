@@ -5,6 +5,11 @@ import com.pmb.domain.model.LoginResponse
 import com.pmb.domain.model.SendOtpRequest
 import com.pmb.domain.model.SendOtpResponse
 import com.pmb.domain.model.UserData
+import com.pmb.domain.model.changePassword.NewPasswordRequest
+import com.pmb.domain.model.changePassword.NewPasswordWithEKYCRequest
+import com.pmb.domain.model.changePassword.NewPasswordWithEKYCResponse
+import com.pmb.domain.model.changePassword.NewPasswordWithVerifyRequest
+import com.pmb.domain.model.changePassword.NewPasswordWithVerifyResponse
 import com.pmb.domain.model.openAccount.AccountArchiveJobDocResponse
 import com.pmb.domain.model.openAccount.CheckPostalCodeResponse
 import com.pmb.domain.model.openAccount.FetchAdmittanceTextResponse
@@ -68,4 +73,13 @@ interface AuthRepository {
     suspend fun setFingerPrintState(state: Boolean)
 
     fun checkPostalCode(postCode: Int): Flow<Result<CheckPostalCodeResponse>>
+
+    fun newPassword(newPasswordRequest: NewPasswordRequest): Flow<Result<Boolean>>
+
+    fun newPasswordFetchAdmittanceText(): Flow<Result<FetchAdmittanceTextResponse>>
+
+    fun newPasswordWithEKYC(newPasswordWithEKYCRequest: NewPasswordWithEKYCRequest): Flow<Result<NewPasswordWithEKYCResponse>>
+
+    fun newPasswordWithVerify(newPasswordWithVerifyRequest: NewPasswordWithVerifyRequest): Flow<Result<NewPasswordWithVerifyResponse>>
+
 }

@@ -9,6 +9,11 @@ import com.pmb.domain.model.LoginResponse
 import com.pmb.domain.model.SendOtpRequest
 import com.pmb.domain.model.SendOtpResponse
 import com.pmb.domain.model.UserData
+import com.pmb.domain.model.changePassword.NewPasswordRequest
+import com.pmb.domain.model.changePassword.NewPasswordWithEKYCRequest
+import com.pmb.domain.model.changePassword.NewPasswordWithEKYCResponse
+import com.pmb.domain.model.changePassword.NewPasswordWithVerifyRequest
+import com.pmb.domain.model.changePassword.NewPasswordWithVerifyResponse
 import com.pmb.domain.model.openAccount.AccountArchiveJobDocResponse
 import com.pmb.domain.model.openAccount.CheckPostalCodeResponse
 import com.pmb.domain.model.openAccount.FetchAdmittanceTextResponse
@@ -23,6 +28,7 @@ import com.pmb.domain.model.openAccount.comissionFee.FetchCommissionFeeResponse
 import com.pmb.domain.model.openAccount.jobLevel.JobLevel
 import com.pmb.domain.repository.auth.AuthRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
@@ -199,5 +205,32 @@ class AuthRepositoryImpl @Inject constructor(
         return remoteServiceProvider.getAuthService().checkPostCode(postCode).mapApiResult {
             it.second
         }
+    }
+
+    override fun newPassword(newPasswordRequest: NewPasswordRequest): Flow<Result<Boolean>> = flow {
+        emit(Result.Loading)
+        remoteServiceProvider.getAuthService().newPassword(newPasswordRequest)
+            .mapApiResult { result ->
+                if (result.first?.statusMessage == "موفق") {
+                    Result.Success(true)
+                } else {
+                    Result.Error("Failed to set new password")
+                }
+            }
+    }
+
+    override fun newPasswordFetchAdmittanceText(): Flow<Result<FetchAdmittanceTextResponse>> {
+        return remoteServiceProvider.getAuthService().newPasswordFetchAdmittanceText()
+            .mapApiResult { it.second }
+    }
+
+    override fun newPasswordWithEKYC(newPasswordWithEKYCRequest: NewPasswordWithEKYCRequest): Flow<Result<NewPasswordWithEKYCResponse>> {
+        return remoteServiceProvider.getAuthService().newPasswordWithEKYC(newPasswordWithEKYCRequest)
+            .mapApiResult { it.second }
+    }
+
+    override fun newPasswordWithVerify(newPasswordWithVerifyRequest: NewPasswordWithVerifyRequest): Flow<Result<NewPasswordWithVerifyResponse>> {
+        return remoteServiceProvider.getAuthService().newPasswordWithVerify(newPasswordWithVerifyRequest)
+            .mapApiResult { it.second }
     }
 }
