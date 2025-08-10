@@ -34,8 +34,10 @@
     <string name="hamrah_bank_activate">فعالسازی همراه بانک</string>
     <string name="activation">فعالسازی</string>
     <string name="msg_first_login_confirm_header">کد ورود به شماره تلفن همراه شما ارسال شد. لطفا آن را وارد نمایید.</string>
+    <string name="msg_register_confirm_header">کد تایید به شماره تلفن همراه شما ارسال شد. لطفا آن را وارد نمایید.</string>
     <string name="otp">کد ورود</string>
     <string name="confirm_code">کد ورود</string>
+    <string name="accept_code">کد تایید</string>
     <string name="re_send">ارسال مجدد</string>
     <string name="resend_request"> امکان درخواست مجدد تا %s:%s</string>
     <string name="msg_could_not_login">ورود امکان پذیر نیست!</string>

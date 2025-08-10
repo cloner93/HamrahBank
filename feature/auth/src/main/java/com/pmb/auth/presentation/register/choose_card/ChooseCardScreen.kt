@@ -41,6 +41,7 @@ import com.pmb.auth.presentation.component.cardComponent.OrientationToggle
 import com.pmb.auth.presentation.register.choose_card.viewModel.ChooseCardViewActions
 import com.pmb.auth.presentation.register.choose_card.viewModel.ChooseCardViewModel
 import com.pmb.auth.presentation.register.choose_card.viewModel.ChooseCardViewState
+import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppLoading
@@ -186,5 +187,8 @@ fun ChooseCardScreen(
         } else {
             AppLoading()
         }
+    }
+    if (viewState.alertModelState!=null){
+        AlertComponent(viewState.alertModelState!!)
     }
 }
