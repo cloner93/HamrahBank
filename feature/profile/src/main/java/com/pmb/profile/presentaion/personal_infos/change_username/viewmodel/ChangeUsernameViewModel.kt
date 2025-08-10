@@ -62,8 +62,23 @@ class ChangeUsernameViewModel @Inject constructor(
                             .let {
                                 localProvider.getUserDataStore().setUserData(userData = it)
                             }
-                        setState { it.copy(loading = false) }
-                        postEvent(ChangeUsernameViewEvents.NavigateBackToPersonalInfo(newUsername = username))
+                        setState {
+                            it.copy(
+                                loading = false,
+                                alertState = AlertModelState.Dialog(
+                                    title = "پیغام",
+                                    description = "نام کاربری شما با موفقیت تغییر یافت!",
+                                    positiveButtonTitle = "تایید",
+                                    onPositiveClick = {
+                                        setState { state -> state.copy(alertState = null) }
+                                        postEvent(
+                                            ChangeUsernameViewEvents.NavigateBackToPersonalInfo(
+                                                newUsername = username
+                                            )
+                                        )
+                                    }
+                                ))
+                        }
                     }
                 }
             }
