@@ -42,6 +42,7 @@ import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.text_field.AppPasswordTextField
 import com.pmb.ballon.models.AccountSampleModel
 import com.pmb.ballon.ui.theme.AppTheme
+import com.pmb.core.utils.allowOnlyEnglishLettersAndDigits
 import com.pmb.core.utils.isValidChars
 import com.pmb.core.utils.validatePhone
 import com.pmb.navigation.manager.LocalNavigationManager
@@ -123,7 +124,7 @@ fun FirstLoginScreen(
             value = viewState.phoneNumber,
             label = stringResource(com.pmb.auth.R.string.mobile_number),
             onFocused = { focused ->
-                isError = if (!focused && !viewState.phoneNumber.isNullOrEmpty()) {
+                isError = if (!focused && viewState.phoneNumber.isNotEmpty()) {
                     !viewState.phoneNumber.validatePhone()
                 } else {
                     false
@@ -177,18 +178,18 @@ fun FirstLoginScreen(
             value = viewState.password,
             label = stringResource(com.pmb.auth.R.string.login_password),
             onValueChange = {
-                if (it.length <= 10 && it.isValidChars() || it.isEmpty())
+                if (it.length <= 10 && it.allowOnlyEnglishLettersAndDigits() || it.isEmpty())
                     viewModel.handle(FirstLoginViewActions.UpdatePassword(it))
                 else if (it.length > 10) {
                     scope.launch {
                         snackBarHostState.showSnackbar(
-                            message = "رمز عبور حداکثر 20 کاراگتر باشد"
+                            message = "رمز عبور حداکثر 10 کاراگتر باشد"
                         )
                     }
                 } else if (!it.isValidChars()) {
                     scope.launch {
                         snackBarHostState.showSnackbar(
-                            message = "رمز عبور فقط می تواند شامل عدد و حروف انگلیسی و حروف خاص  @  -  _  .  می باشد"
+                            message = "رمز عبور فقط می تواند شامل عدد و حروف انگلیسی می باشد"
                         )
                     }
                 }

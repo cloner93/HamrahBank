@@ -20,7 +20,7 @@ fun String.isMobile(): MobileValidationResult {
 
 fun String?.validatePhone(): Boolean {
     return (this?.matches(Regex("^\\+?[0-9]{10,13}$"))
-        ?: false) && (this.startsWith("09") || this.startsWith("9"))
+        ?: false) && (this?.startsWith("09") == true || this?.startsWith("9") == true)
 }
 
 fun String.setMobileValidator(): String {
@@ -42,10 +42,12 @@ fun String.allowOnlyEnglishLettersDigitsAndSymbols(): Boolean {
         it.code in 32..126 // ASCII printable characters: includes letters, digits, symbols
     }
 }
+
 fun isValidInput(input: String): Boolean {
     val regex = "^[A-Za-z0-9@_-]+$".toRegex()
     return regex.matches(input)
 }
+
 fun String.isValidCustomInput(): Boolean {
     if (this.length != 10) return false
 
@@ -88,7 +90,7 @@ fun String.isIranianNationalId(): Boolean {
 
     // Calculate the checksum using the first 9 digits
     val checksum = digits[9]
-    val sum = (0..8).sumBy { i -> digits[i] * (10 - i) }
+    val sum = (0..8).sumOf { i -> digits[i] * (10 - i) }
     val remainder = sum % 11
 
     // Valid national ID if the remainder is either equal to the checksum,
@@ -132,14 +134,13 @@ data class UsernameValidationResult(
         get() = minLen && maxLen && startWithLetter && specialChar && !space
 
     companion object {
-        fun validate(value: String): UsernameValidationResult =
-            UsernameValidationResult(
-                minLen = value.length >= 5,
-                maxLen = value.length <= 30,
-                startWithLetter = value.startWithEnglishLetter(),
-                specialChar = value.isValidChars(),
-                space = value.contains(Regex("\\s"))
-            )
+        fun validate(value: String): UsernameValidationResult = UsernameValidationResult(
+            minLen = value.length >= 5,
+            maxLen = value.length <= 30,
+            startWithLetter = value.startWithEnglishLetter(),
+            specialChar = value.isValidChars(),
+            space = value.contains(Regex("\\s"))
+        )
     }
 }
 
@@ -164,9 +165,5 @@ fun String.convertPersianDigitsToEnglish(): String {
 
 fun String.toCurrency(): String {
     // separate amount string 3 digits each with comma. like 100000000 to 100,000,000
-    return this
-        .reversed()
-        .chunked(3)
-        .joinToString(",")
-        .reversed()
+    return this.reversed().chunked(3).joinToString(",").reversed()
 }
