@@ -20,6 +20,7 @@ import com.pmb.ballon.component.base.AppBottomSheet
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.ClickableIcon
 import com.pmb.ballon.component.base.IconType
+import com.pmb.ballon.models.AppBottomSheetDefaults
 import com.pmb.core.utils.toCurrency
 import com.pmb.transfer.R
 import com.pmb.transfer.domain.entity.AccountBankEntity
@@ -37,7 +38,7 @@ fun AccountBanksBottomSheet(
     AppBottomSheet(
         isVisible = isVisible,
         cancelable = true,
-        dragHandle = { BottomSheetDefaults.DragHandle() },
+        dragHandle = { AppBottomSheetDefaults.DragHandle() },
         onDismiss = { onDismiss() },
         content = {
             Column(

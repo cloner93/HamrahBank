@@ -13,6 +13,6 @@ data class TransferRequest(
     val commissionFee: Long,
     val reasonRowNo: Long,
     val desc: String,
-    val descInfo: String,
+    val destInfo: String,
     val saveFavorite: Boolean
 )

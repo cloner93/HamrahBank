@@ -63,7 +63,7 @@ fun CitySearchComponent(
 
         Spacer(modifier = Modifier.size(24.dp))
 
-        cityList?.forEach { cityName ->
+        cityList?.takeIf { it.isNotEmpty() }?.forEach { cityName ->
             BodyMediumText(
                 text = cityName.cityName ?: "",
                 modifier = Modifier.clickable {
@@ -73,10 +73,19 @@ fun CitySearchComponent(
 
             )
             Spacer(modifier = Modifier.size(16.dp))
+        } ?: run {
+            BodyMediumText(
+                text = "نتیجه ای یافت نشد",
+                modifier = Modifier,
+                color = AppTheme.colorScheme.onBackgroundNeutralDefault
+
+            )
+            Spacer(modifier = Modifier.size(16.dp))
         }
 
     }
 }
+
 @Composable
 fun ProvinceSearchComponent(
     searchQuery: String,
@@ -119,7 +128,7 @@ fun ProvinceSearchComponent(
 
         Spacer(modifier = Modifier.size(24.dp))
 
-        cityList?.forEach { cityName ->
+        cityList?.takeIf { it.isNotEmpty() }?.forEach { cityName ->
             BodyMediumText(
                 text = cityName.provinceName ?: "",
                 modifier = Modifier.clickable {
@@ -129,10 +138,19 @@ fun ProvinceSearchComponent(
 
             )
             Spacer(modifier = Modifier.size(16.dp))
+        } ?: run {
+            BodyMediumText(
+                text = "نتیجه ای یافت نشد",
+                modifier = Modifier,
+                color = AppTheme.colorScheme.onBackgroundNeutralDefault
+
+            )
+            Spacer(modifier = Modifier.size(16.dp))
         }
 
     }
 }
+
 @Composable
 fun CityListSearchComponent(
     searchQuery: String,
@@ -175,12 +193,20 @@ fun CityListSearchComponent(
 
         Spacer(modifier = Modifier.size(24.dp))
 
-        cityList?.forEach { cityName ->
+        cityList?.takeIf { it.isNotEmpty() }?.forEach { cityName ->
             BodyMediumText(
                 text = cityName.cityName ?: "",
                 modifier = Modifier.clickable {
                     onCityClick(cityName)
                 },
+                color = AppTheme.colorScheme.onBackgroundNeutralDefault
+
+            )
+            Spacer(modifier = Modifier.size(16.dp))
+        } ?: run {
+            BodyMediumText(
+                text = "نتیجه ای یافت نشد",
+                modifier = Modifier,
                 color = AppTheme.colorScheme.onBackgroundNeutralDefault
 
             )

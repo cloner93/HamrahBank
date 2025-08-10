@@ -10,12 +10,12 @@ import kotlinx.serialization.Serializable
 @Parcelize
 data class CityOfBirthInfoDTO(
     val cityCode: Int,
-    val cityLatinName: String?=null,
+    val cityEnglishName: String?=null,
     val cityName: String?=null,
     val hajCityCode: Int,
     val issueRegionCode: Int,
     val macnacitiesCode: Int,
-    val markazCode: Int,
+    val mrkzCode: Int,
     val provinceCode: Int,
     val status: Int,
     val statusDate: Int,

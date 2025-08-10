@@ -42,7 +42,10 @@ fun String.allowOnlyEnglishLettersDigitsAndSymbols(): Boolean {
         it.code in 32..126 // ASCII printable characters: includes letters, digits, symbols
     }
 }
-
+fun isValidInput(input: String): Boolean {
+    val regex = "^[A-Za-z0-9@_-]+$".toRegex()
+    return regex.matches(input)
+}
 fun String.isValidCustomInput(): Boolean {
     if (this.length != 10) return false
 
@@ -94,7 +97,7 @@ fun String.isIranianNationalId(): Boolean {
 }
 
 fun String.isPassword(): PasswordValidationResult = PasswordValidationResult(
-    minLen = length >= 8,
+    minLen = length >= 10,
     lowercase = contains(Regex("[a-z]")),
     uppercase = contains(Regex("[A-Z]")),
     digit = contains(Regex("[0-9]")),
@@ -115,7 +118,7 @@ data class PasswordValidationResult(
     val space: Boolean = false
 ) {
     val isValid: Boolean
-        get() = minLen && lowercase && uppercase && digit && specialChar && !space
+        get() = minLen && lowercase && uppercase && digit && !specialChar && !space
 }
 
 data class UsernameValidationResult(
@@ -141,7 +144,7 @@ data class UsernameValidationResult(
 }
 
 fun String.isValidChars(): Boolean {
-    val regex = Regex("^[a-zA-Z0-9_.-]+$")
+    val regex = Regex("^[a-zA-Z0-9@_.-]+$")
     return regex.matches(this)
 }
 
