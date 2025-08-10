@@ -19,12 +19,12 @@ fun AlertComponent(alertState: AlertModelState) {
             onDismiss = alertState.onNegativeClick
         )
 
-        is AlertModelState.SnackBar -> SnackBar(
+        is AlertModelState.SnackBar -> /*SnackBar(
             message = alertState.message,
             actionLabel = alertState.buttonTitle,
             onDismissed = alertState.onDismissed,
             onActionPerformed = alertState.onActionPerformed
-        )
+        )*/ Unit
 
         is AlertModelState.BottomSheet ->
             showConfirmDeleteBottomSheet = true

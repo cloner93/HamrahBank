@@ -1,5 +1,6 @@
 package com.pmb.profile.presentaion.update.status
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -9,21 +10,27 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.MenuItem
 import com.pmb.ballon.component.MenuItemDefaults
-import com.pmb.ballon.component.TextImage
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppContent
+import com.pmb.ballon.component.base.AppImage
 import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.BodySmallText
+import com.pmb.ballon.component.base.Headline4Text
+import com.pmb.ballon.component.base.Headline6Text
 import com.pmb.ballon.component.base.IconType
 import com.pmb.ballon.models.IconStyle
+import com.pmb.ballon.models.ImageStyle
+import com.pmb.ballon.models.Size
 import com.pmb.ballon.models.TextStyle
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.navigation.manager.LocalNavigationManager
@@ -79,14 +86,24 @@ fun UpdateStatusScreen(viewModel: UpdateStatusViewModel, result: (VersionEntity)
     ) {
         if (!viewState.loading)
             viewState.versionEntity?.let {
-                TextImage(
-                    image = IconType.Painter(painterResource(if (it.updated) R.drawable.img_success else com.pmb.ballon.R.drawable.profile)),
+                Box(contentAlignment = Alignment.Center) {
+                    AppImage(
+                        image = IconType.Painter(painterResource(if (it.updated) R.drawable.img_success else com.pmb.ballon.R.drawable.img_new_version)),
+                        style = ImageStyle(size = Size.FIX(100.dp))
+                    )
+                    if (!it.updated)
+                        Headline4Text(
+                            modifier = Modifier.padding(bottom = 16.dp),
+                            text = "جدید",
+                            color = Color.White,
+                            textAlign = TextAlign.Center
+                        )
+                }
+                Spacer(modifier = Modifier.size(32.dp))
+                Headline6Text(
                     text = stringResource(if (it.updated) R.string.msg_new_version_updated_title else R.string.msg_new_version_for_update_title),
-                    textStyle = TextStyle(
-                        color = AppTheme.colorScheme.onBackgroundNeutralDefault,
-                        typography = AppTheme.typography.headline6
-                    ),
-                    spacer = 32.dp
+                    color = AppTheme.colorScheme.onBackgroundNeutralDefault,
+                    textAlign = TextAlign.Center
                 )
                 Spacer(modifier = Modifier.size(4.dp))
                 viewState.versionEntity?.takeIf { !it.updated }?.let {
