@@ -45,15 +45,15 @@ import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppNumberTextField
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.BodyMediumText
-import com.pmb.ballon.component.base.ButtonMediumText
+import com.pmb.ballon.component.base.ButtonLargeText
 import com.pmb.ballon.component.base.ChipWithIcon
 import com.pmb.ballon.component.base.IconType
 import com.pmb.ballon.component.datePicker.ShowPersianDatePickerBottomSheet
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.calender.currentMonthPair
-import com.pmb.calender.formatPersianDateForDisplay
 import com.pmb.calender.subtractDays
 import com.pmb.calender.toLong
+import com.pmb.calender.toPersianDateString
 import com.pmb.calender.today
 import com.pmb.navigation.manager.LocalNavigationManager
 
@@ -126,13 +126,15 @@ fun TransactionFilterScreen(
                             .padding(horizontal = 10.dp, vertical = 8.dp)
                             .clickable {
                                 viewModel.handle(TransactionsFilterViewActions.ClearFilters)
-                            }) {
+                            },
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
                         Icon(
                             imageVector = Icons.Outlined.FilterAltOff,
                             contentDescription = null,
                             tint = AppTheme.colorScheme.onBackgroundErrorDefault
                         )
-                        ButtonMediumText(
+                        ButtonLargeText(
                             modifier = Modifier.padding(horizontal = 8.dp),
                             text = "حذف فیلترها",
                             color = AppTheme.colorScheme.onBackgroundErrorDefault
@@ -140,7 +142,7 @@ fun TransactionFilterScreen(
                     }
                 }
 
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
                 AppButton(
                     modifier = Modifier.fillMaxWidth(),
@@ -155,7 +157,7 @@ fun TransactionFilterScreen(
             horizontalAlignment = Alignment.Start
         ) {
             Spacer(modifier = Modifier.height(24.dp))
-            BodyMediumText(
+            ButtonLargeText(
                 text = "نوع تراکنش",
                 color = AppTheme.colorScheme.onBackgroundNeutralSubdued
             )
@@ -233,7 +235,7 @@ fun TransactionFilterScreen(
             }
 
             Spacer(modifier = Modifier.height(44.dp))
-            BodyMediumText(
+            ButtonLargeText(
                 text = "مبلغ تراکنش",
                 color = AppTheme.colorScheme.onBackgroundNeutralSubdued
             )
@@ -290,7 +292,7 @@ fun TransactionFilterScreen(
             )
 
             Spacer(modifier = Modifier.height(44.dp))
-            BodyMediumText(
+            ButtonLargeText(
                 text = "انتخاب تاریخ",
                 color = AppTheme.colorScheme.onBackgroundNeutralSubdued
             )
@@ -342,7 +344,6 @@ fun TransactionFilterScreen(
                     assetColor = AppTheme.colorScheme.onBackgroundNeutralDefault,
                     borderColor = AppTheme.colorScheme.strokeNeutral1Default,
                 )
-
                 ChipWithIcon(
                     modifier = Modifier.weight(1f),
                     fillMaxWidth = true,
@@ -409,10 +410,7 @@ fun TransactionFilterScreen(
                 Column {
                     Spacer(modifier = Modifier.height(32.dp))
                     AppClickableReadOnlyTextField(
-                        value = formatPersianDateForDisplay(
-                            date = viewState.fromDate.toString(),
-                            time = null,
-                        ),
+                        value = viewState.fromDate.toString().toPersianDateString(),
                         label = "از تاریخ",
                         trailingIcon = {
                             AppButtonIcon(
@@ -426,10 +424,7 @@ fun TransactionFilterScreen(
 
                     Spacer(modifier = Modifier.height(24.dp))
                     AppClickableReadOnlyTextField(
-                        value = formatPersianDateForDisplay(
-                            date = viewState.toDate.toString(),
-                            time = null,
-                        ),
+                        value = viewState.toDate.toString().toPersianDateString(),
                         label = "تا تاریخ",
                         trailingIcon = {
                             AppButtonIcon(

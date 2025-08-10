@@ -5,8 +5,8 @@ sealed class AlertModelState(val alertType: AlertType) {
         val type: AlertType = AlertType.Error,
         val message: String,
         val buttonTitle: String? = null,
-        val onActionPerformed: (() -> Unit)?=null,
-        val onDismissed: (() -> Unit)?=null
+        val onActionPerformed: (() -> Unit)? = null,
+        val onDismissed: (() -> Unit)? = null
     ) : AlertModelState(alertType = type)
 
     data class Dialog(
@@ -15,8 +15,18 @@ sealed class AlertModelState(val alertType: AlertType) {
         val description: String? = null,
         val positiveButtonTitle: String? = null,
         val negativeButtonTitle: String? = null,
-        val onPositiveClick: (() -> Unit)?=null,
-        val onNegativeClick: (() -> Unit)?=null,
+        val onPositiveClick: (() -> Unit)? = null,
+        val onNegativeClick: (() -> Unit)? = null,
+    ) : AlertModelState(alertType = type)
+
+    data class BottomSheet(
+        val type: AlertType = AlertType.Error,
+        val message: String,
+        val cancelable: Boolean = true,
+        val positiveButtonTitle: String? = null,
+        val negativeButtonTitle: String? = null,
+        val onPositiveClick: (() -> Unit)? = null,
+        val onNegativeClick: (() -> Unit)? = null,
     ) : AlertModelState(alertType = type)
 }
 

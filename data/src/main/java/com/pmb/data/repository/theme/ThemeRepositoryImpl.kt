@@ -24,7 +24,7 @@ class ThemeRepositoryImpl @Inject constructor(
 
     override fun getThemeModeFlow(): Flow<ThemeMode> {
         return dataStore.data.map { prefs ->
-            val theme = prefs[THEME_KEY] ?: ThemeMode.SYSTEM.name
+            val theme = prefs[THEME_KEY] ?: ThemeMode.LIGHT.name
             ThemeMode.valueOf(theme)
         }
     }

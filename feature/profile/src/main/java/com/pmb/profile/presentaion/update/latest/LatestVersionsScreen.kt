@@ -23,7 +23,7 @@ import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.CaptionText
 import com.pmb.ballon.models.TextStyle
 import com.pmb.ballon.ui.theme.AppTheme
-import com.pmb.core.utils.Convert
+import com.pmb.calender.formatSimple
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.moduleScreen.ProfileScreens
 import com.pmb.profile.R
@@ -31,6 +31,7 @@ import com.pmb.profile.domain.entity.VersionEntity
 import com.pmb.profile.presentaion.update.latest.viewmodel.LatestVersionsViewActions
 import com.pmb.profile.presentaion.update.latest.viewmodel.LatestVersionsViewEvents
 import com.pmb.profile.presentaion.update.latest.viewmodel.LatestVersionsViewModel
+import java.util.Date
 
 @Composable
 fun LatestVersionsScreen(viewModel: LatestVersionsViewModel, result: (VersionEntity) -> Unit) {
@@ -83,10 +84,11 @@ fun LatestVersionsScreen(viewModel: LatestVersionsViewModel, result: (VersionEnt
                             innerPadding = MenuItemDefaults.innerPadding.copy(start = 16.dp),
                             endContent = {
                                 CaptionText(
-                                    text = Convert.timestampToPersianDate(item.updatedAt),
+                                    text = Date(item.updatedAt).formatSimple(),
                                     color = AppTheme.colorScheme.onBackgroundNeutralSubdued
                                 )
                             },
+                            clickable = true,
                             onItemClick = {
                                 viewModel.handle(LatestVersionsViewActions.SelectVersion(item))
                             })

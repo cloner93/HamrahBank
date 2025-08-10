@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="title_pasword_condition">موارد زیر را در رمز جدید خود استفاده کنید:</string>
-    <string name="min_char_in_password">حداقل ۸ کاراکتر</string>
+    <string name="min_char_in_password">حداقل ۱۰ کاراکتر</string>
     <string name="upper_case">حروف بزرگ</string>
     <string name="lowercase">حروف کوچک</string>
-    <string name="digit">عدد09123456789</string>
+    <string name="digit">عدد</string>
     <string name="special_char"><![CDATA[علامت (مانند ٪>@)]]></string>
     <string name="real_carrency">ریال</string>
     <string name="daller">دلار</string>
@@ -49,4 +49,7 @@
     <string name="back_side_of_card">پشت کارت</string>
     <string name="choose_card">انتخاب کارت</string>
     <string name="tap_on_card">برای نمایش پشت کارت، ضربه بزنید.</string>
+    <string name="call">تماس\n</string>
+    <string name="common_questions">سوالات متداول</string>
+    <string name="feature_usage_guide">راهنمای استفاده از قابلیت ها</string>
 </resources>

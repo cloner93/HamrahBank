@@ -81,7 +81,7 @@ fun SelectJobInformationScreen(
 
         Spacer(modifier = Modifier.size(24.dp))
 
-        viewState.selectJobInformation?.forEach { selectJobInformation ->
+        viewState.selectJobInformation?.takeIf { it.isNotEmpty() }?.forEach { selectJobInformation ->
             BodyMediumText(
                 text = selectJobInformation.jobName ?: "",
                 modifier = Modifier.clickable {
@@ -91,6 +91,14 @@ fun SelectJobInformationScreen(
                     )
                     navigationManager.navigateBack()
                 },
+                color = AppTheme.colorScheme.onBackgroundNeutralDefault
+
+            )
+            Spacer(modifier = Modifier.size(16.dp))
+        }?:run {
+            BodyMediumText(
+                text = "نتیجه ای یافت نشد",
+                modifier = Modifier,
                 color = AppTheme.colorScheme.onBackgroundNeutralDefault
 
             )

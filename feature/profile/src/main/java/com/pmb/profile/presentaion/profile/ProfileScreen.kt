@@ -26,6 +26,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.pmb.ballon.component.AlertComponent
+import com.pmb.ballon.component.GuideBottomSheet
 import com.pmb.ballon.component.MenuItem
 import com.pmb.ballon.component.TextImage
 import com.pmb.ballon.component.annotation.AppPreview
@@ -42,6 +43,8 @@ import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.moduleScreen.AuthScreens
 import com.pmb.navigation.moduleScreen.ProfileScreens
 import com.pmb.profile.R
+import com.pmb.profile.presentaion.component.ShowInviteFriendBottomSheet
+import com.pmb.profile.presentaion.component.ShowSupportBottomSheet
 import com.pmb.profile.presentaion.profile.viewModel.ProfileViewActions
 import com.pmb.profile.presentaion.profile.viewModel.ProfileViewEvents
 import com.pmb.profile.presentaion.profile.viewModel.ProfileViewModel
@@ -67,33 +70,37 @@ fun ProfileScreen(viewModel: ProfileViewModel) {
                 ProfileViewEvents.NavigateToUpdate -> {
                     navigationManager.navigate(ProfileScreens.Update.Graph)
                 }
+
+                ProfileViewEvents.NavigateToAboutApp -> {
+                    navigationManager.navigate(ProfileScreens.AboutAppScreen)
+                }
+
+                ProfileViewEvents.NavigateToCommentsSuggestions -> {
+                    navigationManager.navigate(ProfileScreens.CommentsSuggestionsScreen)
+                }
             }
         }
     }
 
     AppContent(
-        modifier = Modifier
-            .padding(horizontal = 16.dp),
+        modifier = Modifier.padding(horizontal = 16.dp),
         backgroundColor = AppTheme.colorScheme.background3Neutral,
         scrollState = rememberScrollState(),
         topBar = {
-
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
             ) {
                 AppButtonIcon(
-                    modifier = Modifier
-                        .align(Alignment.Companion.TopStart),
+                    modifier = Modifier.align(Alignment.Companion.TopStart),
                     icon = Icons.Outlined.HelpOutline,
                     style = IconStyle(tint = AppTheme.colorScheme.onBackgroundNeutralDefault),
                     onClick = {
-
+                        viewModel.handle(ProfileViewActions.ShowGuideBottomSheet)
                     })
                 Row(
-                    modifier = Modifier
-                        .align(Alignment.Companion.Center)
+                    modifier = Modifier.align(Alignment.Companion.Center)
                 ) {
                     TextImage(
                         image = R.drawable.ic_profile,
@@ -184,13 +191,12 @@ fun ProfileScreen(viewModel: ProfileViewModel) {
                     title = stringResource(R.string.support),
                     startIcon = R.drawable.ic_support,
                     endIcon = com.pmb.ballon.R.drawable.ic_arrow_left,
-
                     bottomDivider = true,
                     startIconStyle = IconStyle(tint = AppTheme.colorScheme.onBackgroundNeutralCTA),
                     endIconStyle = IconStyle(tint = AppTheme.colorScheme.foregroundNeutralRest),
                     clickable = true,
                     onItemClick = {
-
+                        viewModel.handle(ProfileViewActions.ShowSupportBottomSheet(true))
                     })
 
                 MenuItem(
@@ -202,7 +208,7 @@ fun ProfileScreen(viewModel: ProfileViewModel) {
                     endIconStyle = IconStyle(tint = AppTheme.colorScheme.foregroundNeutralRest),
                     clickable = true,
                     onItemClick = {
-
+                        viewModel.handle(ProfileViewActions.ShowInviteFriendBottomSheet(true))
                     })
 
                 MenuItem(
@@ -214,7 +220,7 @@ fun ProfileScreen(viewModel: ProfileViewModel) {
                     endIconStyle = IconStyle(tint = AppTheme.colorScheme.foregroundNeutralRest),
                     clickable = true,
                     onItemClick = {
-
+                        viewModel.handle(ProfileViewActions.AboutAppClicked)
                     })
 
                 MenuItem(
@@ -225,7 +231,7 @@ fun ProfileScreen(viewModel: ProfileViewModel) {
                     endIconStyle = IconStyle(tint = AppTheme.colorScheme.foregroundNeutralRest),
                     clickable = true,
                     onItemClick = {
-
+                        viewModel.handle(ProfileViewActions.CommentsSuggestionsClicked)
                     })
             }
         }
@@ -252,12 +258,24 @@ fun ProfileScreen(viewModel: ProfileViewModel) {
                     })
             }
         }
-
         Spacer(modifier = Modifier.height(24.dp))
     }
     if (viewState.loading) AppLoading()
     viewState.alertModelState?.let { AlertComponent(it) }
+    if (viewState.showSupportBottomSheet) ShowSupportBottomSheet(onDismiss = {
+        viewModel.handle(ProfileViewActions.ShowSupportBottomSheet(false))
+    })
+    if (viewState.showInviteFriendBottomSheet) ShowInviteFriendBottomSheet(onDismiss = {
+        viewModel.handle(ProfileViewActions.ShowInviteFriendBottomSheet(false))
+    })
+
+    if (viewState.showGuideBottomSheet){
+        GuideBottomSheet {
+            viewModel.handle(ProfileViewActions.CloseGuideBottomSheet)
+        }
+    }
 }
+
 
 @AppPreview
 @Composable

@@ -6,6 +6,8 @@ sealed class ProfileScreens(route: String, arguments: Map<String, String> = empt
     Screen(baseRoute = route, arguments = arguments) {
     data object Profile : ProfileScreens(route = "profile")
     data object ThemeScreen : ProfileScreens(route = "themeScreen")
+    data object AboutAppScreen : ProfileScreens(route = "aboutAppScreen")
+    data object CommentsSuggestionsScreen : ProfileScreens(route = "commentsSuggestionsScreen")
 
     sealed class PersonalInfo(route: String) : ProfileScreens(route) {
         data object Graph : PersonalInfo(route = "profile_personal_info_graph")
@@ -25,8 +27,9 @@ sealed class ProfileScreens(route: String, arguments: Map<String, String> = empt
 
         data object PrivacySecurityScreen : PrivacyAndSecurity(route = "profile_privacy_security")
         data object ChangePasswordScreen : PrivacyAndSecurity(route = "profile_change_password")
-        data object UserAuthenticationScreen :
-            PrivacyAndSecurity(route = "profile_user_authentication")
+        data object EnableFingerprintScreen :
+            PrivacyAndSecurity(route = "enable_fingerprint_screen")
+
     }
 
     sealed class Update(route: String) : ProfileScreens(route) {

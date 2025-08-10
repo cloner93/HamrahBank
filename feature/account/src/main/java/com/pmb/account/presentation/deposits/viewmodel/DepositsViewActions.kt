@@ -5,22 +5,28 @@ import com.pmb.domain.model.DepositModel
 import com.pmb.domain.model.TransactionModel
 
 sealed interface DepositsViewActions : BaseViewAction {
-    object ShowHelp : DepositsViewActions
-    object NavigateToBalanceScreen : DepositsViewActions
+    data object ShowHelp : DepositsViewActions
+    data object NavigateToBalanceScreen : DepositsViewActions
 
-    object ShowShareBottomSheet : DepositsViewActions
+    data object ShowShareBottomSheet : DepositsViewActions
     class CloseShareBottomSheet(str: String?) : DepositsViewActions
 
-    object NavigateToTransactionScreen : DepositsViewActions
+    data object NavigateToTransactionScreen : DepositsViewActions
     class NavigateToTransactionDetailScreen(val transaction: TransactionModel) : DepositsViewActions
 
-    object ShowDepositMoreActionBottomSheet : DepositsViewActions
-    object CloseDepositMoreActionBottomSheet : DepositsViewActions
+    data object ShowDepositMoreActionBottomSheet : DepositsViewActions
+    data object CloseDepositMoreActionBottomSheet : DepositsViewActions
 
-    object SetAmountVisibility : DepositsViewActions
+    data object SetAmountVisibility : DepositsViewActions
 
-    object ShowDepositListBottomSheet : DepositsViewActions
-    object OpenDepositDetailsScreen : DepositsViewActions
+    data object ShowDepositListBottomSheet : DepositsViewActions
+    data object RefreshDepositAmount : DepositsViewActions
+    data object OpenDepositDetailsScreen : DepositsViewActions
+    data class SetDepositAsMain(val model: DepositModel?) : DepositsViewActions
 
     class CloseDepositListBottomSheet(val model: DepositModel?) : DepositsViewActions
+
+    data object ShowGuideBottomSheet : DepositsViewActions
+    data object CloseGuideBottomSheet : DepositsViewActions
+
 }

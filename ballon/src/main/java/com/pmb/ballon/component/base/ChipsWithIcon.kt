@@ -26,6 +26,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.pmb.ballon.component.annotation.AppPreview
+import com.pmb.ballon.component.loadingState
 import com.pmb.ballon.models.IconStyle
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.ballon.ui.theme.HamrahBankTheme
@@ -44,7 +45,8 @@ fun ChipWithIcon(
     assetColor: Color = AppTheme.colorScheme.onBackgroundTintPrimaryDefault,
     borderColor: Color? = null,
     borderWidth: Dp = 1.dp,
-    fillMaxWidth: Boolean = false
+    fillMaxWidth: Boolean = false,
+    isLoading: Boolean = false
 ) {
     Box(
         modifier = modifier
@@ -58,6 +60,7 @@ fun ChipWithIcon(
                 else
                     Modifier
             )
+            .loadingState(isLoading)
             .clickable(enabled = clickable != null) { clickable?.invoke() }
             .padding(horizontal = 10.dp, vertical = 6.dp),
     ) {
@@ -86,6 +89,7 @@ fun ChipWithIcon(
 fun PreviewChipDefault() {
         HamrahBankTheme {
             Column(
+                modifier = Modifier.background(AppTheme.colorScheme.background1Neutral),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 ChipWithIcon(
@@ -102,6 +106,14 @@ fun PreviewChipDefault() {
                     clickable = { },
                     color = Color.LightGray,
                     assetColor = Color.Black
+                )
+                ChipWithIcon(
+                    value = "Default Chip",
+                    startIcon = Icons.Default.ArrowDropDown,
+                    clickable = { },
+                    color = Color.LightGray,
+                    assetColor = Color.Black,
+                    isLoading = true
                 )
 
                 ChipWithIcon(

@@ -20,11 +20,14 @@
     <string name="cardless_withdrawal">برداشت وجه بدون کارت</string>
     <string name="card_cancellation">ابطال کارت</string>
     <string name="add_a_new_bank_card">افزودن کارت بانکی جدید</string>
-    <string name="adding_and_activating_a_bank_card">افزودن و فعال‌سازی بن‌کارت</string>
+    <string name="adding_and_activating_a_bank_card">افزودن بن‌کارت جدید</string>
     <string name="copy_all_data">کپی همه موارد</string>
     <string name="share_all_data">اشتراک گذاری همه</string>
     <string name="birthday">تاریخ تولد</string>
     <string name="_continue">ادامه</string>
     <string name="from">از تاریخ</string>
-    <string name="deposit_details">جزییات حساب</string>
+    <string name="deposit_details">جزئیات حساب</string>
+    <string name="call">تماس</string>
+    <string name="common_questions">سوالات متداول</string>
+    <string name="feature_usage_guide">راهنمای استفاده از قابلیت ها</string>
 </resources>

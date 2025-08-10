@@ -9,6 +9,7 @@ import com.pmb.auth.presentation.ekyc.ekyc_face_photo.viewModel.EKYCFacePhotoCap
 import com.pmb.auth.presentation.ekyc.ekyc_register_national_id.viewModel.EKYCRegisterNationalIdViewState
 import com.pmb.auth.presentation.ekyc.ekyc_video_capture.viewModel.EKYCAuthenticationCapturingVideoViewState
 import com.pmb.auth.presentation.ekyc.open_account.viewModel.OpenAccountViewState
+import com.pmb.auth.presentation.fingerprint.viewmodel.EnableFingerprintViewState
 import com.pmb.auth.presentation.first_login.viewModel.FirstLoginViewState
 import com.pmb.auth.presentation.first_login_confirm.viewModel.FirstLoginConfirmViewState
 import com.pmb.auth.presentation.foget_password.viewmodel.ForgetPasswordViewState
@@ -179,4 +180,9 @@ object StateModule {
     @Singleton
     fun provideAuthenticationInformationViewState(): AuthenticationInformationViewState =
         AuthenticationInformationViewState()
+
+    @Provides
+    @Singleton
+    fun provideEnableFingerprintViewState(): EnableFingerprintViewState =
+        EnableFingerprintViewState()
 }

@@ -6,4 +6,6 @@ sealed interface ProfileViewEvents : BaseViewEvent {
     data object LogoutAccountSucceed : ProfileViewEvents
     object NavigateToThemeScreen : ProfileViewEvents
     object NavigateToUpdate : ProfileViewEvents
+    object NavigateToAboutApp : ProfileViewEvents
+    object NavigateToCommentsSuggestions : ProfileViewEvents
 }

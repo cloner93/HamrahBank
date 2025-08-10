@@ -19,21 +19,26 @@ fun DepositCarouselWidget(
     onMoreClick: () -> Unit,
     onAmountVisibilityClick: () -> Unit,
     onDepositListChipsClick: () -> Unit,
-    isAmountVisible: Boolean
+    onRefreshClick: () -> Unit,
+    isAmountVisible: Boolean,
+    isLoading: Boolean
 ) {
     Box(
         modifier = Modifier
             .fillMaxWidth(),
         contentAlignment = Alignment.BottomCenter
     ) {
-        if (depositModel != null)
+//        if (depositModel != null)
             DepositWidget(
                 modifier = Modifier.padding(start = 32.dp, end = 32.dp),
                 item = depositModel,
                 isAmountVisible = isAmountVisible,
+                isLoading = isLoading,
                 moreClick = { onMoreClick.invoke() },
-                onAmountVisibilityClick = { onAmountVisibilityClick.invoke() }
-            ) { onDepositListChipsClick.invoke() }
+                onAmountVisibilityClick = { onAmountVisibilityClick.invoke() },
+                onDepositListChipsClick = { onDepositListChipsClick.invoke() },
+                onRefreshClick = { onRefreshClick.invoke() }
+            )
     }
 }
 
@@ -51,6 +56,14 @@ private fun DepositCardPrev() {
         categoryCode = 0,
     )
     HamrahBankTheme {
-        DepositCarouselWidget(dip, {}, {}, { }, true)
+        DepositCarouselWidget(
+            depositModel = dip,
+            onMoreClick = {},
+            onAmountVisibilityClick = {},
+            onDepositListChipsClick = { },
+            isAmountVisible = true,
+            onRefreshClick = {},
+            isLoading = false
+        )
     }
 }

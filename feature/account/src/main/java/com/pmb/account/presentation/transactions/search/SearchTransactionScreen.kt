@@ -92,10 +92,29 @@ fun TransactionSearchScreen(
             }
         }
     ) {
-        val list =
-            viewState.filteredTransactionList.ifEmpty { viewState.transactionList }
 
-        TransactionList(list) { transactionModel ->
+        val list =
+            if (viewState.query == "")
+                viewState.transactionList
+            else
+                viewState.filteredTransactionList
+
+        TransactionList(list, {
+            if (viewState.transactionList.isEmpty())
+                EmptyList(
+                    modifier = Modifier.fillMaxSize(),
+                    iconType = IconType.Painter(painterResource(R.drawable.empty_list)),
+                    message = "تراکنش یافت نشد."
+                )
+            else
+                if (viewState.query != "")
+                    EmptyList(
+                        modifier = Modifier.fillMaxSize(),
+                        iconType = IconType.Painter(painterResource(R.drawable.ic_not_found)),
+                        message = "تراکنشی با این مشخصات پیدا نشد."
+                    )
+
+        }) { transactionModel ->
             viewModel.handle(
                 TransactionSearchViewActions.NavigateToTransactionInfoScreen(
                     transactionModel
@@ -108,14 +127,11 @@ fun TransactionSearchScreen(
 @Composable
 fun TransactionList(
     transaction: List<TransactionModel>,
+    onEmpty: @Composable () -> Unit,
     onItemClick: (TransactionModel) -> Unit
 ) {
     if (transaction.isEmpty()) {
-        EmptyList(
-            modifier = Modifier.fillMaxSize(),
-            iconType = IconType.Painter(painterResource(R.drawable.empty_list)),
-            message = "تراکنش یافت نشد."
-        )
+        onEmpty()
     } else {
         LazyColumn(
             modifier = Modifier.fillMaxSize()
@@ -126,7 +142,7 @@ fun TransactionList(
                     TransactionRow(
                         item = item,
                         isAmountVisible = true,
-                        onClick = { onItemClick(item) }
+                        onClick = { onItemClick(item) },
                     )
                 }
             }

@@ -56,6 +56,12 @@ fun Date.formatInReceipt(): String {
     }
 }
 
+fun Date.formatSimple(): String {
+    Jdn(this.toGregorianCalendar().toCivilDate()).toPersianDate().let { persianDate ->
+        return "${persianDate.dayOfMonth} ${persianDate.monthName()} ${persianDate.year}"
+    }
+}
+
 fun Int.monthName(): String =
     persianCalendarMonthsInPersian[this - 1]
 
@@ -72,12 +78,21 @@ fun generateShiftedMonthList(
 ): List<Pair<PersianDate, PersianDate>> {
     val list = mutableListOf<Pair<PersianDate, PersianDate>>()
 
-    for (i in 10 downTo -1) {
-        val startDate = currentDate.monthStartOfMonthsDistance(-i)  // 1404 04 01
-        val endDate = lastDayOfMonth(startDate)                                     // 1404 04 31
+    for (i in 10 downTo 1) {
+        val startDate = currentDate.monthStartOfMonthsDistance(-i)  // xxxx xx 01
+        val endDate = lastDayOfMonth(startDate)                                     // xxxx xx 31
 
         list.add(startDate to endDate)
     }
+
+    // current month from xxxx.xx.01 to xxxx.xx.today
+    list.add(currentMonthPair())
+
+    // next month
+    val startDate = currentDate.monthStartOfMonthsDistance(1)  // xxxx xx 01
+    val endDate = lastDayOfMonth(startDate)                                     // xxxx xx 31
+    list.add(startDate to endDate)
+
     return list
 }
 
@@ -97,29 +112,28 @@ fun formatPersianDateForDisplay(date: String, time: String?): String {
     time?.let {
         val hour = time.substring(0, 2).toInt()
         val minute = time.substring(2, 4).toInt()
-        val second = time.substring(4, 6).toInt()
+        time.substring(4, 6).toInt()
 
-        timeStr = "ساعت $hour:$minute:$second"
+        timeStr = "$hour:$minute"
     }
-
 
     return when {
         transactionDate.year == now.year && transactionDate.month == now.month && transactionDate.dayOfMonth == now.dayOfMonth -> {
-            "امروز $timeStr"
+            "امروز | $timeStr"
         }
 
         transactionDate.year == yesterday.year && transactionDate.month == yesterday.month && transactionDate.dayOfMonth == yesterday.dayOfMonth -> {
-            "دیروز $timeStr"
+            "دیروز | $timeStr"
         }
 
         transactionDate.year == now.year -> {
             val monthName = transactionDate.monthName()
-            "${transactionDate.dayOfMonth} $monthName $timeStr"
+            "${Jdn(transactionDate).weekDayName} ${transactionDate.dayOfMonth} $monthName ${transactionDate.year} | $timeStr"
         }
 
         else -> {
             val monthName = transactionDate.monthName()
-            "${transactionDate.dayOfMonth} $monthName ${transactionDate.year} $timeStr"
+            "${Jdn(transactionDate).weekDayName} ${transactionDate.dayOfMonth} $monthName ${transactionDate.year} | $timeStr"
         }
     }
 }

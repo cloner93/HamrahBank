@@ -14,6 +14,7 @@ sealed class AuthScreens(route: String, arguments: Map<String, String> = emptyMa
     }
 
     data object Login : AuthScreens(route = "login")
+    data object EnableFingerprint : AuthScreens(route = "enable_fingerprint")
 
     data object ForgetPassword : AuthScreens(route = "forget_password")
     data object ForgetPasswordAuth : AuthScreens(route = "forget_password_auth")

@@ -15,8 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.pmb.ballon.component.MenuItem
 import com.pmb.ballon.component.MenuItemDefaults
@@ -28,7 +26,6 @@ import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.core.utils.toCurrency
 import com.pmb.transfer.R
 import com.pmb.transfer.domain.entity.AccountBankEntity
-import com.pmb.transfer.domain.entity.ReasonEntity
 
 @Composable
 fun AccountBanksComponent(
@@ -67,7 +64,7 @@ fun AccountBanksComponent(
         endIconStyle = IconStyle(
             tint = AppTheme.colorScheme.onBackgroundNeutralDefault, size = Size.FIX(24.dp)
         ),
-//        titleLayoutDirection = LayoutDirection.Ltr,
+        clickable = true,
         onItemClick = { showBottomSheet = true })
 
     if (showBottomSheet)

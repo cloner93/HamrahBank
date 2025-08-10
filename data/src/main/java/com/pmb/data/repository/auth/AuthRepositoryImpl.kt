@@ -60,9 +60,10 @@ class AuthRepositoryImpl @Inject constructor(
                         UserData(
                             customerId = user.customerId.toString(),
                             username = sendOtpRequest.userName,
-                            firstName = user.name,
-                            lastName = user.family,
+                            firstName = user.name ?:"",
+                            lastName = user.family ?:"",
                             phoneNumber = sendOtpRequest.mobileNumber,
+                            password = sendOtpRequest.password
                         )
                     )
                 }
@@ -71,27 +72,34 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun login(
-        customerId: String, username: String, password: String
+    override suspend fun login(
+        customerId: String, username: String, password: String, useFinger: Boolean
     ): Flow<Result<LoginResponse>> {
-        return remoteServiceProvider.getAuthService()
-            .login(customerId = customerId, username = username, password = password).mapApiResult {
-                it.second.let { user ->
-                    localServiceProvider.getUserDataStore().setUserData(
-                        UserData(
-                            customerId = user.customerId.toString(),
-                            username = user.userName ?: username,
-                            firstName = user.name ?: "",
-                            lastName = user.family ?: "",
-                            phoneNumber = localServiceProvider.getUserDataStore()
-                                .getUserData()?.phoneNumber ?: ""
-                        )
-                    )
+        if (!useFinger)
+            return remoteServiceProvider.getAuthService()
+                .login(
+                    customerId = customerId,
+                    username = username,
+                    password = password
+                )
+                .mapApiResult {
+                    it.second
                 }
-                it.second
-            }
-    }
+        else {
+            val userData = localServiceProvider.getUserDataStore().getUserData()
 
+            return remoteServiceProvider.getAuthService()
+                .login(
+                    customerId = userData.customerId,
+                    username = userData.username,
+                    password = userData.password
+                )
+                .mapApiResult {
+                    it.second
+                }
+        }
+
+    }
     override fun register(
         customerId: String, username: String, password: String
     ): Flow<Result<Boolean>> {
@@ -179,6 +187,14 @@ class AuthRepositoryImpl @Inject constructor(
         return remoteServiceProvider.getAuthService()
             .registerOpenAccount(registerOpenAccountRequest)
             .mapApiResult { it.second }
+    }
+
+    override suspend fun getFingerPrintState(): Boolean {
+        return localServiceProvider.getBiometric().getBiometricState()
+    }
+
+    override suspend fun setFingerPrintState(state: Boolean) {
+        localServiceProvider.getBiometric().setBiometricState(state)
     }
 
     override fun checkPostalCode(postCode: Int): Flow<Result<CheckPostalCodeResponse>> {

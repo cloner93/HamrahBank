@@ -14,6 +14,7 @@ import com.pmb.profile.domain.entity.PersonalInfoEntity
 import com.pmb.profile.domain.entity.VersionEntity
 import com.pmb.profile.domain.repository.ProfileRepository
 import com.pmb.profile.domain.use_case.PersonalInfoUseCase
+import com.pmb.profile.domain.use_case.SubmitCommentsSuggestionsUseCase
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -169,6 +170,13 @@ class ProfileRepositoryImpl @Inject constructor(
             data = req
         )
     }
+
+    override suspend fun submitCommentsSuggestions(params: SubmitCommentsSuggestionsUseCase.Params): Flow<Result<Unit>> =
+        flow {
+            emit(Result.Loading)
+            delay(2000)
+            emit(Result.Success(Unit))
+        }
 }
 
 private val mockVersionEntities = listOf(

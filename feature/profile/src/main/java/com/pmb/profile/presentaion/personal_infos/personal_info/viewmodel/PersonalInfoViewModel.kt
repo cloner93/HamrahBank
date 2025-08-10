@@ -1,9 +1,7 @@
 package com.pmb.profile.presentaion.personal_infos.personal_info.viewmodel
 
 import androidx.lifecycle.viewModelScope
-import com.pmb.core.platform.AlertModelState
 import com.pmb.core.platform.BaseViewModel
-import com.pmb.core.platform.Result
 import com.pmb.data.serviceProvider.local.LocalServiceProvider
 import com.pmb.profile.domain.entity.PersonalInfoEntity
 import com.pmb.profile.domain.use_case.PersonalInfoUseCase
@@ -51,7 +49,6 @@ class PersonalInfoViewModel @Inject constructor(
     }
 
     private fun fetchPersonalInfo() {
-
         viewModelScope.launch {
             val username = localProvider.getUserDataStore().getUserData()?.username
             setState {
@@ -63,40 +60,5 @@ class PersonalInfoViewModel @Inject constructor(
             }
         }
 
-        return
-        viewModelScope.launch {
-            personalInfoUseCase.invoke(PersonalInfoUseCase.Param(userId = 10L)).collect { result ->
-                when (result) {
-
-                    is Result.Error -> {
-                        setState {
-                            it.copy(
-                                loading = false,
-                                alertState = AlertModelState.SnackBar(
-                                    message = result.message,
-                                    onActionPerformed = {
-                                        setState { it.copy(loading = false) }
-                                    },
-                                    onDismissed = {
-                                        setState { it.copy(loading = false) }
-                                    })
-                            )
-                        }
-                    }
-
-                    Result.Loading -> {
-                        setState { it.copy(loading = true) }
-                    }
-
-                    is Result.Success -> {
-                        setState {
-                            it.copy(
-                                loading = false, personalInfo = result.data
-                            )
-                        }
-                    }
-                }
-            }
-        }
     }
 }

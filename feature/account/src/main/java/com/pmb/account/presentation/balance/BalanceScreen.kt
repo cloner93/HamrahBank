@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
@@ -32,7 +34,9 @@ import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.component.base.BodySmallText
 import com.pmb.ballon.component.base.CaptionText
+import com.pmb.ballon.component.base.ClickableIcon
 import com.pmb.ballon.component.base.Headline6Text
+import com.pmb.ballon.component.base.IconType
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.core.utils.toCurrency
 import com.pmb.navigation.manager.LocalNavigationManager
@@ -59,9 +63,11 @@ fun BalanceScreen() {
         topBar = {
             AppTopBar(
                 title = "دارایی ها",
-                onBack = {
-                    navigationManager.navigateBack()
-                })
+                startIcon = ClickableIcon(
+                    icon = IconType.ImageVector(Icons.Default.Close), onClick = {
+                        navigationManager.navigateBack()
+                    })
+            )
         }) {
 
         Card(
@@ -76,8 +82,7 @@ fun BalanceScreen() {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 PieChart(
-                    modifier = Modifier,
-                    charts = viewState.deposits
+                    modifier = Modifier, charts = viewState.deposits
                 )
 
                 BodySmallText(
@@ -94,8 +99,7 @@ fun BalanceScreen() {
                     )
 
                     BodySmallText(
-                        text = "ریال",
-                        color = AppTheme.colorScheme.onBackgroundNeutralDefault
+                        text = "ریال", color = AppTheme.colorScheme.onBackgroundNeutralDefault
                     )
                 }
             }
@@ -126,8 +130,7 @@ fun BalanceScreen() {
 fun DepositRow(deposit: DepositsChartModel, onClick: () -> Unit) {
 
     Row(
-        modifier = Modifier
-            .padding(end = 12.dp, top = 12.dp, bottom = 12.dp),
+        modifier = Modifier.padding(end = 12.dp, top = 12.dp, bottom = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(
@@ -141,8 +144,7 @@ fun DepositRow(deposit: DepositsChartModel, onClick: () -> Unit) {
 
         Column(modifier = Modifier.fillMaxWidth()) {
             Headline6Text(
-                text = deposit.title,
-                color = AppTheme.colorScheme.foregroundNeutralDefault
+                text = deposit.title, color = AppTheme.colorScheme.foregroundNeutralDefault
             )
             Spacer(modifier = Modifier.height(4.dp))
             Row {

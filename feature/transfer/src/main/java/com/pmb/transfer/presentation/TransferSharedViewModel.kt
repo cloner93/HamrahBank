@@ -30,6 +30,9 @@ class TransferSharedViewModel @Inject constructor() : ViewModel() {
     private val _cardVerification = MutableStateFlow<CardVerificationEntity?>(null)
     val cardVerification: StateFlow<CardVerificationEntity?> = _cardVerification
 
+    private val _transferReasons = MutableStateFlow<List<ReasonEntity>>(listOf())
+    val transferReasons: StateFlow<List<ReasonEntity>> = _transferReasons
+
     private val _transferReason = MutableStateFlow<ReasonEntity?>(null)
     val transferReason: StateFlow<ReasonEntity?> = _transferReason
 
@@ -63,6 +66,9 @@ class TransferSharedViewModel @Inject constructor() : ViewModel() {
         _cardVerification.value = cardVerification
     }
 
+    fun setTransferReasons(reasons: List<ReasonEntity>?) {
+        _transferReasons.value = reasons ?: listOf()
+    }
 
     fun setReason(reason: ReasonEntity?) {
         _transferReason.value = reason

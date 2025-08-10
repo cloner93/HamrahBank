@@ -32,6 +32,7 @@ import com.pmb.account.presentation.cards.viewmodel.CardsViewEvents
 import com.pmb.account.presentation.cards.viewmodel.CardsViewModel
 import com.pmb.account.presentation.component.CardInfo
 import com.pmb.ballon.component.EmptyList
+import com.pmb.ballon.component.GuideBottomSheet
 import com.pmb.ballon.component.MenuBottomSheet
 import com.pmb.ballon.component.base.AppButtonIcon
 import com.pmb.ballon.component.base.AppFAB
@@ -98,7 +99,7 @@ fun CardsScreen() {
                     icon = com.pmb.ballon.R.drawable.ic_help,
                     style = IconStyle(tint = AppTheme.colorScheme.foregroundNeutralDefault),
                     onClick = {
-                        viewModel.handle(CardsViewActions.ShowHelp)
+                        viewModel.handle(CardsViewActions.ShowGuideBottomSheet)
                     })
 
                 AppButtonIcon(
@@ -128,7 +129,7 @@ fun CardsScreen() {
             }
             else
                 EmptyList(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxSize(),
                     iconType = IconType.Painter(painterResource(R.drawable.ic_add_card)),
                     message = "هنوز کارتی اضافه نکرده\u200Cاید.\n" +
                             "روی دکمه + در پایین صفحه بزنید و کارت بانکی خود را اضافه کنید."
@@ -153,28 +154,21 @@ fun CardsScreen() {
         ),
         MenuSheetModel(
             title = stringResource(R.string.deactivating_the_card),
-            icon = com.pmb.ballon.R.drawable.ic_credit_card_lock_circe,
+            icon = com.pmb.ballon.R.drawable.ic_disable_card,
             onClicked = {
 
             }
         ),
         MenuSheetModel(
             title = stringResource(R.string.password_management),
-            icon = com.pmb.ballon.R.drawable.ic_credit_card_lock_circe,
-            onClicked = {
-
-            }
-        ),
-        MenuSheetModel(
-            title = stringResource(R.string.cardless_withdrawal),
-            icon = com.pmb.ballon.R.drawable.ic_key_password,
+            icon = com.pmb.ballon.R.drawable.ic_password_manage,
             onClicked = {
 
             }
         ),
         MenuSheetModel(
             title = stringResource(R.string.card_cancellation),
-            icon = com.pmb.ballon.R.drawable.ic_money_banknote_hand,
+            icon = com.pmb.ballon.R.drawable.ic_trash_delete_red,
             textColor = { Color(0xFFBA1A1A) },
             iconTint = { Color(0xFFBA1A1A) },
             onClicked = {
@@ -201,7 +195,6 @@ fun CardsScreen() {
         MenuSheetModel(
             title = stringResource(R.string.adding_and_activating_a_bank_card),
             icon = com.pmb.ballon.R.drawable.ic_add,
-            iconTint = { AppTheme.colorScheme.iconColor },
             onClicked = {
 
             }
@@ -213,4 +206,10 @@ fun CardsScreen() {
         onDismiss = {
             viewModel.handle(CardsViewActions.ShowFabBottomSheet)
         })
+
+    if (viewState.isGuideBottomSheetVisible) {
+        GuideBottomSheet {
+            viewModel.handle(CardsViewActions.CloseGuideBottomSheet)
+        }
+    }
 }

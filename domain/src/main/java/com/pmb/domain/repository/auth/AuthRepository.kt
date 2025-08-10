@@ -24,7 +24,13 @@ interface AuthRepository {
     suspend fun getUserData(): Flow<Result<UserData?>>
     suspend fun logoutUser(): Flow<Result<Boolean>>
     suspend fun sendOtp(sendOtpRequest: SendOtpRequest): Flow<Result<SendOtpResponse>>
-    fun login(customerId: String, username: String, password: String): Flow<Result<LoginResponse>>
+    suspend fun login(
+        customerId: String,
+        username: String,
+        password: String,
+        useFinger: Boolean
+    ): Flow<Result<LoginResponse>>
+
     fun register(customerId: String, username: String, password: String): Flow<Result<Boolean>>
     fun generateCode(
         nationalCode: String, mobileNo: String, birthDate: String
@@ -57,6 +63,11 @@ interface AuthRepository {
     fun fetchAdmittanceText(): Flow<Result<FetchAdmittanceTextResponse>>
 
     fun registerOpenAccount(registerOpenAccountRequest: RegisterOpenAccountRequest): Flow<Result<RegisterOpenAccountResponse>>
+
+    suspend fun getFingerPrintState(): Boolean
+
+    suspend fun setFingerPrintState(state: Boolean)
+
     fun checkPostalCode(postCode: Int): Flow<Result<CheckPostalCodeResponse>>
     fun fetchCardFormat(): Flow<Result<List<FetchCardFormatResponse>>>
 }

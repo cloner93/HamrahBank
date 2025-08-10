@@ -10,13 +10,18 @@ import com.pmb.core.platform.Result
 import com.pmb.domain.model.DepositModel
 import com.pmb.domain.model.TransactionModel
 import com.pmb.domain.model.TransactionRequest
+import com.pmb.domain.usecae.deposit.BalanceDepositUseCase
+import com.pmb.domain.usecae.deposit.BalanceParams
+import com.pmb.domain.usecae.deposit.GetDefaultDepositUseCase
 import com.pmb.domain.usecae.deposit.GetUserDepositListUseCase
+import com.pmb.domain.usecae.deposit.SetDefaultDepositUseCase
 import com.pmb.domain.usecae.transactions.TransactionsByCountPagingUsaCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import java.net.URLEncoder
@@ -28,12 +33,14 @@ open class DepositsViewModel @Inject constructor(
     initialState: DepositsViewState,
     private val getDepositsUseCase: GetUserDepositListUseCase,
     private val getTransactionsPaging: TransactionsByCountPagingUsaCase,
-
-    ) : BaseViewModel<DepositsViewActions, DepositsViewState, DepositsViewEvents>(initialState) {
+    private val getDefaultDepositUseCase: GetDefaultDepositUseCase,
+    private val setDefaultDepositUseCase: SetDefaultDepositUseCase,
+    private val getBalanceDepositUseCase: BalanceDepositUseCase,
+) : BaseViewModel<DepositsViewActions, DepositsViewState, DepositsViewEvents>(initialState) {
 
     // we cont handle paging flow inside of ViewState.
-    private val _transactionFlow = MutableStateFlow<
-            PagingData<TransactionModel>>(PagingData.empty())
+    private val _transactionFlow =
+        MutableStateFlow<PagingData<TransactionModel>>(PagingData.empty())
     val transactionFlow: StateFlow<PagingData<TransactionModel>> = _transactionFlow
 
     init {
@@ -74,6 +81,7 @@ open class DepositsViewModel @Inject constructor(
 
             is DepositsViewActions.ShowDepositMoreActionBottomSheet -> {
                 setState { it.copy(showMoreBottomSheet = true) }
+
             }
 
             is DepositsViewActions.SetAmountVisibility -> {
@@ -97,15 +105,28 @@ open class DepositsViewModel @Inject constructor(
             }
 
             DepositsViewActions.OpenDepositDetailsScreen -> {
-                viewState.value.selectedDeposit?.let { depositModel ->
+                getDefaultDeposit()
 
-                    val json = Json { ignoreUnknownKeys = true }
-                    val deposit = json.encodeToString(depositModel)
-                    val e = URLEncoder.encode(deposit, "UTF-8")
+            }
 
-
-                    postEvent(DepositsViewEvents.NavigateToDetailsScreen(e))
+            is DepositsViewActions.SetDepositAsMain -> {
+                action.model?.let {
+                    viewModelScope.launch {
+                        setDefaultDepositUseCase.invoke(action.model).collect {}
+                    }
                 }
+            }
+
+            DepositsViewActions.CloseGuideBottomSheet -> {
+                setState { it.copy(showGuideBottomSheet = false) }
+            }
+
+            DepositsViewActions.ShowGuideBottomSheet -> {
+                setState { it.copy(showGuideBottomSheet = true) }
+            }
+
+            DepositsViewActions.RefreshDepositAmount -> {
+                loadBalanceOfDeposit()
             }
         }
     }
@@ -113,48 +134,94 @@ open class DepositsViewModel @Inject constructor(
     private fun loadDeposits() {
         viewModelScope.launch {
 
-            getDepositsUseCase.invoke(Unit)
-                .collect { result ->
+            getDepositsUseCase.invoke(Unit).collect { result ->
+                when (result) {
+                    is Result.Error -> {
+                        setState {
+                            it.copy(
+                                errorMessage = result.message,
+                                depositLoading = false
+                            )
+                        }
+                        postEvent(DepositsViewEvents.ShowError(result.message))
+                    }
+
+                    Result.Loading -> {
+                        setState {
+                            it.copy(
+                                depositLoading = true,
+                                transactionLoading = true
+                            )
+                        }
+                    }
+
+                    is Result.Success -> {
+                        val listOfDeposits: List<DepositModel> =
+                            result.data.mapIndexed { index, deposit ->
+                                deposit.copy(isSelected = index == 0)
+                            }
+                        val selectedDeposit = listOfDeposits.firstOrNull()
+
+                        setState {
+                            it.copy(
+                                deposits = listOfDeposits,
+                                selectedDeposit = selectedDeposit,
+                                depositLoading = false
+                            )
+                        }
+
+                        viewState.value.selectedDeposit?.let {
+                            loadTransactions(
+                                it
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun loadBalanceOfDeposit() {
+        viewModelScope.launch {
+            viewState.value.selectedDeposit?.let { depositModel ->
+                getBalanceDepositUseCase.invoke(
+                    BalanceParams(
+                        depositModel.categoryCode,
+                        depositModel.depositNumber.toLong()
+                    )
+                ).collect { result ->
                     when (result) {
                         is Result.Error -> {
                             setState {
                                 it.copy(
                                     errorMessage = result.message,
-                                    isLoading = false
+                                    depositLoading = false
                                 )
                             }
                             postEvent(DepositsViewEvents.ShowError(result.message))
                         }
 
                         Result.Loading -> {
-                            setState { it.copy(isLoading = true) }
+                            setState {
+                                it.copy(
+                                    depositLoading = true,
+                                    transactionLoading = true
+                                )
+                            }
                         }
 
-                        is Result.Success<*> -> {
-                            val listOfDeposits: List<DepositModel> =
-                                (result.data as List<DepositModel>).mapIndexed { index, deposit ->
-                                    deposit.copy(isSelected = index == 0)
-                                }
-                            val selectedDeposit = listOfDeposits.firstOrNull()
-                            val balance = listOfDeposits.sumOf { deposit -> deposit.amount }
+                        is Result.Success -> {
 
                             setState {
                                 it.copy(
-                                    deposits = listOfDeposits,
-                                    selectedDeposit = selectedDeposit,
-                                    totalBalance = balance,
-                                    isLoading = false
-                                )
-                            }
-
-                            viewState.value.selectedDeposit?.let {
-                                loadTransactions(
-                                    it
+                                    selectedDeposit = depositModel.copy(amount = result.data.balance.toDouble()),
+                                    depositLoading = false
                                 )
                             }
                         }
                     }
                 }
+            }
         }
     }
 
@@ -166,69 +233,71 @@ open class DepositsViewModel @Inject constructor(
                 count = 10,
                 categoryCode = deposit.categoryCode
             )
-        ).cachedIn(viewModelScope)
+        )
+            .cachedIn(viewModelScope)
+            .onStart { setState { it.copy(transactionLoading = true) } }
             .onEach { pagingData ->
                 _transactionFlow.value = pagingData
             }.launchIn(viewModelScope)
 
     }
 
-    /* private fun loadTransactions(deposit: DepositModel) {
-         viewModelScope.launch {
-             getTransactionsUseCase.invoke(
-                 TransactionRequest(
-                     extAccNo = deposit.depositNumber.toLong(),
-                     count = 10,
-                     categoryCode = deposit.categoryCode
-                 )
-             ).collect { result ->
-                 when (result) {
-                     is Result.Error -> {
-                         setState {
-                             it.copy(
-                                 errorMessage = result.message,
-                                 isLoading = false,
-                                 transactions = listOf()
-                             )
-                         }
-                         postEvent(DepositsViewEvents.ShowError(result.message))
+    private fun getDefaultDeposit() {
+        viewModelScope.launch {
+            getDefaultDepositUseCase.invoke(Unit).collect { result ->
+                when (result) {
+                    is Result.Success -> {
+                        val defaultDeposit = result.data
+                        defaultDeposit?.let {
+                            setState {
+                                it.copy(
+                                    defaultDepositAccount = defaultDeposit
+                                )
+                            }
+                            viewState.value.selectedDeposit?.let { depositModel ->
 
-                     }
+                                val json = Json { ignoreUnknownKeys = true }
+                                val deposit = json.encodeToString(depositModel)
+                                val e = URLEncoder.encode(deposit, "UTF-8")
 
-                     Result.Loading -> {
-                         setState { it.copy(isLoading = true) }
-                     }
 
-                     is Result.Success<*> -> {
-                         val listOfTransactions: List<TransactionModel> =
-                             result.data as List<TransactionModel>
+                                postEvent(DepositsViewEvents.NavigateToDetailsScreen(e))
+                            }
+                        }
+                    }
 
-                         setState {
-                             it.copy(
-                                 transactions = listOfTransactions,
-                                 isLoading = false
-                             )
-                         }
-                     }
-                 }
-             }
-         }
-     }*/
+                    is Result.Error -> {
+                        viewState.value.selectedDeposit?.let { depositModel ->
 
-    fun selectDeposit(deposit: DepositModel) {
+                            val json = Json { ignoreUnknownKeys = true }
+                            val deposit = json.encodeToString(depositModel)
+                            val e = URLEncoder.encode(deposit, "UTF-8")
+
+
+                            postEvent(DepositsViewEvents.NavigateToDetailsScreen(e))
+                        }
+                        setState { it.copy(showDepositListBottomSheet = true) }
+                    }
+
+                    else -> Unit
+                }
+            }
+        }
+    }
+
+    private fun selectDeposit(deposit: DepositModel) {
         val selectedDeposit =
             viewState.value.deposits.find { it.depositNumber == deposit.depositNumber }
 
         setState {
             it.copy(
-                deposits = viewState.value.deposits
-                    .map {
-                        if (it.depositNumber == deposit.depositNumber) {
-                            it.copy(isSelected = true)
-                        } else {
-                            it.copy(isSelected = false)
-                        }
+                deposits = viewState.value.deposits.map { depositModel ->
+                    if (depositModel.depositNumber == deposit.depositNumber) {
+                        depositModel.copy(isSelected = true)
+                    } else {
+                        depositModel.copy(isSelected = false)
                     }
+                }
 
             )
         }

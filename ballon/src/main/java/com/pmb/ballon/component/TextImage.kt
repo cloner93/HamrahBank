@@ -83,6 +83,6 @@ fun TextImage(
 private fun TextImagePreview() {
     TextImage(
         image = R.drawable.img_key,
-        text = "جهت ثبت رمز عبور جدید، باید از طریق یکی روش\u200Cهای زیر اقدام به احراز هویت نمایید."
+        text = "جهت ثبت رمز ورود جدید، باید از طریق یکی روش\u200Cهای زیر اقدام به احراز هویت نمایید."
     )
 }

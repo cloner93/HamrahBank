@@ -89,8 +89,6 @@ fun TransferMethodScreen(
         }
     }
 
-    "انتقال در لحظه | کارمزد: ۵٬۰۰۰ ریال"
-
     if (viewState.loading) AppLoading()
     viewState.alertState?.let { AlertComponent(it) }
 }

@@ -87,6 +87,7 @@ fun SelectJobScreen(
                         typography = AppTheme.typography.bodyMedium,
                     ),
                     innerPadding = MenuItemDefaults.innerPadding.copy(horizontal = 16.dp, vertical = 12.dp),
+                    clickable = true,
                     onItemClick = {
                         viewModel.handle(SelectJobViewActions.SelectJob(item))
                     }

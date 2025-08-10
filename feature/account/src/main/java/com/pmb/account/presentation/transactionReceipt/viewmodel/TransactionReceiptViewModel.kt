@@ -2,7 +2,6 @@ package com.pmb.account.presentation.transactionReceipt.viewmodel
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.pmb.account.usecase.deposits.GetTransactionByIdUseCase
 import com.pmb.core.platform.BaseViewAction
 import com.pmb.core.platform.BaseViewEvent
 import com.pmb.core.platform.BaseViewModel
@@ -20,7 +19,6 @@ import javax.inject.Inject
 class TransactionReceiptViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     initialState: TransactionReceiptViewState,
-    private val transactionsByIdUseCase: GetTransactionByIdUseCase,
 ) : BaseViewModel<TransactionReceiptViewActions, TransactionReceiptViewState, TransactionReceiptViewEvents>(
     initialState
 ) {
@@ -76,13 +74,13 @@ class TransactionReceiptViewModel @Inject constructor(
                 RowData.TwoText(
                     title = "روش پرداخت",
                     subtitle =
-                        "از کارت",
+                        "از حساب",
                 ),
-                RowData.TwoText(
-                    title = "کارت مبدأ",
-                    subtitle =
-                        "۶۰۳۷۶۹۱۹۰۱۲۳۴۵۶۷",
-                ),
+//                RowData.TwoText(
+//                    title = "حساب مبدأ",
+//                    subtitle =
+//                        "۶۰۳۷۶۹۱۹۰۱۲۳۴۵۶۷",
+//                ),
                 RowData.TwoText(
                     title = "شماره پیگیری",
                     subtitle =
@@ -114,4 +112,32 @@ data class TransactionReceiptViewState(
     val errorMessage: String? = null,
     val transaction: TransactionModel? = null,
     val rows: List<RowData> = emptyList(),
-) : BaseViewState
+) : BaseViewState {
+    val sharedText: String
+        get() {
+            val res = StringBuilder()
+
+            res.append("رسید تراکنش بانک ملت")
+            res.append("\n")
+
+            if (rows.isEmpty()) "" else rows.forEach {
+                val row: StringBuilder = StringBuilder(it.title)
+
+                when (it) {
+                    is RowData.Payment -> {
+                        row.append(": " + it.amount + " " + it.currency)
+                    }
+
+                    is RowData.Simple -> {
+                    }
+
+                    is RowData.TwoText -> {
+                        row.append(": " + it.subtitle)
+                    }
+                }
+                res.append(row).append("\n")
+            }
+
+            return res.toString()
+        }
+}

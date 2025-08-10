@@ -65,6 +65,7 @@ fun CartBanksComponent(
         ),
         innerPadding = MenuItemDefaults.innerPadding.copy(start = 16.dp),
         titleLayoutDirection = LayoutDirection.Ltr,
+        clickable = true,
         onItemClick = { showCardsBottomSheet = true })
 
     if (showCardsBottomSheet)

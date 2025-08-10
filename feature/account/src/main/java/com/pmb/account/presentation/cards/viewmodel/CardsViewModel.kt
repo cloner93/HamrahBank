@@ -42,8 +42,12 @@ class CardsViewModel @Inject constructor(
                 setState { it.copy(showFabBottomSheet = !it.showFabBottomSheet) }
             }
 
-            CardsViewActions.ShowHelp -> {
-                postEvent(CardsViewEvents.ShowHelp)
+            CardsViewActions.CloseGuideBottomSheet -> {
+                setState { it.copy(isGuideBottomSheetVisible = false) }
+            }
+
+            CardsViewActions.ShowGuideBottomSheet -> {
+                setState { it.copy(isGuideBottomSheetVisible = true) }
             }
         }
     }
@@ -82,18 +86,19 @@ class CardsViewModel @Inject constructor(
 }
 
 sealed interface CardsViewEvents : BaseViewEvent {
-    object NavigateToBalance : CardsViewEvents
-    object ShowHelp : CardsViewEvents
+    data object NavigateToBalance : CardsViewEvents
+    data object ShowHelp : CardsViewEvents
 
     class ShowError(val error: String) : CardsViewEvents
 }
 
 sealed interface CardsViewActions : BaseViewAction {
-    object NavigateToBalanceScreen : CardsViewActions
-    object ShowHelp : CardsViewActions
+    data object NavigateToBalanceScreen : CardsViewActions
+    object CloseGuideBottomSheet : CardsViewActions
+    object ShowGuideBottomSheet : CardsViewActions
 
     class ShowDetailCardBottomSheetBottomSheet(val model: CardModel?) : CardsViewActions
-    object ShowFabBottomSheet : CardsViewActions
+    data object ShowFabBottomSheet : CardsViewActions
 }
 
 data class CardsViewState(
@@ -103,4 +108,5 @@ data class CardsViewState(
     val showDetailCardBottomSheet: Boolean = false,
     val showFabBottomSheet: Boolean = false,
     val selectedCard: CardModel? = null,
+    val isGuideBottomSheetVisible: Boolean = false,
 ) : BaseViewState

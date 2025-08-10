@@ -32,13 +32,19 @@ fun String.setMobileValidator(): String {
         trimmed
     }
 }
+
 fun String.allowOnlyEnglishLettersAndDigits(): Boolean {
     return this.all { it.isDigit() || it in 'a'..'z' || it in 'A'..'Z' }
 }
+
 fun String.allowOnlyEnglishLettersDigitsAndSymbols(): Boolean {
     return this.all {
         it.code in 32..126 // ASCII printable characters: includes letters, digits, symbols
     }
+}
+fun isValidInput(input: String): Boolean {
+    val regex = "^[A-Za-z0-9@_-]+$".toRegex()
+    return regex.matches(input)
 }
 fun String.isValidCustomInput(): Boolean {
     if (this.length != 10) return false
@@ -52,6 +58,7 @@ fun String.isValidCustomInput(): Boolean {
 
     return firstIsDigit && secondIsEnglishLetter && remainingAreDigits
 }
+
 fun String.setNationalCodeValidator(): String {
     val trimmed = this.trim().filter { it.isDigit() }
 
@@ -89,21 +96,14 @@ fun String.isIranianNationalId(): Boolean {
     return (remainder < 2 && remainder == checksum) || (remainder >= 2 && 11 - remainder == checksum)
 }
 
-fun String.isPassword(): PasswordValidationResult {
-    val minLen = this.length >= 8
-    val lowercase = this.any { it.isLowerCase() }
-    val uppercase = this.any { it.isUpperCase() }
-    val digit = this.any { it.isDigit() }
-    val specialChar = this.any { it in "!@#\$%^&*()_+\\-=\\[\\]{};':\"|,.<>?/" }
-
-    return PasswordValidationResult(
-        minLen = minLen,
-        lowercase = lowercase,
-        uppercase = uppercase,
-        digit = digit,
-        specialChar = true
-    )
-}
+fun String.isPassword(): PasswordValidationResult = PasswordValidationResult(
+    minLen = length >= 10,
+    lowercase = contains(Regex("[a-z]")),
+    uppercase = contains(Regex("[A-Z]")),
+    digit = contains(Regex("[0-9]")),
+    specialChar = contains(Regex("[!@#\$%^&*()_+\\-=\\[\\]{};':\"|,.<>/?]")),
+    space = contains(Regex("\\s"))
+)
 
 data class MobileValidationResult(
     val length: Int, val isValid: Boolean
@@ -114,45 +114,42 @@ data class PasswordValidationResult(
     val lowercase: Boolean = false,
     val uppercase: Boolean = false,
     val digit: Boolean = false,
-    private val specialChar: Boolean = true
+    val specialChar: Boolean = false,
+    val space: Boolean = false
 ) {
     val isValid: Boolean
-        get() = minLen && lowercase && uppercase && digit && specialChar
+        get() = minLen && lowercase && uppercase && digit && !specialChar && !space
 }
 
 data class UsernameValidationResult(
     val minLen: Boolean = false,
     val maxLen: Boolean = false,
     val startWithLetter: Boolean = false,
-    val specialChar: Boolean = false
+    val specialChar: Boolean = false,
+    val space: Boolean = false
 ) {
     val isValid: Boolean
-        get() = minLen && maxLen && startWithLetter && specialChar
+        get() = minLen && maxLen && startWithLetter && specialChar && !space
 
     companion object {
-        fun validate(value: String): UsernameValidationResult {
-            val minLen = value.length >= 5
-            val maxLen = value.length <= 30
-            val startWithLetter = value.startWithEnglishLetter()
-            val specialChar = value.isValidChars()
-
-            return UsernameValidationResult(
-                minLen = minLen,
-                maxLen = maxLen,
-                startWithLetter = startWithLetter,
-                specialChar = specialChar
+        fun validate(value: String): UsernameValidationResult =
+            UsernameValidationResult(
+                minLen = value.length >= 5,
+                maxLen = value.length <= 30,
+                startWithLetter = value.startWithEnglishLetter(),
+                specialChar = value.isValidChars(),
+                space = value.contains(Regex("\\s"))
             )
-        }
     }
 }
 
 fun String.isValidChars(): Boolean {
-    val regex = Regex("^[a-zA-Z0-9_.-]+$")
+    val regex = Regex("^[a-zA-Z0-9@_.-]+$")
     return regex.matches(this)
 }
 
 fun String.startWithEnglishLetter(): Boolean {
-    val regex = Regex("^[a-zA-Z]+$")
+    val regex = Regex("^[a-zA-Z].*")
     return regex.matches(this)
 }
 

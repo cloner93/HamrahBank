@@ -133,7 +133,7 @@ fun PersianDatePicker(calendar: Calendar = Calendar.SHAMSI, jdn: Jdn, setJdn: (J
                     modifier = Modifier.weight(1f),
                     range = startYear..startYear + 400,
                     value = date.year,
-                    disableEdit = true,
+                    disableEdit = false,
                     onClickLabel = "year",
                 ) { year ->
                     val month = date.month.coerceIn(1, calendar.getYearMonths(year))

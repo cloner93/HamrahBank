@@ -2,6 +2,7 @@ package com.pmb.calender
 
 import com.pmb.calender.utils.Calendar
 import com.pmb.calender.utils.applyWeekStartOffsetToWeekDay
+import com.pmb.calender.utils.persianCalendarDayOfWeekInPersian
 import com.pmb.calender.utils.toCivilDate
 import com.pmb.calender.utils.toGregorianCalendar
 import io.github.persiancalendar.calendar.AbstractDate
@@ -23,7 +24,7 @@ value class Jdn(val value: Long) {
 
     // 0 means Saturday in it, see #`test day of week from jdn`() in the testsuite
     val weekDay: Int get() = ((value + 2L) % 7L).toInt()
-//    val weekDayName: String get() = weekDays[this.weekDay]
+    val weekDayName: String get() = persianCalendarDayOfWeekInPersian[this.weekDay]
 //    val weekDayNameInitials: String get() = weekDaysInitials[this.weekDay]
 
 //    val isWeekEnd: Boolean get() = weekEnds[this.weekDay]

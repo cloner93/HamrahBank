@@ -9,8 +9,13 @@ import javax.inject.Inject
 
 class TransferReasonUseCase @Inject constructor(
     private val transferRepository: TransferRepository
-): BaseUseCase<Unit, List<ReasonEntity>>() {
-    override suspend fun execute(params: Unit): Flow<Result<List<ReasonEntity>>> {
-        return transferRepository.fetchReasons()
+) : BaseUseCase<TransferReasonUseCase.Params, List<ReasonEntity>>() {
+    override suspend fun execute(params: Params): Flow<Result<List<ReasonEntity>>> {
+        return transferRepository.fetchReasons(params)
     }
+
+    data class Params(
+        val transferType: Int,
+        val destination: String
+    )
 }

@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -22,22 +21,25 @@ import com.pmb.ballon.component.base.AppBottomSheet
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppOutlineButton
 import com.pmb.ballon.component.base.Headline5Text
+import com.pmb.ballon.models.AppBottomSheetDefaults
 import com.pmb.ballon.ui.theme.AppTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SimpleConfirmBottomSheet(
     message: String,
-    rejectButton: String,
-    confirmButton: String,
+    cancelable: Boolean = true,
+    confirmButton: String? = null,
+    rejectButton: String? = null,
+    onConfirm: () -> Unit,
     onDismiss: () -> Unit,
-    onConfirm: () -> Unit
 ) {
     var isVisible by remember { mutableStateOf(true) }
     AppBottomSheet(
         isVisible = isVisible,
         onDismiss = { onDismiss() },
-        dragHandle = { BottomSheetDefaults.DragHandle() },
+        dragHandle = { if (cancelable) AppBottomSheetDefaults.DragHandle() },
+        cancelable = cancelable,
         content = {
             Column(
                 modifier = Modifier.padding(20.dp),
@@ -49,28 +51,33 @@ fun SimpleConfirmBottomSheet(
                     color = AppTheme.colorScheme.onBackgroundNeutralDefault,
                     textAlign = TextAlign.Center
                 )
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(32.dp))
 
                 Row {
-                    AppButton(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f),
-                        title = confirmButton,
-                        colors = com.pmb.ballon.models.AppButton.buttonRedColors(),
-                        onClick = {
-                            isVisible = false
-                            onConfirm()
-                        })
-                    Spacer(modifier = Modifier.width(16.dp))
-                    AppOutlineButton(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f),
-                        title = rejectButton,
-                        onClick = {
-                            isVisible = false
-                        })
+                    confirmButton?.let {
+                        AppButton(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(1f),
+                            title = confirmButton,
+                            colors = com.pmb.ballon.models.AppButton.buttonColors(),
+                            onClick = {
+                                isVisible = false
+                                onConfirm()
+                            })
+                    }
+                    if (confirmButton != null && rejectButton != null)
+                        Spacer(modifier = Modifier.width(16.dp))
+                    rejectButton?.let {
+                        AppOutlineButton(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(1f),
+                            title = rejectButton,
+                            onClick = {
+                                isVisible = false
+                            })
+                    }
                 }
             }
         })

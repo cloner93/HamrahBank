@@ -11,14 +11,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.MenuItem
 import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.component.base.AppTopBar
-import com.pmb.ballon.component.base.BaseAppText
 import com.pmb.ballon.component.base.CaptionText
 import com.pmb.ballon.models.IconStyle
 import com.pmb.ballon.models.TextStyle
@@ -116,6 +114,7 @@ private fun ProfileInfoItemsComponent(viewModel: PersonalInfoViewModel) {
                         color = AppTheme.colorScheme.onBackgroundNeutralSubdued
                     )
                 },
+                clickable = true,
                 onItemClick = {
                     viewModel.handle(PersonalInfoViewActions.ChangeUsername)
                 })

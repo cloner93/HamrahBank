@@ -8,6 +8,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.pmb.navigation.manager.navigationManager
 import com.pmb.navigation.moduleScreen.ProfileScreens
+import com.pmb.profile.presentaion.about_app.AboutAppScreen
+import com.pmb.profile.presentaion.comments_suggestions.CommentsSuggestionsScreen
+import com.pmb.profile.presentaion.comments_suggestions.viewmodel.CommentsSuggestionsViewModel
 import com.pmb.profile.presentaion.personal_infos.PersonalInfoSharedViewModel
 import com.pmb.profile.presentaion.personal_infos.change_address.ChangeAddressScreen
 import com.pmb.profile.presentaion.personal_infos.change_address.viewmodel.ChangeAddressViewModel
@@ -27,6 +30,8 @@ import com.pmb.profile.presentaion.personal_infos.select_job.SelectJobScreen
 import com.pmb.profile.presentaion.personal_infos.select_job.viewmodel.SelectJobViewModel
 import com.pmb.profile.presentaion.privacyAndSecurity.PrivacySecurityScreen
 import com.pmb.profile.presentaion.privacyAndSecurity.changePassword.ChangePasswordScreen
+import com.pmb.profile.presentaion.privacyAndSecurity.enableFingerprint.EnableFingerprintScreen
+import com.pmb.profile.presentaion.privacyAndSecurity.enableFingerprint.viewmodel.EnableFingerprintViewModel
 import com.pmb.profile.presentaion.profile.ProfileScreen
 import com.pmb.profile.presentaion.profile.viewModel.ProfileViewModel
 import com.pmb.profile.presentaion.themeScreen.ThemeScreen
@@ -47,6 +52,16 @@ fun NavGraphBuilder.profileScreensHandle() {
     composable(route = ProfileScreens.ThemeScreen.route) {
         ThemeScreen(
             viewModel = hiltViewModel<ThemeScreenViewModel>()
+        )
+    }
+
+    composable(route = ProfileScreens.AboutAppScreen.route) {
+        AboutAppScreen()
+    }
+
+    composable(route = ProfileScreens.CommentsSuggestionsScreen.route) {
+        CommentsSuggestionsScreen(
+            viewModel = hiltViewModel<CommentsSuggestionsViewModel>()
         )
     }
 
@@ -192,7 +207,9 @@ fun NavGraphBuilder.profileScreensHandle() {
         composable(route = ProfileScreens.PrivacyAndSecurity.ChangePasswordScreen.route) {
             ChangePasswordScreen()
         }
-        composable(route = ProfileScreens.PrivacyAndSecurity.UserAuthenticationScreen.route) {}
+        composable(route = ProfileScreens.PrivacyAndSecurity.EnableFingerprintScreen.route) {
+            EnableFingerprintScreen(hiltViewModel<EnableFingerprintViewModel>())
+        }
     }
 
     navigation(

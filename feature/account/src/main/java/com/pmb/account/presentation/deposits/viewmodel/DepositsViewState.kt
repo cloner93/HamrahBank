@@ -9,16 +9,18 @@ import kotlinx.coroutines.flow.emptyFlow
 
 
 data class DepositsViewState(
-    val isLoading: Boolean = false,
+    val depositLoading: Boolean = false,
+    val transactionLoading: Boolean = false,
     val isRefreshing: Boolean = false,
     val errorMessage: String? = null,
     val deposits: List<DepositModel> = emptyList(),
     val selectedDeposit: DepositModel? = null,
-    val totalBalance: Double = 0.0,
     val isAmountVisible: Boolean = true,
     val transactionFlow: Flow<PagingData<TransactionModel>> = emptyFlow(),
     val transactions: List<TransactionModel> = emptyList(),
     val showShareDepositInfoBottomSheet: Boolean = false,
     val showMoreBottomSheet: Boolean = false,
     val showDepositListBottomSheet: Boolean = false,
-) : BaseViewState
+    val defaultDepositAccount: DepositModel? = null,
+    val showGuideBottomSheet: Boolean = false,
+    ) : BaseViewState
