@@ -8,6 +8,6 @@ import kotlinx.serialization.Serializable
 data class FetchFavoriteAccountResponse (
     val description:String,
     val number:String,
-    val type:Int,
+    val type:Int, //0 favorite //recent 1
     val id:Long
 )

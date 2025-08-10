@@ -6,6 +6,6 @@ import kotlinx.serialization.Serializable
 @SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class FetchFavoriteAccountRequest(
-    val favoriteType: Int, // 0 for favorite, 1 for recent transactions
+    val favoriteType: Int, //1 transfer
     val fetchFavoriteMode:Boolean
 )

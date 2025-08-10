@@ -144,6 +144,48 @@ object BankUtil {
     }
 }
 
+fun String.detectBankIdentifierType(
+
+): Pair<BankIdentifierNumberType, String>? {
+    val orderBy: List<BankIdentifierNumberType> = listOf(
+    BankIdentifierNumberType.CARD,
+    BankIdentifierNumberType.IBAN,
+    BankIdentifierNumberType.ACCOUNT
+    )
+    val ids = extractAllLongNumbers()
+
+    orderBy.forEach { type ->
+        ids.forEach { id ->
+            when (type) {
+                BankIdentifierNumberType.CARD -> {
+                    // کارت: 16 رقم
+                    val cardRegex = Regex("\\b\\d{16}\\b")
+                    cardRegex.find(id)?.value?.let {
+                        return type to it
+                    }
+                }
+
+                BankIdentifierNumberType.IBAN -> {
+                    // شبا: IR + 24 رقم
+                    val shebaRegex = Regex("\\bIR\\d{24}\\b", RegexOption.IGNORE_CASE)
+                    shebaRegex.find(id)?.value?.let {
+                        return type to it.uppercase()
+                    }
+                }
+
+                BankIdentifierNumberType.ACCOUNT -> {
+                    // حساب: بررسی اعتبار
+                    if (id.validateMellatBankAccount()) {
+                        return type to id
+                    }
+                }
+            }
+        }
+    }
+    return null // اگر هیچ چیزی پیدا نشد
+}
+
+
 fun String.extractAllLongNumbers(minLength: Int = 5): List<String> {
     val cleanText = convertPersianDigitsToEnglish()
         .replace("""[\s\-_,.]""".toRegex(), "")

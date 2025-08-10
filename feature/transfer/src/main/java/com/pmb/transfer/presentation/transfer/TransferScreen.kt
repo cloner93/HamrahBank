@@ -1,5 +1,6 @@
 package com.pmb.transfer.presentation.transfer
 
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -45,6 +46,7 @@ fun TransferScreen(
     val navigationManager = LocalNavigationManager.current
     val lazyListState = rememberLazyListState()
     val viewState by viewModel.viewState.collectAsState()
+    Log.d("Masoud Tag", "TransferScreen: ${viewState.favoriteAccounts}")
 
     // Handle one-time events such as navigation or showing toasts
     LaunchedEffect(Unit) {
