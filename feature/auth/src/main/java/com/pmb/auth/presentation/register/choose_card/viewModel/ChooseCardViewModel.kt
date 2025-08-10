@@ -5,6 +5,7 @@ import android.util.Base64
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.pmb.core.fileManager.FileManager
+import com.pmb.core.platform.AlertModelState
 import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.platform.Result
 import com.pmb.domain.model.openAccount.CardFormatModel
@@ -38,6 +39,13 @@ class ChooseCardViewModel @Inject constructor(
             is ChooseCardViewActions.SelectCardFormat -> {
                 handleSelectCardFormat(action)
             }
+            is ChooseCardViewActions.ClearAlertModelState -> {
+                setState {
+                    it.copy(
+                        alertModelState = null
+                    )
+                }
+            }
         }
     }
 
@@ -59,7 +67,17 @@ class ChooseCardViewModel @Inject constructor(
 
                     is Result.Error -> {
                         Log.d("Error", "error")
-                        setState { it.copy(isLoading = false) }
+                        setState {
+                            it.copy(
+                                isLoading = false, alertModelState = AlertModelState.Dialog(
+                                title = "خطا",
+                                description = " ${result.message}",
+                                positiveButtonTitle = "تایید",
+                                onPositiveClick = {
+                                    setState { state -> state.copy(alertModelState = null) }
+                                }
+                            ))
+                        }
                     }
 
                     is Result.Success -> {
