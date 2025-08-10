@@ -38,6 +38,7 @@ import com.pmb.ballon.component.base.BodySmallText
 import com.pmb.ballon.component.base.CaptionText
 import com.pmb.ballon.component.base.Headline6Text
 import com.pmb.ballon.component.base.IconType
+import com.pmb.ballon.models.AppBottomSheetDefaults
 import com.pmb.ballon.models.IconStyle
 import com.pmb.ballon.models.ImageStyle
 import com.pmb.ballon.models.Size
@@ -56,7 +57,7 @@ fun ShareDepositBottomSheet(
     AppBottomSheet(
         isVisible = isVisible,
         onDismiss = { onDismiss() },
-        dragHandle = { BottomSheetDefaults.DragHandle() },
+        dragHandle = { AppBottomSheetDefaults.DragHandle() },
         cancelable = true,
         content = content
     )
