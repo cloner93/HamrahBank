@@ -132,18 +132,12 @@ fun LoginScreen(viewModel: LoginViewModel) {
 //                isPassword = it.isValid
             },
             onValueChange = {
-                if (it.length <= 10 && it.allowOnlyEnglishLettersAndDigits() || it.isEmpty())
-                password = it
-                else if (it.length > 10) {
+                if (it.allowOnlyEnglishLettersAndDigits() || it.isEmpty())
+                    password = it
+                else if (!it.allowOnlyEnglishLettersAndDigits()) {
                     scope.launch {
                         snackBarHostState.showSnackbar(
-                            message = "رمز عبور حداکثر 10 کاراگتر باشد"
-                        )
-                    }
-                } else if (!it.isValidChars()) {
-                    scope.launch {
-                        snackBarHostState.showSnackbar(
-                            message = "رمز عبور فقط می تواند شامل عدد و حروف انگلیسی می باشد"
+                            message = "رمز عبور فقط می تواند شامل عدد و حروف انگلیسی باشد"
                         )
                     }
                 }
@@ -156,7 +150,7 @@ fun LoginScreen(viewModel: LoginViewModel) {
                 com.pmb.auth.R.string.login
             ),
             icon = if (password.isEmpty() && viewState.biometricState) com.pmb.ballon.R.drawable.ic_fingerprint else null,
-            enable = true
+            enable = password.length >= 10
         ) {
             if (password.isEmpty() && viewState.biometricState) {
                 viewModel.handle(
