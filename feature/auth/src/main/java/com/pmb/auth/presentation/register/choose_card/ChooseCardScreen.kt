@@ -50,6 +50,7 @@ import com.pmb.core.utils.toCurrency
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.manager.NavigationManager
 import com.pmb.navigation.moduleScreen.RegisterScreens
+
 @Composable
 fun ChooseCardScreen(
     viewModel: ChooseCardViewModel,
@@ -98,7 +99,7 @@ fun ChooseCardScreen(
                 viewModel.handle(ChooseCardViewActions.SelectCardFormat(if (orientationSelected == Orientation.Horizontal) viewState.horizontalCardList.first() else viewState.verticalCardList.first()))
             }
             Spacer(modifier = Modifier.padding(top = 33.dp))
-            FlipToggle{
+            FlipToggle {
                 sideSelected = !sideSelected
             }
             Spacer(modifier = Modifier.padding(top = 20.dp))
