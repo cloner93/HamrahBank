@@ -4,7 +4,7 @@ import com.pmb.core.platform.BaseViewAction
 import com.pmb.transfer.domain.entity.TransactionClientBankEntity
 
 sealed interface TransferEditDestinationViewActions : BaseViewAction {
-    data class ChangeFavoriteStatus(val newStatus: Boolean, val item: TransactionClientBankEntity) :
+    data class ChangeFavoriteStatus(val item: TransactionClientBankEntity) :
         TransferEditDestinationViewActions
     data class SelectAccount(val item: TransactionClientBankEntity) :
         TransferEditDestinationViewActions

@@ -1,25 +1,26 @@
 package com.pmb.transfer.presentation.transfer_edit_destination.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.pmb.core.platform.AlertModelState
 import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.platform.Result
+import com.pmb.domain.usecae.favorite.FetchRecentTransferFavoriteAccountsUseCase
+import com.pmb.domain.usecae.favorite.InsertFavoriteAccountParams
+import com.pmb.domain.usecae.favorite.InsertFavoriteAccountUseCase
 import com.pmb.transfer.domain.entity.TransactionClientBankEntity
-import com.pmb.transfer.domain.param.AccountFavoriteToggleParam
-import com.pmb.transfer.domain.use_case.AccountFavoriteToggleUseCase
-import com.pmb.transfer.domain.use_case.AccountHistoryUseCase
+import com.pmb.transfer.domain.entity.toEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class TransferEditDestinationViewModel @Inject constructor(
-    private val accountHistoryUseCase: AccountHistoryUseCase,
-    private val accountFavoriteToggleUseCase: AccountFavoriteToggleUseCase
-) :
-    BaseViewModel<TransferEditDestinationViewActions, TransferEditDestinationViewState, TransferEditDestinationViewEvents>(
-        TransferEditDestinationViewState()
-    ) {
+    private val insertFavoriteAccountUseCase: InsertFavoriteAccountUseCase,
+    private val fetchRecentFavoriteTransferFavoriteAccountUseCase: FetchRecentTransferFavoriteAccountsUseCase
+) : BaseViewModel<TransferEditDestinationViewActions, TransferEditDestinationViewState, TransferEditDestinationViewEvents>(
+    TransferEditDestinationViewState()
+) {
     init {
         fetchTransferHistories()
     }
@@ -27,7 +28,6 @@ class TransferEditDestinationViewModel @Inject constructor(
     override fun handle(action: TransferEditDestinationViewActions) {
         when (action) {
             is TransferEditDestinationViewActions.ChangeFavoriteStatus -> handleChangeFavoriteStatus(
-                action.newStatus,
                 action.item
             )
 
@@ -38,20 +38,18 @@ class TransferEditDestinationViewModel @Inject constructor(
 
     private fun fetchTransferHistories() {
         viewModelScope.launch {
-            accountHistoryUseCase.invoke(Unit).collect { result ->
+            fetchRecentFavoriteTransferFavoriteAccountUseCase.invoke(Unit).collect { result ->
                 when (result) {
                     is Result.Error -> {
                         setState {
                             it.copy(
-                                loading = false,
-                                alertState = AlertModelState.Dialog(
+                                loading = false, alertState = AlertModelState.Dialog(
                                     title = "خطا",
                                     description = " ${result.message}",
                                     positiveButtonTitle = "تایید",
                                     onPositiveClick = {
                                         setState { state -> state.copy(alertState = null) }
-                                    }
-                                )
+                                    })
                             )
                         }
                     }
@@ -64,8 +62,9 @@ class TransferEditDestinationViewModel @Inject constructor(
                         setState {
                             it.copy(
                                 loading = false,
-                                transactionClientBanks = result.data
-                            )
+                                transactionClientBanks = result.data.map {
+                                    it.toEntity().copy(favorite = false)
+                                })
                         }
                     }
                 }
@@ -77,27 +76,33 @@ class TransferEditDestinationViewModel @Inject constructor(
         postEvent(TransferEditDestinationViewEvents.TransferDestinationAmount(item))
     }
 
-    private fun handleChangeFavoriteStatus(newStatus: Boolean, item: TransactionClientBankEntity) {
+    private fun handleChangeFavoriteStatus(item: TransactionClientBankEntity) {
         viewModelScope.launch {
-            accountFavoriteToggleUseCase(
-                AccountFavoriteToggleParam(
-                    newStatus = newStatus,
-                    item = item
+            val account = with(item.clientBankEntity) {
+                when {
+                    accountNumber.isNotEmpty() -> accountNumber
+                    cardNumber.isNotEmpty() -> cardNumber
+                    iban.isNotEmpty() -> iban
+                    else -> ""
+                }
+            }
+            insertFavoriteAccountUseCase(
+                InsertFavoriteAccountParams(
+                    ownerDescription = item.clientBankEntity.name, number = account
                 )
             ).collect { result ->
+                Log.d("Masoud Tag", "handleChangeFavoriteStatus: $result")
                 when (result) {
                     is Result.Error -> {
                         setState {
                             it.copy(
-                                loading = false,
-                                alertState = AlertModelState.Dialog(
+                                loading = false, alertState = AlertModelState.Dialog(
                                     title = "خطا",
                                     description = " ${result.message}",
                                     positiveButtonTitle = "تایید",
                                     onPositiveClick = {
                                         setState { state -> state.copy(alertState = null) }
-                                    }
-                                )
+                                    })
                             )
                         }
                     }
@@ -110,9 +115,9 @@ class TransferEditDestinationViewModel @Inject constructor(
                         setState {
                             it.copy(
                                 loading = false,
-                                transactionClientBanks = result.data,
                             )
                         }
+                        postEvent(TransferEditDestinationViewEvents.NavigateUp)
                     }
                 }
             }

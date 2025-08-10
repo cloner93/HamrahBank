@@ -9,5 +9,6 @@ sealed interface TransferViewActions : BaseViewAction {
     data object ClearAlert : TransferViewActions
     data object ShowGuideBottomSheet : TransferViewActions
     data object CloseGuideBottomSheet : TransferViewActions
+    data object RefreshFavorites : TransferViewActions
 
 }

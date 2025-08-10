@@ -1,46 +1,46 @@
 package com.pmb.transfer.presentation.transfer_edit_favorite.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.pmb.core.platform.AlertModelState
 import com.pmb.core.platform.AlertType
 import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.platform.Result
+import com.pmb.domain.usecae.favorite.FetchAllTransferFavoriteAccountsUseCase
+import com.pmb.domain.usecae.favorite.FetchFavoriteTransferFavoriteAccountsUseCase
+import com.pmb.domain.usecae.favorite.RemoveFavoriteAccountParams
+import com.pmb.domain.usecae.favorite.RemoveFavoriteAccountUseCase
 import com.pmb.transfer.domain.entity.TransactionClientBankEntity
-import com.pmb.transfer.domain.param.AccountRemoveFavoriteParam
-import com.pmb.transfer.domain.use_case.AccountFavoritesUseCase
-import com.pmb.transfer.domain.use_case.AccountRemoveFavoriteUseCase
+import com.pmb.transfer.domain.entity.toEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class TransferEditFavoriteViewModel @Inject constructor(
-    private val accountFavoritesUseCase: AccountFavoritesUseCase,
-    private val accountRemoveFavoriteUseCase: AccountRemoveFavoriteUseCase
-) :
-    BaseViewModel<TransferEditFavoriteViewActions, TransferEditFavoriteViewState, TransferEditFavoriteViewEvents>(
-        TransferEditFavoriteViewState()
-    ) {
+    private val fetchFavoriteTransferFavoriteAccountsUseCase: FetchFavoriteTransferFavoriteAccountsUseCase,
+    private val removeFavoriteAccountUseCase: RemoveFavoriteAccountUseCase
+) : BaseViewModel<TransferEditFavoriteViewActions, TransferEditFavoriteViewState, TransferEditFavoriteViewEvents>(
+    TransferEditFavoriteViewState()
+) {
     init {
         fetchFavoriteList()
     }
 
     private fun fetchFavoriteList() {
         viewModelScope.launch {
-            accountFavoritesUseCase.invoke().collect { result ->
+            fetchFavoriteTransferFavoriteAccountsUseCase.invoke(Unit).collect { result ->
                 when (result) {
                     is Result.Error -> {
                         setState {
                             it.copy(
-                                loading = false,
-                                alertState = AlertModelState.Dialog(
+                                loading = false, alertState = AlertModelState.Dialog(
                                     title = "خطا",
                                     description = " ${result.message}",
                                     positiveButtonTitle = "تایید",
                                     onPositiveClick = {
                                         setState { state -> state.copy(alertState = null) }
-                                    }
-                                )
+                                    })
                             )
                         }
                     }
@@ -49,8 +49,7 @@ class TransferEditFavoriteViewModel @Inject constructor(
                         setState {
                             it.copy(
                                 loading = false,
-                                accountsFavorite = result.data
-                            )
+                                accountsFavorite = result.data.map { item -> item.toEntity() })
                         }
                     }
 
@@ -85,8 +84,7 @@ class TransferEditFavoriteViewModel @Inject constructor(
                     },
                     onNegativeClick = {
                         setState { newState -> newState.copy(alertState = null) }
-                    }
-                )
+                    })
             )
         }
     }
@@ -97,41 +95,39 @@ class TransferEditFavoriteViewModel @Inject constructor(
 
     private fun handleRemoveAccount(accountValue: TransactionClientBankEntity) {
         viewModelScope.launch {
-            accountRemoveFavoriteUseCase.invoke(
-                AccountRemoveFavoriteParam(item = accountValue)
+            val account = with(accountValue.clientBankEntity) {
+                when {
+                    accountNumber.isNotEmpty() -> accountNumber
+                    cardNumber.isNotEmpty() -> cardNumber
+                    iban.isNotEmpty() -> iban
+                    else -> ""
+                }
+            }
+
+            removeFavoriteAccountUseCase.invoke(
+                RemoveFavoriteAccountParams(account)
             ).collect { result ->
+                Log.d("Masoud Tag", "handleRemoveAccount: $result")
                 when (result) {
                     is Result.Error -> {
                         setState {
                             it.copy(
-                                loading = false,
-                                alertState = AlertModelState.Dialog(
+                                loading = false, alertState = AlertModelState.Dialog(
                                     title = "خطا",
                                     description = " ${result.message}",
                                     positiveButtonTitle = "تایید",
                                     onPositiveClick = {
                                         setState { state -> state.copy(alertState = null) }
-                                    }
-                                )
+                                    })
                             )
                         }
                     }
 
                     is Result.Success -> {
                         setState {
-                            it.copy(
-                                loading = false,
-                                accountsFavorite = result.data,
-                                alertState = AlertModelState.Dialog(
-                                    title = "پیغام",
-                                    description = "${accountValue.clientBankEntity.name} از مقاصد برگزیده حذف شد",
-                                    positiveButtonTitle = "تایید",
-                                    onPositiveClick = {
-                                        setState { state -> state.copy(alertState = null) }
-                                    }
-                                )
-                            )
+                            it.copy(loading = false)
                         }
+                        fetchFavoriteList()
                     }
 
                     is Result.Loading -> {

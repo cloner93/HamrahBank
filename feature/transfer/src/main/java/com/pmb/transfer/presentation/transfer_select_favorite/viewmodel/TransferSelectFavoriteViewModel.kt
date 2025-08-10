@@ -4,7 +4,10 @@ import androidx.lifecycle.viewModelScope
 import com.pmb.core.platform.AlertModelState
 import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.platform.Result
+import com.pmb.domain.usecae.favorite.FetchFavoriteTransferFavoriteAccountsUseCase
+import com.pmb.domain.usecae.favorite.FetchFavoriteTransferFavoriteAccountsUseCase_Factory
 import com.pmb.transfer.domain.entity.TransactionClientBankEntity
+import com.pmb.transfer.domain.entity.toEntity
 import com.pmb.transfer.domain.use_case.AccountFavoritesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -12,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TransferSelectFavoriteViewModel @Inject constructor(
-    private val accountFavoritesUseCase: AccountFavoritesUseCase
+    private val fetchFavoriteTransferFavoriteUseCase: FetchFavoriteTransferFavoriteAccountsUseCase
 ) :
     BaseViewModel<TransferSelectFavoriteViewActions, TransferSelectFavoriteViewState, TransferSelectFavoriteViewEvents>(
         TransferSelectFavoriteViewState()
@@ -34,7 +37,7 @@ class TransferSelectFavoriteViewModel @Inject constructor(
 
     private fun fetchTransferFavorites() {
         viewModelScope.launch {
-            accountFavoritesUseCase.invoke(Unit).collect { result ->
+            fetchFavoriteTransferFavoriteUseCase.invoke(Unit).collect { result ->
                 when (result) {
                     is Result.Error -> {
                         setState {
@@ -60,7 +63,7 @@ class TransferSelectFavoriteViewModel @Inject constructor(
                         setState {
                             it.copy(
                                 loading = false,
-                                accounts = result.data
+                                accounts = result.data.map { it.toEntity() }
                             )
                         }
                     }

@@ -4,22 +4,19 @@ import androidx.lifecycle.viewModelScope
 import com.pmb.core.platform.AlertModelState
 import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.platform.Result
+import com.pmb.domain.usecae.favorite.FetchAllTransferFavoriteAccountsUseCase
 import com.pmb.transfer.domain.entity.TransactionClientBankEntity
-import com.pmb.transfer.domain.use_case.AccountFavoritesUseCase
-import com.pmb.transfer.domain.use_case.AccountHistoryUseCase
+import com.pmb.transfer.domain.entity.toEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class TransferViewModel @Inject constructor(
-    private val accountFavoritesUseCase: AccountFavoritesUseCase,
-    private val accountHistoryUseCase: AccountHistoryUseCase
-) :
-    BaseViewModel<TransferViewActions, TransferViewState, TransferViewEvents>(TransferViewState()) {
+    private val fetchAllTransferFavoriteAccountsUseCase: FetchAllTransferFavoriteAccountsUseCase,
+) : BaseViewModel<TransferViewActions, TransferViewState, TransferViewEvents>(TransferViewState()) {
     init {
         fetchTransferFavorites()
-        fetchTransferHistories()
     }
 
     override fun handle(action: TransferViewActions) {
@@ -27,30 +24,26 @@ class TransferViewModel @Inject constructor(
             is TransferViewActions.NavigateToDestinationInput -> handleDestinationInput()
             TransferViewActions.ClearAlert -> setState { it.copy(alertState = null) }
             is TransferViewActions.SelectAccount -> handleSelectAccount(action.item)
-            TransferViewActions.CloseGuideBottomSheet ->
-                setState { it.copy(showGuideBottomSheet = false) }
-            TransferViewActions.ShowGuideBottomSheet ->
-                setState { it.copy(showGuideBottomSheet = true) }
+            TransferViewActions.CloseGuideBottomSheet -> setState { it.copy(showGuideBottomSheet = false) }
+            TransferViewActions.ShowGuideBottomSheet -> setState { it.copy(showGuideBottomSheet = true) }
+            TransferViewActions.RefreshFavorites -> fetchTransferFavorites()
         }
     }
 
     private fun fetchTransferFavorites() {
         viewModelScope.launch {
-            accountFavoritesUseCase.invoke(Unit).collect { result ->
+            fetchAllTransferFavoriteAccountsUseCase.invoke(Unit).collect { result ->
                 when (result) {
                     is Result.Error -> {
                         setState {
                             it.copy(
-                                loading = false,
-                                alertState = AlertModelState.Dialog(
-                                    title = "خطا",
-                                    description = " ${result.message}",
-                                    positiveButtonTitle = "تایید",
-                                    onPositiveClick = {
-                                        setState { state -> state.copy(alertState = null) }
-                                    }
-                                )
-                            )
+                                loading = false, alertState = AlertModelState.Dialog(
+                                title = "خطا",
+                                description = " ${result.message}",
+                                positiveButtonTitle = "تایید",
+                                onPositiveClick = {
+                                    setState { state -> state.copy(alertState = null) }
+                                }))
                         }
                     }
 
@@ -59,47 +52,15 @@ class TransferViewModel @Inject constructor(
                     }
 
                     is Result.Success -> {
+                        val favoriteList = result.data.filter { item -> item.type == 0 }
+                            .map { item -> item.toEntity() }
+                        val accounts = result.data.filter { item -> item.type == 1 }
+                            .map { item -> item.toEntity() }
                         setState {
                             it.copy(
                                 loading = false,
-                                favoriteAccounts = result.data
-                            )
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private fun fetchTransferHistories() {
-        viewModelScope.launch {
-            accountHistoryUseCase.invoke(Unit).collect { result ->
-                when (result) {
-                    is Result.Error -> {
-                        setState {
-                            it.copy(
-                                loading = false,
-                                alertState = AlertModelState.Dialog(
-                                    title = "خطا",
-                                    description = " ${result.message}",
-                                    positiveButtonTitle = "تایید",
-                                    onPositiveClick = {
-                                        setState { state -> state.copy(alertState = null) }
-                                    }
-                                )
-                            )
-                        }
-                    }
-
-                    Result.Loading -> {
-                        setState { it.copy(loading = true) }
-                    }
-
-                    is Result.Success -> {
-                        setState {
-                            it.copy(
-                                loading = false,
-                                accounts = result.data
+                                favoriteAccounts = favoriteList,
+                                accounts = accounts
                             )
                         }
                     }
