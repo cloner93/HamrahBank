@@ -8,6 +8,7 @@ import com.pmb.domain.model.UserData
 import com.pmb.domain.model.openAccount.AccountArchiveJobDocResponse
 import com.pmb.domain.model.openAccount.CheckPostalCodeResponse
 import com.pmb.domain.model.openAccount.FetchAdmittanceTextResponse
+import com.pmb.domain.model.openAccount.FetchCardFormatResponse
 import com.pmb.domain.model.openAccount.FetchCommitmentResponse
 import com.pmb.domain.model.openAccount.RegisterOpenAccountRequest
 import com.pmb.domain.model.openAccount.RegisterOpenAccountResponse
@@ -57,4 +58,5 @@ interface AuthRepository {
 
     fun registerOpenAccount(registerOpenAccountRequest: RegisterOpenAccountRequest): Flow<Result<RegisterOpenAccountResponse>>
     fun checkPostalCode(postCode: Int): Flow<Result<CheckPostalCodeResponse>>
+    fun fetchCardFormat(): Flow<Result<List<FetchCardFormatResponse>>>
 }

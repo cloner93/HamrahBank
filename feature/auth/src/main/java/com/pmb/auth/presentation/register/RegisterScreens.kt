@@ -20,6 +20,7 @@ import com.pmb.auth.presentation.register.authentication_select_services.viewMod
 import com.pmb.auth.presentation.register.check_postal_code.CheckPostalCodeScreen
 import com.pmb.auth.presentation.register.check_postal_code.viewModel.CheckPostalCodeViewModel
 import com.pmb.auth.presentation.register.choose_card.ChooseCardScreen
+import com.pmb.auth.presentation.register.choose_card.viewModel.ChooseCardViewModel
 import com.pmb.auth.presentation.register.deposit_information.CitySearchScreen
 import com.pmb.auth.presentation.register.deposit_information.DepositInformationScreen
 import com.pmb.auth.presentation.register.deposit_information.ProvinceSearchScreen
@@ -68,7 +69,6 @@ fun NavGraphBuilder.registerScreenHandler() {
                 viewModel = hiltViewModel<OpeningAccountViewModel>(),
                 sharedState = sharedState
             ) { childState ->
-                Log.d("Masoud Tag", "registerScreenHandler: $childState")
                 sharedViewModel.updateState {
                     sharedState.value.copy(
                         mobileNo = childState.phoneNumber,
@@ -88,8 +88,6 @@ fun NavGraphBuilder.registerScreenHandler() {
                 viewModel = hiltViewModel<RegisterNationalIdViewModel>(),
                 sharedState.value
             ) { childState ->
-                Log.d("Masoud Tag", "registerScreenHandler child state : $childState")
-                Log.d("Masoud Tag", "registerScreenHandler shared state : $sharedState")
                 childState.nationalSerialId?.let { serial ->
                     sharedViewModel.updateState {
                         sharedState.value.copy(
@@ -106,13 +104,11 @@ fun NavGraphBuilder.registerScreenHandler() {
                     screen = RegisterScreens.RegisterGraph, navBackStackEntry = it
                 )
             val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
-            Log.d("Masoud Tag", "registerScreenHandler shared state : $sharedState")
 
             RegisterConfirmScreen(
                 sharedState = sharedState,
                 viewModel = hiltViewModel<RegisterConfirmViewModel>(),
             ) { childState ->
-                Log.d("Masoud Tag", "registerScreenHandler child state : $childState")
                 sharedViewModel.updateState {
                     sharedState.value.copy(
                         verifyCodeResponse = childState.verifyCodeResponse
@@ -375,7 +371,9 @@ fun NavGraphBuilder.registerScreenHandler() {
             )
         }
         composable(route = RegisterScreens.RegisterChooseCard.route) {
-            ChooseCardScreen()
+            ChooseCardScreen(
+                viewModel = hiltViewModel<ChooseCardViewModel>()
+            )
         }
     }
 }

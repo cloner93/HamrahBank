@@ -12,6 +12,7 @@ import com.pmb.domain.model.UserData
 import com.pmb.domain.model.openAccount.AccountArchiveJobDocResponse
 import com.pmb.domain.model.openAccount.CheckPostalCodeResponse
 import com.pmb.domain.model.openAccount.FetchAdmittanceTextResponse
+import com.pmb.domain.model.openAccount.FetchCardFormatResponse
 import com.pmb.domain.model.openAccount.FetchCommitmentResponse
 import com.pmb.domain.model.openAccount.RegisterOpenAccountRequest
 import com.pmb.domain.model.openAccount.RegisterOpenAccountResponse
@@ -22,6 +23,7 @@ import com.pmb.domain.model.openAccount.cityName.City
 import com.pmb.domain.model.openAccount.comissionFee.FetchCommissionFeeResponse
 import com.pmb.domain.model.openAccount.jobLevel.JobLevel
 import com.pmb.domain.repository.auth.AuthRepository
+import io.ktor.util.decodeBase64String
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -45,7 +47,7 @@ class AuthRepositoryImpl @Inject constructor(
         try {
             val result = localServiceProvider.getUserDataStore().logoutUser()
             emit(Result.Success(result))
-        }catch (e:Exception){
+        } catch (e: Exception) {
             emit(Result.Error(message = e.message ?: "Unknown error", exception = e))
         }
     }
@@ -182,6 +184,12 @@ class AuthRepositoryImpl @Inject constructor(
     override fun checkPostalCode(postCode: Int): Flow<Result<CheckPostalCodeResponse>> {
         return remoteServiceProvider.getAuthService().checkPostCode(postCode).mapApiResult {
             it.second
+        }
+    }
+
+    override fun fetchCardFormat(): Flow<Result<List<FetchCardFormatResponse>>> {
+        return remoteServiceProvider.getAuthService().fetchCardFormat().mapApiResult {(_, list) ->
+            list
         }
     }
 }
