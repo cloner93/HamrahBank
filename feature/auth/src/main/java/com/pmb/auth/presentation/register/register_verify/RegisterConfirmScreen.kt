@@ -104,7 +104,7 @@ fun RegisterConfirmScreen(
     ) {
         Spacer(modifier = Modifier.size(24.dp))
         BodyMediumText(
-            text = stringResource(R.string.msg_first_login_confirm_header),
+            text = stringResource(R.string.msg_register_confirm_header),
             textAlign = TextAlign.Center,
             color = AppTheme.colorScheme.onBackgroundPrimarySubdued
         )
