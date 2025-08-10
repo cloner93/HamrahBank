@@ -88,7 +88,7 @@ fun ForgetPasswordScreen(
                     .fillMaxWidth()
                     .padding(horizontal = 24.dp),
                 title = stringResource(R.string._continue),
-                enable = !viewState.loading && isMobile && isNationalId && isPassword && isRePassword && password == rePassword,
+                enable = !viewState.loading && password == rePassword,
                 onClick = {
                     viewModel.handle(
                         ForgetPasswordViewActions.ResetPassword(
@@ -136,7 +136,6 @@ fun ForgetPasswordScreen(
                 label = stringResource(R.string.new_password),
                 conditionMessage = true,
                 onValidate = {
-                    isPassword = it.isValid
                 },
                 onValueChange = { password = it })
 
@@ -147,7 +146,6 @@ fun ForgetPasswordScreen(
                 label = stringResource(R.string.re_new_password),
                 conditionMessage = true,
                 onValidate = {
-                    isRePassword = it.isValid
                 },
                 onValueChange = { rePassword = it })
 

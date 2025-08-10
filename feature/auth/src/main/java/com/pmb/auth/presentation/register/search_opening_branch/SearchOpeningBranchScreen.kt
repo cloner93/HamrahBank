@@ -29,8 +29,10 @@ import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.component.base.AppSearchTextField
 import com.pmb.ballon.component.base.AppTopBar
+import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.component.base.ClickableIcon
 import com.pmb.ballon.component.base.IconType
+import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.domain.model.openAccount.branchName.Branch
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.manager.NavigationManager
@@ -105,7 +107,7 @@ fun SearchOpeningBranchScreen(
             )
         }
         Spacer(modifier = Modifier.size(16.dp))
-        viewState.searchedBranchList?.forEach { openingBranch ->
+        viewState.searchedBranchList?.takeIf { it.isNotEmpty() }?.forEach { openingBranch ->
             RoundedCornerCheckboxComponent(
                 title = "${openingBranch.branchName},${openingBranch.branchCode}",
                 caption = openingBranch.address,
@@ -113,6 +115,14 @@ fun SearchOpeningBranchScreen(
             ) {
                 viewModel.handle(SearchOpeningBranchViewActions.SelectOpeningBranchId(openingBranch))
             }
+            Spacer(modifier = Modifier.size(16.dp))
+        }?:run {
+            BodyMediumText(
+                text = "نتیجه ای یافت نشد",
+                modifier = Modifier,
+                color = AppTheme.colorScheme.onBackgroundNeutralDefault
+
+            )
             Spacer(modifier = Modifier.size(16.dp))
         }
 
