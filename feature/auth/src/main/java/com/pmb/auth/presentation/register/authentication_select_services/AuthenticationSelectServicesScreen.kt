@@ -47,7 +47,7 @@ import com.pmb.navigation.moduleScreen.RegisterScreens
 @Composable
 fun AuthenticationSelectServicesScreen(
     viewModel: AuthenticationSelectServicesViewModel,
-    updateState :(AuthenticationSelectServicesViewState)-> Unit
+    updateState: (AuthenticationSelectServicesViewState) -> Unit
 ) {
     val navigationManager: NavigationManager = LocalNavigationManager.current
     val viewState by viewModel.viewState.collectAsState()
@@ -107,8 +107,13 @@ fun AuthenticationSelectServicesScreen(
                         enable = !viewState.data.isNullOrEmpty(),
                         title = stringResource(R.string._continue),
                         onClick = {
+                            if (
+                                selectServices.selectServicesList.findLast { it.id == 1 }?.isChecked?.value == true ) {
+                                navigationManager.navigate(RegisterScreens.RegisterChooseCard)
+                            } else {
+                                navigationManager.navigate(RegisterScreens.RegisterAuthentication)
+                            }
                             updateState(viewState)
-                            navigationManager.navigate(RegisterScreens.RegisterChooseCard)
                         })
                 }
             ) {

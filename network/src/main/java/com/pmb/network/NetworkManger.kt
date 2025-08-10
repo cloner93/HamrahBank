@@ -92,9 +92,9 @@ class NetworkManger @Inject constructor(
         }
 
         install(HttpTimeout) {
-            requestTimeoutMillis = 20_000
-            connectTimeoutMillis = 20_000
-            socketTimeoutMillis = 20_000
+            requestTimeoutMillis = 30_000
+            connectTimeoutMillis = 30_000
+            socketTimeoutMillis = 30_000
         }
 
         installErrorHandler()

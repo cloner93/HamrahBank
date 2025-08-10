@@ -13,6 +13,7 @@ import com.pmb.domain.model.changePassword.NewPasswordWithVerifyResponse
 import com.pmb.domain.model.openAccount.AccountArchiveJobDocResponse
 import com.pmb.domain.model.openAccount.CheckPostalCodeResponse
 import com.pmb.domain.model.openAccount.FetchAdmittanceTextResponse
+import com.pmb.domain.model.openAccount.FetchCardFormatResponse
 import com.pmb.domain.model.openAccount.FetchCommitmentResponse
 import com.pmb.domain.model.openAccount.RegisterOpenAccountRequest
 import com.pmb.domain.model.openAccount.RegisterOpenAccountResponse
@@ -70,6 +71,7 @@ interface AuthService {
     fun registerOpenAccount(registerOpenAccountRequest: RegisterOpenAccountRequest): Flow<Result<SuccessData<RegisterOpenAccountResponse>>>
 
     fun checkPostCode(postCode: Int): Flow<Result<SuccessData<CheckPostalCodeResponse>>>
+    fun fetchCardFormat(): Flow<Result<SuccessData<List<FetchCardFormatResponse>>>>
 
     fun newPassword(newPasswordRequest: NewPasswordRequest): Flow<Result<SuccessData<AnyModel>>>
 
