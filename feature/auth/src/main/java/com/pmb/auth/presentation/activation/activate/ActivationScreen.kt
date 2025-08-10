@@ -113,7 +113,7 @@ fun ActivationScreen(viewModel: ActivationViewModel) {
                         .fillMaxWidth()
                         .padding(horizontal = 24.dp),
                     title = stringResource(R.string._continue),
-                    enable = !viewState.loading && isMobile && isNationalId && viewState.isChecked,
+                    enable = !viewState.loading && viewState.isChecked,
                     onClick = {
                         viewModel.handle(
                             ActivationViewActions.ActiveUser(
@@ -135,7 +135,9 @@ fun ActivationScreen(viewModel: ActivationViewModel) {
                 AppMobileTextField(
                     value = mobile,
                     label = stringResource(R.string.mobile_number),
-                    onValidate = { isMobile = it },
+                    onValidate = {
+
+                    },
                     onValueChange = { mobile = it })
 
                 Spacer(modifier = Modifier.size(24.dp))
@@ -143,7 +145,7 @@ fun ActivationScreen(viewModel: ActivationViewModel) {
                 AppNationalIdTextField(
                     value = nationalId,
                     label = stringResource(R.string.national_id),
-                    onValidate = { isNationalId = it },
+                    onValidate = {  },
                     onValueChange = { nationalId = it })
 
                 Spacer(modifier = Modifier.height(24.dp))

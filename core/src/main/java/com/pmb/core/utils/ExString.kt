@@ -42,7 +42,10 @@ fun String.allowOnlyEnglishLettersDigitsAndSymbols(): Boolean {
         it.code in 32..126 // ASCII printable characters: includes letters, digits, symbols
     }
 }
-
+fun isValidInput(input: String): Boolean {
+    val regex = "^[A-Za-z0-9@_-]+$".toRegex()
+    return regex.matches(input)
+}
 fun String.isValidCustomInput(): Boolean {
     if (this.length != 10) return false
 
@@ -141,7 +144,7 @@ data class UsernameValidationResult(
 }
 
 fun String.isValidChars(): Boolean {
-    val regex = Regex("^[a-zA-Z0-9_.-]+$")
+    val regex = Regex("^[a-zA-Z0-9@_.-]+$")
     return regex.matches(this)
 }
 
