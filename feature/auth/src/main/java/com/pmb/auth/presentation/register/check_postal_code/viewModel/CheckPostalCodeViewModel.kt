@@ -1,9 +1,7 @@
 package com.pmb.auth.presentation.register.check_postal_code.viewModel
 
 import androidx.lifecycle.viewModelScope
-import com.pmb.auth.domain.register.check_postal_code.entity.CheckPostalCodeRequest
 import com.pmb.auth.domain.register.check_postal_code.entity.SendAddressRequest
-import com.pmb.auth.domain.register.check_postal_code.useCase.CheckPostalCodeUseCase
 import com.pmb.auth.domain.register.check_postal_code.useCase.SendAddressUseCase
 import com.pmb.core.platform.AlertModelState
 import com.pmb.core.platform.BaseViewModel

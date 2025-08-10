@@ -19,6 +19,7 @@ import com.pmb.auth.presentation.register.authentication_select_services.viewMod
 import com.pmb.auth.presentation.register.check_postal_code.CheckPostalCodeScreen
 import com.pmb.auth.presentation.register.check_postal_code.viewModel.CheckPostalCodeViewModel
 import com.pmb.auth.presentation.register.choose_card.ChooseCardScreen
+import com.pmb.auth.presentation.register.choose_card.viewModel.ChooseCardViewModel
 import com.pmb.auth.presentation.register.deposit_information.CitySearchScreen
 import com.pmb.auth.presentation.register.deposit_information.DepositInformationScreen
 import com.pmb.auth.presentation.register.deposit_information.ProvinceSearchScreen
@@ -102,6 +103,7 @@ fun NavGraphBuilder.registerScreenHandler() {
                     screen = RegisterScreens.RegisterGraph, navBackStackEntry = it
                 )
             val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
+
             RegisterConfirmScreen(
                 sharedState = sharedState,
                 viewModel = hiltViewModel<RegisterConfirmViewModel>(),
@@ -141,7 +143,7 @@ fun NavGraphBuilder.registerScreenHandler() {
                     screen = RegisterScreens.RegisterGraph, navBackStackEntry = it
                 )
             val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
-            BirthDatePlaceScreen(sharedState.value){
+            BirthDatePlaceScreen(sharedState.value) {
                 sharedViewModel.updateState {
                     sharedState.value.copy(
                         birthDatePlaceCity = it
@@ -155,7 +157,7 @@ fun NavGraphBuilder.registerScreenHandler() {
                     screen = RegisterScreens.RegisterGraph, navBackStackEntry = it
                 )
             val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
-            IssueCityPlace(sharedState.value){
+            IssueCityPlace(sharedState.value) {
                 sharedViewModel.updateState {
                     sharedState.value.copy(
                         issuePlaceCity = it
@@ -169,7 +171,7 @@ fun NavGraphBuilder.registerScreenHandler() {
                     screen = RegisterScreens.RegisterGraph, navBackStackEntry = it
                 )
             val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
-            CitySearchScreen(sharedState.value){
+            CitySearchScreen(sharedState.value) {
                 sharedViewModel.updateState {
                     sharedState.value.copy(
                         cityOfDeposit = it
@@ -183,7 +185,7 @@ fun NavGraphBuilder.registerScreenHandler() {
                     screen = RegisterScreens.RegisterGraph, navBackStackEntry = it
                 )
             val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
-            ProvinceSearchScreen(sharedState.value){
+            ProvinceSearchScreen(sharedState.value) {
                 sharedViewModel.updateState {
                     sharedState.value.copy(
                         provinceOfDeposit = it
@@ -243,7 +245,7 @@ fun NavGraphBuilder.registerScreenHandler() {
             DepositInformationScreen(
                 viewModel = hiltViewModel<DepositInformationViewModel>(),
                 sharedState.value,
-                setProvince ={
+                setProvince = {
                     sharedViewModel.updateState {
                         sharedState.value.copy(
                             provinceList = it,
@@ -368,7 +370,20 @@ fun NavGraphBuilder.registerScreenHandler() {
             )
         }
         composable(route = RegisterScreens.RegisterChooseCard.route) {
-            ChooseCardScreen()
+            val sharedViewModel =
+                it.navigationManager.retrieveSharedViewModel<RegisterSharedViewModel>(
+                    screen = RegisterScreens.RegisterGraph, navBackStackEntry = it
+                )
+            val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
+            ChooseCardScreen(
+                viewModel = hiltViewModel<ChooseCardViewModel>()
+            ) { childState ->
+                sharedViewModel.updateState {
+                    sharedState.value.copy(
+                        cardFormatId = childState.selectedCard?.formatId
+                    )
+                }
+            }
         }
     }
 }
