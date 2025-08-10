@@ -6,12 +6,15 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -39,12 +42,14 @@ import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.text_field.AppPasswordTextField
 import com.pmb.ballon.models.AccountSampleModel
 import com.pmb.ballon.ui.theme.AppTheme
-import com.pmb.core.utils.allowOnlyEnglishLettersDigitsAndSymbols
+import com.pmb.core.utils.allowOnlyEnglishLettersAndDigits
+import com.pmb.core.utils.isValidChars
 import com.pmb.core.utils.validatePhone
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.manager.NavigationManager
 import com.pmb.navigation.moduleScreen.ActivationScreens
 import com.pmb.navigation.moduleScreen.AuthScreens
+import kotlinx.coroutines.launch
 
 //
 @Composable
@@ -52,6 +57,9 @@ fun FirstLoginScreen(
     viewModel: FirstLoginViewModel,
     updateShareState: (String, String, String) -> Unit
 ) {
+    val snackBarHostState = remember { SnackbarHostState() }
+
+    val scope = rememberCoroutineScope()
     val navigationManager: NavigationManager = LocalNavigationManager.current
     val viewState by viewModel.viewState.collectAsState()
     val primaryStyle = SpanStyle(
@@ -80,12 +88,12 @@ fun FirstLoginScreen(
             }
         }
     }
-
     AppContent(modifier = Modifier.padding(horizontal = 24.dp), topBar = {
         AppTopBar(
             title = stringResource(com.pmb.auth.R.string.login_to_hamrah_bank),
             onBack = { navigationManager.navigateBack() })
     }, horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally, footer = {
+        SnackbarHost(hostState = snackBarHostState)
         AppOutlineButton(
             modifier = Modifier
                 .padding(horizontal = 24.dp)
@@ -116,7 +124,7 @@ fun FirstLoginScreen(
             value = viewState.phoneNumber,
             label = stringResource(com.pmb.auth.R.string.mobile_number),
             onFocused = { focused ->
-                isError = if (!focused && !viewState.phoneNumber.isNullOrEmpty()) {
+                isError = if (!focused && viewState.phoneNumber.isNotEmpty()) {
                     !viewState.phoneNumber.validatePhone()
                 } else {
                     false
@@ -145,8 +153,21 @@ fun FirstLoginScreen(
                 }
             },
             onValueChange = {
-                if (it.length <= 20 && it.allowOnlyEnglishLettersDigitsAndSymbols())
+                if (it.length <= 20 && it.isValidChars() || it.isEmpty())
                     viewModel.handle(FirstLoginViewActions.UpdateUsername(it))
+                else if (it.length > 20) {
+                    scope.launch {
+                        snackBarHostState.showSnackbar(
+                            message = "نام کاربری حداکثر 20 کاراکتر می باشد"
+                        )
+                    }
+                } else if (!it.isValidChars()) {
+                    scope.launch {
+                        snackBarHostState.showSnackbar(
+                            message = "نام کاربری فقط می تواند شامل عدد و حروف انگلیسی و حروف خاص  @  -  _  .  باشد"
+                        )
+                    }
+                }
             },
         )
 
@@ -157,7 +178,15 @@ fun FirstLoginScreen(
             value = viewState.password,
             label = stringResource(com.pmb.auth.R.string.login_password),
             onValueChange = {
-                viewModel.handle(FirstLoginViewActions.UpdatePassword(it))
+                if (it.allowOnlyEnglishLettersAndDigits() || it.isEmpty())
+                    viewModel.handle(FirstLoginViewActions.UpdatePassword(it))
+                 else if (!it.allowOnlyEnglishLettersAndDigits()) {
+                    scope.launch {
+                        snackBarHostState.showSnackbar(
+                            message = "رمز عبور فقط می تواند شامل عدد و حروف انگلیسی باشد"
+                        )
+                    }
+                }
             })
 
         Spacer(modifier = Modifier.size(32.dp))
@@ -179,6 +208,7 @@ fun FirstLoginScreen(
                 navigationManager.navigate(AuthScreens.ForgetPassword)
             })
     }
+
     if (viewState.loading) AppLoading()
     viewState.alertModelState?.let { AlertComponent(it) }
 }

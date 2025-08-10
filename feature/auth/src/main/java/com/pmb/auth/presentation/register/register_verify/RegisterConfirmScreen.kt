@@ -95,7 +95,7 @@ fun RegisterConfirmScreen(
         modifier = Modifier.padding(horizontal = 16.dp),
         topBar = {
             AppTopBar(
-                title = stringResource(R.string.confirm_code),
+                title = stringResource(R.string.accept_code),
                 onBack = {
                     navigationManager.navigateBack()
                 })
@@ -104,7 +104,7 @@ fun RegisterConfirmScreen(
     ) {
         Spacer(modifier = Modifier.size(24.dp))
         BodyMediumText(
-            text = stringResource(R.string.msg_first_login_confirm_header),
+            text = stringResource(R.string.msg_register_confirm_header),
             textAlign = TextAlign.Center,
             color = AppTheme.colorScheme.onBackgroundPrimarySubdued
         )
@@ -119,7 +119,7 @@ fun RegisterConfirmScreen(
         AppNumberTextField(
             modifier = Modifier.fillMaxWidth(),
             value = otp,
-            label = stringResource(R.string.confirm_code),
+            label = stringResource(R.string.accept_code),
             onValueChange = {  if (it.length <= 6) otp = it },
         )
         Spacer(modifier = Modifier.size(32.dp))

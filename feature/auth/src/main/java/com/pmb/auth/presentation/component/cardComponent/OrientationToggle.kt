@@ -89,8 +89,8 @@ fun OrientationToggle(
 
 
 enum class Orientation(val label: String) {
-    Horizontal("افقی"),
-    Vertical("عمودی")
+    Vertical("عمودی"),
+    Horizontal("افقی")
 }
 
 @Preview

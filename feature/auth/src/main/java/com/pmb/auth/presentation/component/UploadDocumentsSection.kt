@@ -63,7 +63,7 @@ fun UploadDocumentsSection(
                                 1.dp,
                                 AppTheme.colorScheme.strokeNeutral3Rest,
                                 RoundedCornerShape(16.dp)
-                            ), fileUrl = uri
+                            ), fileUrl = uri, newScaleX= 1f
                     ) {
                         onRemoveImage()
                     }

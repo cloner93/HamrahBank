@@ -11,20 +11,21 @@ import com.pmb.domain.model.openAccount.AccountArchiveJobDocRequest
 import com.pmb.domain.model.openAccount.AccountArchiveJobDocResponse
 import com.pmb.domain.model.openAccount.CheckPostCodeRequest
 import com.pmb.domain.model.openAccount.CheckPostalCodeResponse
+import com.pmb.domain.model.openAccount.FetchAdmittanceTextResponse
+import com.pmb.domain.model.openAccount.FetchCardFormatResponse
 import com.pmb.domain.model.openAccount.FetchCommitmentRequest
 import com.pmb.domain.model.openAccount.FetchCommitmentResponse
 import com.pmb.domain.model.openAccount.GenerateCodeRequest
+import com.pmb.domain.model.openAccount.RegisterOpenAccountRequest
+import com.pmb.domain.model.openAccount.RegisterOpenAccountResponse
 import com.pmb.domain.model.openAccount.accountType.FetchAccountTypeRequest
 import com.pmb.domain.model.openAccount.accountType.FetchAccountTypeResponse
 import com.pmb.domain.model.openAccount.accountVerifyCode.VerifyCodeRequest
 import com.pmb.domain.model.openAccount.accountVerifyCode.VerifyCodeResponse
-import com.pmb.domain.model.openAccount.branchName.FetchBranchListRequest
-import com.pmb.domain.model.openAccount.cityName.FetchCityListRequest
-import com.pmb.domain.model.openAccount.FetchAdmittanceTextResponse
-import com.pmb.domain.model.openAccount.RegisterOpenAccountRequest
-import com.pmb.domain.model.openAccount.RegisterOpenAccountResponse
 import com.pmb.domain.model.openAccount.branchName.Branch
+import com.pmb.domain.model.openAccount.branchName.FetchBranchListRequest
 import com.pmb.domain.model.openAccount.cityName.City
+import com.pmb.domain.model.openAccount.cityName.FetchCityListRequest
 import com.pmb.domain.model.openAccount.comissionFee.FetchCommissionFeeResponse
 import com.pmb.domain.model.openAccount.jobLevel.JobLevel
 import com.pmb.model.SuccessData
@@ -92,13 +93,13 @@ class AuthServiceImpl @Inject constructor(
     }
 
     override fun fetchJobLevel(): Flow<Result<SuccessData<List<JobLevel>>>> {
-        return client.request<Unit,List<JobLevel>>(
+        return client.request<Unit, List<JobLevel>>(
             "openAccount/accountFetchLevelJob"
         )
     }
 
     override fun fetchAccountType(
-       nationalCode: String, mobileNo: String
+        nationalCode: String, mobileNo: String
     ): Flow<Result<SuccessData<FetchAccountTypeResponse>>> {
         val req = FetchAccountTypeRequest(
             nationalCode = nationalCode, mobileNo = mobileNo
@@ -129,8 +130,8 @@ class AuthServiceImpl @Inject constructor(
 
     override fun fetchCommitment(accType: Int): Flow<Result<SuccessData<FetchCommitmentResponse>>> {
         val req = FetchCommitmentRequest(accType = accType)
-        return client.request<FetchCommitmentRequest,FetchCommitmentResponse>(
-            "openAccount/fetchCommitment",req
+        return client.request<FetchCommitmentRequest, FetchCommitmentResponse>(
+            "openAccount/fetchCommitment", req
         )
     }
 
@@ -142,20 +143,26 @@ class AuthServiceImpl @Inject constructor(
 
     override fun fetchAdmittanceText(): Flow<Result<SuccessData<FetchAdmittanceTextResponse>>> {
         return client.request<Unit, FetchAdmittanceTextResponse>(
-           "openAccount/fetchAdmittanceText"
+            "openAccount/fetchAdmittanceText"
         )
     }
 
     override fun registerOpenAccount(registerOpenAccountRequest: RegisterOpenAccountRequest): Flow<Result<SuccessData<RegisterOpenAccountResponse>>> {
-        return client.request<RegisterOpenAccountRequest,RegisterOpenAccountResponse>(
+        return client.request<RegisterOpenAccountRequest, RegisterOpenAccountResponse>(
             "openAccount/registerRequest", registerOpenAccountRequest
         )
     }
 
     override fun checkPostCode(postCode: Int): Flow<Result<SuccessData<CheckPostalCodeResponse>>> {
         val req = CheckPostCodeRequest(postcode = postCode)
-        return client.request<CheckPostCodeRequest,CheckPostalCodeResponse>(
+        return client.request<CheckPostCodeRequest, CheckPostalCodeResponse>(
             "openAccount/postCodeInquiry", req
+        )
+    }
+
+    override fun fetchCardFormat(): Flow<Result<SuccessData<List<FetchCardFormatResponse>>>> {
+        return client.request<Unit, List<FetchCardFormatResponse>>(
+            "openAccount/fetchCardFormat"
         )
     }
 

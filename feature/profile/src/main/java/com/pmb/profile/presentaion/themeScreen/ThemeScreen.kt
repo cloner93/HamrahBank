@@ -64,7 +64,7 @@ fun ThemeScreen(viewModel: ThemeScreenViewModel) {
             ) {
                 BodyMediumText(
                     modifier = Modifier.padding(top = 12.dp),
-                    text = "نوع تراکنش",
+                    text = "حالت نمایش",
                     color = AppTheme.colorScheme.onBackgroundNeutralSubdued
                 )
                 Row(

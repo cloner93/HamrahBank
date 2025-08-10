@@ -2,6 +2,7 @@ package com.pmb.transfer.presentation.transfer_edit_favorite.viewmodel
 
 import androidx.lifecycle.viewModelScope
 import com.pmb.core.platform.AlertModelState
+import com.pmb.core.platform.AlertType
 import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.platform.Result
 import com.pmb.transfer.domain.entity.TransactionClientBankEntity
@@ -64,8 +65,29 @@ class TransferEditFavoriteViewModel @Inject constructor(
     override fun handle(action: TransferEditFavoriteViewActions) {
         when (action) {
             TransferEditFavoriteViewActions.ClearAlert -> setState { it.copy(alertState = null) }
+            is TransferEditFavoriteViewActions.SelectRemoveAccount -> showRemoveAccountDialog(action.accountValue)
             is TransferEditFavoriteViewActions.RemoveAccount -> handleRemoveAccount(action.accountValue)
             is TransferEditFavoriteViewActions.SelectAccount -> handleSelectAccount(action.accountValue)
+        }
+    }
+
+    private fun showRemoveAccountDialog(accountValue: TransactionClientBankEntity) {
+        setState {
+            it.copy(
+                alertState = AlertModelState.BottomSheet(
+                    type = AlertType.Warning,
+                    message = "آیا از حذف «${accountValue.clientBankEntity.name}» از مقاصد برگزیده اطمینان دارید؟",
+                    positiveButtonTitle = "حذف",
+                    negativeButtonTitle = "انصراف",
+                    onPositiveClick = {
+                        handle(TransferEditFavoriteViewActions.RemoveAccount(accountValue))
+                        setState { newState -> newState.copy(alertState = null) }
+                    },
+                    onNegativeClick = {
+                        setState { newState -> newState.copy(alertState = null) }
+                    }
+                )
+            )
         }
     }
 

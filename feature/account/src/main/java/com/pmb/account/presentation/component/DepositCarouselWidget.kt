@@ -19,6 +19,7 @@ fun DepositCarouselWidget(
     onMoreClick: () -> Unit,
     onAmountVisibilityClick: () -> Unit,
     onDepositListChipsClick: () -> Unit,
+    onRefreshClick: () -> Unit,
     isAmountVisible: Boolean,
     isLoading: Boolean
 ) {
@@ -32,10 +33,12 @@ fun DepositCarouselWidget(
                 modifier = Modifier.padding(start = 32.dp, end = 32.dp),
                 item = depositModel,
                 isAmountVisible = isAmountVisible,
-                moreClick = { onMoreClick.invoke() },
                 isLoading = isLoading,
-                onAmountVisibilityClick = { onAmountVisibilityClick.invoke() }
-            ) { onDepositListChipsClick.invoke() }
+                moreClick = { onMoreClick.invoke() },
+                onAmountVisibilityClick = { onAmountVisibilityClick.invoke() },
+                onDepositListChipsClick = { onDepositListChipsClick.invoke() },
+                onRefreshClick = { onRefreshClick.invoke() }
+            )
     }
 }
 
@@ -59,6 +62,7 @@ private fun DepositCardPrev() {
             onAmountVisibilityClick = {},
             onDepositListChipsClick = { },
             isAmountVisible = true,
+            onRefreshClick = {},
             isLoading = false
         )
     }

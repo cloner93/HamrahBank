@@ -54,11 +54,10 @@ class ProfileViewModel @Inject constructor(
         setState {
             it.copy(
                 loading = false,
-                alertModelState = AlertModelState.Dialog(
-                    title = "پیام",
-                    description = "آیا از خروج اطمینان دارید؟",
-                    positiveButtonTitle = "یله",
-                    negativeButtonTitle = "خیر",
+                alertModelState = AlertModelState.BottomSheet(
+                    message = "آیا برای خروج از برنامه اطمینان دارید؟",
+                    positiveButtonTitle = "خروج",
+                    negativeButtonTitle = "انصراف",
                     onPositiveClick = {
                         setState { state -> state.copy(alertModelState = null) }
                         logoutAccount()

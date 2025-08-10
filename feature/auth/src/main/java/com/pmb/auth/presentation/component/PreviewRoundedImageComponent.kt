@@ -54,7 +54,7 @@ fun PreviewRoundedImageComponent(
 
 @Composable
 fun PreviewRoundedImageComponent(
-    modifier: Modifier = Modifier, fileUrl: Uri?, onClickListener: () -> Unit
+    modifier: Modifier = Modifier, fileUrl: Uri?, newScaleX: Float= -1f, onClickListener: () -> Unit
 ) {
     Box(
         modifier = modifier
@@ -63,7 +63,7 @@ fun PreviewRoundedImageComponent(
             AsyncImage(
                 modifier = Modifier
                     .fillMaxSize()
-                    .graphicsLayer { scaleX = -1f },
+                    .graphicsLayer { scaleX = newScaleX },
                 model = ImageRequest.Builder(LocalContext.current).data(fileUrl).crossfade(true)
                     .build(),
                 contentDescription = "SignatureImage",

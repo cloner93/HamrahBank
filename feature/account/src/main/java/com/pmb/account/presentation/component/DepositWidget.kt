@@ -19,9 +19,10 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.pmb.ballon.R
+import com.pmb.account.R
 import com.pmb.ballon.component.annotation.AppPreview
 import com.pmb.ballon.component.base.AppButtonIcon
 import com.pmb.ballon.component.base.AppContent
@@ -47,6 +48,7 @@ fun DepositWidget(
     moreClick: () -> Unit,
     onAmountVisibilityClick: () -> Unit,
     onDepositListChipsClick: () -> Unit,
+    onRefreshClick: () -> Unit,
 ) {
     Card(
         modifier = modifier
@@ -106,6 +108,11 @@ fun DepositWidget(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 if (isAmountVisible) {
+                    AppButtonIcon(
+                        icon = painterResource(R.drawable.ic_refresh),
+                        style = IconStyle(tint = AppTheme.colorScheme.onBackgroundNeutralDefault),
+                        onClick = onRefreshClick
+                    )
                     Headline4Text(
                         text = item?.amount?.toCurrency() ?: "",
                         color = AppTheme.colorScheme.onBackgroundNeutralDefault
@@ -115,6 +122,7 @@ fun DepositWidget(
                         text = item?.currency ?: "",
                         color = AppTheme.colorScheme.onBackgroundNeutralDefault
                     )
+
                 } else {
                     Headline2Text(
                         text = "********",
@@ -134,7 +142,7 @@ private fun DepositPrev() {
         desc = "تنخواه",
         depositNumber = "1232324-56",
         amount = 10000023400.0,
-        currency = stringResource(R.string.real_carrency),
+        currency = stringResource(com.pmb.ballon.R.string.real_carrency),
         ibanNumber = "IR1234567890098765432112",
         cardNumber = "6219861920241234",
         categoryCode = 0,
@@ -146,21 +154,24 @@ private fun DepositPrev() {
                 isAmountVisible = true,
                 isLoading = true,
                 moreClick = {},
-                onAmountVisibilityClick = { }
+                onAmountVisibilityClick = { },
+                onDepositListChipsClick = {}
             ) { }
             DepositWidget(
                 item = null,
                 isAmountVisible = true,
                 isLoading = true,
                 moreClick = {},
-                onAmountVisibilityClick = { }
+                onAmountVisibilityClick = { },
+                onDepositListChipsClick = {}
             ) { }
             DepositWidget(
                 item = null,
                 isAmountVisible = true,
                 isLoading = false,
                 moreClick = {},
-                onAmountVisibilityClick = { }
+                onAmountVisibilityClick = { },
+                onDepositListChipsClick = {}
             ) { }
         }
     }

@@ -1,5 +1,8 @@
 package com.pmb.auth.presentation.component.cardComponent
 
+import android.graphics.BitmapFactory
+import androidx.compose.animation.core.animateDpAsState
+import androidx.exifinterface.media.ExifInterface
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
@@ -16,16 +19,21 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import kotlin.Unit
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
+import java.io.File
 
 @Composable
 fun CardFlip(
@@ -51,7 +59,7 @@ fun CardFlip(
                 this.cameraDistance = cameraDistancePx
             }
             .clickable {
-                    onClick.invoke()
+                onClick.invoke()
             }
 
     ) {
@@ -69,9 +77,9 @@ fun CardFlip(
 
 @Composable
 fun CardImage(
-    imageAddress: Int, //todo it should change with image url from backend
+    imageAddress: Int,
     isHorizontal: Boolean,
-    horizontalPadding : Dp = 40.dp
+    horizontalPadding: Dp = 40.dp
 ) {
     Box(
         modifier = Modifier
@@ -99,53 +107,109 @@ fun CardImage(
 }
 
 @Composable
-fun HorizontalCardBack(
-    imageAddress: Int, //todo it should change with image url from backend,
-
+fun AsyncCardImage(
+    imageAddress: File?, //todo it should change with image url from backend
+    isHorizontal: Boolean,
 ) {
     Box(
         modifier = Modifier
-            .width(240.dp)
-            .height(160.dp)
-            .background(Color.Transparent, RoundedCornerShape(16.dp)),
+//            .fillMaxWidth()
+            .then(
+                if (isHorizontal)
+                    Modifier
+                        .aspectRatio(3 / 2f)
+                else
+                    Modifier
+                        .fillMaxWidth(0.5f)
+                        .aspectRatio(2 / 3f)
+//                        .padding(horizontal = horizontalPadding)
+            )
+            .clip(RoundedCornerShape(16.dp)),
         contentAlignment = Alignment.Center
     ) {
-        Image(
+        AsyncImage(
             modifier = Modifier
-                .width(240.dp)
-                .height(160.dp)
-                .background(Color.Transparent, RoundedCornerShape(16.dp)),
-            painter = painterResource(id = imageAddress), contentDescription = null
+                    then (
+//                    if (isHorizontal)
+//                        Modifier
+//                            .aspectRatio(3/2f)
+//                    else
+                    Modifier
+                        .fillMaxSize()
+//                            .aspectRatio(2/3f)
+//                            .padding(horizontal = horizontalPadding)
+                    )
+                .clip(RoundedCornerShape(16.dp)),
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(imageAddress)
+                .crossfade(true)
+                .build(),
+            contentScale = ContentScale.FillBounds,
+//            placeholder = painterResource(imageAddress),
+            contentDescription = "SliderImageHeader",
         )
     }
 }
 
 @Composable
-fun VerticalCardFront(
-    imageAddress: Int, //todo it should change with image url from backend
+fun AsyncInnerCardImage(
+    imageFile: File?,
+    cardWidth: Dp
 ) {
+    val context = LocalContext.current
+
+    // Determine orientation
+    val isLandscape = remember(imageFile) {
+        imageFile?.let { isImageActuallyHorizontal(it) } ?: true
+    }
+
+    // Animate width change between portrait/landscape
+//    val animatedWidth by animateDpAsState(
+//        targetValue = if (isLandscape) cardWidth else cardWidth * 0.5f,
+//        label = "animatedCardWidth"
+//    )
+
+    val cardHeight = if (isLandscape) cardWidth * (2f / 3f) else cardWidth * (3f / 2f)
+
     Box(
         modifier = Modifier
-
-            .background(Color(0xFFD61C4E), RoundedCornerShape(16.dp))
-            .padding(16.dp),
+            .width(cardWidth)
+            .height(cardHeight)
+            .clip(RoundedCornerShape(16.dp)),
         contentAlignment = Alignment.Center
     ) {
-        Text("نام و نام خانوادگی", color = Color.White)
+        AsyncImage(
+            model = ImageRequest.Builder(context)
+                .data(imageFile)
+                .crossfade(true)
+                .build(),
+            contentScale = ContentScale.FillBounds,
+            contentDescription = null,
+            modifier = Modifier
+                .fillMaxSize()
+                .clip(RoundedCornerShape(16.dp))
+        )
     }
 }
 
-@Composable
-fun VerticalCardBack() {
-    Box(
-        modifier = Modifier
-            .width(160.dp)
-            .height(240.dp)
-            .background(Color(0xFFB41635), RoundedCornerShape(16.dp))
-            .padding(16.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Text("cvv2: ***", color = Color.White)
+fun isImageActuallyHorizontal(file: File): Boolean {
+    val exif = ExifInterface(file.absolutePath)
+    val orientation = exif.getAttributeInt(
+        ExifInterface.TAG_ORIENTATION,
+        ExifInterface.ORIENTATION_NORMAL
+    )
+
+    val options = BitmapFactory.Options().apply {
+        inJustDecodeBounds = true
+    }
+    BitmapFactory.decodeFile(file.absolutePath, options)
+
+    val width = options.outWidth
+    val height = options.outHeight
+
+    return when (orientation) {
+        ExifInterface.ORIENTATION_ROTATE_90,
+        ExifInterface.ORIENTATION_ROTATE_270 -> height >= width
+        else -> width >= height
     }
 }
-

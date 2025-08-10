@@ -194,6 +194,7 @@ fun DepositsScreen(
                         onMoreClick = { viewModel.handle(DepositsViewActions.ShowDepositMoreActionBottomSheet) },
                         onAmountVisibilityClick = { viewModel.handle(DepositsViewActions.SetAmountVisibility) },
                         onDepositListChipsClick = { viewModel.handle(DepositsViewActions.ShowDepositListBottomSheet) },
+                        onRefreshClick = { viewModel.handle(DepositsViewActions.RefreshDepositAmount) },
                         isAmountVisible = viewState.isAmountVisible,
                         isLoading = viewState.depositLoading
                     )

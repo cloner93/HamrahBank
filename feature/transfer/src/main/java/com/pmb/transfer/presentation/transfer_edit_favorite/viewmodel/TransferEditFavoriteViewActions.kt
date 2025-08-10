@@ -7,6 +7,9 @@ sealed interface TransferEditFavoriteViewActions : BaseViewAction {
     data class SelectAccount(val accountValue: TransactionClientBankEntity) :
         TransferEditFavoriteViewActions
 
+    data class SelectRemoveAccount(val accountValue: TransactionClientBankEntity) :
+        TransferEditFavoriteViewActions
+
     data class RemoveAccount(val accountValue: TransactionClientBankEntity) :
         TransferEditFavoriteViewActions
 

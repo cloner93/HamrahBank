@@ -6,12 +6,15 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,16 +41,21 @@ import com.pmb.ballon.models.Size
 import com.pmb.ballon.models.TextStyle
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.core.BiometricPromptHelper
+import com.pmb.core.utils.allowOnlyEnglishLettersAndDigits
+import com.pmb.core.utils.isValidChars
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.manager.NavigationManager
 import com.pmb.navigation.moduleScreen.AuthScreens
 import com.pmb.navigation.moduleScreen.HomeScreens
+import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(viewModel: LoginViewModel) {
     val navigationManager: NavigationManager = LocalNavigationManager.current
     var password by remember { mutableStateOf("") }
+    val snackBarHostState = remember { SnackbarHostState() }
 
+    val scope = rememberCoroutineScope()
     val viewState by viewModel.viewState.collectAsState()
 
     val activity = LocalContext.current as? FragmentActivity
@@ -96,7 +104,7 @@ fun LoginScreen(viewModel: LoginViewModel) {
             }
         },
         footer = {
-
+            SnackbarHost(hostState = snackBarHostState)
         },
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -123,7 +131,17 @@ fun LoginScreen(viewModel: LoginViewModel) {
             onValidate = {
 //                isPassword = it.isValid
             },
-            onValueChange = { password = it })
+            onValueChange = {
+                if (it.allowOnlyEnglishLettersAndDigits() || it.isEmpty())
+                    password = it
+                else if (!it.allowOnlyEnglishLettersAndDigits()) {
+                    scope.launch {
+                        snackBarHostState.showSnackbar(
+                            message = "رمز عبور فقط می تواند شامل عدد و حروف انگلیسی باشد"
+                        )
+                    }
+                }
+            })
         Spacer(modifier = Modifier.size(24.dp))
         AppButtonWithIcon(
             modifier = Modifier
@@ -132,7 +150,7 @@ fun LoginScreen(viewModel: LoginViewModel) {
                 com.pmb.auth.R.string.login
             ),
             icon = if (password.isEmpty() && viewState.biometricState) com.pmb.ballon.R.drawable.ic_fingerprint else null,
-            enable = true
+            enable = password.length >= 10
         ) {
             if (password.isEmpty() && viewState.biometricState) {
                 viewModel.handle(
