@@ -17,10 +17,10 @@ data class SendOtpRequest(
 data class SendOtpResponse(
     val isSuccess: Boolean,
     val customerId: Long,
-    val desKey: String,
-    val passwordX: String,
-    val securePassword: String,
-    val userName: String,
+    val desKey: String?,
+    val passwordX: String?,
+    val securePassword: String?,
+    val userName: String?,
     val email: String?,
-    val imeiNo: String,
+    val imeiNo: String?,
 )

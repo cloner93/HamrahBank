@@ -58,8 +58,8 @@ class AuthRepositoryImpl @Inject constructor(
                         UserData(
                             customerId = user.customerId.toString(),
                             username = sendOtpRequest.userName,
-                            firstName = user.name,
-                            lastName = user.family,
+                            firstName = user.name ?:"",
+                            lastName = user.family ?:"",
                             phoneNumber = sendOtpRequest.mobileNumber,
                             password = sendOtpRequest.password
                         )
