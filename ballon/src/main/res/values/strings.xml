@@ -2,6 +2,7 @@
 <resources>
     <string name="title_pasword_condition">موارد زیر را در رمز جدید خود استفاده کنید:</string>
     <string name="min_char_in_password">حداقل ۱۰ کاراکتر</string>
+    <string name="upper_or_lower_case">حروف بزرگ یا حروف کوچک</string>
     <string name="upper_case">حروف بزرگ</string>
     <string name="lowercase">حروف کوچک</string>
     <string name="digit">عدد</string>
@@ -33,7 +34,7 @@
     <string name="_continue">ادامه</string>
     <string name="username_condition_word">متشکل از حروف انگلیسی٬ اعداد و «_»، «-»، «.» باشد</string>
     <string name="username_condition_start_with_letter">با حرف انگلیسی آغاز شود</string>
-    <string name="username_condition_limit_length">بین ۵ تا ۳۰ کاراکتر باشد</string>
+    <string name="username_condition_limit_length">بین ۸ تا ۲۰ کاراکتر باشد</string>
     <string name="purchase">پرداخت</string>
     <string name="select_share_type">" انتخاب نوع اشتراک‌گذاری"</string>
     <string name="text">متنی</string>

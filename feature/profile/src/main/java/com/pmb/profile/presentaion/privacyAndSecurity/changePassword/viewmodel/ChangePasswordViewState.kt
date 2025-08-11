@@ -13,5 +13,11 @@ data class ChangePasswordViewState(
     val renewPassword: String = "",
     val isRenewPasswordValid: Boolean = false,
     val isAllPasswordOk: Boolean = false,
-    val enableSubmit: Boolean = false
-) : BaseViewState
+) : BaseViewState {
+    val enableSubmit: Boolean
+        get() = isNewPasswordValid &&
+                isRenewPasswordValid &&
+                newPassword.isNotEmpty() &&
+                newPassword == renewPassword &&
+                !loading
+}

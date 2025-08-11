@@ -9,11 +9,14 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.NavHostController
@@ -24,9 +27,12 @@ import androidx.navigation.compose.rememberNavController
 import com.pmb.account.presentation.accountScreensHandle
 import com.pmb.auth.presentation.authScreensHandle
 import com.pmb.ballon.component.base.AppBottomBar
+import com.pmb.ballon.component.base.AppSnackBar
 import com.pmb.ballon.component.base.BottomNavItem
 import com.pmb.ballon.component.base.bottomNavItems
 import com.pmb.ballon.ui.theme.HamrahBankTheme
+import com.pmb.core.composition.LocalScreenScope
+import com.pmb.core.composition.LocalSnackbarHostState
 import com.pmb.home.presentation.homeScreensHandle
 import com.pmb.mobile.presentation.viewmodel.MainActivityViewModel
 import com.pmb.navigation.manager.LocalNavigationManager
@@ -54,11 +60,25 @@ class MainActivity : FragmentActivity() {
 
             val navController = rememberNavController()
             val navigationManager = remember { NavigationManager(navController) }
+            val snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
+            val scope = rememberCoroutineScope()
 
             HamrahBankTheme(themeMode = viewState.themeMode) {
-                CompositionLocalProvider(LocalNavigationManager provides navigationManager) {
+                CompositionLocalProvider(
+                    LocalNavigationManager provides navigationManager,
+                    LocalSnackbarHostState provides snackbarHostState,
+                    LocalScreenScope provides scope
+                ) {
                     Scaffold(
                         modifier = Modifier.fillMaxSize(),
+                        snackbarHost = {
+                            SnackbarHost(
+                                hostState = snackbarHostState,
+                                snackbar = { data ->
+                                    AppSnackBar(data)
+                                },
+                            )
+                        },
                         bottomBar = { CheckBottomBar(navController) }
                     ) { innerPadding ->
                         AppNavHost(innerPadding)
@@ -68,6 +88,7 @@ class MainActivity : FragmentActivity() {
         }
     }
 }
+
 @Composable
 fun AppNavHost(innerPadding: PaddingValues) {
     val navigationManager = LocalNavigationManager.current

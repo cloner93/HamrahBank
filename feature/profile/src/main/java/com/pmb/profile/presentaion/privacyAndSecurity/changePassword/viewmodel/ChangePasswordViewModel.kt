@@ -106,19 +106,9 @@ class ChangePasswordViewModel @Inject constructor(
                     }
 
                     is Result.Success -> {
-                        setState {
-                            it.copy(
-                                loading = false,
-                                alertState = AlertModelState.Dialog(
-                                    title = "پیغام",
-                                    description = "رمز عبور شما با موفقیت تغییر یافت!",
-                                    positiveButtonTitle = "تایید",
-                                    onPositiveClick = {
-                                        setState { state -> state.copy(alertState = null) }
-                                        postEvent(ChangePasswordViewEvents.NavigateBack)
-                                    }
-                                ))
-                        }
+                        setState { it.copy(loading = false) }
+                        postEvent(ChangePasswordViewEvents.ShowSnackBar(message = "رمز عبور شما با موفقیت تغییر یافت!"))
+                        postEvent(ChangePasswordViewEvents.NavigateBack)
                     }
                 }
             }
