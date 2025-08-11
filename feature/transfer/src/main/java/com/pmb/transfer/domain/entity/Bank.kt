@@ -93,7 +93,7 @@ enum class Bank(
         icon = com.pmb.ballon.R.drawable.ic_bank_karafarin
     ),
     BLU(
-        accountPrefix = "056",
+        accountPrefix = "-1",
         cardPrefix = listOf("62198619"),
         shebaPrefix = "IR56",
         icon = com.pmb.ballon.R.drawable.ic_bank_blu

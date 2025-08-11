@@ -12,9 +12,10 @@ import com.pmb.transfer.domain.entity.BankIdentifierNumberType
 object BankUtil {
 
     @Composable
-    fun getLogo(cardNumber: String): Painter {
-        return painterResource(com.pmb.ballon.R.drawable.ic_mellat_circle)
-    }
+    fun getLogo(number: String): Painter =
+        painterResource(
+            number.retrieveBank()?.icon ?: com.pmb.ballon.R.drawable.ic_mellat_circle
+        )
 
 
     fun getBankByCardNumber(cardNumber: String): Bank? {
@@ -38,6 +39,17 @@ object BankUtil {
             val pattern = Regex("^IR\\d{2}${bank.accountPrefix}")
             pattern.matches(firstSevenChars)
         }
+    }
+
+    fun String.retrieveBank(): Bank? {
+        detectBankIdentifierType()?.let {
+            return when (it.first) {
+                BankIdentifierNumberType.ACCOUNT -> getBankByAccountNumber(it.second)
+                BankIdentifierNumberType.CARD -> getBankByCardNumber(it.second)
+                BankIdentifierNumberType.IBAN -> getBankBySheba(it.second)
+            }
+        }
+        return null
     }
 
     @Composable
@@ -144,13 +156,11 @@ object BankUtil {
     }
 }
 
-fun String.detectBankIdentifierType(
-
-): Pair<BankIdentifierNumberType, String>? {
+fun String.detectBankIdentifierType(): Pair<BankIdentifierNumberType, String>? {
     val orderBy: List<BankIdentifierNumberType> = listOf(
-    BankIdentifierNumberType.CARD,
-    BankIdentifierNumberType.IBAN,
-    BankIdentifierNumberType.ACCOUNT
+        BankIdentifierNumberType.CARD,
+        BankIdentifierNumberType.IBAN,
+        BankIdentifierNumberType.ACCOUNT
     )
     val ids = extractAllLongNumbers()
 

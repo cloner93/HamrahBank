@@ -13,15 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,7 +21,6 @@ import androidx.compose.ui.unit.dp
 import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.core.platform.AlertModelState
-import kotlinx.coroutines.launch
 
 @Deprecated("Use AppContent() instead added alertState to handle alert")
 @Composable
@@ -80,57 +71,7 @@ fun AppContent(
     content: @Composable (ColumnScope.() -> Unit)
 ) {
     val wrapperModifier = footer?.let { Modifier.imePadding() } ?: Modifier
-    val snackbarHostState = remember { SnackbarHostState() }
-    val coroutineScope = rememberCoroutineScope()
-    var _alertState by remember { mutableStateOf(alertState) }
-    _alertState = alertState
-    if (_alertState != null) {
-        when (alertState) {
-            is AlertModelState.BottomSheet -> Unit
-            is AlertModelState.Dialog -> Unit
-            is AlertModelState.SnackBar -> {
-                coroutineScope.launch {
-                    snackbarHostState.showSnackbar(
-                        message = alertState.message,
-                        actionLabel = alertState.buttonTitle,
-                        withDismissAction = alertState.onActionPerformed != null,
-                        duration = SnackbarDuration.Short
-                    )
-                }
-                _alertState = null
-            }
-
-            null -> Unit
-        }
-    }
-
-//    LaunchedEffect(Unit) {
-//        alertState?.collect {
-//            when (it) {
-//                is AlertModelState.BottomSheet -> Unit
-//                is AlertModelState.Dialog -> Unit
-//                is AlertModelState.SnackBar ->
-//                    coroutineScope.launch {
-//                        snackbarHostState.showSnackbar(
-//                            message = it.message,
-//                            actionLabel = it.buttonTitle,
-//                            withDismissAction = it.onActionPerformed != null,
-//                            duration = SnackbarDuration.Short
-//                        )
-//                    }
-//            }
-//        }
-//    }
-
     Scaffold(
-        snackbarHost = {
-            SnackbarHost(
-                hostState = snackbarHostState,
-                snackbar = { data ->
-                    AppSnackBar(data)
-                },
-            )
-        },
     ) { padding ->
         Column(
             modifier = wrapperModifier

@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.text.isDigitsOnly
 import com.pmb.ballon.component.MenuItem
 import com.pmb.ballon.component.MenuItemDefaults
+import com.pmb.ballon.component.base.AppMultiTextField
 import com.pmb.ballon.component.base.AppNumberTextField
 import com.pmb.ballon.models.IconStyle
 import com.pmb.ballon.models.Size
@@ -38,11 +39,14 @@ import com.pmb.transfer.domain.entity.asCard
 fun ShowInputsByTransferType(
     transferMethod: TransferMethodEntity,
     depositId: String,
+    description: String,
+    descriptionLength: Int,
     sourceCardBanks: List<CardBankEntity>?,
     sourceAccountBanks: List<AccountBankEntity>?,
     defaultSource: TransferSourceEntity?,
     defaultReason: ReasonEntity?,
     onDepositIdChange: (String) -> Unit,
+    onDescriptionChange: (String) -> Unit,
     selectedCardBank: (CardBankEntity) -> Unit,
     selectedAccountBank: (AccountBankEntity) -> Unit,
     selectedTransferReason: (ReasonEntity?) -> Unit
@@ -121,6 +125,31 @@ fun ShowInputsByTransferType(
             onValueChange = {
                 if (it.isDigitsOnly() && it.length <= 18) onDepositIdChange.invoke(it)
             })
+
+        val descLabel = when (transferMethod.paymentType) {
+            PaymentType.INTERNAL_SATNA,
+            PaymentType.INTERNAL_BRIDGE -> stringResource(R.string.desc)
+
+            else -> stringResource(R.string.desc_optional)
+        }
+
+        when (transferMethod.paymentType) {
+            PaymentType.MELLAT_TO_MELLAT,
+            PaymentType.INTERNAL_PAYA,
+            PaymentType.INTERNAL_SATNA,
+            PaymentType.INTERNAL_BRIDGE -> {
+                Spacer(modifier = Modifier.size(8.dp))
+                AppMultiTextField(
+                    value = description,
+                    label = descLabel,
+                    onValueChange = {
+                        if (it.length <= descriptionLength) onDescriptionChange.invoke(it)
+                    }
+                )
+            }
+
+            PaymentType.CARD_TO_CARD -> Unit
+        }
 
     }
 }

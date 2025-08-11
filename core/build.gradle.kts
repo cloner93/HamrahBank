@@ -50,6 +50,7 @@ dependencies {
 
     // DI > Hilt
     api(libs.android.hilt)
+    api(libs.material3)
     kapt(libs.android.hilt.compiler)
     api(libs.hilt.navigation.compose)
 

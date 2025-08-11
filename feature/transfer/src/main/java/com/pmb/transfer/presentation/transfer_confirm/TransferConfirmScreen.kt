@@ -163,12 +163,17 @@ fun TransferConfirmScreen(
             ShowInputsByTransferType(
                 transferMethod = it,
                 depositId = viewState.depositId,
+                description = viewState.description,
+                descriptionLength = viewState.descriptionLength,
                 defaultSource = viewState.defaultSource,
                 defaultReason = viewState.defaultReason,
                 sourceCardBanks = viewState.sourceCardBanks,
                 sourceAccountBanks = viewState.sourceAccountBanks,
                 onDepositIdChange = { depositId ->
                     viewModel.handle(TransferConfirmViewActions.UpdateDepositId(depositId))
+                },
+                onDescriptionChange = { description ->
+                    viewModel.handle(TransferConfirmViewActions.UpdateDescription(description))
                 },
                 selectedCardBank = { cardBank ->
                     viewModel.handle(TransferConfirmViewActions.SelectCardBank(cardBank))
