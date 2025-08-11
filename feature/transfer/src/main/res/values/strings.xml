@@ -45,5 +45,7 @@
     <string name="card">کارت</string>
     <string name="account">حساب</string>
     <string name="iban">شبا</string>
+    <string name="desc">شرح مقصد</string>
+    <string name="desc_optional">شرح مقصد (اختیاری)</string>
 
 </resources>

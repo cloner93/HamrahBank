@@ -78,7 +78,8 @@ fun ChangeUsernameScreen(
                 value = viewState.username,
                 label = stringResource(R.string.new_username),
                 onValueChange = {
-                    viewModel.handle(ChangeUsernameViewActions.UsernameChanged(it))
+                    if (!viewState.usernameConditions.maxLen)
+                        viewModel.handle(ChangeUsernameViewActions.UsernameChanged(it))
                 }
             )
             Spacer(modifier = Modifier.size(40.dp))

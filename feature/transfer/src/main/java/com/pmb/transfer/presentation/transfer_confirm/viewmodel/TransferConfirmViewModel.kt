@@ -50,6 +50,7 @@ class TransferConfirmViewModel @Inject constructor(
             }
 
             is TransferConfirmViewActions.UpdateDepositId -> setState { it.copy(depositId = action.depositId) }
+            is TransferConfirmViewActions.UpdateDescription -> setState { it.copy(description = action.description) }
             TransferConfirmViewActions.SelectTransferReason -> fetchReasons()
         }
     }
@@ -184,15 +185,15 @@ class TransferConfirmViewModel @Inject constructor(
                 TransferConfirmUseCase.Params(
                     sourceNumber = sourceNumber ?: return@launch,
                     destinationNumber = destinationNumber,
-                    destinationInfo = viewState.value.destinationAccount?.clientBankEntity?.name
+                    destinationInfo = destinationAccount?.clientBankEntity?.name
                         ?: "",
-                    desc = "", //TODO:: this is for satna and paya (sharhe havale)
+                    desc = description,
                     customerId = localServiceProvider.getUserDataStore().getUserData().customerId,
                     amount = destinationAmount,
                     reasonId = defaultReason?.id,
-                    depositId = viewState.value.depositId,
-                    transferMethod = viewState.value.transferMethod ?: return@launch,
-                    favoriteDestination = viewState.value.favoriteDestination
+                    depositId = depositId,
+                    transferMethod = transferMethod ?: return@launch,
+                    favoriteDestination = favoriteDestination
                 )
             }
 
