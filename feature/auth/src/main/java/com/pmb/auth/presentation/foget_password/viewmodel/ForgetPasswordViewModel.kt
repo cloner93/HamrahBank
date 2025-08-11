@@ -28,7 +28,20 @@ class ForgetPasswordViewModel @Inject constructor(
                     )
                 }
             }
-
+            is ForgetPasswordViewActions.SetNewPasswordValid -> {
+                setState {
+                    it.copy(
+                        isPasswordValid = action.newPasswordValid
+                    )
+                }
+            }
+            is ForgetPasswordViewActions.SetReNewPasswordValid -> {
+                setState {
+                    it.copy(
+                        isRenewPasswordValid = action.renewPasswordValid
+                    )
+                }
+            }
             is ForgetPasswordViewActions.SetReNewPassword -> {
                 setState {
                     it.copy(

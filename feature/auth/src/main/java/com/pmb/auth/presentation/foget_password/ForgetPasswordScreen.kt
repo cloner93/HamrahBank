@@ -48,8 +48,6 @@ fun ForgetPasswordScreen(
     val navigationManager: NavigationManager = LocalNavigationManager.current
     var showBottomSheet by remember { mutableStateOf(false) }
 
-    var isPassword by remember { mutableStateOf(false) }
-    var isRePassword by remember { mutableStateOf(false) }
     var isError by remember { mutableStateOf(false) }
     val viewState by viewModel.viewState.collectAsState()
 
@@ -84,7 +82,7 @@ fun ForgetPasswordScreen(
                     .fillMaxWidth()
                     .padding(horizontal = 24.dp),
                 title = stringResource(R.string._continue),
-                enable = !viewState.loading && viewState.password == viewState.rePassword && isRePassword && isPassword,
+                enable = viewState.isEnableButton,
                 onClick = {
                     viewModel.handle(
                         ForgetPasswordViewActions.ResetPassword
@@ -130,13 +128,12 @@ fun ForgetPasswordScreen(
                 label = stringResource(R.string.new_password),
                 conditionMessage = true,
                 onValidate = {
-
+                    viewModel.handle(ForgetPasswordViewActions.SetNewPasswordValid(it.isValid))
                 },
                 onValueChange = {
                     if (it.allowOnlyEnglishLettersAndDigits() || it.isEmpty()) {
                         viewModel.handle(ForgetPasswordViewActions.SetNewPassword(it))
-                        isPassword =
-                            it.length >= 10
+
                     }
                 })
 
@@ -147,13 +144,12 @@ fun ForgetPasswordScreen(
                 label = stringResource(R.string.re_new_password),
                 conditionMessage = true,
                 onValidate = {
-
+                    viewModel.handle(ForgetPasswordViewActions.SetReNewPasswordValid(it.isValid))
                 },
                 onValueChange = {
                     if (it.allowOnlyEnglishLettersAndDigits() || it.isEmpty()) {
                         viewModel.handle(ForgetPasswordViewActions.SetReNewPassword(it))
-                        isRePassword =
-                             (it.length) >= 10
+
                     }
                 })
 
