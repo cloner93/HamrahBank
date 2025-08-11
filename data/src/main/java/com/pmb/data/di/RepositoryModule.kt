@@ -5,11 +5,13 @@ import com.pmb.data.repository.card.CardsRepositoryImpl
 import com.pmb.data.repository.deposit.DepositRepositoryImpl
 import com.pmb.data.repository.theme.ThemeRepositoryImpl
 import com.pmb.data.repository.transaction.TransactionRepositoryImpl
+import com.pmb.data.repository.favorite.FavoriteRepositoryImpl
 import com.pmb.domain.repository.auth.AuthRepository
 import com.pmb.domain.repository.card.CardsRepository
 import com.pmb.domain.repository.deposit.DepositsRepository
 import com.pmb.domain.repository.theme.ThemeRepository
 import com.pmb.domain.repository.transactions.TransactionRepository
+import com.pmb.domain.repository.favorite.FavoriteRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -33,4 +35,7 @@ abstract class RepositoryModule {
 
     @Binds
     abstract fun bindTransactionsRepository(transactionRepository: TransactionRepositoryImpl): TransactionRepository
+
+    @Binds
+    abstract fun bindFavoriteRepository(favoriteRepository: FavoriteRepositoryImpl): FavoriteRepository
 }

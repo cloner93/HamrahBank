@@ -42,6 +42,7 @@ fun TransferEditDestinationScreen(
                     navigationManager.navigateBack()
                 }
 
+
                 is TransferEditDestinationViewEvents.TransferDestinationAmount -> {
                     selectedAccount.invoke(event.item)
                     navigationManager.navigate(TransferScreens.TransferAmount)
@@ -73,7 +74,6 @@ fun TransferEditDestinationScreen(
                             onClick = {
                                 viewModel.handle(
                                     TransferEditDestinationViewActions.ChangeFavoriteStatus(
-                                        newStatus = !item.favorite,
                                         item = item
                                     )
                                 )
