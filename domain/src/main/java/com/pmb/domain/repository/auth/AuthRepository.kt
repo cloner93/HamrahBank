@@ -2,6 +2,7 @@ package com.pmb.domain.repository.auth
 
 import com.pmb.core.platform.Result
 import com.pmb.domain.model.LoginResponse
+import com.pmb.domain.model.NationalIdResponse
 import com.pmb.domain.model.SendOtpRequest
 import com.pmb.domain.model.SendOtpResponse
 import com.pmb.domain.model.UserData
@@ -76,7 +77,7 @@ interface AuthRepository {
     fun checkPostalCode(postCode: Int): Flow<Result<CheckPostalCodeResponse>>
     fun fetchCardFormat(): Flow<Result<List<FetchCardFormatResponse>>>
 
-    fun newPassword(newPasswordRequest: NewPasswordRequest): Flow<Result<Boolean>>
+    fun newPassword(newPasswordRequest: NewPasswordRequest): Flow<Result<NationalIdResponse>>
 
     fun newPasswordFetchAdmittanceText(): Flow<Result<FetchAdmittanceTextResponse>>
 

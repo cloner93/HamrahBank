@@ -10,6 +10,7 @@ data class ForgetPasswordViewState(
     var showBottomSheet: Boolean = false,
     var mobile: String? = null,
     var nationalId: String? = null,
+    val nationalIdSerial :String?=null,
     var password: String? = null,
     var rePassword: String? = null,
 ) : BaseViewState

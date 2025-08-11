@@ -111,6 +111,8 @@ fun NavGraphBuilder.authScreensHandle(
                         changePasswordPassword = childState.password ?: "",
                         changePasswordPhoneNumber = childState.mobile ?: "",
                         changePasswordNationalId = childState.nationalId ?: ""
+                        ,
+                        changePasswordNationalIdSerial =childState.nationalIdSerial
                     )
                 }
             }

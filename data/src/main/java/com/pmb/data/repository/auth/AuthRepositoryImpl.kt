@@ -6,6 +6,7 @@ import com.pmb.data.mapper.mapApiResult
 import com.pmb.data.serviceProvider.local.LocalServiceProvider
 import com.pmb.data.serviceProvider.remote.RemoteServiceProvider
 import com.pmb.domain.model.LoginResponse
+import com.pmb.domain.model.NationalIdResponse
 import com.pmb.domain.model.SendOtpRequest
 import com.pmb.domain.model.SendOtpResponse
 import com.pmb.domain.model.UserData
@@ -215,10 +216,10 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun newPassword(newPasswordRequest: NewPasswordRequest): Flow<Result<Boolean>> {
+    override fun newPassword(newPasswordRequest: NewPasswordRequest): Flow<Result<NationalIdResponse>> {
        return remoteServiceProvider.getAuthService().newPassword(newPasswordRequest)
             .mapApiResult { result ->
-                result.first?.statusMessage == "موفق"
+                result.second
             }
     }
 

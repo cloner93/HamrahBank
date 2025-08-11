@@ -3,6 +3,7 @@ package com.pmb.data.serviceProvider.remote.auth
 import com.pmb.core.platform.Result
 import com.pmb.data.model.AnyModel
 import com.pmb.domain.model.LoginResponse
+import com.pmb.domain.model.NationalIdResponse
 import com.pmb.domain.model.RegisterVerifyResponse
 import com.pmb.domain.model.SendOtpRequest
 import com.pmb.domain.model.changePassword.NewPasswordRequest
@@ -73,7 +74,7 @@ interface AuthService {
     fun checkPostCode(postCode: Int): Flow<Result<SuccessData<CheckPostalCodeResponse>>>
     fun fetchCardFormat(): Flow<Result<SuccessData<List<FetchCardFormatResponse>>>>
 
-    fun newPassword(newPasswordRequest: NewPasswordRequest): Flow<Result<SuccessData<Boolean>>>
+    fun newPassword(newPasswordRequest: NewPasswordRequest): Flow<Result<SuccessData<NationalIdResponse>>>
 
     fun newPasswordFetchAdmittanceText(): Flow<Result<SuccessData<FetchAdmittanceTextResponse>>>
 

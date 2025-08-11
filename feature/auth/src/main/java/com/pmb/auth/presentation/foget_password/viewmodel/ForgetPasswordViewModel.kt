@@ -93,7 +93,8 @@ class ForgetPasswordViewModel @Inject constructor(
                     is Result.Success -> {
                         setState {
                             it.copy(
-                                loading = false
+                                loading = false,
+                                nationalIdSerial = if (!result.data.nationalCardSerial.isNullOrEmpty()) "${result.data.nationalCardSeri}${result.data.nationalCardSerial}" else null
                             )
                         }
                         postEvent(ForgetPasswordViewEvents.ResetPasswordSuccess)
