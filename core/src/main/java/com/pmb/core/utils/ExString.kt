@@ -116,7 +116,7 @@ data class PasswordValidationResult(
     val digit: Boolean = false,
 ) {
     val isValid: Boolean
-        get() = minLen && lowercase && uppercase && digit
+        get() = minLen && (lowercase || uppercase) && digit
 }
 
 data class UsernameValidationResult(
@@ -131,8 +131,8 @@ data class UsernameValidationResult(
 
     companion object {
         fun validate(value: String): UsernameValidationResult = UsernameValidationResult(
-            minLen = value.length >= 5,
-            maxLen = value.length <= 30,
+            minLen = value.length >= 8,
+            maxLen = value.length <= 20,
             startWithLetter = value.startWithEnglishLetter(),
             specialChar = value.isValidChars(),
             space = value.contains(Regex("\\s"))

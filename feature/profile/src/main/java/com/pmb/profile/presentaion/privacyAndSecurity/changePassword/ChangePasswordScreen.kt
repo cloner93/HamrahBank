@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -13,7 +14,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.annotation.AppPreview
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppContent
@@ -22,10 +22,13 @@ import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.text_field.AppPasswordTextField
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.ballon.ui.theme.HamrahBankTheme
+import com.pmb.core.composition.LocalScreenScope
+import com.pmb.core.composition.LocalSnackbarHostState
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.profile.presentaion.privacyAndSecurity.changePassword.viewmodel.ChangePasswordViewActions
 import com.pmb.profile.presentaion.privacyAndSecurity.changePassword.viewmodel.ChangePasswordViewEvents
 import com.pmb.profile.presentaion.privacyAndSecurity.changePassword.viewmodel.ChangePasswordViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun ChangePasswordScreen() {
@@ -33,17 +36,20 @@ fun ChangePasswordScreen() {
     val viewState by viewModel.viewState.collectAsState()
 
     val navigationManager = LocalNavigationManager.current
+    val snackbarHostState: SnackbarHostState = LocalSnackbarHostState.current
+    val screenScope = LocalScreenScope.current
 
     LaunchedEffect(Unit) {
         viewModel.viewEvent.collect { event ->
             when (event) {
-                is ChangePasswordViewEvents.ShowError -> {
-
-                }
-
                 ChangePasswordViewEvents.NavigateBack -> {
                     navigationManager.navigateBack()
                 }
+
+                is ChangePasswordViewEvents.ShowSnackBar ->
+                    screenScope.launch {
+                        snackbarHostState.showSnackbar(message = event.message)
+                    }
             }
         }
     }
@@ -68,13 +74,14 @@ fun ChangePasswordScreen() {
             ) {
                 AppButton(
                     modifier = Modifier.fillMaxWidth(),
-                    enable = viewState.isAllPasswordOk,
+                    enable = viewState.enableSubmit,
                     title = "ادامه",
                     onClick = {
                         viewModel.handle(ChangePasswordViewActions.SubmitNewPassword)
                     })
             }
-        }
+        },
+        alertState = viewState.alertState,
     ) {
 
         AppPasswordTextField(
@@ -107,7 +114,6 @@ fun ChangePasswordScreen() {
             })
     }
     if (viewState.loading) AppLoading()
-    viewState.alertState?.let { AlertComponent(it) }
 }
 
 @AppPreview

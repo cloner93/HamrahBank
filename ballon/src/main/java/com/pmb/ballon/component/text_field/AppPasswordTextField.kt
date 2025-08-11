@@ -87,12 +87,8 @@ private fun PasswordConditions(result: PasswordValidationResult) {
             icon = if (result.minLen) checked else unchecked
         )
         TextIcon(
-            title = stringResource(R.string.upper_case),
-            icon = if (result.uppercase) checked else unchecked
-        )
-        TextIcon(
-            title = stringResource(R.string.lowercase),
-            icon = if (result.lowercase) checked else unchecked
+            title = stringResource(R.string.upper_or_lower_case),
+            icon = if (result.uppercase || result.lowercase) checked else unchecked
         )
         TextIcon(
             title = stringResource(R.string.digit),
