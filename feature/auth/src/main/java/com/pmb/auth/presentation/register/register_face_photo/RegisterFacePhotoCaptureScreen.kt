@@ -141,7 +141,7 @@ fun RegisterFacePhotoCaptureScreen(
                     enable = true,
                     title = stringResource(R.string._continue),
                     onClick = {
-                        viewModel.handle(RegisterFacePhotoCapturedViewActions.SendFacePhoto("DD"))
+                        viewModel.handle(RegisterFacePhotoCapturedViewActions.SendFacePhoto)
                     })
             }
         },

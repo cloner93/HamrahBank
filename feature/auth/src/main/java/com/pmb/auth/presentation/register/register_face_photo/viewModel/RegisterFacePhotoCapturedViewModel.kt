@@ -26,7 +26,6 @@ class RegisterFacePhotoCapturedViewModel @Inject constructor(
     private val cameraManager: CameraManagerImpl,
     private val imageCompressor: ImageCompressor,
     private val fileManager: FileManager,
-    private val sendFacePhotoUseCase: SendFacePhotoUseCase
 ) : BaseViewModel<PhotoViewActions, RegisterFacePhotoCapturedViewState, RegisterFacePhotoCapturedViewEvents>(
     initialState
 ) {
@@ -51,7 +50,7 @@ class RegisterFacePhotoCapturedViewModel @Inject constructor(
             }
 
             is RegisterFacePhotoCapturedViewActions.SendFacePhoto -> {
-                handleSendFacePhoto(action)
+                handleSendFacePhoto()
             }
 
             is RegisterFacePhotoCapturedViewActions.ClearAlert -> {
@@ -101,54 +100,24 @@ class RegisterFacePhotoCapturedViewModel @Inject constructor(
         }
     }
 
-    private fun handleSendFacePhoto(action: RegisterFacePhotoCapturedViewActions.SendFacePhoto) {
+    private fun handleSendFacePhoto() {
         viewModelScope.launch {
-            sendFacePhotoUseCase.invoke(FacePhotoParams(action.uri)).collect { result ->
-                when (result) {
-                    is Result.Success -> {
-                        setState {
-                            it.copy(
-                                isLoading = false,
-                                alertModelState = null,
-                                hasCameraPermission = false,
-                                hasFilePermissions = false,
-                                isCameraReady = false,
-                                isFrontCamera = false,
-                                isCapturingPhoto = false,
-                                photoCaptured = false,
-                                savedFileUri = null,
-                                cameraHasError = null,
-                                isCameraLoading = false
-                            )
-                        }
-                        postEvent(RegisterFacePhotoCapturedViewEvents.FacePhotoCaptured)
-                    }
-
-                    is Result.Error -> {
-                        setState {
-                            it.copy(
-                                isLoading = false,
-                                alertModelState = AlertModelState.Dialog(
-                                    title = "خطا",
-                                    description = " ${result.message}",
-                                    positiveButtonTitle = "تایید",
-                                    onPositiveClick = {
-                                        setState { state -> state.copy(alertModelState = null) }
-                                    }
-                                )
-                            )
-                        }
-                    }
-
-                    is Result.Loading -> {
-                        setState {
-                            it.copy(
-                                isLoading = true
-                            )
-                        }
-                    }
-                }
+            setState {
+                it.copy(
+                    isLoading = false,
+                    alertModelState = null,
+                    hasCameraPermission = false,
+                    hasFilePermissions = false,
+                    isCameraReady = false,
+                    isFrontCamera = false,
+                    isCapturingPhoto = false,
+                    photoCaptured = false,
+                    savedFileUri = null,
+                    cameraHasError = null,
+                    isCameraLoading = false
+                )
             }
+            postEvent(RegisterFacePhotoCapturedViewEvents.FacePhotoCaptured)
         }
     }
 

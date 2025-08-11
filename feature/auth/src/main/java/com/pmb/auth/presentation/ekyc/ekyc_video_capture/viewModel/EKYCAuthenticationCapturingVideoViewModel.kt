@@ -1,30 +1,37 @@
 package com.pmb.auth.presentation.ekyc.ekyc_video_capture.viewModel
-import android.net.Uri
+
+import android.Manifest
 import android.util.Log
 import androidx.lifecycle.viewModelScope
-import com.pmb.auth.domain.ekyc.capture_video.entity.CapturingVideoParams
-import com.pmb.auth.domain.ekyc.capture_video.useCase.SendVideoUseCase
 import com.pmb.auth.presentation.first_login_confirm.viewModel.TimerEvent
 import com.pmb.auth.presentation.first_login_confirm.viewModel.TimerState
 import com.pmb.auth.presentation.first_login_confirm.viewModel.TimerStatus
 import com.pmb.auth.presentation.first_login_confirm.viewModel.TimerTypeId
+import com.pmb.auth.presentation.register.register_video.viewModel.RegisterCapturingVideoViewActions
+import com.pmb.auth.presentation.register.register_video.viewModel.RegisterCapturingVideoViewEvents
 import com.pmb.auth.utils.startCountUp
 import com.pmb.camera.platform.VideoCameraManagerImpl
 import com.pmb.camera.platform.VideoViewActions
 import com.pmb.compressor.compression.VideoCompressor
 import com.pmb.compressor.compression.VideoQuality
 import com.pmb.compressor.config.Configuration
-import com.pmb.compressor.listeners.CompressionListener
 import com.pmb.core.fileManager.FileManager
 import com.pmb.core.permissions.PermissionDispatcher
 import com.pmb.core.platform.AlertModelState
 import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.platform.Result
+import com.pmb.core.utils.Base64FileHelper
+import com.pmb.domain.usecae.auth.newPassword.NewPasswordFetchAdmittanceTextUseCase
+import com.pmb.domain.usecae.auth.newPassword.NewPasswordWithEKYCParams
+import com.pmb.domain.usecae.auth.newPassword.NewPasswordWithEKYCUseCase
+import com.pmb.domain.usecae.auth.newPassword.NewPasswordWithVerifyParams
+import com.pmb.domain.usecae.auth.newPassword.NewPasswordWithVerifyUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flatMapLatest
@@ -32,7 +39,6 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
@@ -42,11 +48,16 @@ class EKYCAuthenticationCapturingVideoViewModel @Inject constructor(
     private val cameraManager: VideoCameraManagerImpl,
     private val videoCompressor: VideoCompressor,
     private val fileManager: FileManager,
-    private val sendVideoUseCase: SendVideoUseCase
+    private val newPasswordFetchAdmittanceTextUseCase: NewPasswordFetchAdmittanceTextUseCase,
+    private val newPasswordWithEKYCUseCase: NewPasswordWithEKYCUseCase,
+    private val newPasswordWithVerifyUseCase: NewPasswordWithVerifyUseCase
 ) : BaseViewModel<
         VideoViewActions,
         EKYCAuthenticationCapturingVideoViewState,
         EKYCAuthenticationCapturingVideoViewEvents>(initialState) {
+//    init {
+//        handle(EKYCAuthenticationCapturingVideoViewActions.GetAdmittanceText)
+//    }
     override fun handle(action: VideoViewActions) {
         when (action) {
             is VideoViewActions.RequestCameraPermission -> {
@@ -79,33 +90,67 @@ class EKYCAuthenticationCapturingVideoViewModel @Inject constructor(
                     it.copy(isLoading = false)
                 }
             }
+
+            is EKYCAuthenticationCapturingVideoViewActions.GetAdmittanceText -> {
+                handleAdmittanceText()
+            }
+
+            is EKYCAuthenticationCapturingVideoViewActions.ForgetPasswordVerification -> {
+                handleForgetPasswordVerification(action)
+            }
         }
     }
 
-    private fun handleSendFacePhoto(action: EKYCAuthenticationCapturingVideoViewActions.SendVideo) {
+    private fun handleForgetPasswordVerification(action: EKYCAuthenticationCapturingVideoViewActions.ForgetPasswordVerification) {
         viewModelScope.launch {
-            sendVideoUseCase.invoke(CapturingVideoParams(action.uri)).collect { result ->
+            newPasswordWithVerifyUseCase.invoke(
+                NewPasswordWithVerifyParams(
+                    nationalCode = action.eKYCSharedViewState.changePasswordNationalId ?: "",
+                    password = action.eKYCSharedViewState.changePasswordPassword ?: ""
+                )
+            ).collectLatest { result ->
                 when (result) {
-                    is Result.Success -> {
-                        setState {
-                            it.copy(
+                    is Result.Error -> {
+                        setState { state ->
+                            state.copy(
                                 isLoading = false,
-                                alertModelState = null,
-                                timerState = null,
-                                hasCameraPermission = false,
-                                isCameraReady = false,
-                                isFrontCamera = false,
-                                isCapturingVideo = false,
-                                videoCaptured = false,
-                                savedFileUri = null,
-                                cameraHasError = null,
-                                isCameraLoading = false,
-                                isCompressing = false
+                                alertModelState = AlertModelState.Dialog(
+                                    title = "خطا",
+                                    description = " ${result.message}",
+                                    positiveButtonTitle = "تایید",
+                                    onPositiveClick = {
+                                        setState { state -> state.copy(alertModelState = null) }
+                                    }
+                                )
                             )
                         }
-                        postEvent(EKYCAuthenticationCapturingVideoViewEvents.VideoCaptured)
                     }
 
+                    is Result.Success -> {
+                        setState { state ->
+                            state.copy(
+                                isLoading = false,
+                            )
+                        }
+                        postEvent(EKYCAuthenticationCapturingVideoViewEvents.ForgetPasswordVerificationSucceed)
+                    }
+
+                    is Result.Loading -> {
+                        setState { state ->
+                            state.copy(
+                                isLoading = true,
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun handleAdmittanceText() {
+        viewModelScope.launch {
+            newPasswordFetchAdmittanceTextUseCase.invoke(Unit).collect { result ->
+                when (result) {
                     is Result.Error -> {
                         setState {
                             it.copy(
@@ -129,6 +174,73 @@ class EKYCAuthenticationCapturingVideoViewModel @Inject constructor(
                             )
                         }
                     }
+
+                    is Result.Success -> {
+                        setState {
+                            it.copy(
+                                isLoading = false,
+                                admittanceTextResponse = result.data
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun handleSendFacePhoto(action: EKYCAuthenticationCapturingVideoViewActions.SendVideo) {
+        viewModelScope.launch {
+            val fileBase64 = viewState.value.videoFileBase64File?.let {
+                Base64FileHelper.encodeToBase64(
+                    it,
+                    viewModelScope
+                )
+            }
+            Log.d("Ali Tag",action.eKYCSharedViewState.toString())
+            newPasswordWithEKYCUseCase.invoke(
+                NewPasswordWithEKYCParams(
+                    nationalCode = action.eKYCSharedViewState.changePasswordNationalId ?: "",
+                    authImage = action.eKYCSharedViewState.authImage ?: "",
+                    admittanceText = viewState.value.admittanceTextResponse?.admittanceText
+                        ?: "",
+                    authVideo = fileBase64?.await() ?: "",
+                    cardSerialNo = action.eKYCSharedViewState.cardSerialNo ?: "",
+                    mobileNumber = action.eKYCSharedViewState.changePasswordPhoneNumber ?: "",
+                )
+            ).collect { result ->
+                when (result) {
+                    is Result.Error -> {
+                        setState { state ->
+                            state.copy(
+                                isLoading = false,
+                                alertModelState = AlertModelState.Dialog(
+                                    title = "خطا",
+                                    description = " ${result.message}",
+                                    positiveButtonTitle = "تایید",
+                                    onPositiveClick = {
+                                        setState { state -> state.copy(alertModelState = null) }
+                                    }
+                                )
+                            )
+                        }
+                    }
+
+                    is Result.Success -> {
+                        setState { state ->
+                            state.copy(
+                                isLoading = false,
+                            )
+                        }
+                        postEvent(EKYCAuthenticationCapturingVideoViewEvents.ForgetPasswordVideoSent)
+                    }
+
+                    is Result.Loading -> {
+                        setState { state ->
+                            state.copy(
+                                isLoading = true,
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -148,7 +260,7 @@ class EKYCAuthenticationCapturingVideoViewModel @Inject constructor(
 
             permissionDispatcher.initialize(singlePermissionLauncher = action.managedActivityResultLauncher)
             permissionDispatcher.requestSinglePermission(
-                permission = android.Manifest.permission.CAMERA,
+                permission = Manifest.permission.CAMERA,
                 onPermissionGranted = {
                     Log.i("per", "You have permission for using camera")
                     setState { state ->
@@ -164,12 +276,13 @@ class EKYCAuthenticationCapturingVideoViewModel @Inject constructor(
             )
         }
     }
+
     private fun requestAudioPermission(action: VideoViewActions.RequestAudioPermission) {
         viewModelScope.launch {
 
             permissionDispatcher.initialize(singlePermissionLauncher = action.managedActivityResultLauncher)
             permissionDispatcher.requestSinglePermission(
-                permission = android.Manifest.permission.RECORD_AUDIO,
+                permission = Manifest.permission.RECORD_AUDIO,
                 onPermissionGranted = {
                     setState { state ->
                         Log.i("per", "You have permission for using camera")
@@ -191,6 +304,7 @@ class EKYCAuthenticationCapturingVideoViewModel @Inject constructor(
 //            permissionDispatcher.initialize(multiplePermissionLauncher = action.managedActivityResultLauncher)
 //            permissionDispatcher.requestMultiplePermission(
 //                permissions = arrayOf(
+////                    android.Manifest.permission.RECORD_AUDIO
 //                ),
 //                onPermissionGranted = {
 //                    setState { state ->
@@ -311,44 +425,41 @@ class EKYCAuthenticationCapturingVideoViewModel @Inject constructor(
                 )
             )
         }
+        handleAdmittanceText()
         startTimers()
         dispatch(TimerTypeId.VIDEO_TAKEN_TIMER, TimerEvent.STARTED)
         cameraManager.startRecording(videoFile, onCaptured = {
             viewModelScope.launch {
-
-                videoCompressor.compress(
-                    videoFile.absolutePath,
-                    configureWith = Configuration(
-                        quality = VideoQuality.LOW,
-                        videoNames = videoFile.name,
-                        isMinBitrateCheckEnabled = false,
-                        keepOriginalResolution = true,
-                    ),
-//                    listener = object : CompressionListener {
-//                        override fun onProgress(percent: Float) {
-//                        }
-//
-//                        override fun onStart() {
-//                            setState { state ->
-//                                state.copy(
-//                                    isLoading = true,
-//                                    isCompressing = true
-//                                )
-//                            }
-//
-//                        }
-//
+//                setState { state ->
+//                    state.copy(
+//                        isLoading = false,
+//                        isCapturingVideo = false,
+//                        videoCaptured = true,
+//                        isCompressing = false,
+//                        savedFileUri = videoFile.absolutePath,
+//                        cameraHasError = null,
+//                    )
+//                }
+                try {
+                    val result = videoCompressor.compress(
+                        videoFile.absolutePath,
+                        configureWith = Configuration(
+                            quality = VideoQuality.LOW,
+                            videoNames = videoFile.name,
+                            isMinBitrateCheckEnabled = false,
+                            keepOriginalResolution = true,
+                        ),
 //                        override fun onSuccess(size: Long, path: String?) {
-//                            setState { state ->
-//                                state.copy(
-//                                    isLoading = false,
-//                                    isCapturingVideo = false,
-//                                    videoCaptured = true,
-//                                    isCompressing = false,
-//                                    savedFileUri = path,
-//                                    cameraHasError = null
-//                                )
-//                            }
+////                                setState { state ->
+////                                    state.copy(
+////                                        isLoading = false,
+////                                        isCapturingVideo = false,
+////                                        videoCaptured = true,
+////                                        isCompressing = false,
+////                                        savedFileUri = path,
+////                                        cameraHasError = null,
+////                                    )
+////                            }
 //                        }
 //
 //                        override fun onFailure(failureMessage: String) {
@@ -359,7 +470,22 @@ class EKYCAuthenticationCapturingVideoViewModel @Inject constructor(
 //                            Log.wtf("TAG", "compression has been cancelled")
 //                        }
 //                    },
-                )
+                    )
+                    setState { state ->
+                        state.copy(
+                            isLoading = false,
+                            isCapturingVideo = false,
+                            videoCaptured = true,
+                            isCompressing = false,
+                            savedFileUri = result.resultPath,
+                            videoFileBase64File = result.file,
+                            cameraHasError = null,
+
+                            )
+                    }
+                } catch (e: Exception) {
+
+                }
             }
         }, onError = { error ->
             setState { state ->
@@ -394,6 +520,7 @@ class EKYCAuthenticationCapturingVideoViewModel @Inject constructor(
                             cameraHasError = null
                         )
                     }
+                    handleAdmittanceText()
                 } else {
                     setState {
                         it.copy(

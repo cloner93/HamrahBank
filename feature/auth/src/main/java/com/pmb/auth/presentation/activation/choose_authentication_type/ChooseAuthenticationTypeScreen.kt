@@ -27,6 +27,7 @@ import com.pmb.ballon.component.base.AppImage
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.Headline4Text
 import com.pmb.ballon.models.AppButton.buttonColors
+import com.pmb.ballon.models.IconStyle
 import com.pmb.ballon.models.ImageStyle
 import com.pmb.ballon.models.Size
 import com.pmb.ballon.models.TextStyle
@@ -39,7 +40,7 @@ import com.pmb.navigation.moduleScreen.RegisterScreens
 
 @Composable
 fun ActivationAuthenticationTypeScreen(
-    sharedState: State<AuthSharedViewState>,
+    sharedState: AuthSharedViewState,
 ) {
     val navigationManager: NavigationManager = LocalNavigationManager.current
     var showMellatSignatureAppBottomSheet by remember { mutableStateOf(false) }
@@ -61,7 +62,7 @@ fun ActivationAuthenticationTypeScreen(
         Spacer(modifier = Modifier.size(30.dp))
         AppImage(
             image =
-                if (sharedState.value.actionType == AuthActionType.FORGET_PASSWORD) painterResource(
+                if (sharedState.actionType == AuthActionType.FORGET_PASSWORD) painterResource(
                     com.pmb.ballon.R.drawable.img_key
                 ) else painterResource(
                     com.pmb.ballon.R.drawable.img_document
@@ -72,7 +73,7 @@ fun ActivationAuthenticationTypeScreen(
         Headline4Text(
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth(),
-            text = if (sharedState.value.actionType == AuthActionType.FORGET_PASSWORD) stringResource(
+            text = if (sharedState.actionType == AuthActionType.FORGET_PASSWORD) stringResource(
                 R.string.authentication_type_password_description
             ) else stringResource(
                 R.string.authentication_type_activation_description
@@ -86,13 +87,18 @@ fun ActivationAuthenticationTypeScreen(
                 .fillMaxWidth(),
             title = stringResource(R.string.bank_card),
             icon = com.pmb.ballon.R.drawable.ic_arrow_left,
+            enable = false,
             colors = buttonColors(
-                containerColor = AppTheme.colorScheme.background1Neutral
+                containerColor = AppTheme.colorScheme.background1Neutral,
+                disabledContainerColor = AppTheme.colorScheme.background1Neutral
             ),
             textStyle = TextStyle.defaultButton(
-                color = AppTheme.colorScheme.onBackgroundPrimaryActive,
+                color = AppTheme.colorScheme.onBackgroundPrimaryDisabled ,//when it is enabled it should be changed to AppTheme.colorScheme.onBackgroundPrimaryActive
                 typography = AppTheme.typography.bodyMedium
             ),
+            iconStyle = IconStyle(
+                tint = AppTheme.colorScheme.onBackgroundPrimaryDisabled ,//when it is enabled it should be removed
+            )
         ) {
             navigationManager.navigate(CardScreens.CardGraph)
         }
@@ -116,14 +122,19 @@ fun ActivationAuthenticationTypeScreen(
             modifier = Modifier
                 .padding(vertical = 8.dp)
                 .fillMaxWidth(),
+            enable = false,
             title = stringResource(R.string.mellat_signature_app),
             icon = com.pmb.ballon.R.drawable.ic_arrow_left,
             colors = buttonColors(
-                containerColor = AppTheme.colorScheme.background1Neutral
+                containerColor = AppTheme.colorScheme.background1Neutral,
+                disabledContainerColor = AppTheme.colorScheme.background1Neutral
             ),
             textStyle = TextStyle.defaultButton(
-                color = AppTheme.colorScheme.onBackgroundPrimaryActive,
+                color = AppTheme.colorScheme.onBackgroundPrimaryDisabled ,//when it is enabled it should be changed to AppTheme.colorScheme.onBackgroundPrimaryActive
                 typography = AppTheme.typography.bodyMedium
+            ),
+            iconStyle = IconStyle(
+                tint = AppTheme.colorScheme.onBackgroundPrimaryDisabled ,//when it is enabled it should be removed
             ),
         ) {
             showMellatSignatureAppBottomSheet = true

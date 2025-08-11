@@ -4,5 +4,5 @@ import com.pmb.camera.platform.PhotoViewActions
 
 sealed interface RegisterFacePhotoCapturedViewActions : PhotoViewActions {
     data object ClearAlert : RegisterFacePhotoCapturedViewActions
-    data class SendFacePhoto(val uri: String) :RegisterFacePhotoCapturedViewActions
+    data object SendFacePhoto :RegisterFacePhotoCapturedViewActions
 }

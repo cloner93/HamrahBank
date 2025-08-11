@@ -4,13 +4,16 @@ import com.pmb.auth.presentation.first_login_confirm.viewModel.TimerState
 import com.pmb.auth.presentation.first_login_confirm.viewModel.TimerTypeId
 import com.pmb.camera.platform.VideoViewState
 import com.pmb.core.platform.AlertModelState
+import com.pmb.domain.model.openAccount.FetchAdmittanceTextResponse
+import java.io.File
 
 data class EKYCAuthenticationCapturingVideoViewState(
     val isLoading :Boolean = false,
     val alertModelState: AlertModelState?=null,
+    val admittanceTextResponse: FetchAdmittanceTextResponse? = null,
     val timerState: Map<TimerTypeId, TimerState>? = null,
+    val videoFileBase64File: File? = null,
     override val hasCameraPermission: Boolean = false,
-//    override val hasFilePermissions: Boolean = false,
     override val hasAudioPermissions: Boolean = false,
     override val isCameraReady: Boolean = false,
     override val isFrontCamera: Boolean = false,

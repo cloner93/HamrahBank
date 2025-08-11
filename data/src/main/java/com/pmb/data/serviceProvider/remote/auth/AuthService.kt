@@ -1,9 +1,15 @@
 package com.pmb.data.serviceProvider.remote.auth
 
 import com.pmb.core.platform.Result
+import com.pmb.data.model.AnyModel
 import com.pmb.domain.model.LoginResponse
 import com.pmb.domain.model.RegisterVerifyResponse
 import com.pmb.domain.model.SendOtpRequest
+import com.pmb.domain.model.changePassword.NewPasswordRequest
+import com.pmb.domain.model.changePassword.NewPasswordWithEKYCRequest
+import com.pmb.domain.model.changePassword.NewPasswordWithEKYCResponse
+import com.pmb.domain.model.changePassword.NewPasswordWithVerifyRequest
+import com.pmb.domain.model.changePassword.NewPasswordWithVerifyResponse
 import com.pmb.domain.model.openAccount.AccountArchiveJobDocResponse
 import com.pmb.domain.model.openAccount.CheckPostalCodeResponse
 import com.pmb.domain.model.openAccount.FetchAdmittanceTextResponse
@@ -66,4 +72,13 @@ interface AuthService {
 
     fun checkPostCode(postCode: Int): Flow<Result<SuccessData<CheckPostalCodeResponse>>>
     fun fetchCardFormat(): Flow<Result<SuccessData<List<FetchCardFormatResponse>>>>
+
+    fun newPassword(newPasswordRequest: NewPasswordRequest): Flow<Result<SuccessData<Boolean>>>
+
+    fun newPasswordFetchAdmittanceText(): Flow<Result<SuccessData<FetchAdmittanceTextResponse>>>
+
+    fun newPasswordWithEKYC(newPasswordWithEKYCRequest: NewPasswordWithEKYCRequest): Flow<Result<SuccessData<NewPasswordWithEKYCResponse>>>
+
+    fun newPasswordWithVerify(newPasswordWithVerifyRequest: NewPasswordWithVerifyRequest): Flow<Result<SuccessData<Boolean>>>
+
 }
