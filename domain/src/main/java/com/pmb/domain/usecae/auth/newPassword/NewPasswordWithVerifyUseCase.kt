@@ -10,8 +10,8 @@ import javax.inject.Inject
 
 class NewPasswordWithVerifyUseCase @Inject constructor(
     private val authRepository: AuthRepository
-) : BaseUseCase<NewPasswordWithVerifyParams, NewPasswordWithVerifyResponse>() {
-    override suspend fun execute(params: NewPasswordWithVerifyParams): Flow<Result<NewPasswordWithVerifyResponse>> {
+) : BaseUseCase<NewPasswordWithVerifyParams, Boolean>() {
+    override suspend fun execute(params: NewPasswordWithVerifyParams): Flow<Result<Boolean>> {
         return authRepository.newPasswordWithVerify(params.toRequest())
     }
 }

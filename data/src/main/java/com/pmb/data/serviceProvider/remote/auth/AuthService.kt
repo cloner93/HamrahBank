@@ -73,12 +73,12 @@ interface AuthService {
     fun checkPostCode(postCode: Int): Flow<Result<SuccessData<CheckPostalCodeResponse>>>
     fun fetchCardFormat(): Flow<Result<SuccessData<List<FetchCardFormatResponse>>>>
 
-    fun newPassword(newPasswordRequest: NewPasswordRequest): Flow<Result<SuccessData<AnyModel>>>
+    fun newPassword(newPasswordRequest: NewPasswordRequest): Flow<Result<SuccessData<Boolean>>>
 
     fun newPasswordFetchAdmittanceText(): Flow<Result<SuccessData<FetchAdmittanceTextResponse>>>
 
     fun newPasswordWithEKYC(newPasswordWithEKYCRequest: NewPasswordWithEKYCRequest): Flow<Result<SuccessData<NewPasswordWithEKYCResponse>>>
 
-    fun newPasswordWithVerify(newPasswordWithVerifyRequest: NewPasswordWithVerifyRequest): Flow<Result<SuccessData<NewPasswordWithVerifyResponse>>>
+    fun newPasswordWithVerify(newPasswordWithVerifyRequest: NewPasswordWithVerifyRequest): Flow<Result<SuccessData<Boolean>>>
 
 }

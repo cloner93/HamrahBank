@@ -56,7 +56,8 @@ import com.pmb.navigation.moduleScreen.EKYCScreens
 
 @Composable
 fun EKYCFacePhotoCaptureScreen(
-    viewModel: EKYCFacePhotoCapturedViewModel
+    viewModel: EKYCFacePhotoCapturedViewModel,
+    updateState:(String?)->Unit
 ) {
     val navigationManager: NavigationManager = LocalNavigationManager.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -92,6 +93,7 @@ fun EKYCFacePhotoCaptureScreen(
         viewModel.viewEvent.collect { event ->
             when (event) {
                 EKYCFacePhotoCapturedViewEvents.FacePhotoCaptured -> {
+                    updateState(viewState.fileBase64)
                     navigationManager.navigate(EKYCScreens.EKYCVideoCapture)
                 }
             }
@@ -139,7 +141,7 @@ fun EKYCFacePhotoCaptureScreen(
                     enable = true,
                     title = stringResource(R.string._continue),
                     onClick = {
-                        viewModel.handle(EKYCFacePhotoCapturedViewActions.SendFacePhoto("DD"))
+                        viewModel.handle(EKYCFacePhotoCapturedViewActions.SendFacePhoto)
                     })
             }
         },

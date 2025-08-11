@@ -82,6 +82,6 @@ interface AuthRepository {
 
     fun newPasswordWithEKYC(newPasswordWithEKYCRequest: NewPasswordWithEKYCRequest): Flow<Result<NewPasswordWithEKYCResponse>>
 
-    fun newPasswordWithVerify(newPasswordWithVerifyRequest: NewPasswordWithVerifyRequest): Flow<Result<NewPasswordWithVerifyResponse>>
+    fun newPasswordWithVerify(newPasswordWithVerifyRequest: NewPasswordWithVerifyRequest): Flow<Result<Boolean>>
 
 }

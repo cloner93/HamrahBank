@@ -6,7 +6,7 @@ import com.pmb.core.platform.BaseViewState
 
 data class ForgetPasswordViewState(
     val loading: Boolean = false,
-    val alert: AlertModelState? = null,
+    val alertModelState: AlertModelState? = null,
     var showBottomSheet: Boolean = false,
     var mobile: String? = null,
     var nationalId: String? = null,

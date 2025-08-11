@@ -54,8 +54,8 @@ fun AppPasswordTextField(
             singleLine = true,
             onValueChange = {
                 result = it.isPassword()
-                onValueChange(it)
                 onValidate?.invoke(result)
+                onValueChange(it)
             },
             visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = @Composable {

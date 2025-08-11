@@ -1,8 +1,8 @@
 package com.pmb.auth.presentation.ekyc.ekyc_video_capture
 
-import android.view.Gravity
-import android.widget.FrameLayout
-import android.widget.VideoView
+import android.media.MediaPlayer
+import android.view.Surface
+import android.view.TextureView
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.view.PreviewView
@@ -20,7 +20,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -45,8 +44,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.net.toUri
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.pmb.auth.R
+import com.pmb.auth.presentation.ekyc.EKYCSharedViewState
 import com.pmb.auth.presentation.ekyc.ekyc_video_capture.viewModel.EKYCAuthenticationCapturingVideoViewActions
 import com.pmb.auth.presentation.ekyc.ekyc_video_capture.viewModel.EKYCAuthenticationCapturingVideoViewEvents
 import com.pmb.auth.presentation.ekyc.ekyc_video_capture.viewModel.EKYCAuthenticationCapturingVideoViewModel
@@ -70,6 +71,8 @@ import com.pmb.navigation.moduleScreen.AuthScreens
 @Composable
 fun EKYCVideoCaptureScreen(
     viewModel: EKYCAuthenticationCapturingVideoViewModel,
+    sharedState: EKYCSharedViewState,
+    updateState: () -> Unit
 ) {
     val navigationManager: NavigationManager = LocalNavigationManager.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -85,8 +88,12 @@ fun EKYCVideoCaptureScreen(
             }/00:20"
         } else ""
     LaunchedEffect(viewState.hasAudioPermissions) {
-        if (viewState.hasAudioPermissions)
-            viewModel.handle(VideoViewActions.PreviewCamera(previewView, lifecycleOwner))
+        if (viewState.hasAudioPermissions) viewModel.handle(
+            VideoViewActions.PreviewCamera(
+                previewView,
+                lifecycleOwner
+            )
+        )
     }
     val permissionAudioLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
@@ -101,8 +108,12 @@ fun EKYCVideoCaptureScreen(
     LaunchedEffect(Unit) {
         viewModel.viewEvent.collect { event ->
             when (event) {
-                EKYCAuthenticationCapturingVideoViewEvents.VideoCaptured -> {
-                    navigationManager.navigateAndClearStack(AuthScreens.AuthenticationConfirmStep)
+                EKYCAuthenticationCapturingVideoViewEvents.ForgetPasswordVerificationSucceed -> {
+                    updateState()
+                    navigationManager.navigateAndClearStack(AuthScreens.ForgetPassword)
+                }
+                EKYCAuthenticationCapturingVideoViewEvents.ForgetPasswordVideoSent -> {
+                    viewModel.handle(EKYCAuthenticationCapturingVideoViewActions.ForgetPasswordVerification(sharedState))
                 }
             }
         }
@@ -111,11 +122,9 @@ fun EKYCVideoCaptureScreen(
         modifier = Modifier.padding(horizontal = 16.dp),
         topBar = {
             AppTopBar(
-                title = stringResource(R.string.video_authentication),
-                onBack = {
+                title = stringResource(R.string.video_authentication), onBack = {
                     navigationManager.navigateBack()
-                }
-            )
+                })
         },
         footer = {
             Spacer(modifier = Modifier.size(10.dp))
@@ -129,11 +138,9 @@ fun EKYCVideoCaptureScreen(
                         modifier = Modifier
                             .align(Alignment.Center)
                             .padding(bottom = 16.dp)
-                            .size(66.dp),
-                        onClick = {
+                            .size(66.dp), onClick = {
                             viewModel.handle(VideoViewActions.VideoCaptured)
-                        }
-                    ) {
+                        }) {
                         AppImage(
                             image = painterResource(com.pmb.ballon.R.drawable.ic_video_camera),
                         )
@@ -162,8 +169,7 @@ fun EKYCVideoCaptureScreen(
                                 .padding(bottom = 3.dp)
                                 .size(8.dp)
                                 .background(
-                                    AppTheme.colorScheme.foregroundPrimaryDefault,
-                                    CircleShape
+                                    AppTheme.colorScheme.foregroundPrimaryDefault, CircleShape
                                 )
                         )
                     }
@@ -173,11 +179,9 @@ fun EKYCVideoCaptureScreen(
                             modifier = Modifier
                                 .align(Alignment.Center)
                                 .padding(bottom = 16.dp)
-                                .size(66.dp),
-                            onClick = {
+                                .size(66.dp), onClick = {
                                 viewModel.handle(EKYCAuthenticationCapturingVideoViewActions.FinishTimer)
-                            },
-                            enabled = !viewState.isCompressing
+                            }, enabled = !viewState.isCompressing
                         ) {
                             AppImage(
                                 image = painterResource(com.pmb.ballon.R.drawable.ic_video_stop)
@@ -197,8 +201,7 @@ fun EKYCVideoCaptureScreen(
                         title = stringResource(R.string.record_again),
                         onClick = {
                             viewModel.handle(EKYCAuthenticationCapturingVideoViewActions.ClearVideo)
-                        }
-                    )
+                        })
                     Spacer(modifier = Modifier.size(10.dp))
                     AppButton(
                         modifier = Modifier
@@ -207,7 +210,7 @@ fun EKYCVideoCaptureScreen(
                         enable = true,
                         title = stringResource(R.string._continue),
                         onClick = {
-                            viewModel.handle(EKYCAuthenticationCapturingVideoViewActions.SendVideo("FF"))
+                            viewModel.handle(EKYCAuthenticationCapturingVideoViewActions.SendVideo(sharedState))
                         })
                 }
             }
@@ -215,18 +218,17 @@ fun EKYCVideoCaptureScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Spacer(modifier = Modifier.size(24.dp))
-        if (!viewState.videoCaptured && !viewState.isCapturingVideo)
-            BodyMediumText(
-                modifier = Modifier.fillMaxWidth(),
-                text = buildAnnotatedString {
-                    append("پس از فشردن علامت فیلمبرداری،")
-                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append(" یک جمله ")
-                    }
-                    append("برای شما نمایش داده می شود که باید آن را بخوانید.")
-                },
-                color = AppTheme.colorScheme.onBackgroundPrimarySubdued,
-            )
+        if (!viewState.videoCaptured && !viewState.isCapturingVideo) BodyMediumText(
+            modifier = Modifier.fillMaxWidth(),
+            text = buildAnnotatedString {
+                append("پس از فشردن علامت فیلمبرداری،")
+                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                    append(" یک جمله ")
+                }
+                append("برای شما نمایش داده می شود که باید آن را بخوانید.")
+            },
+            color = AppTheme.colorScheme.onBackgroundPrimarySubdued,
+        )
         else {
             BodyMediumText(
                 text = if (viewState.isCapturingVideo && !viewState.videoCaptured) stringResource(
@@ -238,46 +240,48 @@ fun EKYCVideoCaptureScreen(
                 color = AppTheme.colorScheme.onBackgroundPrimarySubdued
 
             )
-            if (viewState.isCapturingVideo && !viewState.videoCaptured)
+            if (viewState.isCapturingVideo && !viewState.videoCaptured) viewState.admittanceTextResponse?.admittanceText?.let {
                 Headline4Text(
-                    text = stringResource(
-                        R.string.repeated_sentence
-                    ),
+                    text = it,
                     textAlign = TextAlign.Center,
                     color = AppTheme.colorScheme.foregroundPrimaryDefault
                 )
+            }
         }
         Spacer(modifier = Modifier.size(44.dp))
         if (viewState.savedFileUri != null && viewState.videoCaptured) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .heightIn(max = 312.dp)
+                    .height(312.dp)
                     .background(Color.White, RoundedCornerShape(size = 16.dp))
             ) {
                 AndroidView(
                     factory = { ctx ->
-                        VideoView(ctx).apply {
-                            layoutParams = FrameLayout.LayoutParams(
-                                FrameLayout.LayoutParams.MATCH_PARENT,
-                                FrameLayout.LayoutParams.MATCH_PARENT
-                            ).apply { gravity = Gravity.CENTER }
-                            setVideoPath(viewState.savedFileUri)
-                            setOnPreparedListener { mediaPlayer ->
-                                mediaPlayer.start()
-                            }
+                        val textureView = TextureView(ctx).apply {
+                            scaleX = -1f
+                            scaleY = 1.6f
                         }
+                        MediaPlayer().apply {
+                            setDataSource(ctx, viewState.savedFileUri!!.toUri())
+                            setOnPreparedListener {
+                                textureView.surfaceTexture?.let { surfaceTexture ->
+                                    setSurface(Surface(surfaceTexture))
+                                    start()
+                                }
+                            }
+                            prepareAsync()
+                        }
+                        textureView
                     },
                     modifier = Modifier
                         .fillMaxWidth()
+                        .height(312.dp)
                         .clip(RoundedCornerShape(16.dp))
                         .border(
-                            1.dp,
-                            AppTheme.colorScheme.strokeNeutral3Rest,
-                            RoundedCornerShape(16.dp)
+                            1.dp, AppTheme.colorScheme.strokeNeutral3Rest, RoundedCornerShape(16.dp)
                         )
                 )
-
             }
         } else {
             Box(
@@ -287,7 +291,7 @@ fun EKYCVideoCaptureScreen(
                     .background(Color.White, RoundedCornerShape(size = 16.dp))
             ) {
                 AndroidView(
-                    factory = { context ->
+                    factory = {
                         previewView
                     },
                     modifier = Modifier
@@ -295,9 +299,7 @@ fun EKYCVideoCaptureScreen(
                         .height(312.dp)
                         .clip(RoundedCornerShape(16.dp))
                         .border(
-                            1.dp,
-                            AppTheme.colorScheme.strokeNeutral3Rest,
-                            RoundedCornerShape(16.dp)
+                            1.dp, AppTheme.colorScheme.strokeNeutral3Rest, RoundedCornerShape(16.dp)
                         )
                 )
             }

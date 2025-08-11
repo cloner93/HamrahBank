@@ -6,4 +6,5 @@ import com.pmb.core.platform.BaseViewState
 data class EKYCRegisterNationalIdViewState(
     val isLoading: Boolean = false,
     val alertModelState: AlertModelState? = null,
+    val nationalSerialId :String?=null,
 ) : BaseViewState

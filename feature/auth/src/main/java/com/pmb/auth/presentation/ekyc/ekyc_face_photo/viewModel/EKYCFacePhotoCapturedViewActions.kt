@@ -4,5 +4,5 @@ import com.pmb.camera.platform.PhotoViewActions
 
 sealed interface EKYCFacePhotoCapturedViewActions : PhotoViewActions {
     data object ClearAlert : EKYCFacePhotoCapturedViewActions
-    data class SendFacePhoto(val uri: String) :EKYCFacePhotoCapturedViewActions
+    data object SendFacePhoto :EKYCFacePhotoCapturedViewActions
 }

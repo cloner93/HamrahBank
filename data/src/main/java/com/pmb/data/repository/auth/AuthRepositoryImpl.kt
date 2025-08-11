@@ -232,7 +232,7 @@ class AuthRepositoryImpl @Inject constructor(
             .mapApiResult { it.second }
     }
 
-    override fun newPasswordWithVerify(newPasswordWithVerifyRequest: NewPasswordWithVerifyRequest): Flow<Result<NewPasswordWithVerifyResponse>> {
+    override fun newPasswordWithVerify(newPasswordWithVerifyRequest: NewPasswordWithVerifyRequest): Flow<Result<Boolean>> {
         return remoteServiceProvider.getAuthService().newPasswordWithVerify(newPasswordWithVerifyRequest)
             .mapApiResult { it.second }
     }

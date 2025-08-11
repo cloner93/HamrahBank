@@ -7,7 +7,11 @@ data class AuthSharedViewState(
     val userName : String ="",
     val password : String ="",
     val actionType: AuthActionType = AuthActionType.FORGET_PASSWORD,
-    val isPasswordChanged : Boolean = false
+    val isPasswordChanged : Boolean = false,
+    val changePasswordPhoneNumber: String ="",
+    val changePasswordPassword: String ="",
+    val changePasswordNationalId: String ="",
+
 ) : BaseSharedState
 
 enum class AuthActionType {

@@ -23,6 +23,7 @@ import com.pmb.auth.presentation.component.ShowChangedNewPasswordBottomSheet
 import com.pmb.auth.presentation.foget_password.viewmodel.ForgetPasswordViewActions
 import com.pmb.auth.presentation.foget_password.viewmodel.ForgetPasswordViewEvents
 import com.pmb.auth.presentation.foget_password.viewmodel.ForgetPasswordViewModel
+import com.pmb.auth.presentation.foget_password.viewmodel.ForgetPasswordViewState
 import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppContent
@@ -31,6 +32,7 @@ import com.pmb.ballon.component.base.AppMobileTextField
 import com.pmb.ballon.component.base.AppNationalIdTextField
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.text_field.AppPasswordTextField
+import com.pmb.core.utils.allowOnlyEnglishLettersAndDigits
 import com.pmb.core.utils.validatePhone
 import com.pmb.navigation.manager.LocalNavigationManager
 import com.pmb.navigation.manager.NavigationManager
@@ -39,19 +41,13 @@ import com.pmb.navigation.moduleScreen.AuthScreens
 @Composable
 fun ForgetPasswordScreen(
     viewModel: ForgetPasswordViewModel,
-    sharedState: State<AuthSharedViewState>,
+    sharedState: AuthSharedViewState,
     updatePasswordChangedState: (Boolean) -> Unit,
-    updateSharedState: (AuthActionType) -> Unit
+    updateSharedState: (AuthActionType,ForgetPasswordViewState) -> Unit
 ) {
     val navigationManager: NavigationManager = LocalNavigationManager.current
     var showBottomSheet by remember { mutableStateOf(false) }
-    var mobile by remember { mutableStateOf("") }
-    var nationalId by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var rePassword by remember { mutableStateOf("") }
 
-    var isMobile by remember { mutableStateOf(false) }
-    var isNationalId by remember { mutableStateOf(false) }
     var isPassword by remember { mutableStateOf(false) }
     var isRePassword by remember { mutableStateOf(false) }
     var isError by remember { mutableStateOf(false) }
@@ -62,7 +58,7 @@ fun ForgetPasswordScreen(
             when (event) {
                 ForgetPasswordViewEvents.ResetPasswordSuccess -> {
                     updateSharedState.invoke(
-                        AuthActionType.FORGET_PASSWORD
+                        AuthActionType.FORGET_PASSWORD,viewState
                     )
                     navigationManager.navigate(AuthScreens.ChooseAuthenticationType)
                 }
@@ -70,7 +66,7 @@ fun ForgetPasswordScreen(
         }
     }
     LaunchedEffect(Unit) {
-        if (sharedState.value.isPasswordChanged) {
+        if (sharedState.isPasswordChanged) {
             showBottomSheet = true
         }
     }
@@ -88,23 +84,21 @@ fun ForgetPasswordScreen(
                     .fillMaxWidth()
                     .padding(horizontal = 24.dp),
                 title = stringResource(R.string._continue),
-                enable = !viewState.loading && password == rePassword && isRePassword && isPassword,
+                enable = !viewState.loading && viewState.password == viewState.rePassword && isRePassword && isPassword,
                 onClick = {
                     viewModel.handle(
-                        ForgetPasswordViewActions.ResetPassword(
-                            nationalId = nationalId, mobileNumber = mobile, password = password
-                        )
+                        ForgetPasswordViewActions.ResetPassword
                     )
                 })
         },
         content = {
 
             AppMobileTextField(
-                value = mobile,
+                value = viewState.mobile ?: "",
                 label = stringResource(R.string.mobile_number),
                 onFocused = { focused ->
-                    isError = if (!focused && !mobile.isNullOrEmpty()) {
-                        !mobile.validatePhone()
+                    isError = if (!focused && !viewState.mobile.isNullOrEmpty()) {
+                        !viewState.mobile.validatePhone()
                     } else {
                         false
                     }
@@ -113,43 +107,55 @@ fun ForgetPasswordScreen(
                 errorText = stringResource(R.string.validate_phone_number),
                 onValueChange = { phone ->
                     if (phone.isDigitsOnly() || phone.isEmpty())
-                        mobile = phone
+                        viewModel.handle(ForgetPasswordViewActions.SetMobile(phone))
                 }
             )
 
             Spacer(modifier = Modifier.height(24.dp))
 
             AppNationalIdTextField(
-                value = nationalId,
+                value = viewState.nationalId ?: "",
                 label = stringResource(R.string.national_id),
                 onValidate = { },
                 onValueChange = {
-                    if (nationalId.isDigitsOnly() || nationalId.isEmpty())
-                        nationalId = it
+                    if (it.isDigitsOnly() || it.isEmpty())
+                        viewModel.handle(ForgetPasswordViewActions.SetNationalId(it))
                 }
             )
 
             Spacer(modifier = Modifier.height(24.dp))
 
             AppPasswordTextField(
-                value = password,
+                value = viewState.password ?: "",
                 label = stringResource(R.string.new_password),
                 conditionMessage = true,
                 onValidate = {
-                    isPassword = it.isValid
+
                 },
-                onValueChange = { password = it })
+                onValueChange = {
+                    if (it.allowOnlyEnglishLettersAndDigits() || it.isEmpty()) {
+                        viewModel.handle(ForgetPasswordViewActions.SetNewPassword(it))
+                        isPassword =
+                            it.length >= 10
+                    }
+                })
 
             Spacer(modifier = Modifier.height(24.dp))
 
             AppPasswordTextField(
-                value = rePassword,
+                value = viewState.rePassword ?: "",
                 label = stringResource(R.string.re_new_password),
                 conditionMessage = true,
                 onValidate = {
-                    isRePassword = it.isValid
+
                 },
-                onValueChange = { rePassword = it })
+                onValueChange = {
+                    if (it.allowOnlyEnglishLettersAndDigits() || it.isEmpty()) {
+                        viewModel.handle(ForgetPasswordViewActions.SetReNewPassword(it))
+                        isRePassword =
+                             (it.length) >= 10
+                    }
+                })
 
             Spacer(modifier = Modifier.height(24.dp))
 
@@ -162,7 +168,7 @@ fun ForgetPasswordScreen(
     if (viewState.loading) {
         AppLoading()
     }
-    if (viewState.alert != null) {
-        AlertComponent(viewState.alert!!)
+    if (viewState.alertModelState != null) {
+        AlertComponent(viewState.alertModelState!!)
     }
 }

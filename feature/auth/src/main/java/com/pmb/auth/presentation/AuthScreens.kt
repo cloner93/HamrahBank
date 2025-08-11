@@ -66,13 +66,6 @@ fun NavGraphBuilder.authScreensHandle(
         }
         composable(
             route = AuthScreens.FirstLoginConfirm.route,
-//            deepLinks = listOf(navDeepLink {
-//                uriPattern = "myapp://first_login_confirm/{mobileNumber}/{username}/{password}"
-//            }),
-//            arguments = listOf(
-//                navArgument("mobileNumber") { type = NavType.StringType },
-//                navArgument("username") { type = NavType.StringType },
-//                navArgument("password") { type = NavType.StringType })
         ) {
             val sharedViewModel =
                 it.navigationManager.retrieveSharedViewModel<AuthSharedViewModel>(
@@ -83,10 +76,6 @@ fun NavGraphBuilder.authScreensHandle(
                 viewModel = hiltViewModel<FirstLoginConfirmViewModel>(),
                 sharedState = sharedState
             )
-//            FirstLoginConfirmScreen(
-//                viewModel = hiltViewModel<FirstLoginConfirmViewModel>(),
-//                comingType = comingType.value ?: ComingType.COMING_LOGIN
-//            )
         }
         composable(route = AuthScreens.Login.route) {
             LoginScreen(
@@ -107,7 +96,7 @@ fun NavGraphBuilder.authScreensHandle(
             val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
             ForgetPasswordScreen(
                 viewModel = hiltViewModel<ForgetPasswordViewModel>(),
-                sharedState = sharedState,
+                sharedState = sharedState.value,
                 updatePasswordChangedState = {
                     sharedViewModel.updateState {
                         sharedState.value.copy(
@@ -115,10 +104,13 @@ fun NavGraphBuilder.authScreensHandle(
                         )
                     }
                 }
-            ) {
+            ) { type, childState ->
                 sharedViewModel.updateState {
                     sharedState.value.copy(
-                        actionType = it
+                        actionType = type,
+                        changePasswordPassword = childState.password ?: "",
+                        changePasswordPhoneNumber = childState.mobile ?: "",
+                        changePasswordNationalId = childState.nationalId ?: ""
                     )
                 }
             }
@@ -156,7 +148,7 @@ fun NavGraphBuilder.authScreensHandle(
                 )
             val sharedState = sharedViewModel.state.collectAsStateWithLifecycle()
             ActivationAuthenticationTypeScreen(
-                sharedState
+                sharedState.value
             )
         }
     }

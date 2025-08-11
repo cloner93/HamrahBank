@@ -172,8 +172,8 @@ class AuthServiceImpl @Inject constructor(
         )
     }
 
-    override fun newPassword(newPasswordRequest: NewPasswordRequest): Flow<Result<SuccessData<AnyModel>>> {
-        return client.request<NewPasswordRequest,AnyModel>(
+    override fun newPassword(newPasswordRequest: NewPasswordRequest): Flow<Result<SuccessData<Boolean>>> {
+        return client.request<NewPasswordRequest, Boolean>(
             "changePassword/newPassword", newPasswordRequest
         )
     }
@@ -186,13 +186,13 @@ class AuthServiceImpl @Inject constructor(
 
     override fun newPasswordWithEKYC(newPasswordWithEKYCRequest: NewPasswordWithEKYCRequest): Flow<Result<SuccessData<NewPasswordWithEKYCResponse>>> {
         return client.request<NewPasswordWithEKYCRequest, NewPasswordWithEKYCResponse>(
-            "changePassword/withEkyc"
+            "changePassword/withEkyc",newPasswordWithEKYCRequest
         )
     }
 
-    override fun newPasswordWithVerify(newPasswordWithVerifyRequest: NewPasswordWithVerifyRequest): Flow<Result<SuccessData<NewPasswordWithVerifyResponse>>> {
-        return client.request<NewPasswordWithVerifyRequest, NewPasswordWithVerifyResponse>(
-            "changePassword/withVerify"
+    override fun newPasswordWithVerify(newPasswordWithVerifyRequest: NewPasswordWithVerifyRequest): Flow<Result<SuccessData<Boolean>>> {
+        return client.request<NewPasswordWithVerifyRequest, Boolean>(
+            "changePassword/withVerify",newPasswordWithVerifyRequest
         )
     }
 

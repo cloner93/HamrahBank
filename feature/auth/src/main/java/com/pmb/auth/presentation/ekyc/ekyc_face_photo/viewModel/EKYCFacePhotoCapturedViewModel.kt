@@ -1,9 +1,12 @@
 package com.pmb.auth.presentation.ekyc.ekyc_face_photo.viewModel
 
 import android.util.Log
+import androidx.camera.core.CameraSelector
 import androidx.lifecycle.viewModelScope
 import com.pmb.auth.domain.ekyc.face_photo.entity.FacePhotoParams
 import com.pmb.auth.domain.ekyc.face_photo.useCase.SendFacePhotoUseCase
+import com.pmb.auth.presentation.register.register_face_photo.viewModel.RegisterFacePhotoCapturedViewActions
+import com.pmb.auth.presentation.register.register_face_photo.viewModel.RegisterFacePhotoCapturedViewEvents
 import com.pmb.camera.platform.CameraManagerImpl
 import com.pmb.camera.platform.PhotoViewActions
 import com.pmb.compressor.compression.ImageCompressor
@@ -12,6 +15,7 @@ import com.pmb.core.permissions.PermissionDispatcher
 import com.pmb.core.platform.AlertModelState
 import com.pmb.core.platform.BaseViewModel
 import com.pmb.core.platform.Result
+import com.pmb.core.utils.Base64FileHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -28,6 +32,9 @@ class EKYCFacePhotoCapturedViewModel @Inject constructor(
 ) : BaseViewModel<PhotoViewActions, EKYCFacePhotoCapturedViewState, EKYCFacePhotoCapturedViewEvents>(
     initialState
 ) {
+    init {
+        cameraManager.toggleCamera(CameraSelector.DEFAULT_FRONT_CAMERA)
+    }
     override fun handle(action: PhotoViewActions) {
         when (action) {
             is PhotoViewActions.RequestCameraPermission -> {
@@ -46,7 +53,7 @@ class EKYCFacePhotoCapturedViewModel @Inject constructor(
             }
 
             is EKYCFacePhotoCapturedViewActions.SendFacePhoto -> {
-                handleSendFacePhoto(action)
+                handleSendFacePhoto()
             }
 
             is EKYCFacePhotoCapturedViewActions.ClearAlert -> {
@@ -96,54 +103,24 @@ class EKYCFacePhotoCapturedViewModel @Inject constructor(
         }
     }
 
-    private fun handleSendFacePhoto(action: EKYCFacePhotoCapturedViewActions.SendFacePhoto) {
+    private fun handleSendFacePhoto() {
         viewModelScope.launch {
-            sendFacePhotoUseCase.invoke(FacePhotoParams(action.uri)).collect { result ->
-                when (result) {
-                    is Result.Success -> {
-                        setState {
-                            it.copy(
-                                isLoading = false,
-                                alertModelState = null,
-                                hasCameraPermission = false,
-                                hasFilePermissions = false,
-                                isCameraReady = false,
-                                isFrontCamera = false,
-                                isCapturingPhoto = false,
-                                photoCaptured = false,
-                                savedFileUri = null,
-                                cameraHasError = null,
-                                isCameraLoading = false
-                            )
-                        }
-                        postEvent(EKYCFacePhotoCapturedViewEvents.FacePhotoCaptured)
-                    }
-
-                    is Result.Error -> {
-                        setState {
-                            it.copy(
-                                isLoading = false,
-                                alertModelState = AlertModelState.Dialog(
-                                    title = "خطا",
-                                    description = " ${result.message}",
-                                    positiveButtonTitle = "تایید",
-                                    onPositiveClick = {
-                                        setState { state -> state.copy(alertModelState = null) }
-                                    }
-                                )
-                            )
-                        }
-                    }
-
-                    is Result.Loading -> {
-                        setState {
-                            it.copy(
-                                isLoading = true
-                            )
-                        }
-                    }
-                }
+            setState {
+                it.copy(
+                    isLoading = false,
+                    alertModelState = null,
+                    hasCameraPermission = false,
+                    hasFilePermissions = false,
+                    isCameraReady = false,
+                    isFrontCamera = false,
+                    isCapturingPhoto = false,
+                    photoCaptured = false,
+                    savedFileUri = null,
+                    cameraHasError = null,
+                    isCameraLoading = false
+                )
             }
+            postEvent(EKYCFacePhotoCapturedViewEvents.FacePhotoCaptured)
         }
     }
 
@@ -241,14 +218,22 @@ class EKYCFacePhotoCapturedViewModel @Inject constructor(
                         val compressedFilePath = imageCompressor.compressAndReplaceImage(
                             photoFile.absolutePath, 1024, 1024, compressionPercentage = 50
                         )
-                        setState { state ->
-                            state.copy(
-                                isLoading = false,
-                                isCapturingPhoto = false,
-                                photoCaptured = compressedFilePath,
-                                savedFileUri = photoFile.absolutePath,
-                                cameraHasError = null
+                        val file =
+                            Base64FileHelper.encodeToBase64(
+                                photoFile,
+                                viewModelScope
                             )
+                        file?.let {
+                            val f = it.await()
+                            setState { state ->
+                                state.copy(
+                                    isLoading = false,
+                                    isCapturingPhoto = false,
+                                    photoCaptured = compressedFilePath,
+                                    savedFileUri = photoFile.absolutePath,
+                                    cameraHasError = null, fileBase64 = f
+                                )
+                            }
                         }
                     }
                 }

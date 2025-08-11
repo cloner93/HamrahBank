@@ -6,6 +6,6 @@ import kotlinx.serialization.Serializable
 @SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class NewPasswordWithVerifyResponse(
-    val intCustId: Int,
-    val mobileNumber: String
+    val intCustId: Int?,
+    val mobileNumber: String?
 )

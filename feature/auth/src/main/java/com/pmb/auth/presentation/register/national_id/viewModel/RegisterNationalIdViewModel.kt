@@ -20,7 +20,6 @@ import javax.inject.Inject
 class RegisterNationalIdViewModel @Inject constructor(
     initialState: RegisterNationalIdViewState,
     private val generateCodeUseCase: GenerateCodeUseCase,
-    private val repository: RegisterNationalIdUseCase
 ) : BaseViewModel<RegisterNationalIdViewActions, RegisterNationalIdViewState, RegisterNationalIdViewEvents>(
     initialState
 ) {
