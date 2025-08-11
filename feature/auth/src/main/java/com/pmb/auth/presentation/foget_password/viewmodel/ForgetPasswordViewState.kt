@@ -13,4 +13,9 @@ data class ForgetPasswordViewState(
     val nationalIdSerial :String?=null,
     var password: String? = null,
     var rePassword: String? = null,
-) : BaseViewState
+    var isRenewPasswordValid: Boolean = false,
+    var isPasswordValid: Boolean = false,
+) : BaseViewState{
+    val isEnableButton: Boolean
+        get() = isRenewPasswordValid && isPasswordValid && password == rePassword && !rePassword.isNullOrEmpty() && !loading
+}
