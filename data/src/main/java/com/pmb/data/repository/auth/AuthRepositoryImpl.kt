@@ -215,15 +215,10 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun newPassword(newPasswordRequest: NewPasswordRequest): Flow<Result<Boolean>> = flow {
-        emit(Result.Loading)
-        remoteServiceProvider.getAuthService().newPassword(newPasswordRequest)
+    override fun newPassword(newPasswordRequest: NewPasswordRequest): Flow<Result<Boolean>> {
+       return remoteServiceProvider.getAuthService().newPassword(newPasswordRequest)
             .mapApiResult { result ->
-                if (result.first?.statusMessage == "موفق") {
-                    Result.Success(true)
-                } else {
-                    Result.Error("Failed to set new password")
-                }
+                result.first?.statusMessage == "موفق"
             }
     }
 
