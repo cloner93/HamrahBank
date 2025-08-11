@@ -17,6 +17,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.pmb.auth.AuthSharedViewState
 import com.pmb.auth.R
 import com.pmb.auth.presentation.ekyc.ekyc_register_national_id.viewModel.EKYCRegisterNationalIdViewActions
 import com.pmb.auth.presentation.ekyc.ekyc_register_national_id.viewModel.EKYCRegisterNationalIdViewModel
@@ -40,11 +41,17 @@ import com.pmb.navigation.moduleScreen.EKYCScreens
 @Composable
 fun EkycRegisterNationalIdScreen(
     viewModel: EKYCRegisterNationalIdViewModel,
+    sharedState : AuthSharedViewState,
     updateState: (EKYCRegisterNationalIdViewState) -> Unit
 ) {
     val navigationManager: NavigationManager = LocalNavigationManager.current
     val viewState by viewModel.viewState.collectAsState()
     var isError by remember { mutableStateOf(false) }
+    var nationalId by remember {
+        mutableStateOf(
+            sharedState.changePasswordNationalIdSerial?.takeIf { it.isNotEmpty() } ?: ""
+        )
+    }
     AppContent(
         modifier = Modifier.padding(horizontal = 24.dp),
         topBar = {
@@ -58,10 +65,11 @@ fun EkycRegisterNationalIdScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 16.dp, end = 16.dp, top = 16.dp),
-                enable = !viewState.nationalSerialId.isNullOrEmpty() && !viewState.isLoading,
+                enable = nationalId.isNotEmpty() && !viewState.isLoading,
                 title = stringResource(R.string._continue),
                 onClick = {
                     if (viewState.nationalSerialId?.isValidCustomInput() == true) {
+                        viewModel.handle(EKYCRegisterNationalIdViewActions.SetNationalIdSerial(nationalId))
                         isError = false
                         updateState(viewState)
                         navigationManager.navigate(EKYCScreens.EKYCAuthentication)
@@ -79,7 +87,7 @@ fun EkycRegisterNationalIdScreen(
         Spacer(modifier = Modifier.size(32.dp))
         AppSingleTextField(
             modifier = Modifier.fillMaxWidth(),
-            value = viewState.nationalSerialId ?: "",
+            value =nationalId ,
             label = stringResource(R.string.national_id_serial_interception),
             isError = isError,
             errorText = "الگوی وارد شده صحیح نمی باشد",
@@ -92,7 +100,8 @@ fun EkycRegisterNationalIdScreen(
                     isError = false
                 }
                 if (it.length <= 10 && it.allowOnlyEnglishLettersAndDigits())
-                    viewModel.handle(EKYCRegisterNationalIdViewActions.SetNationalIdSerial(it))
+                    nationalId = it
+
 
             },
         )

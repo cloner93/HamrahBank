@@ -5,6 +5,7 @@ import com.pmb.data.mapper.authService.toData
 import com.pmb.data.model.AnyModel
 import com.pmb.domain.model.LoginRequest
 import com.pmb.domain.model.LoginResponse
+import com.pmb.domain.model.NationalIdResponse
 import com.pmb.domain.model.RegisterRequest
 import com.pmb.domain.model.RegisterVerifyResponse
 import com.pmb.domain.model.SendOtpRequest
@@ -172,8 +173,8 @@ class AuthServiceImpl @Inject constructor(
         )
     }
 
-    override fun newPassword(newPasswordRequest: NewPasswordRequest): Flow<Result<SuccessData<Boolean>>> {
-        return client.request<NewPasswordRequest, Boolean>(
+    override fun newPassword(newPasswordRequest: NewPasswordRequest): Flow<Result<SuccessData<NationalIdResponse>>> {
+        return client.request<NewPasswordRequest, NationalIdResponse>(
             "changePassword/newPassword", newPasswordRequest
         )
     }

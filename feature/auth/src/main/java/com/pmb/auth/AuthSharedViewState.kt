@@ -11,6 +11,7 @@ data class AuthSharedViewState(
     val changePasswordPhoneNumber: String ="",
     val changePasswordPassword: String ="",
     val changePasswordNationalId: String ="",
+    val changePasswordNationalIdSerial: String ?=null,
 
 ) : BaseSharedState
 

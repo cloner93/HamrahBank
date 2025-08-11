@@ -38,6 +38,7 @@ fun NavGraphBuilder.ekycScreenHandler() {
             val topSharedState = topSharedViewModel.state.collectAsStateWithLifecycle()
             EkycRegisterNationalIdScreen(
                 viewModel = hiltViewModel<EKYCRegisterNationalIdViewModel>(),
+                topSharedState.value
             ){childState->
                 Log.d("Ali Tag", "ekycScreenHandler: ${topSharedState.value.changePasswordPhoneNumber}")
                 sharedViewModel.updateState {

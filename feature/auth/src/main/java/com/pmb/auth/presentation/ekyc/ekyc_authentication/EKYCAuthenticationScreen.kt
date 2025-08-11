@@ -15,6 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import com.pmb.auth.AuthSharedViewState
 import com.pmb.auth.R
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppContent
