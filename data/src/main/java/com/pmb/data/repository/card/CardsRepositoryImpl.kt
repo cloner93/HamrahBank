@@ -1,10 +1,18 @@
 package com.pmb.data.repository.card
 
 import com.pmb.core.platform.Result
-import com.pmb.data.serviceProvider.remote.RemoteServiceProvider
 import com.pmb.data.mapper.cardService.toDomain
 import com.pmb.data.mapper.mapApiResult
+import com.pmb.data.serviceProvider.remote.RemoteServiceProvider
 import com.pmb.domain.model.CardModel
+import com.pmb.domain.model.card.CardCustomerAddressRequest
+import com.pmb.domain.model.card.CardCustomerAddressResponse
+import com.pmb.domain.model.card.CardFetchPostCodeResponse
+import com.pmb.domain.model.card.FetchCommissionForCreateCardResponse
+import com.pmb.domain.model.card.RegisterCardRequest
+import com.pmb.domain.model.card.RegisterCardResponse
+import com.pmb.domain.model.card.ReturnCardChequeResponse
+import com.pmb.domain.model.openAccount.FetchCardFormatResponse
 import com.pmb.domain.repository.card.CardsRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -16,5 +24,52 @@ class CardsRepositoryImpl @Inject constructor(
         return remoteServiceProvider.getCardService().getCardList().mapApiResult {
             it.second.toDomain()
         }
+    }
+
+    override fun getReturnCheque(): Flow<Result<ReturnCardChequeResponse>> {
+        return remoteServiceProvider.getCardService().getReturnCheque().mapApiResult {
+            it.second
+        }
+    }
+
+    override fun getCustomerAddress(
+        cardCustomerAddressRequest: CardCustomerAddressRequest
+    ): Flow<Result<CardCustomerAddressResponse>> {
+        return remoteServiceProvider.getCardService().getCustomerAddress(
+            cardCustomerAddressRequest
+        ).mapApiResult {
+            it.second
+        }
+    }
+
+    override fun fetchPostCodeCard(postalCode: Int): Flow<Result<CardFetchPostCodeResponse>> {
+        return remoteServiceProvider.getCardService().fetchPostCodeCard(postalCode).mapApiResult {
+            it.second
+        }
+    }
+
+    override fun fetchCommissionForCreateCard(
+        cardGroup: Int,
+        accountNumber: Int
+    ): Flow<Result<FetchCommissionForCreateCardResponse>> {
+        return remoteServiceProvider.getCardService().fetchCommissionForCreateCard(
+            cardGroup = cardGroup,
+            accountNumber = accountNumber
+        ).mapApiResult {
+            it.second
+        }
+    }
+
+    override fun fetchCardFormat(): Flow<Result<FetchCardFormatResponse>> {
+        return remoteServiceProvider.getCardService().fetchCardFormat().mapApiResult {
+            it.second
+        }
+    }
+
+    override fun registerCard(registerCardRequest: RegisterCardRequest): Flow<Result<RegisterCardResponse>> {
+        return remoteServiceProvider.getCardService().registerCard(registerCardRequest)
+            .mapApiResult {
+                it.second
+            }
     }
 }
