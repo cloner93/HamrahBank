@@ -29,11 +29,11 @@ fun CustomSpinner(
     options: List<String>?,
     labelString: String,
     displayText: String,
+    readOnly: Boolean = true,
     isEnabled: Boolean = false,
     onOptionSelected: (String) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
-    var isSelected by remember { mutableStateOf(false) }
 
     ExposedDropdownMenuBox(
         expanded = expanded, onExpandedChange = {
@@ -43,6 +43,7 @@ fun CustomSpinner(
             value = displayText,
             onValueChange = {},
             label = labelString,
+            readOnly = readOnly,
             enabled = isEnabled,
             hideCursor = true,
             trailingIcon = {
@@ -72,7 +73,6 @@ fun CustomSpinner(
                     )
                 }, onClick = {
                     onOptionSelected(option)
-                    isSelected = true
                     expanded = false
                 })
             }

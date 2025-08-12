@@ -116,6 +116,7 @@ fun AppBaseTextField(
                 )
             }
         },
+        readOnly = readOnly,
         visualTransformation = visualTransformation,
         keyboardOptions = keyboardOptions.copy(
             autoCorrectEnabled = false

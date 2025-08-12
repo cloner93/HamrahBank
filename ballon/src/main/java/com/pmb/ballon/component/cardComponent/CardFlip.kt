@@ -1,8 +1,6 @@
-package com.pmb.auth.presentation.component.cardComponent
+package com.pmb.ballon.component.cardComponent
 
 import android.graphics.BitmapFactory
-import androidx.compose.animation.core.animateDpAsState
-import androidx.exifinterface.media.ExifInterface
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
@@ -16,7 +14,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -31,6 +28,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.exifinterface.media.ExifInterface
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import java.io.File

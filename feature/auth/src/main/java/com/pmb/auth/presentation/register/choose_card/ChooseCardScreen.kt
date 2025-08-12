@@ -33,11 +33,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
-import com.pmb.auth.presentation.component.cardComponent.AsyncCardImage
-import com.pmb.auth.presentation.component.cardComponent.CardFlip
-import com.pmb.auth.presentation.component.cardComponent.FlipToggle
-import com.pmb.auth.presentation.component.cardComponent.Orientation
-import com.pmb.auth.presentation.component.cardComponent.OrientationToggle
 import com.pmb.auth.presentation.register.choose_card.viewModel.ChooseCardViewActions
 import com.pmb.auth.presentation.register.choose_card.viewModel.ChooseCardViewModel
 import com.pmb.auth.presentation.register.choose_card.viewModel.ChooseCardViewState
@@ -46,6 +41,11 @@ import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.component.base.AppTopBar
+import com.pmb.ballon.component.cardComponent.AsyncCardImage
+import com.pmb.ballon.component.cardComponent.CardFlip
+import com.pmb.ballon.component.cardComponent.FlipToggle
+import com.pmb.ballon.component.cardComponent.Orientation
+import com.pmb.ballon.component.cardComponent.OrientationToggle
 import com.pmb.ballon.ui.theme.AppTheme
 import com.pmb.core.utils.toCurrency
 import com.pmb.navigation.manager.LocalNavigationManager
@@ -61,7 +61,6 @@ fun ChooseCardScreen(
     val viewState by viewModel.viewState.collectAsStateWithLifecycle()
     var orientationSelected by remember { mutableStateOf(Orientation.Vertical) }
     var sideSelected by remember { mutableStateOf(false) }
-    var selectedIndex by remember { mutableIntStateOf(0) }
 
     AppContent(
         modifier = Modifier.padding(horizontal = 16.dp),

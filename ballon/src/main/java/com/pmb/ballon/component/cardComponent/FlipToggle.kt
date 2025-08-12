@@ -1,4 +1,4 @@
-package com.pmb.auth.presentation.component.cardComponent
+package com.pmb.ballon.component.cardComponent
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
@@ -45,10 +45,9 @@ fun FlipToggle(
 @Preview
 @Composable
 fun FlipTogglePreview() {
-    var selected by remember { mutableStateOf(false) }
 
     HamrahBankTheme {
-        FlipToggle(){
+        FlipToggle {
 
         }
     }

@@ -1,4 +1,4 @@
-package com.pmb.auth.presentation.component.cardComponent
+package com.pmb.ballon.component.cardComponent
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
@@ -98,7 +98,7 @@ enum class Orientation(val label: String) {
 fun OrientationTogglePreview() {
     var selected by remember { mutableStateOf(Orientation.Horizontal) }
 
-    HamrahBankTheme() {
+    HamrahBankTheme {
         OrientationToggle(
             selected = selected,
         ) {
