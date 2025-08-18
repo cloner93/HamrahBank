@@ -7,7 +7,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
-import com.pmb.auth.presentation.component.CitySearchComponent
 import com.pmb.auth.presentation.component.ProvinceSearchComponent
 import com.pmb.auth.presentation.register.RegisterSharedViewState
 import com.pmb.domain.model.openAccount.accountType.Province

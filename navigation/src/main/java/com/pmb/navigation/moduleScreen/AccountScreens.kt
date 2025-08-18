@@ -23,6 +23,24 @@ sealed class AccountScreens(route: String, arguments: Map<String, String> = empt
         data object TransactionSearch : Transactions(route = "transactionSearch")
     }
 
+    sealed class IssueCard(route: String) : AccountScreens(route) {
+        data object Graph : IssueCard(route = "issueCardGraph")
+
+        data object IssueCardIntroScreen :
+            IssueCard(route = "issueCardIntroScreen/{accountNumber}/{cardGroup}") {
+            fun createRoute(accountNumber: String, cardGroup: Int) =
+                "issueCardIntroScreen/$accountNumber/$cardGroup"
+        }
+
+        data object IssueCardConfirmScreen : IssueCard(route = "issueCardConfirmScreen")
+        data object IssueCardFeeScreen : IssueCard(route = "issueCardFeeScreen")
+        data object SelectAddressScreen : IssueCard(route = "selectAddressScreen")
+        data object SelectCardNoScreen : IssueCard(route = "selectCardNoScreen")
+        data object SelectCardShemaScreen : IssueCard(route = "selectCardShemaScreen")
+        data object SelectProvincePlaceScreen : IssueCard(route = "selectCardProvincePlaceScreen")
+        data object SelectCityPlaceScreen : IssueCard(route = "selectCardCityPlaceScreen")
+    }
+
     data object TransactionReceipt :
         AccountScreens(route = "transactionReceipt/{depositId}/{transactionJson}") {
         fun createRoute(depositId: String, transactionJson: String) =
