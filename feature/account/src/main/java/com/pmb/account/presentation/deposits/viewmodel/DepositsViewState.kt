@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.emptyFlow
 
 data class DepositsViewState(
     val depositLoading: Boolean = false,
+    val returnChequeLoading: Boolean = false,
     val transactionLoading: Boolean = false,
     val isRefreshing: Boolean = false,
     val errorMessage: String? = null,

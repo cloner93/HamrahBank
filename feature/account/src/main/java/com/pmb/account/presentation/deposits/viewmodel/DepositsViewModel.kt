@@ -10,6 +10,7 @@ import com.pmb.core.platform.Result
 import com.pmb.domain.model.DepositModel
 import com.pmb.domain.model.TransactionModel
 import com.pmb.domain.model.TransactionRequest
+import com.pmb.domain.usecae.card.GetCardReturnChequeUseCase
 import com.pmb.domain.usecae.deposit.BalanceDepositUseCase
 import com.pmb.domain.usecae.deposit.BalanceParams
 import com.pmb.domain.usecae.deposit.GetDefaultDepositUseCase
@@ -36,9 +37,9 @@ open class DepositsViewModel @Inject constructor(
     private val getDefaultDepositUseCase: GetDefaultDepositUseCase,
     private val setDefaultDepositUseCase: SetDefaultDepositUseCase,
     private val getBalanceDepositUseCase: BalanceDepositUseCase,
+    private val getCardReturnChequeUseCase: GetCardReturnChequeUseCase
 ) : BaseViewModel<DepositsViewActions, DepositsViewState, DepositsViewEvents>(initialState) {
 
-    // we cont handle paging flow inside of ViewState.
     private val _transactionFlow =
         MutableStateFlow<PagingData<TransactionModel>>(PagingData.empty())
     val transactionFlow: StateFlow<PagingData<TransactionModel>> = _transactionFlow
@@ -127,6 +128,10 @@ open class DepositsViewModel @Inject constructor(
 
             DepositsViewActions.RefreshDepositAmount -> {
                 loadBalanceOfDeposit()
+            }
+
+            DepositsViewActions.IssueCard -> {
+                getCardReturnCheque()
             }
         }
     }
@@ -305,6 +310,17 @@ open class DepositsViewModel @Inject constructor(
         setState { it.copy(selectedDeposit = selectedDeposit) }
         postEvent(DepositsViewEvents.DepositSelectionChanged(deposit.depositNumber))
         loadTransactions(deposit)
+    }
+
+    private fun getCardReturnCheque() {
+        viewModelScope.launch {
+
+            postEvent(
+                DepositsViewEvents.NavigateToIssueCard(
+                    viewState.value.selectedDeposit?.depositNumber ?: ""
+                )
+            )
+        }
     }
 
     /*  fun hideAllBottomSheets() {

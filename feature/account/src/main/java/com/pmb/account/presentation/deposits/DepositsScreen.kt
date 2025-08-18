@@ -61,6 +61,7 @@ import com.pmb.ballon.component.MenuBottomSheet
 import com.pmb.ballon.component.MenuItem
 import com.pmb.ballon.component.MenuItemDefaults
 import com.pmb.ballon.component.base.AppButtonIcon
+import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.component.base.IconType
 import com.pmb.ballon.component.base.RoundedTopColumn
 import com.pmb.ballon.models.IconStyle
@@ -94,7 +95,7 @@ fun DepositsScreen(
                 }
 
                 is DepositsViewEvents.NavigateToTransactionDetails -> {
-                    navigationManager.navigateWithString(
+                    navigationManager.navigateWithString( //
                         AccountScreens.TransactionReceipt.createRoute(
                             viewState.selectedDeposit?.depositNumber ?: "", event.transaction
                         )
@@ -124,6 +125,15 @@ fun DepositsScreen(
                     navigationManager.navigateWithString(
                         AccountScreens.DepositDetailsScreen.createRoute(
                             event.detail
+                        )
+                    )
+                }
+
+                is DepositsViewEvents.NavigateToIssueCard -> {
+                    navigationManager.navigateWithString(
+                        AccountScreens.IssueCard.IssueCardIntroScreen.createRoute(
+                            event.depositNumber,
+                            1
                         )
                     )
                 }
@@ -272,6 +282,10 @@ fun DepositsScreen(
         peekHeight = 92.dp,
     )
 
+    if (viewState.returnChequeLoading) {
+        AppLoading()
+    }
+
     if (viewState.showShareDepositInfoBottomSheet) ShareDepositBottomSheet(content = {
         ShareDepositBottomSheetContent(info = viewState.selectedDeposit!!, onCopyAllClick = {
             viewModel.handle(DepositsViewActions.CloseShareBottomSheet(it))
@@ -314,7 +328,7 @@ fun DepositsScreen(
                     title = stringResource(R.string.request_to_issue_a_card_for_deposit),
                     icon = com.pmb.ballon.R.drawable.ic_credit_card,
                     onClicked = {
-
+                        viewModel.handle(DepositsViewActions.IssueCard)
                     }),
                 MenuSheetModel(
                     title = stringResource(R.string.edit_deposit_title),

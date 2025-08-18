@@ -29,4 +29,5 @@ sealed interface DepositsViewActions : BaseViewAction {
     data object ShowGuideBottomSheet : DepositsViewActions
     data object CloseGuideBottomSheet : DepositsViewActions
 
+    data object IssueCard : DepositsViewActions
 }

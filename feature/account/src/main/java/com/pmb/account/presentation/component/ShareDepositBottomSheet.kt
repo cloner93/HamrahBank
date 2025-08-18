@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -281,6 +280,8 @@ private fun ContentPreview() {
         ibanNumber = "IR1234567890098765432112",
         cardNumber = "6219861920241234",
         categoryCode = 0,
+        accountId = 1,
+        accountType = 2
     )
     HamrahBankTheme {
         ShareDepositBottomSheetContent(info = dip, onCopyAllClick = {}, onShareClick = {})

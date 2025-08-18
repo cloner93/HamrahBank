@@ -146,6 +146,8 @@ private fun DepositPrev() {
         ibanNumber = "IR1234567890098765432112",
         cardNumber = "6219861920241234",
         categoryCode = 0,
+        accountId = 1,
+        accountType = 2
     )
     HamrahBankTheme {
         AppContent {

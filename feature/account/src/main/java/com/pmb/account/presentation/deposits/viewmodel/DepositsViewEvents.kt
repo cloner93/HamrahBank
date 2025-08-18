@@ -11,5 +11,6 @@ sealed interface DepositsViewEvents : BaseViewEvent {
     object RefreshCompleted : DepositsViewEvents
     object NavigateToTransactionsList : DepositsViewEvents
     object NavigateToBalanceScreen : DepositsViewEvents
+    data class NavigateToIssueCard(val depositNumber: String) : DepositsViewEvents
     class NavigateToDetailsScreen(val detail: String) : DepositsViewEvents
 }
