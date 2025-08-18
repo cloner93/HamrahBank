@@ -9,8 +9,8 @@ import javax.inject.Inject
 
 class FetchPostCodeUseCase @Inject constructor(
     private val cardsRepository: CardsRepository
-) : BaseUseCase<Int, CardFetchPostCodeResponse>() {
-    override suspend fun execute(params: Int): Flow<Result<CardFetchPostCodeResponse>> {
+) : BaseUseCase<Long, CardFetchPostCodeResponse>() {
+    override suspend fun execute(params: Long): Flow<Result<CardFetchPostCodeResponse>> {
         return cardsRepository.fetchPostCodeCard(params)
     }
 }

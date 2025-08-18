@@ -19,6 +19,8 @@ class FetchCommissionForCreateUseCase @Inject constructor(
 }
 
 data class FetchCommissionForCreateParams(
-    val cardGroup: Int,
-    val accountNumber: Int
+    val cardGroup: Long,
+    val accountNumber: Long,
+    val isReplicate: Long,
+    val expireDate: Long
 )

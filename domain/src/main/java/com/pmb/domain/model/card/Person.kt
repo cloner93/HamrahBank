@@ -4,11 +4,9 @@ import android.annotation.SuppressLint
 import kotlinx.serialization.Serializable
 
 
-@Serializable
 @SuppressLint("UnsafeOptInUsageError")
-data class CardCustomerAddressRequest(
-    val accountNumber: Long,
-    val cardGroup: Long,
+@Serializable
+data class Person(
+    val firstName: String?,
+    val lastName: String?
 )
-
-

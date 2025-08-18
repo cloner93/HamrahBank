@@ -7,9 +7,9 @@ import com.pmb.domain.repository.card.CardsRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class GetCardReturnChequeUseCase@Inject constructor(
+class GetCardReturnChequeUseCase @Inject constructor(
     private val cardsRepository: CardsRepository
-) : BaseUseCase<Unit,ReturnCardChequeResponse> (){
+) : BaseUseCase<Unit, ReturnCardChequeResponse>() {
     override suspend fun execute(params: Unit): Flow<Result<ReturnCardChequeResponse>> {
         return cardsRepository.getReturnCheque()
     }

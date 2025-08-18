@@ -8,7 +8,7 @@ import com.pmb.domain.repository.card.CardsRepository
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.Flow
 
-class GetCustomerAddressForCard @Inject constructor(
+class GetCustomerAddressForCardUseCase @Inject constructor(
     private val cardsRepository: CardsRepository
 ) : BaseUseCase<CardCustomerAddressParams, CardCustomerAddressResponse>() {
     override suspend fun execute(params: CardCustomerAddressParams): Flow<Result<CardCustomerAddressResponse>> {
@@ -16,10 +16,9 @@ class GetCustomerAddressForCard @Inject constructor(
     }
 }
 
-
 data class CardCustomerAddressParams(
-    val accountNumber: Int,
-    val cardGroup: Int,
+    val accountNumber: Long,
+    val cardGroup: Long,
 ) {
     fun toRequest(): CardCustomerAddressRequest {
         return CardCustomerAddressRequest(

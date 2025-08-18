@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 @SuppressLint("UnsafeOptInUsageError")
 data class CardFetchPostCodeRequest(
-    val postalCode: Int
+    val postalCode: Long
 )
 @Serializable
 @SuppressLint("UnsafeOptInUsageError")

@@ -9,8 +9,8 @@ import javax.inject.Inject
 
 class FetchCardFormatForCreatingUseCase @Inject constructor(
     private val cardsRepository: CardsRepository
-) : BaseUseCase<Unit, FetchCardFormatResponse>() {
-    override suspend fun execute(params: Unit): Flow<Result<FetchCardFormatResponse>> {
+) : BaseUseCase<Unit, List<FetchCardFormatResponse>>() {
+    override suspend fun execute(params: Unit): Flow<Result<List<FetchCardFormatResponse>>> {
         return cardsRepository.fetchCardFormat()
     }
 }

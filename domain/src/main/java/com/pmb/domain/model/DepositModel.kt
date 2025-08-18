@@ -9,6 +9,8 @@ data class DepositModel(
     val title: String,
     val desc: String?,
     val depositNumber: String,
+    val accountId: Long,
+    val accountType: Long,
     val categoryCode: Long,
     val amount: Double,
     val currency: String,

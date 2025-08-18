@@ -3,12 +3,9 @@ package com.pmb.domain.model.card
 import android.annotation.SuppressLint
 import kotlinx.serialization.Serializable
 
-
-@Serializable
 @SuppressLint("UnsafeOptInUsageError")
-data class CardCustomerAddressRequest(
-    val accountNumber: Long,
-    val cardGroup: Long,
+@Serializable
+data class FetchCityListRequest(
+    val flag: Int,
+    val provinceCode: Int,
 )
-
-
