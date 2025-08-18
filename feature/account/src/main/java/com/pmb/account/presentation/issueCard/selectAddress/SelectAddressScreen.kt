@@ -18,6 +18,8 @@ import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MenuAnchorType
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,10 +29,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.pmb.ballon.component.annotation.AppPreview
+import com.pmb.account.presentation.issueCard.AddressOption
+import com.pmb.account.presentation.issueCard.IssueCardSharedState
+import com.pmb.account.presentation.issueCard.selectAddress.viewModel.SelectAddressViewActions
+import com.pmb.account.presentation.issueCard.selectAddress.viewModel.SelectAddressViewEvents
+import com.pmb.account.presentation.issueCard.selectAddress.viewModel.SelectAddressViewModel
+import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.base.AppBaseTextField
 import com.pmb.ballon.component.base.AppButton
+import com.pmb.ballon.component.base.AppClickableReadOnlyTextField
 import com.pmb.ballon.component.base.AppContent
+import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.component.base.AppNumberTextField
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.BodyMediumText
@@ -38,37 +47,34 @@ import com.pmb.ballon.component.base.CaptionText
 import com.pmb.ballon.component.base.ClickableIcon
 import com.pmb.ballon.component.base.IconType
 import com.pmb.ballon.ui.theme.AppTheme
-import com.pmb.ballon.ui.theme.HamrahBankTheme
+import com.pmb.domain.model.card.City
+import com.pmb.domain.model.openAccount.accountType.Province
+import com.pmb.navigation.manager.LocalNavigationManager
+import com.pmb.navigation.moduleScreen.AccountScreens
 
 @Composable
-fun SelectAddressScreen() {
-    val oldAddressList = listOf(
-        "تهران، کوی نصر، خیابان ۲۷، پلاک ۱۵، واحد ۳"
-    )
-    val allOptions = buildList {
-        add(
-            AddressOption(
-                "آدرس ثبت شده قبلی",
-                isHeader = true,
-                isClickable = false
-            )
-        )
-        oldAddressList.forEach { address ->
-            add(
-                AddressOption(
-                    address,
-                    isHeader = false,
-                    isClickable = true
-                )
-            )
-        }
-        add(AddressOption("آدرس جدید", isHeader = true, isClickable = true))
-    }
+fun SelectAddressScreen(
+    viewmodel: SelectAddressViewModel,
+    sharedState: IssueCardSharedState,
+    onUpdateProvinceList: (List<Province>) -> Unit,
+    onUpdateCityList: (List<City>) -> Unit,
+    onUpdateAddress: (AddressType, String?, String?) -> Unit,
+) {
+    val viewState by viewmodel.viewState.collectAsState()
+    val navigationManager = LocalNavigationManager.current
 
-    var spinnerText by remember { mutableStateOf("") }
-    var selectedAddress by remember { mutableStateOf("") }
-    var addressType by remember { mutableStateOf(AddressType.UNSPECIFIED) }
-    var postalCode by remember { mutableStateOf("") }
+    LaunchedEffect(Unit) {
+        viewmodel.viewEvent.collect { event ->
+            when (event) {
+                SelectAddressViewEvents.NavigateBack -> navigationManager.navigateBack()
+                is SelectAddressViewEvents.UpdateProvinceList -> onUpdateProvinceList(event.provinceList)
+                is SelectAddressViewEvents.UpdateCityList -> {
+                    onUpdateCityList(event.cityList)
+                    navigationManager.navigate(AccountScreens.IssueCard.SelectCityPlaceScreen)
+                }
+            }
+        }
+    }
 
     AppContent(
         modifier = Modifier.padding(horizontal = 16.dp),
@@ -80,16 +86,25 @@ fun SelectAddressScreen() {
                     .padding(horizontal = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                val selectedStateAndCity =
+                    sharedState.provinceOfDeposit != null && sharedState.cityOfDeposit != null
                 val bool =
-                    if (addressType == AddressType.OLD_ADDRESS) true
-                    else if (addressType == AddressType.NEW_ADDRESS && (postalCode.isNotEmpty() && postalCode.length == 10)) true
+                    if (selectedStateAndCity && viewState.addressType == AddressType.OLD_ADDRESS) true
+                    else if (selectedStateAndCity && viewState.addressType == AddressType.NEW_ADDRESS && (!viewState.postalCode.isNullOrEmpty() && viewState.postalCode?.length == 10 && !viewState.address.isNullOrEmpty())) true
                     else false
 
                 AppButton(
                     modifier = Modifier.fillMaxWidth(),
                     title = "تایید و ادامه",
                     enable = bool,
-                    onClick = { })
+                    onClick = {
+                        onUpdateAddress(
+                            viewState.addressType,
+                            viewState.address,
+                            viewState.postalCode
+                        )
+                        navigationManager.navigate(AccountScreens.IssueCard.SelectCardShemaScreen)
+                    })
             }
         },
         topBar = {
@@ -98,90 +113,130 @@ fun SelectAddressScreen() {
                 startIcon = ClickableIcon(
                     icon = IconType.ImageVector(Icons.Default.ArrowForward),
                     onClick = {
-//                        navigationManager.navigateBack()
+                        navigationManager.navigateBack()
                     })
             )
         }) {
         Spacer(modifier = Modifier.height(24.dp))
-
-        CustomSpinner(
-            modifier = Modifier.fillMaxWidth(),
-            options = allOptions,
-            labelString = "انتخاب آدرس",
-            displayText = spinnerText,
-            isEnabled = true
-        ) { selectedOption ->
-            spinnerText = selectedOption.text
-            if (!selectedOption.isHeader) {
-                addressType = AddressType.OLD_ADDRESS
-                selectedAddress = selectedOption.text
-            } else {
-                addressType = AddressType.NEW_ADDRESS
-            }
-        }
-
-        when (addressType) {
-            AddressType.OLD_ADDRESS -> {
-
-                Spacer(Modifier.height(32.dp))
-                BodyMediumText(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = selectedAddress,
-                    textAlign = TextAlign.Center,
-                    color = AppTheme.colorScheme.onBackgroundNeutralDefault
+        AppClickableReadOnlyTextField(
+            onClick = {
+                navigationManager.navigate(AccountScreens.IssueCard.SelectProvincePlaceScreen)
+            },
+            value = sharedState.provinceOfDeposit?.provinceName ?: "",
+            label = "استان",
+            trailingIcon = {
+                Icon(
+                    imageVector = Icons.Default.KeyboardArrowDown,
+                    contentDescription = "down Icon",
+                    tint = AppTheme.colorScheme.onBackgroundNeutralDefault
                 )
+            },
+        )
+
+        if (sharedState.provinceOfDeposit != null) {
+            Spacer(modifier = Modifier.height(24.dp))
+            AppClickableReadOnlyTextField(
+                onClick = {
+                    if (sharedState.cityList.isNullOrEmpty())
+                        viewmodel.handle(SelectAddressViewActions.ChangeCity(sharedState.provinceOfDeposit))
+                    else
+                        navigationManager.navigate(AccountScreens.IssueCard.SelectCityPlaceScreen)
+                },
+                value = sharedState.cityOfDeposit?.cityName ?: "",
+                label = "شهر",
+                trailingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.KeyboardArrowDown,
+                        contentDescription = "down Icon",
+                        tint = AppTheme.colorScheme.onBackgroundNeutralDefault
+                    )
+                },
+            )
+        }
+        if (sharedState.cityOfDeposit != null) {
+            Spacer(modifier = Modifier.height(24.dp))
+            CustomSpinner(
+                modifier = Modifier.fillMaxWidth(),
+                options = sharedState.userAddress,
+                labelString = "انتخاب آدرس",
+                displayText = viewState.addressType.title,
+                isEnabled = true
+            ) { selectedOption ->
+                if (!selectedOption.isHeader) {
+                    viewmodel.handle(
+                        SelectAddressViewActions.ChangeAddressType(
+                            AddressType.OLD_ADDRESS,
+                            selectedOption.text
+                        )
+                    )
+                } else {
+                    viewmodel.handle(
+                        SelectAddressViewActions.ChangeAddressType(
+                            AddressType.NEW_ADDRESS,
+                            null
+                        )
+                    )
+                }
             }
 
-            AddressType.NEW_ADDRESS -> {
-                Spacer(Modifier.height(24.dp))
-                AppNumberTextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    value = postalCode,
-                    label = "کد پستی",
-                    onValueChange = {
-                        if (it.length <= 10) postalCode = it
-                    },
-                    trailingIcon = {
-                        AppButton(
-                            modifier = Modifier.padding(end = 6.dp),
-                            title = "استعلام",
-                            enable = postalCode.isNotEmpty() && postalCode.length == 10
-                        ) {
+            when (viewState.addressType) {
+                AddressType.OLD_ADDRESS -> {
+
+                    Spacer(Modifier.height(32.dp))
+                    BodyMediumText(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = viewState.address ?: "",
+                        textAlign = TextAlign.Center,
+                        color = AppTheme.colorScheme.onBackgroundNeutralDefault
+                    )
+                }
+
+                AddressType.NEW_ADDRESS -> {
+                    Spacer(Modifier.height(24.dp))
+                    AppNumberTextField(
+                        modifier = Modifier.fillMaxWidth(),
+                        value = viewState.postalCode ?: "",
+                        label = "کد پستی",
+                        isError = !viewState.postalCodeError.isNullOrEmpty(),
+                        errorText = viewState.postalCodeError,
+                        onValueChange = {
+                            if (it.length <= 10)
+                                viewmodel.handle(SelectAddressViewActions.ChangePostalCode(it))
+                        },
+                        trailingIcon = {
+                            AppButton(
+                                modifier = Modifier.padding(end = 6.dp),
+                                title = "استعلام",
+                                enable = !viewState.postalCode.isNullOrEmpty() && viewState.postalCode?.length == 10
+                            ) {
+                                viewmodel.handle(SelectAddressViewActions.InquiryPostCode)
+                            }
                         }
-                    }
-                )
+                    )
 
-                Spacer(Modifier.height(32.dp))
-                BodyMediumText(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = "",
-                    textAlign = TextAlign.Center,
-                    color = AppTheme.colorScheme.onBackgroundNeutralCTA
-                )
+                    Spacer(Modifier.height(32.dp))
+                    BodyMediumText(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = viewState.address ?: "",
+                        textAlign = TextAlign.Center,
+                        color = AppTheme.colorScheme.onBackgroundNeutralCTA
+                    )
+                }
+
+                AddressType.UNSPECIFIED -> {}
             }
-
-            AddressType.UNSPECIFIED -> {}
         }
+
+    }
+
+    if (viewState.isLoading) {
+        AppLoading()
+    }
+
+    if (viewState.alertModelState != null) {
+        AlertComponent(viewState.alertModelState!!)
     }
 }
-
-@AppPreview
-@Composable
-private fun SelectAddressScreenPreview() {
-    HamrahBankTheme {
-        SelectAddressScreen()
-    }
-}
-
-private enum class AddressType {
-    OLD_ADDRESS, NEW_ADDRESS, UNSPECIFIED
-}
-
-private data class AddressOption(
-    val text: String,
-    val isHeader: Boolean = false,
-    val isClickable: Boolean = true
-)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -259,4 +314,10 @@ private fun CustomSpinner(
             }
         }
     }
+}
+
+enum class AddressType(val title: String) {
+    OLD_ADDRESS("آدرس ثبت شده قبلی"),
+    NEW_ADDRESS("آدرس جدید"),
+    UNSPECIFIED("")
 }

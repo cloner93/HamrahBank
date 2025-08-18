@@ -13,13 +13,20 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.pmb.ballon.component.annotation.AppPreview
+import com.pmb.account.presentation.issueCard.issueCardIntro.viewModel.IssueCardIntroViewActions
+import com.pmb.account.presentation.issueCard.issueCardIntro.viewModel.IssueCardIntroViewEvents
+import com.pmb.account.presentation.issueCard.issueCardIntro.viewModel.IssueCardIntroViewModel
+import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppContent
+import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.component.base.AppOutlineButton
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.BodyMediumText
@@ -28,33 +35,59 @@ import com.pmb.ballon.component.base.ButtonMediumText
 import com.pmb.ballon.component.base.ClickableIcon
 import com.pmb.ballon.component.base.IconType
 import com.pmb.ballon.ui.theme.AppTheme
-import com.pmb.ballon.ui.theme.HamrahBankTheme
+import com.pmb.domain.model.card.CardCustomerAddressResponse
+import com.pmb.navigation.manager.LocalNavigationManager
+import com.pmb.navigation.moduleScreen.AccountScreens
 
 @Composable
-fun IssueCardIntroScreen() {
+fun IssueCardIntroScreen(
+    viewmodel: IssueCardIntroViewModel,
+    onUpdateData: (CardCustomerAddressResponse, String, Long) -> Unit,
+) {
+    val viewState by viewmodel.viewState.collectAsState()
+    val navigationManager = LocalNavigationManager.current
+
+    LaunchedEffect(Unit) {
+        viewmodel.viewEvent.collect { event ->
+            when (event) {
+                IssueCardIntroViewEvents.NavigateBack -> navigationManager.navigateBack()
+                is IssueCardIntroViewEvents.NavigateToChooseAddress -> {
+                    onUpdateData(
+                        event.data,
+                        viewState.accountNumber,
+                        viewState.cardGroup
+                    )
+
+                    navigationManager.navigate(AccountScreens.IssueCard.SelectAddressScreen)
+                }
+            }
+        }
+    }
+
     AppContent(
         modifier = Modifier.padding(horizontal = 16.dp),
         backgroundColor = AppTheme.colorScheme.background3Neutral,
-
         footer = {
-
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-
                 AppButton(
                     modifier = Modifier.fillMaxWidth(),
                     title = "همراه بانک",
-                    onClick = { })
+                    onClick = {
+                        viewmodel.handle(IssueCardIntroViewActions.DoActionInApp)
+                    })
 
                 Spacer(modifier = Modifier.height(8.dp))
                 AppOutlineButton(
                     modifier = Modifier.fillMaxWidth(),
                     title = "دریافت نوبت حضوری",
-                    onClick = { })
+                    onClick = {
+                        navigationManager.navigateBack()
+                    })
             }
         },
         topBar = {
@@ -63,7 +96,7 @@ fun IssueCardIntroScreen() {
                 startIcon = ClickableIcon(
                     icon = IconType.ImageVector(Icons.Default.ArrowForward),
                     onClick = {
-//                        navigationManager.navigateBack()
+                        navigationManager.navigateBack()
                     })
             )
         }) {
@@ -217,14 +250,13 @@ fun IssueCardIntroScreen() {
             textAlign = TextAlign.Center,
             color = AppTheme.colorScheme.onBackgroundNeutralSubdued
         )
-
     }
-}
 
-@AppPreview
-@Composable
-private fun IssueCardIntroScreenPreview() {
-    HamrahBankTheme {
-        IssueCardIntroScreen()
+    if (viewState.isLoading) {
+        AppLoading()
+    }
+
+    if (viewState.alertModelState != null) {
+        AlertComponent(viewState.alertModelState!!)
     }
 }

@@ -65,4 +65,14 @@ object StateModule {
     fun provideDepositDetailsViewState(): DepositDetailsViewState =
         DepositDetailsViewState()
 
+    @Provides
+    @Singleton
+    fun provideSelectAddressViewState(): SelectAddressViewState =
+        SelectAddressViewState()
+
+    @Provides
+    @Singleton
+    fun provideIssueCardIntroViewState(): IssueCardIntroViewState =
+        IssueCardIntroViewState()
+
 }
