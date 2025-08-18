@@ -11,6 +11,8 @@ fun List<Deposit>.toDomain(): List<DepositModel> {
             DepositModel(
                 title = it.accountTypeDescription ?: "N/A",
                 desc = null,
+                accountId = it.accountId,
+                accountType = it.accountType,
                 categoryCode = it.categoryCode,
                 depositNumber = it.accountNumber.toString(),
                 amount = it.balance.toDouble(),

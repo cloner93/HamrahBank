@@ -6,12 +6,16 @@ import com.pmb.domain.model.card.CardCustomerAddressRequest
 import com.pmb.domain.model.card.CardCustomerAddressResponse
 import com.pmb.domain.model.card.CardFetchPostCodeRequest
 import com.pmb.domain.model.card.CardFetchPostCodeResponse
+import com.pmb.domain.model.card.City
+import com.pmb.domain.model.card.FetchCityListRequest
 import com.pmb.domain.model.card.FetchCommissionForCreateCardRequest
 import com.pmb.domain.model.card.FetchCommissionForCreateCardResponse
 import com.pmb.domain.model.card.RegisterCardRequest
 import com.pmb.domain.model.card.RegisterCardResponse
 import com.pmb.domain.model.card.ReturnCardChequeResponse
 import com.pmb.domain.model.openAccount.FetchCardFormatResponse
+import com.pmb.domain.model.openAccount.accountType.Province
+import com.pmb.domain.usecae.card.FetchCityListParams
 import com.pmb.model.SuccessData
 import com.pmb.network.NetworkManger
 import kotlinx.coroutines.flow.Flow
@@ -29,7 +33,7 @@ class CardServiceImpl @Inject constructor(
     }
 
     override fun getCustomerAddress(
-        cardCustomerAddressRequest:CardCustomerAddressRequest
+        cardCustomerAddressRequest: CardCustomerAddressRequest
     ): Flow<Result<SuccessData<CardCustomerAddressResponse>>> {
         return client.request<CardCustomerAddressRequest, CardCustomerAddressResponse>(
             endpoint = "card/getCustomerAddress",
@@ -37,7 +41,19 @@ class CardServiceImpl @Inject constructor(
         )
     }
 
-    override fun fetchPostCodeCard(postalCode: Int): Flow<Result<SuccessData<CardFetchPostCodeResponse>>> {
+    override fun getProvinceList(): Flow<Result<SuccessData<List<Province>>>> {
+        return client.request<Unit, List<Province>>(endpoint = "card/province")
+    }
+
+    override fun getCityList(params: FetchCityListParams): Flow<Result<SuccessData<List<City>>>> {
+        val req = FetchCityListRequest(params.flag, params.provinceCode)
+        return client.request<FetchCityListRequest, List<City>>(
+            endpoint = "card/city",
+            data = req
+        )
+    }
+
+    override fun fetchPostCodeCard(postalCode: Long): Flow<Result<SuccessData<CardFetchPostCodeResponse>>> {
         val cardCustomerAddressRequest = CardFetchPostCodeRequest(
             postalCode = postalCode
         )
@@ -49,8 +65,8 @@ class CardServiceImpl @Inject constructor(
     }
 
     override fun fetchCommissionForCreateCard(
-        cardGroup: Int,
-        accountNumber: Int
+        cardGroup: Long,
+        accountNumber: Long
     ): Flow<Result<SuccessData<FetchCommissionForCreateCardResponse>>> {
         val fetchCommissionForCreateCardRequest = FetchCommissionForCreateCardRequest(
             cardGroup = cardGroup,
@@ -63,8 +79,8 @@ class CardServiceImpl @Inject constructor(
         )
     }
 
-    override fun fetchCardFormat(): Flow<Result<SuccessData<FetchCardFormatResponse>>> {
-        return client.request<Unit, FetchCardFormatResponse>(endpoint = "card/fetchCardFormat")
+    override fun fetchCardFormat(): Flow<Result<SuccessData<List<FetchCardFormatResponse>>>> {
+        return client.request<Unit, List<FetchCardFormatResponse>>(endpoint = "card/fetchCardFormat")
     }
 
     override fun registerCard(registerCardRequest: RegisterCardRequest): Flow<Result<SuccessData<RegisterCardResponse>>> {
