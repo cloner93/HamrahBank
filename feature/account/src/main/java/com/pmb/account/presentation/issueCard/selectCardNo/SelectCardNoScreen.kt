@@ -20,15 +20,22 @@ import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MenuAnchorType
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.pmb.account.presentation.issueCard.IssueCardSharedState
+import com.pmb.account.presentation.issueCard.selectCardNo.viewmodel.SelectCardNoViewActions
+import com.pmb.account.presentation.issueCard.selectCardNo.viewmodel.SelectCardNoViewEvents
+import com.pmb.account.presentation.issueCard.selectCardNo.viewmodel.SelectCardNoViewModel
+import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.CustomSpinner
-import com.pmb.ballon.component.annotation.AppPreview
 import com.pmb.ballon.component.base.AppBaseTextField
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppContent
@@ -39,41 +46,30 @@ import com.pmb.ballon.component.base.CaptionText
 import com.pmb.ballon.component.base.ClickableIcon
 import com.pmb.ballon.component.base.IconType
 import com.pmb.ballon.ui.theme.AppTheme
-import com.pmb.ballon.ui.theme.HamrahBankTheme
 import com.pmb.core.utils.toCurrency
 import com.pmb.domain.model.DepositModel
+import com.pmb.domain.model.card.FetchCommissionForCreateCardResponse
+import com.pmb.navigation.manager.LocalNavigationManager
+import com.pmb.navigation.moduleScreen.AccountScreens
 
 @Composable
-fun SelectCardNoScreen() {
-    var spinnerText by remember { mutableStateOf("") }
-    var selectedOldCard by remember { mutableStateOf("") }
-    var cardType by remember { mutableStateOf(CardType.UNSPECIFIED) }
+fun SelectCardNoScreen(
+    viewmodel: SelectCardNoViewModel,
+    sharedValue: IssueCardSharedState,
+    onUpdateOwnerAccount: (DepositModel, DepositModel) -> Unit,
+    onUpdateSelectedCard: (String) -> Unit,
+    onCommissions: (FetchCommissionForCreateCardResponse) -> Unit,
+) {
+    val viewState by viewmodel.viewState.collectAsState()
+    val navigationManager = LocalNavigationManager.current
 
-    val list = listOf(
-        DepositModel(
-            title = "حساب قرض الحسنه",
-            desc = "",
-            depositNumber = "523452345234",
-            categoryCode = 1,
-            amount = 234523.0,
-            currency = "ریال",
-            ibanNumber = "2345234523542345245",
-            cardNumber = "2345234523452345234",
-        ),
-        DepositModel(
-            title = "حساب بلند مدت ",
-            desc = "",
-            depositNumber = "3456345",
-            categoryCode = 1,
-            amount = 666666666.0,
-            currency = "ریال",
-            ibanNumber = "234532452345",
-            cardNumber = "2343452345452345234",
-        )
-    )
-
-    var selectedFeeDeposit by remember { mutableStateOf(list.firstOrNull()) }
-    val listOfOldCards = listOf("5029 4321 7654 9876")
+    LaunchedEffect(Unit) {
+        viewmodel.viewEvent.collect { event ->
+            when (event) {
+                SelectCardNoViewEvents.NavigateBack -> navigationManager.navigateBack()
+            }
+        }
+    }
 
     AppContent(
         modifier = Modifier.padding(horizontal = 16.dp),
@@ -86,31 +82,41 @@ fun SelectCardNoScreen() {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
-                val bool = selectedFeeDeposit != null && when (cardType) {
-                    CardType.OLD_CARD -> selectedOldCard.isNotEmpty()
+                val bool = viewState.selectedFeeDeposit != null && when (viewState.cardType) {
+                    CardType.OLD_CARD -> !viewState.selectedOldCard.isNullOrEmpty()
                     CardType.NEW_CARD -> true
                     else -> false
                 }
 
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Row {
+                viewState.commissionFee?.let { commission ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                viewState.commissionFee?.let {
+                                    onCommissions(it)
+                                    navigationManager.navigate(AccountScreens.IssueCard.IssueCardFeeScreen)
+                                }
+                            },
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Row {
+                            BodySmallText(
+                                text = "مجموع\u200C کارمزدها:",
+                                color = AppTheme.colorScheme.onBackgroundNeutralSubdued
+                            )
+                            Spacer(Modifier.width(6.dp))
+                            BodySmallText(
+                                text = commission.totalAmount.toDouble()
+                                    .toCurrency() + " ریال",
+                                color = AppTheme.colorScheme.onBackgroundNeutralSubdued
+                            )
+                        }
                         BodySmallText(
-                            text = "مجموع\u200C کارمزدها:",
-                            color = AppTheme.colorScheme.onBackgroundNeutralSubdued
-                        )
-                        Spacer(Modifier.width(6.dp))
-                        BodySmallText(
-                            text = 5000000.0.toCurrency() + " ریال",
-                            color = AppTheme.colorScheme.onBackgroundNeutralSubdued
+                            text = "مشاهده جزئیات",
+                            color = AppTheme.colorScheme.onBackgroundNeutralDefault
                         )
                     }
-                    BodySmallText(
-                        text = "مشاهده جزئیات",
-                        color = AppTheme.colorScheme.onBackgroundNeutralDefault
-                    )
                 }
 
                 AppButton(
@@ -119,7 +125,14 @@ fun SelectCardNoScreen() {
                         .padding(top = 16.dp),
                     title = "تایید و ادامه",
                     enable = bool,
-                    onClick = { })
+                    onClick = {
+                        onUpdateOwnerAccount(
+                            viewState.deposits.first { it.depositNumber == sharedValue.accountNumber },
+                            viewState.selectedFeeDeposit!!
+                        )
+
+                        navigationManager.navigate(AccountScreens.IssueCard.IssueCardConfirmScreen)
+                    })
             }
         },
         topBar = {
@@ -128,67 +141,73 @@ fun SelectCardNoScreen() {
                 startIcon = ClickableIcon(
                     icon = IconType.ImageVector(Icons.Default.ArrowForward),
                     onClick = {
-//                        navigationManager.navigateBack()
+                        navigationManager.navigateBack()
                     })
             )
         }) {
 
         Spacer(modifier = Modifier.height(24.dp))
-        CustomSpinner(
-            modifier = Modifier.fillMaxWidth(),
-            options = listOf("شماره کارت جدید", "شماره کارت قبلی"),
-            labelString = "نحوه اختصاص شماره کارت",
-            displayText = spinnerText,
-            readOnly = true,
-            isEnabled = true
-        ) { title ->
-            spinnerText = title
-            if (title == "شماره کارت جدید")
-                cardType = CardType.NEW_CARD
-            else if (title == "شماره کارت قبلی")
-                cardType = CardType.OLD_CARD
-        }
 
-        if (cardType != CardType.UNSPECIFIED) {
-            if (cardType == CardType.OLD_CARD) {
+        if (!sharedValue.panList.isNullOrEmpty()) {
+            CustomSpinner(
+                modifier = Modifier.fillMaxWidth(),
+                options = listOf(CardType.NEW_CARD.type, CardType.OLD_CARD.type),
+                labelString = "نحوه اختصاص شماره کارت",
+                displayText = viewState.cardType.type,
+                readOnly = true,
+                isEnabled = true
+            ) { title ->
+                var cardType = CardType.UNSPECIFIED
+
+                if (title == CardType.NEW_CARD.type)
+                    cardType = CardType.NEW_CARD
+                else if (title == CardType.OLD_CARD.type)
+                    cardType = CardType.OLD_CARD
+
+                viewmodel.handle(SelectCardNoViewActions.ChangeCardType(cardType))
+            }
+        } else
+            viewmodel.handle(SelectCardNoViewActions.ChangeCardType(CardType.NEW_CARD))
+
+        if (viewState.cardType != CardType.UNSPECIFIED) {
+            if (viewState.cardType == CardType.OLD_CARD) {
                 Spacer(Modifier.height(12.dp))
                 CustomSpinner(
                     modifier = Modifier.fillMaxWidth(),
-                    options = listOfOldCards,
+                    options = sharedValue.panList?.map { it.toString() },
                     labelString = "شماره کارت",
-                    displayText = selectedOldCard,
+                    displayText = viewState.selectedOldCard ?: "",
                     readOnly = true,
                     isEnabled = true
                 ) { title ->
-                    selectedOldCard = title
+                    onUpdateSelectedCard(title.replace(" ", ""))
+                    viewmodel.handle(SelectCardNoViewActions.SelectOldCard(title))
                 }
             }
 
             Spacer(Modifier.height(12.dp))
             BankAccountSpinner(
                 modifier = Modifier.fillMaxWidth(),
-                options = list,
+                options = viewState.deposits,
                 labelString = "کسر کارمزد از حساب",
                 isEnabled = true,
                 readOnly = true,
-                selectedAccount = selectedFeeDeposit,
+                isError = !viewState.depositsError.isNullOrEmpty(),
+                errorText = viewState.depositsError,
+                selectedAccount = viewState.selectedFeeDeposit,
             ) { deposit ->
-                selectedFeeDeposit = deposit
+                viewmodel.handle(SelectCardNoViewActions.SelectFeeDeposit(deposit))
             }
         }
     }
-}
 
-private enum class CardType {
-    NEW_CARD, OLD_CARD, UNSPECIFIED
-}
-
-@AppPreview
-@Composable
-private fun SelectCardNoScreenPreview() {
-    HamrahBankTheme {
-        SelectCardNoScreen()
+    if (viewState.alertModelState != null) {
+        AlertComponent(viewState.alertModelState!!)
     }
+}
+
+enum class CardType(val type: String) {
+    NEW_CARD("شماره کارت جدید"), OLD_CARD("شماره کارت قبلی"), UNSPECIFIED("")
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -199,6 +218,8 @@ private fun BankAccountSpinner(
     labelString: String,
     selectedAccount: DepositModel?,
     isEnabled: Boolean = true,
+    isError: Boolean = false,
+    errorText: String? = null,
     readOnly: Boolean = true,
     onOptionSelected: (DepositModel) -> Unit
 ) {
@@ -222,6 +243,8 @@ private fun BankAccountSpinner(
             } ?: "",
             onValueChange = {},
             label = labelString,
+            isError = isError,
+            errorText = errorText,
             enabled = isEnabled,
             readOnly = readOnly,
             hideCursor = true,
@@ -250,12 +273,14 @@ private fun BankAccountSpinner(
                                     "${it.title} (${it.depositNumber})"
                                 },
                                 color = AppTheme.colorScheme.foregroundNeutralDefault,
+                                textAlign = TextAlign.Start
                             )
                             CaptionText(
                                 text = deposit.let {
                                     "\nقابل برداشت: ${it.amount.toCurrency()} ${it.currency}"
                                 },
                                 color = AppTheme.colorScheme.foregroundNeutralDefault,
+                                textAlign = TextAlign.Start
                             )
                         }
                     },

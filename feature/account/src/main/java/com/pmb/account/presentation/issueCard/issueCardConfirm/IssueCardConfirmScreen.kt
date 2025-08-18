@@ -13,37 +13,66 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.pmb.account.presentation.issueCard.IssueCardSharedState
+import com.pmb.account.presentation.issueCard.issueCardConfirm.viewmodel.IssueCardConfirmViewActions
+import com.pmb.account.presentation.issueCard.issueCardConfirm.viewmodel.IssueCardConfirmViewEvents
+import com.pmb.account.presentation.issueCard.issueCardConfirm.viewmodel.IssueCardConfirmViewModel
+import com.pmb.ballon.component.AlertComponent
 import com.pmb.ballon.component.MenuItemDefaults.horizontalDividerPadding
-import com.pmb.ballon.component.annotation.AppPreview
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppContent
+import com.pmb.ballon.component.base.AppLoading
 import com.pmb.ballon.component.base.AppTopBar
 import com.pmb.ballon.component.base.BodyMediumText
 import com.pmb.ballon.component.base.CaptionText
 import com.pmb.ballon.component.base.ClickableIcon
 import com.pmb.ballon.component.base.IconType
 import com.pmb.ballon.ui.theme.AppTheme
-import com.pmb.ballon.ui.theme.HamrahBankTheme
 import com.pmb.core.utils.toCurrency
+import com.pmb.navigation.manager.LocalNavigationManager
+import com.pmb.navigation.moduleScreen.AccountScreens
 
 @Composable
-fun IssueCardConfirmScreen() {
-    val listOfData = listOf<Pair<String, String>>(
-        "صاحب کارت" to "نیلوفر طائفی",
-        "کد ملی" to "236234623654",
+fun IssueCardConfirmScreen(
+    viewModel: IssueCardConfirmViewModel,
+    value: IssueCardSharedState
+) {
+    val viewState by viewModel.viewState.collectAsState()
+    val navigationManager = LocalNavigationManager.current
+
+    LaunchedEffect(Unit) {
+        viewModel.viewEvent.collect { event ->
+            when (event) {
+                IssueCardConfirmViewEvents.NavigateBack -> navigationManager.navigateBack()
+                is IssueCardConfirmViewEvents.SuccessAnswer -> navigationManager.navigateWithString(
+                    AccountScreens.TransactionReceipt.createRoute(
+                        value.cardOwnerAccount?.depositNumber ?: "", event.json
+                    )
+                )
+            }
+        }
+    }
+
+    val listOfData = listOf(
+        "صاحب کارت" to value.userData?.output?.name + " " + value.userData?.output?.family,
+        "کد ملی" to value.userData?.output?.nationalCode.toString().padStart(2, '0'),
         "نوع کارت" to "معمولی",
-        "نحوه تخصیص شماره کارت" to "شماره کارت قبلی",
-        "حساب اصلی کارت" to "234523452",
-        "نوع حساب اصلی" to "قرض\u200Cالحسنه پس\u200Cانداز کوتاه مدت",
+        "نحوه تخصیص شماره کارت" to value.addressType.title,
+        "حساب اصلی کارت" to value.accountNumber,
+        "نوع حساب اصلی" to (value.cardOwnerAccount?.title ?: ""),
         "تحویل کارت" to "تحویل در آدرس مشتری",
-        "آدرس" to "تهران، کوی مطهری، خیابان ۲۷، پلاک ۱۵، واحد ۳",
-        "کد پستی" to "123456789",
-        "کسر کارمزد از حساب" to "123456789",
-        "مجموع کارمزدها" to 5000000.0.toCurrency()
+        "آدرس" to value.address,
+        "کد پستی" to (value.postalCode ?: value.userData?.output?.postalCode),
+        "کسر کارمزد از حساب" to value.commissionFeeAccount?.depositNumber,
+        "مجموع کارمزدها" to (value.commissionFee?.totalAmount?.toDouble()
+            ?: 0.0).toCurrency() + " ریال"
     )
 
     AppContent(
@@ -62,17 +91,20 @@ fun IssueCardConfirmScreen() {
                         .padding(top = 16.dp),
                     title = "تایید",
                     enable = true,
-                    onClick = { })
+                    onClick = {
+                        viewModel.handle(IssueCardConfirmViewActions.SendData(value))
+                    })
             }
         },
         topBar = {
             AppTopBar(
-                title = "مشاهده کارمزدها",
+                title = "تایید اطلاعات درخواست",
                 startIcon = ClickableIcon(
                     icon = IconType.ImageVector(Icons.Default.ArrowForward),
                     onClick = {
-
-                    })
+                        navigationManager.navigateBack()
+                    }
+                )
             )
         }) {
 
@@ -93,12 +125,19 @@ fun IssueCardConfirmScreen() {
 
                     FeeRow(
                         title = it.first,
-                        value = it.second,
+                        value = it.second ?: "",
                         bottomDivider = listOfData.size - 1 != index
                     )
                 }
             }
         }
+    }
+
+    if (viewState.isLoading)
+        AppLoading()
+
+    if (viewState.alertModelState != null) {
+        AlertComponent(viewState.alertModelState!!)
     }
 }
 
@@ -141,10 +180,4 @@ private fun FeeRow(
             )
     }
 
-}
-
-@AppPreview
-@Composable
-private fun IssueCardConfirmScreenPreview() {
-    HamrahBankTheme { IssueCardConfirmScreen() }
 }

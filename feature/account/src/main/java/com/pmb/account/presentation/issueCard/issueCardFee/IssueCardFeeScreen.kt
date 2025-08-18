@@ -18,7 +18,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.pmb.ballon.component.MenuItemDefaults.horizontalDividerPadding
-import com.pmb.ballon.component.annotation.AppPreview
 import com.pmb.ballon.component.base.AppButton
 import com.pmb.ballon.component.base.AppContent
 import com.pmb.ballon.component.base.AppTopBar
@@ -27,11 +26,15 @@ import com.pmb.ballon.component.base.CaptionText
 import com.pmb.ballon.component.base.ClickableIcon
 import com.pmb.ballon.component.base.IconType
 import com.pmb.ballon.ui.theme.AppTheme
-import com.pmb.ballon.ui.theme.HamrahBankTheme
 import com.pmb.core.utils.toCurrency
+import com.pmb.domain.model.card.FetchCommissionForCreateCardResponse
+import com.pmb.navigation.manager.LocalNavigationManager
 
 @Composable
-fun IssueCardFeeScreen() {
+fun IssueCardFeeScreen(commissionFee: FetchCommissionForCreateCardResponse?) {
+
+    val navigationManager = LocalNavigationManager.current
+
     AppContent(
         modifier = Modifier.padding(horizontal = 16.dp),
         backgroundColor = AppTheme.colorScheme.background3Neutral,
@@ -48,7 +51,9 @@ fun IssueCardFeeScreen() {
                         .padding(top = 16.dp),
                     title = "تایید",
                     enable = true,
-                    onClick = { })
+                    onClick = {
+                        navigationManager.navigateBack()
+                    })
             }
         },
         topBar = {
@@ -57,7 +62,7 @@ fun IssueCardFeeScreen() {
                 startIcon = ClickableIcon(
                     icon = IconType.ImageVector(Icons.Default.ArrowForward),
                     onClick = {
-
+                        navigationManager.navigateBack()
                     })
             )
         }) {
@@ -76,8 +81,11 @@ fun IssueCardFeeScreen() {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
-                FeeRow("کارمزد اول", bottomDivider = true, amount = 5000000.0)
-                FeeRow("کارمزد دوم", bottomDivider = false, amount = 5000000.0)
+                FeeRow(
+                    "کارمزد اول",
+                    bottomDivider = true,
+                    amount = commissionFee?.commissionAmount?.toDouble() ?: 0.0
+                )
 
             }
         }
@@ -112,8 +120,9 @@ fun IssueCardFeeScreen() {
                         Row(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
+                            val amount = commissionFee?.totalAmount?.toDouble() ?: 0.0
                             BodyMediumText(
-                                text = 10000000.0.toCurrency(),
+                                text = amount.toCurrency(),
                                 color = AppTheme.colorScheme.onBackgroundNeutralDefault
                             )
                             Spacer(Modifier.width(6.dp))
@@ -171,12 +180,4 @@ private fun FeeRow(
             )
     }
 
-}
-
-@AppPreview
-@Composable
-private fun IssueCardFeeScreenPreview() {
-    HamrahBankTheme {
-        IssueCardFeeScreen()
-    }
 }
