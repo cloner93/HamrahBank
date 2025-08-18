@@ -4,6 +4,11 @@ import com.pmb.account.presentation.account.details.DepositDetailsViewState
 import com.pmb.account.presentation.balance.viewmodel.BalanceViewState
 import com.pmb.account.presentation.cards.viewmodel.CardsViewState
 import com.pmb.account.presentation.deposits.viewmodel.DepositsViewState
+import com.pmb.account.presentation.issueCard.issueCardConfirm.viewmodel.IssueCardConfirmViewState
+import com.pmb.account.presentation.issueCard.issueCardIntro.viewModel.IssueCardIntroViewState
+import com.pmb.account.presentation.issueCard.selectAddress.viewModel.SelectAddressViewState
+import com.pmb.account.presentation.issueCard.selectCardNo.viewmodel.SelectCardNoViewState
+import com.pmb.account.presentation.issueCard.selectCardShema.SelectCardShemaViewState
 import com.pmb.account.presentation.transactionReceipt.viewmodel.TransactionReceiptViewState
 import com.pmb.account.presentation.transactions.detailedTransactionLIst.DetailedTransactionListViewState
 import com.pmb.account.presentation.transactions.filterScreen.viewmodel.TransactionsFilterViewState
@@ -75,4 +80,18 @@ object StateModule {
     fun provideIssueCardIntroViewState(): IssueCardIntroViewState =
         IssueCardIntroViewState()
 
+    @Provides
+    @Singleton
+    fun provideSelectCardShemaViewState(): SelectCardShemaViewState =
+        SelectCardShemaViewState()
+
+    @Provides
+    @Singleton
+    fun provideSelectCardNoViewState(): SelectCardNoViewState =
+        SelectCardNoViewState()
+
+    @Provides
+    @Singleton
+    fun provideIssueCardConfirmViewState(): IssueCardConfirmViewState =
+        IssueCardConfirmViewState()
 }
