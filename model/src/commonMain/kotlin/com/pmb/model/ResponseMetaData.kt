@@ -1,9 +1,7 @@
 package com.pmb.model
 
-import android.annotation.SuppressLint
 import kotlinx.serialization.Serializable
 
-@SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class ResponseMetaData(
     val initialVec: String? = null,
@@ -13,3 +11,4 @@ data class ResponseMetaData(
     val time: Int,
     val timeStamp: Long
 )
+

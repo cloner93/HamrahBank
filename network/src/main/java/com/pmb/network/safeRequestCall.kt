@@ -1,6 +1,6 @@
 package com.pmb.network
 
-import MobileApiResponse
+import com.pmb.model.MobileApiResponse
 import com.pmb.core.platform.Result
 import com.pmb.model.SuccessData
 import com.pmb.network.plugin.ApiException

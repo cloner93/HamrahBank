@@ -1,9 +1,7 @@
 package com.pmb.domain.model
 
-import android.annotation.SuppressLint
 import kotlinx.serialization.Serializable
 
-@SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class TransactionResponse(
     val balance: Long,
@@ -22,3 +20,4 @@ data class TransactionResponse(
     val transactionDescription: String?,
     val transactionNumber: Long
 )
+

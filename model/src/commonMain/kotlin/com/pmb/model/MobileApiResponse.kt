@@ -1,11 +1,11 @@
-import android.annotation.SuppressLint
-import com.pmb.model.ResponseMetaData
+package com.pmb.model
+
 import kotlinx.serialization.Serializable
 
-@SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class MobileApiResponse<T>(
     val status: Int,
     val metaData: ResponseMetaData?,
     var data: T? = null
 )
+

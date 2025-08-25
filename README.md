@@ -88,3 +88,18 @@ UI tests can be done with Jetpack Compose testing libraries
 🔐 Secure
 Sensitive data (e.g., tokens) are kept away from UI
 Usecases validate input and handle errors properly
+
+# HamrahBank
+
+## Kotlin Multiplatform Migration
+
+- Created `:shared` KMP module with Android and iOS targets.
+- Added common dependencies: coroutines, Ktor client, Kotlinx Serialization.
+- Provided `platformName()` sample and `HttpClientFactory` expect/actual.
+
+Next steps:
+- Extract pure Kotlin code from `:domain` into `:shared` commonMain (use interfaces for Android-specific APIs).
+- Move DTOs and serialization models from `:model` to `:shared` where cross-platform.
+- Introduce repository interfaces in `:shared` and keep Android implementations in existing modules initially.
+- Gradually replace `:data` networking with `:shared` Ktor client; keep Android engine usage in `androidMain`.
+- If targeting iOS app later, expose APIs from `:shared` via Swift using a KMP framework output.

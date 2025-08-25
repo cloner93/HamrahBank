@@ -105,6 +105,7 @@ dependencies {
     implementation(projects.feature.transfer)
     implementation(projects.feature.account)
     implementation(projects.feature.profile)
+    implementation(project(":shared"))
 
     // DI > Hilt
     implementation(libs.android.hilt)
