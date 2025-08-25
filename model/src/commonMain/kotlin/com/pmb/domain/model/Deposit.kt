@@ -1,9 +1,7 @@
 package com.pmb.domain.model
 
-import android.annotation.SuppressLint
 import kotlinx.serialization.Serializable
 
-@SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class Deposit(
     val accountNumber: Long,
@@ -29,3 +27,4 @@ data class Deposit(
     val serialNumber: Long,
     val shebaNo: String?
 )
+
