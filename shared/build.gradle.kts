@@ -21,28 +21,25 @@ kotlin {
     
     sourceSets {
         commonMain.dependencies {
-            implementation(project(":model"))
-            implementation(libs.ktor.client.core)
-            implementation(libs.ktor.client.auth)
-            implementation(libs.ktor.client.logging)
-            implementation(libs.ktor.client.content.negotiation)
-            implementation(libs.ktor.serialization.kotlinx.json)
+            api(project(":model"))
+            api(project(":domain"))
+            api(project(":network"))
+            api(project(":data"))
             implementation(libs.kotlinx.serialization.json)
         }
         
         androidMain.dependencies {
-            implementation(libs.ktor.client.android)
-            implementation(libs.androidx.core.ktx)
+            // Android-specific dependencies will be handled by individual modules
         }
         
         val desktopMain by getting {
             dependencies {
-                implementation(libs.ktor.client.java)
+                // Desktop-specific dependencies
             }
         }
         
         iosMain.dependencies {
-            implementation(libs.ktor.client.darwin)
+            // iOS-specific dependencies
         }
         
         commonTest.dependencies {
@@ -52,7 +49,7 @@ kotlin {
 }
 
 android {
-    namespace = "com.pmb.network"
+    namespace = "com.pmb.shared"
     compileSdk = 35
 
     defaultConfig {

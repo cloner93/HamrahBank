@@ -53,7 +53,7 @@ dependencies {
     implementation(project(":ballon"))
     implementation(project(":navigation"))
     implementation(project(":snapui:receipt"))
-    implementation(project(":domain"))
+    implementation(project(":shared"))
     implementation(project(":model"))
     implementation(project(":data"))
     implementation(project(":calender"))

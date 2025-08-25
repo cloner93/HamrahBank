@@ -48,7 +48,7 @@ android {
 dependencies {
     implementation(project(":core"))
     implementation(project(":ballon"))
-    implementation(project(":domain"))
+    implementation(project(":shared"))
     implementation(project(":data"))
     implementation(project(":navigation"))
     implementation(project(":calender"))
