@@ -41,7 +41,7 @@ dependencies {
     implementation(project(":navigation"))
     implementation(project(":snapui:receipt"))
     implementation(project(":calender"))
-    implementation(project(":domain"))
+    implementation(project(":shared"))
 
     // back drop view
     implementation("androidx.compose.material:material:1.8.3")
