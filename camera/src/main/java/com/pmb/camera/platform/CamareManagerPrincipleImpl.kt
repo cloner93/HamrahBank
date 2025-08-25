@@ -7,7 +7,7 @@ import java.io.File
 
 abstract class CameraManagerPrincipleImpl : CameraManager {
 
-    protected var cameraSelector: CameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+    protected var cameraSelector: CameraSelector = CameraSelector.DEFAULT_FRONT_CAMERA
     abstract fun startCamera(
         previewView: PreviewView,
         lifecycleOwner: LifecycleOwner,
@@ -28,5 +28,9 @@ abstract class CameraManagerPrincipleImpl : CameraManager {
         } else {
             CameraSelector.DEFAULT_BACK_CAMERA
         }
+    }
+
+    override fun toggleCamera(cameraSelector: CameraSelector) {
+        this.cameraSelector =cameraSelector
     }
 }

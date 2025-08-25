@@ -1,0 +1,64 @@
+package com.pmb.profile.presentaion.personal_infos.personal_info.viewmodel
+
+import androidx.lifecycle.viewModelScope
+import com.pmb.core.platform.BaseViewModel
+import com.pmb.data.serviceProvider.local.LocalServiceProvider
+import com.pmb.profile.domain.entity.PersonalInfoEntity
+import com.pmb.profile.domain.use_case.PersonalInfoUseCase
+import com.pmb.profile.presentaion.personal_infos.PersonalInfoSharedState
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+
+@HiltViewModel
+class PersonalInfoViewModel @Inject constructor(
+    private val personalInfoUseCase: PersonalInfoUseCase,
+    private val localProvider: LocalServiceProvider
+) : BaseViewModel<PersonalInfoViewActions, PersonalInfoViewState, PersonalInfoViewEvents>(
+    PersonalInfoViewState()
+) {
+
+    init {
+        fetchPersonalInfo()
+    }
+
+    override fun handle(action: PersonalInfoViewActions) {
+        when (action) {
+            is PersonalInfoViewActions.UpdateShareState -> fetchPersonalInfo() //handleUpdateShareState(action.sharedState)
+            PersonalInfoViewActions.ChangeUsername -> postEvent(PersonalInfoViewEvents.NavigateToChangeUsername)
+            PersonalInfoViewActions.ChangePhoneNumber -> postEvent(PersonalInfoViewEvents.NavigateToChangePhoneNumber)
+            PersonalInfoViewActions.ChangeAddress -> postEvent(PersonalInfoViewEvents.NavigateToChangeAddress)
+            PersonalInfoViewActions.ChangeEducation -> postEvent(PersonalInfoViewEvents.NavigateToChangeEducation)
+            PersonalInfoViewActions.ChangeJob -> postEvent(PersonalInfoViewEvents.NavigateToChangeJob)
+            PersonalInfoViewActions.ClearAlert -> setState { it.copy(alertState = null) }
+        }
+    }
+
+    private fun handleUpdateShareState(shareState: PersonalInfoSharedState) {
+        setState {
+            it.copy(
+                personalInfo = PersonalInfoEntity(
+                    username = shareState.username,
+                    phoneNumber = shareState.phoneNumber,
+                    addressEntity = shareState.addressEntity,
+                    educationEntity = shareState.educationEntity,
+                    jobEntity = shareState.jobEntity
+                )
+            )
+        }
+    }
+
+    private fun fetchPersonalInfo() {
+        viewModelScope.launch {
+            val username = localProvider.getUserDataStore().getUserData()?.username
+            setState {
+                it.copy(
+                    personalInfo = PersonalInfoEntity(
+                        username = username
+                    )
+                )
+            }
+        }
+
+    }
+}

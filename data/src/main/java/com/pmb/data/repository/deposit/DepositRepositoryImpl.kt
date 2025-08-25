@@ -1,41 +1,43 @@
 package com.pmb.data.repository.deposit
 
 import com.pmb.core.platform.Result
+import com.pmb.data.mapper.depositService.toDomain
 import com.pmb.data.mapper.mapApiResult
-import com.pmb.domain.model.Deposit
+import com.pmb.data.serviceProvider.local.LocalServiceProvider
+import com.pmb.data.serviceProvider.remote.RemoteServiceProvider
 import com.pmb.domain.model.DepositModel
-import com.pmb.domain.model.LoginRequest
-import com.pmb.domain.repository.DepositRepository
-import com.pmb.network.NetworkManger
+import com.pmb.domain.repository.deposit.DepositsRepository
+import jakarta.inject.Inject
 import kotlinx.coroutines.flow.Flow
-import javax.inject.Inject
+import kotlinx.coroutines.flow.flow
 
 class DepositRepositoryImpl @Inject constructor(
-    private val client: NetworkManger
-) : DepositRepository {
+    private val remoteServiceProvider: RemoteServiceProvider,
+    private val localServiceProvider: LocalServiceProvider
+) : DepositsRepository {
     override fun getDepositList(): Flow<Result<List<DepositModel>>> {
-        return client.request<LoginRequest, List<Deposit>>(endpoint = "account/getUserAccounts")
-            .mapApiResult {
-                it.second.toDomain()
-            }
-    }
-}
-
-private fun List<Deposit>.toDomain(): List<DepositModel> {
-    val listOfDeposit = mutableListOf<DepositModel>()
-    this.forEach {
-        listOfDeposit.add(
-            DepositModel(
-                title = it.accountTypeDescription ?: "N/A",
-                desc = it.organizationName,
-                depositNumber = it.accountNumber.toString(),
-                amount = it.balance.toDouble(),
-                currency = "ریال",
-                ibanNumber = it.shebaNo.toString(),
-                cardNumber = ""
-            )
-        )
+        return remoteServiceProvider.getDepositService().getDepositList().mapApiResult {
+            it.second.toDomain()
+        }
     }
 
-    return listOfDeposit
+    override fun getDefaultDeposit(): Flow<Result<DepositModel>> = flow {
+        emit(Result.Loading)
+        val depositModel = localServiceProvider.getUserDataStore().getMainDeposit()
+        depositModel?.let {
+            emit(Result.Success(it))
+        }?:run {
+            emit(Result.Error(message = "No Default Deposit Account"))
+        }
+    }
+
+    override fun setDefaultDeposit(depositModel: DepositModel) = flow {
+        emit(Result.Loading)
+        val result = localServiceProvider.getUserDataStore().setDepositAsMainDeposit(depositModel)
+        if (result){
+            emit(Result.Success(true))
+        }else{
+            emit(Result.Error("couldn't set as main deposit"))
+        }
+    }
 }

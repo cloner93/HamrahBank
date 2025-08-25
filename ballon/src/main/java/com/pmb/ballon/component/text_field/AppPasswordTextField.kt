@@ -54,13 +54,12 @@ fun AppPasswordTextField(
             singleLine = true,
             onValueChange = {
                 result = it.isPassword()
-//                if (it.length <= 8 || result.isValid)
                 onValueChange(it)
                 onValidate?.invoke(result)
             },
             visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = @Composable {
-                AppButtonIcon(icon = if (passwordVisible) Icons.Outlined.VisibilityOff else Icons.Outlined.Visibility) {
+                AppButtonIcon(icon = if (!passwordVisible) Icons.Outlined.VisibilityOff else Icons.Outlined.Visibility) {
                     passwordVisible = !passwordVisible
                 }
             },

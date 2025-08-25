@@ -1,0 +1,151 @@
+package com.pmb.auth.presentation.component
+
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.pmb.auth.R
+import com.pmb.ballon.component.TextImage
+import com.pmb.ballon.component.base.AppBottomSheet
+import com.pmb.ballon.component.base.AppButton
+import com.pmb.ballon.component.base.AppOutlineButton
+import com.pmb.ballon.component.base.AppTextButton
+import com.pmb.ballon.component.base.BodyLargeText
+import com.pmb.ballon.component.base.BodyMediumText
+import com.pmb.ballon.component.base.Headline3Text
+import com.pmb.ballon.models.ImageStyle
+import com.pmb.ballon.models.Size
+import com.pmb.ballon.ui.theme.AppTheme
+import com.pmb.core.utils.openApp
+import com.pmb.core.utils.openWebPage
+
+@Composable
+fun ShowChangedNewPasswordBottomSheet(onDismiss: () -> Unit) {
+    var isVisible by remember { mutableStateOf(true) }
+    AppBottomSheet(
+        isVisible = isVisible,
+        onDismiss = { onDismiss() },
+        content = {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                TextImage(
+                    image = com.pmb.ballon.R.drawable.img_check_circle,
+                    text = stringResource(R.string.msg_changed_new_password),
+                    imageStyle = ImageStyle(size = Size.FIX(80.dp)),
+                )
+                Spacer(modifier = Modifier.size(24.dp))
+                AppButton(
+                    modifier = Modifier.fillMaxWidth(),
+                    title = stringResource(R.string.complete),
+                    onClick = {
+                        isVisible = false
+                    })
+            }
+        })
+}
+
+@Composable
+fun ShowMellatSignatureBottomSheet(onDismiss: () -> Unit) {
+    var isVisible by remember { mutableStateOf(true) }
+    val context = LocalContext.current
+    AppBottomSheet(
+        isVisible = isVisible,
+        onDismiss = { onDismiss() },
+        content = {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Spacer(modifier = Modifier.size(20.dp))
+                Headline3Text(text = stringResource(R.string.mellat_signature_app))
+                Spacer(modifier = Modifier.size(32.dp))
+                BodyLargeText(
+                    text = stringResource(R.string.mellat_signature_desc),
+                    textAlign = TextAlign.Center
+                )
+                Spacer(modifier = Modifier.size(24.dp))
+                AppButton(
+                    modifier = Modifier.fillMaxWidth(),
+                    title = stringResource(R.string.enter_mellat_signature_app),
+                    onClick = {
+                        context.openApp("com.bpm.moba", "https://www.bankmellat.ir")
+                        isVisible = false
+                    })
+                Spacer(modifier = Modifier.size(16.dp))
+                AppOutlineButton(
+                    modifier = Modifier.fillMaxWidth(),
+                    title = stringResource(R.string.download_mellat_signature_app),
+                    onClick = {
+                        context.openWebPage("https://www.bankmellat.ir")
+                        isVisible = false
+                    }
+                )
+            }
+        })
+}
+
+@Composable
+fun ShowInvalidLoginBottomSheet(expired: String, onDismiss: () -> Unit) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        TextImage(
+            image = com.pmb.ballon.R.drawable.img_error_circle,
+            text = stringResource(R.string.msg_could_not_login),
+            imageStyle = ImageStyle(size = Size.FIX(80.dp)),
+        )
+        Spacer(modifier = Modifier.size(12.dp))
+        BodyMediumText(
+            text = stringResource(R.string.msg_invalid_login_credentials),
+            color = AppTheme.colorScheme.onBackgroundNeutralSubdued,
+            textAlign = TextAlign.Center
+        )
+        Spacer(modifier = Modifier.size(24.dp))
+        AppTextButton(
+            modifier = Modifier.fillMaxWidth(),
+            title = "امکان  ورود مجدد تا ${expired}",
+            enable = false,
+            onClick = {
+                onDismiss()
+            })
+        Spacer(modifier = Modifier.size(8.dp))
+        AppButton(
+            modifier = Modifier.fillMaxWidth(),
+            title = stringResource(R.string.i_understand),
+            onClick = {
+                onDismiss()
+            })
+    }
+//        })
+}
+
+
+@Preview
+@Composable
+private fun ShowChangedNewPasswordBottomSheetPreview() {
+    ShowChangedNewPasswordBottomSheet {
+
+    }
+}

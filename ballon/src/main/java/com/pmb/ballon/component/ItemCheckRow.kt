@@ -13,6 +13,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.pmb.ballon.component.base.BodyMediumText
@@ -59,16 +60,20 @@ fun ItemCheckRow(
 
                 CompositionLocalProvider(LocalLayoutDirection provides titleLayoutDirection) {
                     BodyMediumText(
+                        modifier = Modifier.weight(1f).padding(end = 8.dp),
                         text = title,
                         color = if (enabled) AppTheme.colorScheme.foregroundNeutralDefault
-                        else AppTheme.colorScheme.onBackgroundNeutralDisabled
+                        else AppTheme.colorScheme.onBackgroundNeutralDisabled,
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 1
                     )
                 }
                 titleMore?.let {
                     CaptionText(
                         text = it,
                         color = if (enabled) AppTheme.colorScheme.onBackgroundNeutralSubdued
-                        else AppTheme.colorScheme.onBackgroundNeutralDisabled
+                        else AppTheme.colorScheme.onBackgroundNeutralDisabled,
+                        maxLines = 1
                     )
                 }
             }

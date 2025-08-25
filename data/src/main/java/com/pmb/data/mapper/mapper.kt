@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 fun <Dto, Domain> Flow<Result<SuccessData<Dto>>>.mapApiResult(
-    mapper: (Pair<ResponseMetaData?, Dto>) -> Domain
+    mapper: suspend (Pair<ResponseMetaData?, Dto>) -> Domain
 ): Flow<Result<Domain>> {
     return map { result ->
         when (result) {

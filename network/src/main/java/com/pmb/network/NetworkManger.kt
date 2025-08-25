@@ -1,8 +1,10 @@
 package com.pmb.network
 
+import android.content.Context
 import android.os.Build
 import android.util.Log
 import com.pmb.core.platform.Result
+import com.pmb.core.utils.getAndroidId
 import com.pmb.model.MobileApiRequest
 import com.pmb.model.RequestMetaData
 import com.pmb.model.SuccessData
@@ -38,10 +40,12 @@ import javax.net.ssl.SSLContext
 import javax.net.ssl.X509TrustManager
 
 class NetworkManger @Inject constructor(
+    val context: Context
 ) {
     val client: HttpClient = HttpClient(Android) {
         defaultRequest {
             host = "172.20.140.242:8443/api/v1"
+//            host = "172.20.140.167:8443/api/v1"
             url {
                 protocol = URLProtocol.HTTPS
             }
@@ -106,7 +110,7 @@ class NetworkManger @Inject constructor(
             // this data is temporary
             metaData = RequestMetaData(
                 initialVec = "",
-                imei = "12345",
+                imei = context.getAndroidId(),
                 osType = 7,
                 osVersion = Build.VERSION.RELEASE.toIntOrNull() ?: 1,
                 deviceName = "${Build.MANUFACTURER} ${Build.MODEL}"
@@ -128,6 +132,8 @@ class NetworkManger @Inject constructor(
         }
     }
 }
+
+
 
 class SessionCookieStorage : CookiesStorage {
     private var session: Cookie? = Cookie(

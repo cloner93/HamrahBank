@@ -71,3 +71,28 @@ enum class Calendar(
 val PERSIAN_DIGITS = charArrayOf('۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹')
 val ARABIC_DIGITS = charArrayOf('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')
 val ARABIC_INDIC_DIGITS = charArrayOf('٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩')
+
+val persianCalendarMonthsInPersian = listOf(
+    "فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد",
+    "شهریور", "مهر", "آبان", "آذر", "دی",
+    "بهمن", "اسفند"
+)
+val persianCalendarMonthsInDariOrPersianOldEra = listOf(
+    "حمل", "ثور", "جوزا", "سرطان", "اسد", "سنبله",
+    "میزان", "عقرب", "قوس", "جدی", "دلو", "حوت"
+)
+
+val persianCalendarDayOfWeekInPersian = listOf(
+    "شنبه", "یک‌شنبه", "دوشنبه", "سه‌شنبه", "چهارشنبه", "پنجشنبه", "جمعه"
+)
+
+fun getDayOfWeekName(dayOfWeek: Int): String = when (dayOfWeek) {
+    1    -> "یک‌شنبه"
+    2    -> "دوشنبه"
+    3    -> "سه‌شنبه"
+    4    -> "چهارشنبه"
+    5    -> "پنجشنبه"
+    6    -> "جمعه"
+    7    -> "شنبه"
+    else -> "نامعلوم"
+}

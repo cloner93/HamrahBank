@@ -3,29 +3,69 @@ package com.pmb.core.utils
 fun String.isMobile(): MobileValidationResult {
     var validFormat = false
     val length = when {
-        startsWith("0098") -> {
-            validFormat = true
-            14
-        }
-
-        startsWith("+98") -> {
-            validFormat = true
-            13
-        }
-
         startsWith("09") -> {
             validFormat = true
             11
         }
 
-        startsWith("98") -> {
+        startsWith("9") -> {
             validFormat = true
-            11
+            10
         }
 
-        else -> 14
+        else -> 11
     }
     return MobileValidationResult(length = length, isValid = validFormat && this.length == length)
+}
+
+fun String?.validatePhone(): Boolean {
+    return (this?.matches(Regex("^\\+?[0-9]{10,13}$"))
+        ?: false) && (this.startsWith("09") || this.startsWith("9"))
+}
+
+fun String.setMobileValidator(): String {
+    val trimmed = this.trim().filter { it.isDigit() }
+
+    return if (trimmed.startsWith("9") && trimmed.length == 10) {
+        "0$trimmed"
+    } else {
+        trimmed
+    }
+}
+
+fun String.allowOnlyEnglishLettersAndDigits(): Boolean {
+    return this.all { it.isDigit() || it in 'a'..'z' || it in 'A'..'Z' }
+}
+
+fun String.allowOnlyEnglishLettersDigitsAndSymbols(): Boolean {
+    return this.all {
+        it.code in 32..126 // ASCII printable characters: includes letters, digits, symbols
+    }
+}
+
+fun String.isValidCustomInput(): Boolean {
+    if (this.length != 10) return false
+
+    val allDigits = this.all { it.isDigit() }
+    if (allDigits) return true
+
+    val firstIsDigit = this[0].isDigit()
+    val secondIsEnglishLetter = this[1] in 'a'..'z' || this[1] in 'A'..'Z'
+    val remainingAreDigits = this.substring(2).all { it.isDigit() }
+
+    return firstIsDigit && secondIsEnglishLetter && remainingAreDigits
+}
+
+fun String.setNationalCodeValidator(): String {
+    val trimmed = this.trim().filter { it.isDigit() }
+
+    return if (trimmed.length == 8) {
+        "00$trimmed"
+    } else if (trimmed.length == 9) {
+        "0$trimmed"
+    } else {
+        trimmed
+    }
 }
 
 fun String.isIranianNationalId(): Boolean {
@@ -53,21 +93,14 @@ fun String.isIranianNationalId(): Boolean {
     return (remainder < 2 && remainder == checksum) || (remainder >= 2 && 11 - remainder == checksum)
 }
 
-fun String.isPassword(): PasswordValidationResult {
-    val minLen = this.length >= 8
-    val lowercase = this.any { it.isLowerCase() }
-    val uppercase = this.any { it.isUpperCase() }
-    val digit = this.any { it.isDigit() }
-    val specialChar = this.any { it in "!@#\$%^&*()_+\\-=\\[\\]{};':\"|,.<>?/" }
-
-    return PasswordValidationResult(
-        minLen = minLen,
-        lowercase = lowercase,
-        uppercase = uppercase,
-        digit = digit,
-        specialChar = specialChar
-    )
-}
+fun String.isPassword(): PasswordValidationResult = PasswordValidationResult(
+    minLen = length >= 8,
+    lowercase = contains(Regex("[a-z]")),
+    uppercase = contains(Regex("[A-Z]")),
+    digit = contains(Regex("[0-9]")),
+    specialChar = contains(Regex("[!@#\$%^&*()_+\\-=\\[\\]{};':\"|,.<>/?]")),
+    space = contains(Regex("\\s"))
+)
 
 data class MobileValidationResult(
     val length: Int, val isValid: Boolean
@@ -78,35 +111,32 @@ data class PasswordValidationResult(
     val lowercase: Boolean = false,
     val uppercase: Boolean = false,
     val digit: Boolean = false,
-    val specialChar: Boolean = false
+    val specialChar: Boolean = false,
+    val space: Boolean = false
 ) {
     val isValid: Boolean
-        get() = minLen && lowercase && uppercase && digit && specialChar
+        get() = minLen && lowercase && uppercase && digit && specialChar && !space
 }
 
 data class UsernameValidationResult(
     val minLen: Boolean = false,
     val maxLen: Boolean = false,
     val startWithLetter: Boolean = false,
-    val specialChar: Boolean = false
+    val specialChar: Boolean = false,
+    val space: Boolean = false
 ) {
     val isValid: Boolean
-        get() = minLen && maxLen && startWithLetter && specialChar
+        get() = minLen && maxLen && startWithLetter && specialChar && !space
 
     companion object {
-        fun validate(value: String): UsernameValidationResult {
-            val minLen = value.length >= 5
-            val maxLen = value.length <= 30
-            val startWithLetter = value.startWithEnglishLetter()
-            val specialChar = value.isValidChars()
-
-            return UsernameValidationResult(
-                minLen = minLen,
-                maxLen = maxLen,
-                startWithLetter = startWithLetter,
-                specialChar = specialChar
+        fun validate(value: String): UsernameValidationResult =
+            UsernameValidationResult(
+                minLen = value.length >= 5,
+                maxLen = value.length <= 30,
+                startWithLetter = value.startWithEnglishLetter(),
+                specialChar = value.isValidChars(),
+                space = value.contains(Regex("\\s"))
             )
-        }
     }
 }
 
@@ -116,7 +146,7 @@ fun String.isValidChars(): Boolean {
 }
 
 fun String.startWithEnglishLetter(): Boolean {
-    val regex = Regex("^[a-zA-Z]+$")
+    val regex = Regex("^[a-zA-Z].*")
     return regex.matches(this)
 }
 

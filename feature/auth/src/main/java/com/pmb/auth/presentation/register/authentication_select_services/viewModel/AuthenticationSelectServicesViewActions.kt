@@ -1,0 +1,9 @@
+package com.pmb.auth.presentation.register.authentication_select_services.viewModel
+
+import com.pmb.core.platform.BaseViewAction
+
+sealed interface AuthenticationSelectServicesViewActions : BaseViewAction {
+    data object ClearAlert : AuthenticationSelectServicesViewActions
+
+    data object LoadSelectedServicesData : AuthenticationSelectServicesViewActions
+}

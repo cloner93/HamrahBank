@@ -1,7 +1,6 @@
 package com.pmb.ballon.component
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -14,9 +13,9 @@ import com.pmb.ballon.models.TextStyle
 import com.pmb.ballon.ui.theme.AppTheme
 
 @Composable
-fun EmptyList(iconType: IconType, message: String) {
+fun EmptyList(modifier: Modifier, iconType: IconType, message: String) {
     Box(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier,
         contentAlignment = Alignment.Center
     ) {
         TextImage(

@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.pmb.compressor"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 24

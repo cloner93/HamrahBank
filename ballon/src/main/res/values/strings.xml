@@ -4,14 +4,14 @@
     <string name="min_char_in_password">حداقل ۸ کاراکتر</string>
     <string name="upper_case">حروف بزرگ</string>
     <string name="lowercase">حروف کوچک</string>
-    <string name="digit">عدد09123456789</string>
+    <string name="digit">عدد</string>
     <string name="special_char"><![CDATA[علامت (مانند ٪>@)]]></string>
     <string name="real_carrency">ریال</string>
     <string name="daller">دلار</string>
     <string name="price_in_real_currency">%1$s ریال</string>
     <string name="toman">تومان</string>
     <string name="home">خانه</string>
-    <string name="transfer_and_receive">انتقال و دریافت</string>
+    <string name="transfer_and_receive">انتقال وجه</string>
     <string name="account_card">کارت و سپرده</string>
     <string name="profile">پروفایل</string>
     <string name="delete">حذف</string>
@@ -45,4 +45,11 @@
     <string name="shamsi_calendar_short">Persian</string>
     <string name="islamic_calendar_short">Islamic</string>
     <string name="gregorian_calendar_short">Gregorian</string>
+    <string name="front_of_card">جلوی کارت</string>
+    <string name="back_side_of_card">پشت کارت</string>
+    <string name="choose_card">انتخاب کارت</string>
+    <string name="tap_on_card">برای نمایش پشت کارت، ضربه بزنید.</string>
+    <string name="call">تماس\n</string>
+    <string name="common_questions">سوالات متداول</string>
+    <string name="feature_usage_guide">راهنمای استفاده از قابلیت ها</string>
 </resources>

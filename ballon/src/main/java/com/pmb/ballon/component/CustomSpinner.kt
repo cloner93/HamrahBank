@@ -1,6 +1,7 @@
 package com.pmb.ballon.component
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -35,12 +36,9 @@ fun CustomSpinner(
     var isSelected by remember { mutableStateOf(false) }
 
     ExposedDropdownMenuBox(
-        expanded = expanded,
-        onExpandedChange = {
-            if (isEnabled)
-                expanded = !expanded
-        }
-    ) {
+        expanded = expanded, onExpandedChange = {
+            if (isEnabled) expanded = !expanded
+        }) {
         AppBaseTextField(
             value = displayText,
             onValueChange = {},
@@ -51,36 +49,32 @@ fun CustomSpinner(
                 Icon(
                     imageVector = if (expanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
                     contentDescription = "Dropdown Icon",
+                    tint = AppTheme.colorScheme.onBackgroundNeutralDefault
                 )
             },
             modifier = modifier
                 .menuAnchor(MenuAnchorType.PrimaryNotEditable, true)
                 .clickable {
-                    if (isEnabled)
-                        expanded = !expanded
-                }
-        )
+                    if (isEnabled) expanded = !expanded
+                })
 
         ExposedDropdownMenu(
+            modifier = Modifier.heightIn(max = 300.dp),
             expanded = expanded,
             containerColor = AppTheme.colorScheme.background1Neutral,
-            onDismissRequest = { expanded = false }
-        ) {
+            onDismissRequest = { expanded = false }) {
             options?.forEach { option ->
-                DropdownMenuItem(
-                    text = {
-                        BodyMediumText(
-                            modifier = Modifier.padding(bottom = 6.dp),
-                            text = option,
-                            color = AppTheme.colorScheme.foregroundNeutralDefault
-                        )
-                    },
-                    onClick = {
-                        onOptionSelected(option)
-                        isSelected = true
-                        expanded = false
-                    }
-                )
+                DropdownMenuItem(text = {
+                    BodyMediumText(
+                        modifier = Modifier.padding(bottom = 6.dp),
+                        text = option,
+                        color = AppTheme.colorScheme.foregroundNeutralDefault
+                    )
+                }, onClick = {
+                    onOptionSelected(option)
+                    isSelected = true
+                    expanded = false
+                })
             }
         }
     }
@@ -106,56 +100,43 @@ fun CustomSearchSpinner(
         options
     }
     ExposedDropdownMenuBox(
-        expanded = expanded,
-        onExpandedChange = {
-            if (isEnabled)
-                expanded = it
-        }
-    ) {
-        AppBaseTextField(
-            value = displayText,
-            onValueChange = {
-                searchQuery = it
-                onSearchValue(it)
-                expanded = true
-            },
-            label = labelString,
-            enabled = isEnabled,
-            trailingIcon = {
-                Icon(
-                    imageVector = if (expanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
-                    contentDescription = "Dropdown Icon",
-                )
-            },
-            modifier = modifier
-                .menuAnchor(MenuAnchorType.PrimaryNotEditable, true)
-                .clickable {
-                    if (isEnabled)
-                        expanded = !expanded
-                }
-        )
+        expanded = expanded, onExpandedChange = {
+            if (isEnabled) expanded = it
+        }) {
+        AppBaseTextField(singleLine = true, value = displayText, onValueChange = {
+            searchQuery = it
+            onSearchValue(it)
+            expanded = true
+        }, label = labelString, enabled = isEnabled, trailingIcon = {
+            Icon(
+                imageVector = if (expanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                contentDescription = "Dropdown Icon",
+                tint = AppTheme.colorScheme.onBackgroundNeutralDefault
+            )
+        }, modifier = modifier
+            .menuAnchor(MenuAnchorType.PrimaryNotEditable, true)
+            .clickable {
+                if (isEnabled) expanded = !expanded
+            })
 
         ExposedDropdownMenu(
+            modifier = Modifier.heightIn(max = 200.dp),
             expanded = expanded,
             containerColor = AppTheme.colorScheme.background1Neutral,
-            onDismissRequest = { expanded = false }
-        ) {
+            onDismissRequest = { expanded = false }) {
             filteredOptions?.forEach { option ->
-                DropdownMenuItem(
-                    text = {
-                        BodyMediumText(
-                            modifier = Modifier.padding(bottom = 6.dp),
-                            text = option,
-                            color = AppTheme.colorScheme.foregroundNeutralDefault
-                        )
-                    },
-                    onClick = {
-                        onSearchValue(option)
-                        onOptionSelected(option)
-                        isSelected = true
-                        expanded = false
-                    }
-                )
+                DropdownMenuItem(text = {
+                    BodyMediumText(
+                        modifier = Modifier.padding(bottom = 6.dp),
+                        text = option,
+                        color = AppTheme.colorScheme.foregroundNeutralDefault
+                    )
+                }, onClick = {
+                    onSearchValue(option)
+                    onOptionSelected(option)
+                    isSelected = true
+                    expanded = false
+                })
             }
         }
     }

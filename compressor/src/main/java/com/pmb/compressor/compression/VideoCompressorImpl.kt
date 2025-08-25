@@ -15,7 +15,9 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
 import javax.inject.Inject
+import kotlin.coroutines.cancellation.CancellationException
 
 
 enum class VideoQuality {
@@ -25,61 +27,83 @@ enum class VideoQuality {
 class VideoCompressorImpl @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     private val fileManager: FileManager,
-) : CoroutineScope by MainScope(), VideoCompressor {
+) :
+//    CoroutineScope by MainScope(),
+    VideoCompressor {
 
-    private var job: Job? = null
+//    private var job: Job? = null
 
 
-    override fun compress(
+    override suspend fun compress(
         path: String,
         configureWith: Configuration,
-        listener: CompressionListener,
-    ) {
-        doVideoCompression(
+//        listener: CompressionListener,
+    ) : CompressionResult{
+       return doVideoCompression(
             path,
             configureWith,
-            listener,
+//            listener,
         )
     }
 
-    private fun doVideoCompression(
+    private suspend fun doVideoCompression(
         path: String,
         configuration: Configuration,
-        listener: CompressionListener,
-    ) {
-        val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
-            listener.onFailure(throwable.message ?: "")
-        }
-        val coroutineScope = CoroutineScope(Job() + coroutineExceptionHandler)
+//        listener: CompressionListener,
+    ):CompressionResult = withContext(ioDispatcher) {
+//        val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
+//            listener.onFailure(throwable.message ?: "")
+//        }
+//        val coroutineScope = CoroutineScope(Job() + coroutineExceptionHandler)
 
-        job = coroutineScope.launch(ioDispatcher) {
+//        job = coroutineScope.launch(ioDispatcher) {
             val desFile = fileManager.createVideoFile()
+        val result = startCompression(
+            srcUri = path,
+            destPath = desFile.path,
+            configuration = configuration,
+//            listener = object : CompressionProgressListener {
+//                override fun onProgressChanged(percent: Float) {
+//                    // no-op for suspend version
+//                }
+//
+//                override fun onProgressCancelled() {
+//                    throw CancellationException("Compression cancelled")
+//                }
+//            }
+        )
 
-            desFile.let {
-                isRunning = true
-                listener.onStart()
-                val result = startCompression(
-                    path,
-                    desFile.path,
-                    configuration,
-                    listener,
-                )
-
-                if (result.success) {
-                    path.let { it1 -> fileManager.deleteFile(it1) }
-                    listener.onSuccess(result.size, result.path)
-                } else {
-                    listener.onFailure(result.failureMessage ?: "An error has occurred!")
-                }
-            }
+        if (result.success) {
+            fileManager.deleteFile(path)
+            CompressionResult(File(result.path!!), result.path)
+        } else {
+            throw IllegalStateException(result.failureMessage ?: "Compression failed")
         }
+//            desFile.let {
+//                isRunning = true
+//                listener.onStart()
+//                val result = startCompression(
+//                    path,
+//                    desFile.path,
+//                    configuration,
+//                    listener,
+//                )
+//
+//                if (result.success) {
+//                    path.let { it1 -> fileManager.deleteFile(it1) }
+//                    listener.onSuccess(result.size, result.path)
+//                } else {
+//                    listener.onFailure(result.failureMessage ?: "An error has occurred!")
+//                }
+//            }
+//        }
     }
 
     private suspend fun startCompression(
         srcUri: String,
         destPath: String,
         configuration: Configuration,
-        listener: CompressionListener,
+//        listener: CompressionProgressListener,
     ): Result = withContext(ioDispatcher) {
         return@withContext compressVideo(
             srcUri,
@@ -87,14 +111,18 @@ class VideoCompressorImpl @Inject constructor(
             configuration,
             object : CompressionProgressListener {
                 override fun onProgressChanged(percent: Float) {
-                    listener.onProgress(percent)
+//                    listener.onProgress(percent)
                 }
 
                 override fun onProgressCancelled() {
-                    listener.onCancelled()
+                    throw CancellationException("Compression cancelled")
                 }
             },
         )
     }
 
 }
+    data class CompressionResult(
+        val file: File,
+        val resultPath: String,
+    )

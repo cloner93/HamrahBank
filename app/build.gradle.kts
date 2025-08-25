@@ -27,9 +27,10 @@ val signingProperties = getSigningConfigProperties()
 
 android {
     namespace = "com.pmb.mobile"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
+        targetSdk = 35 // in new devices it returns a dialog which his this app uses old version of sdk and it is not good for your device
         applicationId = "com.pmb.mobile"
         minSdk = 24
         versionCode = 1
@@ -99,12 +100,12 @@ dependencies {
     implementation(project(":ballon"))
     implementation(project(":domain"))
     implementation(project(":data"))
-    implementation(project(":auth"))
-    implementation(project(":home"))
-    implementation(project(":transfer"))
-    implementation(project(":account"))
-    implementation(project(":profile"))
-    implementation(project(":facilities"))
+    implementation(projects.feature.auth)
+    implementation(projects.feature.home)
+    implementation(projects.feature.transfer)
+    implementation(projects.feature.account)
+    implementation(projects.feature.profile)
+    implementation(project(":shared"))
 
     // DI > Hilt
     implementation(libs.android.hilt)

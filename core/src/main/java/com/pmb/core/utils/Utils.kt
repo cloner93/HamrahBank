@@ -1,11 +1,15 @@
 package com.pmb.core.utils
 
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
-import android.database.Cursor
 import android.net.Uri
 import android.provider.ContactsContract
+import android.provider.Settings
+import android.widget.Toast
 import androidx.core.net.toUri
+import com.pmb.core.R
 
 fun Context.openApp(packageName: String, url: String) {
     val launchIntent = this.packageManager.getLaunchIntentForPackage(packageName)
@@ -14,6 +18,13 @@ fun Context.openApp(packageName: String, url: String) {
     } else {
         openWebPage(url)
     }
+}
+
+fun Context.actionCall(phoneNumber: String) {
+    val intent = Intent(Intent.ACTION_DIAL).apply {
+        data = "tel:$phoneNumber".toUri()
+    }
+    startActivity(intent)
 }
 
 fun Context.openWebPage(url: String) {
@@ -46,7 +57,7 @@ fun Context.fetchContactPhoneNumber(contactUri: Uri?): String? {
         cursor?.use { c ->
             if (c.moveToFirst()) {
                 val idIndex = c.getColumnIndex(ContactsContract.Contacts._ID)
-                val nameIndex = c.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)
+                c.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)
 
                 val contactId = c.getString(idIndex)
 
@@ -61,7 +72,8 @@ fun Context.fetchContactPhoneNumber(contactUri: Uri?): String? {
 
                 phonesCursor?.use { phoneC ->
                     if (phoneC.moveToFirst()) {
-                        val phoneNumberIndex = phoneC.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
+                        val phoneNumberIndex =
+                            phoneC.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
                         val phoneNumber = phoneC.getString(phoneNumberIndex)
 
                         return phoneNumber
@@ -70,8 +82,20 @@ fun Context.fetchContactPhoneNumber(contactUri: Uri?): String? {
             }
         }
 
-      return  null
+        return null
     } ?: run {
         null
     }
 }
+
+fun Context.copyToClipboard(text: String) {
+    val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+    val clip = ClipData.newPlainText(getString(R.string.hamrah_bank_mellat), text)
+    clipboard.setPrimaryClip(clip)
+    Toast.makeText(this, getString(R.string.coppied_successfully), Toast.LENGTH_SHORT).show()
+
+}
+
+fun Context.getAndroidId(): String =
+    Settings.Secure.getString(this.contentResolver, Settings.Secure.ANDROID_ID)
+

@@ -1,9 +1,11 @@
 package com.pmb.network.di
 
+import android.content.Context
 import com.pmb.network.NetworkManger
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -13,5 +15,5 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideNetworkManger() = NetworkManger()
+    fun provideNetworkManger(@ApplicationContext context: Context) = NetworkManger(context)
 }
